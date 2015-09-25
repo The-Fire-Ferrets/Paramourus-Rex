@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<Player>
+	<InputComponent>
+		<Control Type = "Keyboard"/>
+	</InputComponent>	
+	<CollectorComponent>
+		<Items Bags = "6" />
+	</CollectorComponent>
+	<PhysicsComponent>
+		<Category Some_Attribute = "Value" />
+	</PhysicsComponent>
+</Player>
