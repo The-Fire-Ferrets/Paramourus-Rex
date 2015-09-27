@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<NPC Texture = "npc_texture.jpg" Sprite = "npc_sprite.jpg">
+	<InputComponent>
+		<Control Type = "Artificial"/>
+	</InputComponent>	
+	<CollectorComponent>
+		<Items Bags = "0" />
+	</CollectorComponent>
+	<PhysicsComponent>
+		<Category Some_Attribute = "Value" />
+	</PhysicsComponent>
+</NPC>

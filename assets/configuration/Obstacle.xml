@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<Obstacle Texture = "obstacle_texture.jpg" Sprite = "obstacle_sprite.jpg">
+
+</Obstacle>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<WaterFlower Texture = "waterflower_texture.jpg" Sprite = "waterflower_sprite.jpg">
+	<CollectableComponent>
+		<Category Some_Attribute = "Value" />
+	</CollectableComponent>
+	<CraftableComponent>
+		<Properties Type = "Water"/>
+	</CraftableComponent>
+</WaterFlower>
