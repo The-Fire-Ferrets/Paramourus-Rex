@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<FireFlower Texture = "fireflower_texture.jpg" Sprite = "fireflower_sprite.jpg">
-	<CollectableComponent>
-		<Category Some_Attribute = "Value" />
-	</CollectableComponent>
-	<CraftableComponent>
-		<Properties Type = "Fire"/>
-	</CraftableComponent>
-</FireFlower>

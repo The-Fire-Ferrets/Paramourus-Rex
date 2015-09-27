@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level0 Texture = "level0_texture.jpg">
+<Level0 Name = "Hello World!" Background = "level0_background.jpg">
 	<Player>
 		<Location X = "Value" Y = "Value"/>
 	</Player>

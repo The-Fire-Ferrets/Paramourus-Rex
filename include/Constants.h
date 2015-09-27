@@ -2,6 +2,8 @@
 #define CONSTANTS_H
 
 #include <SFML/Graphics.hpp>
+#include "ActorFactory.h"
+#include "LevelFactory.h"
 #include <map>
 #include <memory>
 #include <tr1/memory>
