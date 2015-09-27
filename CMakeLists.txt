@@ -1,5 +1,5 @@
 # Project name
-project(untitled)
+project(paramourusrex)
 
 # Minimum Cmake Version
 cmake_minimum_required(VERSION 2.6)
@@ -22,7 +22,7 @@ if(NOT SFML_FOUND)
 endif()
 
 # set include dirs
-include_directories(${untilted_SOURCE_DIR}/include)
+include_directories(${paramourusrex_SOURCE_DIR}/include)
 
 # get CPP files
 file(GLOB SRC src/*cpp)

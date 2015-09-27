@@ -28,5 +28,5 @@ typedef ActorComponent *(*ActorComponentCreator)(void);
 typedef std::map<ComponentId, ActorComponentCreator> ActorComponentCreatorMap;
 typedef std::map<ComponentId, StrongActorComponentPtr> ActorComponents;
 
-const bool debug_mode = False;
+const bool debug_mode = false;
 #endif
