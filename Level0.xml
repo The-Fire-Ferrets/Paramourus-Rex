@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<Level0 Texture = "level0_texture.jpg">
+	<Player>
+		<Location X = "Value" Y = "Value"/>
+	</Player>
+	<NPC>
+		<Location X = "Value" Y = "Value"/>
+	</NPC>
+	<WaterFlower>
+		<Location X = "Value" Y = "Value"/>
+	</WaterFlower>
+	<Obstacle>
+		<Location X = "Value" Y = "Value"/>
+	</Obstacle>
+</Level0>
