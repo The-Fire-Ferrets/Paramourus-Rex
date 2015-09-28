@@ -10,12 +10,12 @@ set(CMAKE_MODULE_PATH $ENV{CMAKE_MODULE_PATH})
 # Use C++11 (CMAKE_CXX_STANDARD only available w/ CMake 3.1+)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11")
 
+
 # Find SFML
 # TODO: may need to do something here if we use SFML as a submodule
-find_package(SFML COMPONENTS graphics window system audio network QUIET)
+find_package(SFML COMPONENTS graphics window system audio network)
 include_directories(${SFML_INCLUDE_DIR})
 link_libraries(${SFML_LIBRARIES})
-
 if(NOT SFML_FOUND)
   # SFML not found
   message(FATAL_ERROR " * Make sure CMAKE_MODULE_PATH points to the cmake/Modules directory of your SFML install.\n * Make sure LIB includes the directory where the SFML libraries are installed.\n * Make sure INCLUDE includes the directory where the SFML header files are installed.")

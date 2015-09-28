@@ -1,21 +1,21 @@
-#include "LevelFactory.h"
+#include "LevelView.h"
 
 //Total size of pointer arrays
-const int LevelFactory::size = 20;
+const int LevelView::size = 20;
 //Number of actors populating the level
-int LevelFactory::num_actors = 0;
+int LevelView::num_actors = 0;
 //Array holding pointers of actors populating the level
-StrongActorPtr LevelFactory::actors[size];
+StrongActorPtr LevelView::actors[size];
 //Holds filename of background to load
-std::string LevelFactory::background;
+std::string LevelView::background;
 //Holds level name
-std::string LevelFactory::name;
+std::string LevelView::name;
 
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
 **/
-void LevelFactory::CreateLevel(const char* resource, int* state) {
+void LevelView::CreateLevel(const char* resource, int* state) {
 	//Reference to current location in Actor population array
 	//Holds referenced to loaded XML file	
 	num_actors = 0;
@@ -25,7 +25,7 @@ void LevelFactory::CreateLevel(const char* resource, int* state) {
 	pugi::xml_parse_result result;
 	std::string resource_str(resource);
     	if (!(result = doc.load_file(("./assets/levels/" + resource_str + ".xml").c_str()))) {
-		std::cout << "LevelFactory::CreateLevel(...): Failed to load" << std::endl;
+		std::cout << "LevelView::CreateLevel(...): Failed to load" << std::endl;
 		std::cout << "Filename: " << resource << " Load result: " << result.description() << std::endl;
 	}
 
@@ -45,11 +45,11 @@ void LevelFactory::CreateLevel(const char* resource, int* state) {
 	}
 }
 
-std::string LevelFactory::getName(void) {
+std::string LevelView::getName(void) {
 	return name;
 }
 
-int LevelFactory::getNumActors(void) {
+int LevelView::getNumActors(void) {
 	return num_actors;
 }
 

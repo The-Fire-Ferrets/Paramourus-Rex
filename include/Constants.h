@@ -1,16 +1,15 @@
 #include <SFML/Graphics.hpp>
-#include "ActorFactory.h"
-#include "LevelFactory.h"
+#include "pugixml.hpp"
+#include <iostream>
+
 #include <map>
 #include <memory>
 #include <tr1/memory>
+
 #include <math.h>
 #include <string.h>
 #include <string>
-#include <iostream>
-#include <vector>
-#include "pugixml.hpp"
-#include <cassert>
+
 #define PI 3.14159265
 
 class Actor;

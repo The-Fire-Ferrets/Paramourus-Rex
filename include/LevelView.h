@@ -1,9 +1,10 @@
-#ifndef LEVELFACTORY_H
-#define LEVELFACTORY_H
+#ifndef LEVELVIEW_H
+#define LEVELVIEW_H
 
 #include "Constants.h"
+#include "ActorFactory.h"
 
-class LevelFactory {
+class LevelView {
 	private:
 		static const int size;
 		static int num_actors;

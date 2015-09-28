@@ -59,20 +59,20 @@ int main(int argc, char* argv[])
 		}
 		switch(state) {
 			case 0: //Create level, for now just load HelloWorldLevel
-				LevelFactory::CreateLevel(levels[0], &state);
+				LevelView::CreateLevel(levels[0], &state);
 				state = 1;
 				break;
 			case 1:
-				for (int i = 0; i < LevelFactory::getNumActors(); i ++)
-					LevelFactory::actors[i]->update(elapsed_ms);
+				for (int i = 0; i < LevelView::getNumActors(); i ++)
+					LevelView::actors[i]->update(elapsed_ms);
 				break;
 			case 2: //Display Diana
 				break;
 			case 3: //Display craftable
 				break;
 			case 4:
-				for (int i = 0; i < LevelFactory::getNumActors(); i ++)
-					LevelFactory::actors[i]->quit();
+				for (int i = 0; i < LevelView::getNumActors(); i ++)
+					LevelView::actors[i]->quit();
 				return 0;
 			default: 
 				break;
@@ -86,8 +86,8 @@ int main(int argc, char* argv[])
 			case 0: //Display map
 				break;
 			case 1: //Display level
-				for (int i = 0; i < LevelFactory::getNumActors(); i ++)
-					LevelFactory::actors[i]->render(&App);
+				for (int i = 0; i < LevelView::getNumActors(); i ++)
+					LevelView::actors[i]->render(&App);
 				break;
 			case 2: //Display female
 				break;

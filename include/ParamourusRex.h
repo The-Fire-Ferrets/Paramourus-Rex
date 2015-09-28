@@ -2,6 +2,7 @@
 #define THELASTDINOSAUR_H
 
 #include "Constants.h"
+#include "LevelView.h"
 
 //Configuration variables
 int window_height;
