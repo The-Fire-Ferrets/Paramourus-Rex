@@ -13,11 +13,11 @@ class ActorFactory {
 		static ActorId currActorId;
 		static StrongActorPtr CreateActor(const char* resource, int* state);
 		static bool registerComponent(ComponentId* id, ActorComponentCreator creator);
-		static StrongActorPtr actorInstances[size];
+		static StrongActorPtr actorInstances[];
 
 	protected:
-		static ComponentId* actorComponentIds[size];
-		static ActorComponentCreator actorComponentCreators[size];
+		static ComponentId* actorComponentIds[];
+		static ActorComponentCreator actorComponentCreators[];
 		static StrongActorComponentPtr CreateComponent(pugi::xml_node* elem);
 };
 

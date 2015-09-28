@@ -1,22 +1,21 @@
 #include "LevelFactory.h"
 
 //Total size of pointer arrays
-int LevelFactory::size = 20;
-//Current number of actors
+const int LevelFactory::size = 20;
+//Number of actors populating the level
 int LevelFactory::num_actors = 0;
-//Gives each actor a unique ID
-ActorId LevelFactory::currActorId = 0;
 //Array holding pointers of actors populating the level
 StrongActorPtr LevelFactory::actors[size];
 //Holds filename of background to load
 std::string LevelFactory::background;
 //Holds level name
 std::string LevelFactory::name;
+
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
 **/
-StrongActorPtr LevelFactory::CreateLevel(const char* resource, int* state) {
+void LevelFactory::CreateLevel(const char* resource, int* state) {
 	//Reference to current location in Actor population array
 	num_actors = 0;
 	//Holds referenced to loaded XML file	
@@ -34,8 +33,6 @@ StrongActorPtr LevelFactory::CreateLevel(const char* resource, int* state) {
 
 	//Iterates over XML to get components to add
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
-		if (debug_mode)
-			std::cout << tool.name() << std::endl;
 		actors[num_actors++] = ActorFactory::CreateActor(tool.name(), state);
 	}
 }

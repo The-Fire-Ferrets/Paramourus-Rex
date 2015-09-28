@@ -1,6 +1,3 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
-
 #include <SFML/Graphics.hpp>
 #include "ActorFactory.h"
 #include "LevelFactory.h"
@@ -9,6 +6,7 @@
 #include <tr1/memory>
 #include <math.h>
 #include <string.h>
+#include <string>
 #include <iostream>
 #include <vector>
 #include "pugixml.hpp"
@@ -27,6 +25,3 @@ typedef std::shared_ptr<ActorComponent> StrongActorComponentPtr;
 typedef ActorComponent *(*ActorComponentCreator)(void);
 typedef std::map<ComponentId, ActorComponentCreator> ActorComponentCreatorMap;
 typedef std::map<ComponentId, StrongActorComponentPtr> ActorComponents;
-
-const bool debug_mode = False;
-#endif

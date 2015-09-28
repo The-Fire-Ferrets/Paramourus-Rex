@@ -1,32 +1,32 @@
-#include "CollectableComponent.h"
+#include "CollectorComponent.h"
 
 //Unique instance id among instances of the same component
-int CollectableComponent::instances = -1;
+int CollectorComponent::instances = -1;
 //Unique component id
-ComponentId CollectableComponent::id = "CollectableComponent";
+ComponentId CollectorComponent::id = "CollectorComponent";
 //Registers component with factory
-const bool CollectableComponent::registered = ActorFactory::registerComponent(&id, &create);
+const bool CollectorComponent::registered = ActorFactory::registerComponent(&id, &create);
 
 /** Returns the id shared by all components of this type
  **
 **/
-ComponentId CollectableComponent::getId(void) {
+ComponentId CollectorComponent::getId(void) {
 	return id;
 }
 
 /** Returns a reference to the components constructor
  **
 **/
-ActorComponent* CollectableComponent::create() { 
+ActorComponent* CollectorComponent::create() { 
 	//update the instance count
 	instances++;
-	return new CollectableComponent();
+	return new CollectorComponent();
 }
 
 /** Constructor
  ** Sets up unique instance ID
 **/
-CollectableComponent::CollectableComponent(void) {
+CollectorComponent::CollectorComponent(void) {
 	instance = instances;
 }
 
@@ -34,23 +34,18 @@ CollectableComponent::CollectableComponent(void) {
  ** elem : node pointing to section of XML configuration holding more attribute defaults to setup
  ** Sets up additional attribute defaults
 **/
-bool CollectableComponent::Init(pugi::xml_node* elem) {
-	if (debug_mode)
-		std::cout << elem->name() << std::endl;
-	
+bool CollectorComponent::Init(pugi::xml_node* elem) {	
 	char * temp;
 	//Iterate over the component's attributes
 	for (pugi::xml_node tool = elem->first_child(); tool; tool = tool.next_sibling()) {
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
-			if (!strcmp(attr.name(), "Bags")) {
-				bags = std::stoi(attr.value(), temp);				
+			if (!strcmp(attr.name(), "Vases")) {
+				vases = std::strtol(attr.value(), &temp, 10);				
 				if (*temp != '\0') {
-					std::cout << "CollectableComponent::Init: Failed to initialize: Error reading attribute for " << attr.name() << std::endl;
-					return false
+					std::cout << "CollectorComponent::Init: Failed to initialize: Error reading attribute for " << attr.name() << std::endl;
+					return false;
 				}					
 			}
-			if (debug_mode)
-				std::cout << attr.value() << std::endl;
 		}
 	}
 	return true;
@@ -59,13 +54,13 @@ bool CollectableComponent::Init(pugi::xml_node* elem) {
 /** Final Initilizer
  ** Setups up additional attributes based on game configuration
 **/
-void CollectableComponent::PostInit(void) {
+void CollectorComponent::PostInit(void) {
 }
 
 /** Updates the component's attributes
  ** time: current game time
 **/
-void CollectableComponent::update(float time) {
+void CollectorComponent::update(float time) {
 	
 }
 
@@ -73,29 +68,34 @@ void CollectableComponent::update(float time) {
  ** window: canvas on which to draw the component
  ** 
 **/
-void CollectableComponent::render(sf::RenderWindow *window) {
+void CollectorComponent::render(sf::RenderWindow *window) {
 }
 
 /** Reset the component
  **
 **/
-void CollectableComponent::reset(void) {
+void CollectorComponent::reset(void) {
 
 }
 
 /** Restart the component
  **
 **/
-void CollectableComponent::restart(void) {
+void CollectorComponent::restart(void) {
 
 }
 
 /** Cleans up after quiting
  **
 **/
-void CollectableComponent::quit(void) {
+void CollectorComponent::quit(void) {
 
 }
 
-void CollectableComponent::setBags(int b) {
-	bags = b;
+void CollectorComponent::setVases(int b) {
+	vases = b;
+}
+
+int CollectorComponent::getVases(void) {
+	return vases;
+}

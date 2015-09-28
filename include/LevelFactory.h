@@ -1,9 +1,9 @@
-#ifndef ACTORFACTORY_H
-#define ACTORFACTORY_H
+#ifndef LEVELFACTORY_H
+#define LEVELFACTORY_H
 
 #include "Constants.h"
 
-class ActorFactory {
+class LevelFactory {
 	private:
 		static const int size;
 		static int num_actors;

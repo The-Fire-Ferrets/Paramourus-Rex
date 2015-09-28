@@ -18,6 +18,6 @@ int ActorComponent::getInstance(void) {
 /** returns the component's type
  **
 **/
-int ActorComponent::getType(void) {
+std::string ActorComponent::getType(void) {
 	return type;
 }

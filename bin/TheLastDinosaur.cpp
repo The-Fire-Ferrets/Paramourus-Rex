@@ -5,39 +5,36 @@ int main(int argc, char* argv[])
 	//Configuration variables
 	
 	//Load configuration
-    if (!(result = doc.load_file(config))) {
+   	if (!(result = doc.load_file(config))) {
 		std::cout << "Main: Failed to load" << std::endl;
-		std::cout << "Filename: " << resource << " Load result: " << result.description() << std::endl;
+		std::cout << "Filename: " << config << " Load result: " << result.description() << std::endl;
 	}
 
 	//Used to iterate over XML file to get attributes
 	char * temp;
-	pugi::xml_node tools = doc.child(((std::string) resource).substr(0, ((std::string) resource).size() - 4).c_str());
+	pugi::xml_node tools = doc.child(((std::string) config).substr(0, ((std::string) config).size() - 4).c_str());
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
 			if (!strcmp(attr.name(), "Height")) {
-				window_height = std::stoi(attr.value(), temp);				
+				window_height = std::strtol(attr.value(), &temp, 10);	
 				if (*temp != '\0') {
 					std::cout << "Main: Failed to load configuration: Error reading attribute for " << attr.name() << std::endl;
-					return false
+					return false;
 				}					
 			}
 			else if (!strcmp(attr.name(), "Width")) {
-				window_width = std::stoi(attr.value(), temp);				
+				window_width = std::strtol(attr.value(), &temp, 10);	
 				if (*temp != '\0') {
 					std::cout << "Main: Failed to load configuration: Error reading attribute for " << attr.name() << std::endl;
-					return false
+					return false;
 				}					
 			}
-				
-			if (debug_mode)
-				std::cout << attr.value() << std::endl;
 		}
 	}
 	sf::RenderWindow App(sf::VideoMode(window_width, window_height,64), "The Last Dinosaur by Will Hollingsworth, Bina Kakusa, Belol Nessar, and Meghan Tinkler", sf::Style::Titlebar|sf::Style::Close);
 	
 	//Array holding levels in the order to be played
-	std::string levels = ["Level0.xml"];
+	const char* levels[] = {"Level0.xml"};
 	
 	//Holds the current game state
 	// 0 = At the map; 1 = In a level; 2 = Talking to female; 3 = At craftable; 4 = quit game
@@ -52,7 +49,7 @@ int main(int argc, char* argv[])
 		sf::Event Event;
 		
 		//Start structure to control frame rate
-		elapsed = fr_clock.getElapsedTime()
+		elapsed = fr_clock.getElapsedTime();
 		elapsed_ms = elapsed.asSeconds();
 		while(App.pollEvent(Event)) {
 			if(Event.type == sf::Event::Closed)
@@ -72,8 +69,8 @@ int main(int argc, char* argv[])
 			case 3: //Display craftable
 				break;
 			case 4:
-				for (int i = 0; i < num_actors; i ++)
-					actors_list[i]->quit();
+				for (int i = 0; i < LevelFactory::getNumActors(); i ++)
+					LevelFactory::actors[i]->quit();
 				return 0;
 			default: 
 				break;
@@ -103,6 +100,4 @@ int main(int argc, char* argv[])
 	}
 
 	return 0;
-}
-
 }

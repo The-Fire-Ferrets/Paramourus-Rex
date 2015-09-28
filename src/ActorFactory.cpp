@@ -1,7 +1,7 @@
 #include "ActorFactory.h"
 
 //Total size of pointer arrays
-int size = 20;
+const int ActorFactory::size = 20;
 //Gives each actor a unique ID
 ActorId ActorFactory::currActorId = 0;
 //Array holding the registered components
@@ -42,9 +42,6 @@ StrongActorPtr ActorFactory::CreateActor(const char* resource, int* state) {
 
 	//Iterates over XML to get components to add
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
-		if (debug_mode)
-			std::cout << tool.name() << std::endl;
-		
 		//Creates each component given the XML attribute
 		StrongActorComponentPtr component(CreateComponent(&tool));
 		if (component) {
@@ -66,8 +63,6 @@ StrongActorPtr ActorFactory::CreateActor(const char* resource, int* state) {
 	//Registers the actor to the factor array
 	actorInstances[actor->getId()] = actor;
 
-	if (debug_mode)
-		std::cout << "finished" << std::endl;
 	return actor;
 }
 
@@ -105,7 +100,7 @@ StrongActorComponentPtr ActorFactory::CreateComponent(pugi::xml_node* elem) {
 		}
 	}
 	else {
-		std::cout << "ActorFactory::CreateComponent(...): Failed to create component: " << componentId << std::endl;
+		std::cout << "ActorFactory::CreateComponent(...): Failed to create component: " << componentid << std::endl;
 		return StrongActorComponentPtr();
 	}
 
@@ -128,8 +123,6 @@ bool ActorFactory::registerComponent(ComponentId* id, ActorComponentCreator crea
 	//Finds the next empty location with which to register the component (using a map would be better but couldn't find a way to implement a growing map statically)
 	int idx = -1;
 	for (int i = 0; i < size; i++) {
-		if (debug_mode)
-			std::cout << i << std::endl;
 		if (!(ActorFactory::actorComponentIds[i])) {
 			idx = i;
 			break;
@@ -143,7 +136,7 @@ bool ActorFactory::registerComponent(ComponentId* id, ActorComponentCreator crea
 		return true;
 	}
 	else {
-		std::cout << "ActorFactory::registerComponent(...): Failed to register component: " << componentId << std::endl;
+		std::cout << "ActorFactory::registerComponent(...): Failed to register component: " << id << std::endl;
 		return false;
 	}
 }

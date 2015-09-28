@@ -56,7 +56,8 @@ class Actor {
 		int direction;
 		int instance;
 		int* game_state;
-		
+		int state;
+
 		sf::FloatRect* obstacle;
 		sf::FloatRect* boundary;
 		

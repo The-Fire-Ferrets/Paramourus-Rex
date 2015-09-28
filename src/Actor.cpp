@@ -123,8 +123,6 @@ void Actor::quit(void) {
  ** component: pointer to ActorComponent ot be added
 **/
 void Actor::AddComponent(StrongActorComponentPtr component) {
-	if (debug_mode)
-		std::cout << component->getId() << std::endl;
 	components.insert({component->getId(), component});
 }
 

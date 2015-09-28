@@ -24,7 +24,7 @@ class ActorComponent {
 		virtual void quit(void) {};
 		virtual void render(sf::RenderWindow *window) {};
 		virtual ComponentId getId(void) = 0;
-		virtual void getType(void) {};
+		std::string getType(void);
 
 	private:
 		void SetOwner(StrongActorPtr p_owner);
