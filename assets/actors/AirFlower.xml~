@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<AirFlower Type = "AirFlower" Texture = "airflower_texture.jpg" Sprite = "airflower_sprite.jpg">
-	<CollectableComponent>
-		<Category Some_Attribute = "Value" />
-	</CollectableComponent>
-	<CraftableComponent>
-		<Properties Type = "Air"/>
-	</CraftableComponent>
-</AirFlower>
