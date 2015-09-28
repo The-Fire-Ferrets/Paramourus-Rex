@@ -1,4 +1,4 @@
-#include "TheLastDinosaur.h"
+#include "ParamourusRex.h"
 
 int main(int argc, char* argv[])
 {
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 	const char* levels[] = {"Level0"};
 	
 	//Holds the current game state
-	// 0 = At the map; 1 = In a level; 2 = Talking to female; 3 = At craftable; 4 = quit game
+	// 0 = At the map; 1 = In a level; 2 = Talking to Diana; 3 = At craftable; 4 = quit game
 	int state = 0;
 	
 	/**
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 				for (int i = 0; i < LevelFactory::getNumActors(); i ++)
 					LevelFactory::actors[i]->update(elapsed_ms);
 				break;
-			case 2: //Display female
+			case 2: //Display Diana
 				break;
 			case 3: //Display craftable
 				break;
