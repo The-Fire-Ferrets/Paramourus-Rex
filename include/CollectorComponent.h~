@@ -1,14 +1,14 @@
-#ifndef COLLECTABLECOMPONENT_H
-#define COLLECTABLECOMPONENT_H
+#ifndef COLLECTORCOMPONENT_H
+#define COLLECTORCOMPONENT_H
 
 #include "Constants.h"
 #include "ActorComponent.h"
 #include "ActorFactory.h"
 
-class CollectableComponent : public ActorComponent {
+class CollectorComponent : public ActorComponent {
 
 	public:
-		CollectableComponent();
+		CollectorComponent();
 		bool Init(pugi::xml_node* elem) override;
 		void PostInit(void) override;
 

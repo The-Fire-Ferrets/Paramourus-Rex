@@ -17,23 +17,31 @@ std::string LevelFactory::name;
 **/
 void LevelFactory::CreateLevel(const char* resource, int* state) {
 	//Reference to current location in Actor population array
-	num_actors = 0;
 	//Holds referenced to loaded XML file	
+	num_actors = 0;
 	pugi::xml_document doc;
 	
 	//Error check to see if file was loaded correctly
 	pugi::xml_parse_result result;
-    if (!(result = doc.load_file(resource))) {
+	std::string resource_str(resource);
+    	if (!(result = doc.load_file(("./assets/levels/" + resource_str + ".xml").c_str()))) {
 		std::cout << "LevelFactory::CreateLevel(...): Failed to load" << std::endl;
 		std::cout << "Filename: " << resource << " Load result: " << result.description() << std::endl;
 	}
 
 	//Used to iterate over XML file to get attributes
-	pugi::xml_node tools = doc.child(((std::string) resource).substr(0, ((std::string) resource).size() - 4).c_str());
+	pugi::xml_node tools = doc.child(resource);
+	for (pugi::xml_attribute attr = tools.first_attribute(); attr; attr = attr.next_attribute()) {
+		if (!strcmp(attr.name(), "Name"))
+			name = attr.value();
+		else if (!strcmp(attr.name(), "Background"))
+			background = attr.value();
+	}
 
 	//Iterates over XML to get components to add
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
-		actors[num_actors++] = ActorFactory::CreateActor(tool.name(), state);
+		actors[num_actors] = ActorFactory::CreateActor(tool.name(), state);
+		actors[num_actors++]->PostInit(&tool);
 	}
 }
 

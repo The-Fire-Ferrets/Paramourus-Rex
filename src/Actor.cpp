@@ -21,8 +21,7 @@ ActorId Actor::getId(void) {
  ** actorid : unique id for each actor
  ** Sets some attributes to their defaults
 **/
-Actor::Actor(ActorId actorid) {
-	id = actorid;
+Actor::Actor(void) {
 	instance = instances++;
 	state = 0;
 }
@@ -33,7 +32,9 @@ Actor::Actor(ActorId actorid) {
 **/
 bool Actor::Init(pugi::xml_node* elem) {
 	for (pugi::xml_attribute attr = elem->first_attribute(); attr; attr = attr.next_attribute()) {
-		if (!strcmp(attr.name(),"Texture"))
+		if (!strcmp(attr.name(),"Type"))
+  			id = attr.value(); 
+		else if (!strcmp(attr.name(),"Texture"))
   			texture_filename = attr.value();
 		else if (!strcmp(attr.name(),"Sprite"))
 			sprite_filename = attr.value();
@@ -56,12 +57,41 @@ Actor::~Actor(void) {
 /** Final Initializer
  ** Setups up additional attributes based on game configuration
 **/
-void Actor::PostInit(void) {
-	boundary = new sf::FloatRect(position.x, position.y, size.x, size.y);
-	if  (texture.loadFromFile(texture_filename) < 0) {
-		std::cout << "Actor::PostInit: Failed to load texture" << std::endl;
+void Actor::PostInit(pugi::xml_node* elem) {
+	char* temp;
+	for (pugi::xml_node tool = elem->first_child(); tool; tool = tool.next_sibling()) {
+		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
+			if (!strcmp(attr.name(),"X")) {
+				position.x = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+					std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+				}
+			}
+			else if (!strcmp(attr.name(),"Y")) {
+				position.y = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+					std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+				}
+			}
+			else if (!strcmp(attr.name(),"Width")) {
+				size.x = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+					std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+				}
+			}
+			else if (!strcmp(attr.name(),"Height")) {
+				size.y = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+					std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+				}
+			}
+		}
 	}
-	//Load Sprite
+
+	boundary = new sf::FloatRect(position.x, position.y, size.x, size.y);
+	texture.loadFromFile(("./assets/textures/" + texture_filename).c_str());
+	sprite = sf::Sprite(texture, sf::IntRect(position.x, position.y, size.x, size.y));
+	sprite.setPosition(position);
 }
 
 
@@ -72,6 +102,7 @@ void Actor::PostInit(void) {
 **/
 void Actor::move(float time) {	
 	//Move Actor
+	sprite.setPosition(position);
 }
 
 /** Updates each of the actor's components
@@ -87,9 +118,7 @@ void Actor::update(float time) {
  ** window: current game render window
 **/
 void Actor::render(sf::RenderWindow *window) {
-	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it) {
-		(it->second)->render(window);
-	}
+	window->draw(sprite);
 }
 
 /** Reset each of the actors components after scoring
@@ -220,4 +249,11 @@ void Actor::setDirection(int dir) {
 **/
 int Actor::getDirection(void) {
 	return direction;
+}
+
+/** Return the actors instance
+ **
+**/
+int Actor::getInstance(void) {
+	return instance;
 }

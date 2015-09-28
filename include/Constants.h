@@ -11,13 +11,12 @@
 #include <vector>
 #include "pugixml.hpp"
 #include <cassert>
-
 #define PI 3.14159265
 
 class Actor;
 class ActorComponent;
 
-typedef unsigned long ActorId;
+typedef std::string ActorId;
 typedef std::string ComponentId;
 
 typedef std::shared_ptr<Actor> StrongActorPtr;

@@ -34,15 +34,10 @@ CollectableComponent::CollectableComponent(void) {
  ** elem : node pointing to section of XML configuration holding more attribute defaults to setup
  ** Sets up additional attribute defaults
 **/
-bool CollectableComponent::Init(pugi::xml_node* elem) {
-	if (debug_mode)
-		std::cout << elem->name() << std::endl;
-	
+bool CollectableComponent::Init(pugi::xml_node* elem) {	
 	//Iterate over the component's attributes
 	for (pugi::xml_node tool = elem->first_child(); tool; tool = tool.next_sibling()) {
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
-			if (debug_mode)
-				std::cout << attr.value() << std::endl;
 		}
 	}
 	return true;

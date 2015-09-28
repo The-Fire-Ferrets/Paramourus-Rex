@@ -64,13 +64,6 @@ void CollectorComponent::update(float time) {
 	
 }
 
-/** Renders the component
- ** window: canvas on which to draw the component
- ** 
-**/
-void CollectorComponent::render(sf::RenderWindow *window) {
-}
-
 /** Reset the component
  **
 **/

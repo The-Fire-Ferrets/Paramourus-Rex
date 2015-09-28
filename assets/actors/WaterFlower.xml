@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<WaterFlower Texture = "waterflower_texture.jpg" Sprite = "waterflower_sprite.jpg">
+<WaterFlower Type = "WaterFlower" Texture = "WaterFlower.png" Sprite = "WaterFlower.png">
 	<CollectableComponent>
 		<Category Some_Attribute = "Value" />
 	</CollectableComponent>

@@ -15,8 +15,7 @@ class PhysicsComponent : public ActorComponent {
 
 		static ComponentId id;
 		
-		void update(float time) override;
-		void render(sf::RenderWindow *window) override;		
+		void update(float time) override;	
 		void reset(void) override;
 		void restart(void) override;
 		void quit(void) override;

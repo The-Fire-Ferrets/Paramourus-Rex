@@ -59,12 +59,6 @@ void CraftableComponent::update(float time) {
 	
 }
 
-/** Renders the component
- ** window: canvas on which to draw the component
- ** 
-**/
-void CraftableComponent::render(sf::RenderWindow *window) {
-}
 
 /** Reset the component
  **

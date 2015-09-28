@@ -68,12 +68,6 @@ void InputComponent::update(float time) {
 	}
 }
 
-/** Renders the component
- ** window: canvas on which to draw the component
- ** 
-**/
-void InputComponent::render(sf::RenderWindow *window) {
-}
 
 /** Reset the component
  **

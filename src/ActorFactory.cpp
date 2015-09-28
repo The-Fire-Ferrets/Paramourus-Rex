@@ -2,8 +2,6 @@
 
 //Total size of pointer arrays
 const int ActorFactory::size = 20;
-//Gives each actor a unique ID
-ActorId ActorFactory::currActorId = 0;
 //Array holding the registered components
 ComponentId* ActorFactory::actorComponentIds[size];
 //Array holding pointers to created actors
@@ -21,18 +19,19 @@ StrongActorPtr ActorFactory::CreateActor(const char* resource, int* state) {
 	
 	//Error check to see if file was loaded corectly
 	pugi::xml_parse_result result;
-    if (!(result = doc.load_file(resource))) {
+	std::string resource_str(resource);
+    	if (!(result = doc.load_file(("./assets/actors/" + resource_str + ".xml").c_str()))) {
 		std::cout << "ActorFactory::CreateActor(...): Failed to load" << std::endl;
 		std::cout << "Filename: " << resource << " Load result: " << result.description() << std::endl;
 		return StrongActorPtr();
 	}
 	
 	// Constructs a default actor and gives in the current game state
-	StrongActorPtr actor(new Actor(nextActorId()));
+	StrongActorPtr actor(new Actor());
 	actor->resetGameState(state);
 
 	//Used to iterate over XML file to get attributes
-	pugi::xml_node tools = doc.child(((std::string) resource).substr(0, ((std::string) resource).size() - 4).c_str());
+	pugi::xml_node tools = doc.child(resource);
 
 	//Initializes the specified actor with chosen XML attributes
 	if(!actor->Init(&tools)) {
@@ -57,11 +56,9 @@ StrongActorPtr ActorFactory::CreateActor(const char* resource, int* state) {
 			return StrongActorPtr();
 		}
 	}
-	//Completes any post-initialization of the components
-	actor->PostInit();
 	
 	//Registers the actor to the factor array
-	actorInstances[actor->getId()] = actor;
+	actorInstances[actor->getInstance()] = actor;
 
 	return actor;
 }
@@ -106,13 +103,6 @@ StrongActorComponentPtr ActorFactory::CreateComponent(pugi::xml_node* elem) {
 
 	return component;
 
-}
-
-/** Generator to get next unique actor ID
- **
-**/
-ActorId ActorFactory::nextActorId(void) {
-	return currActorId++;
 }
 
 /** Used during compile time to register each component and ID with the factor to be used during creation

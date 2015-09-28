@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Player Texture = "player_texture.jpg" Sprite = "player_sprite.jpg">
+<Player Type = "Player" Texture = "Player.png" Sprite = "Player.png">
 	<InputComponent>
 		<Control Type = "Keyboard"/>
 	</InputComponent>	

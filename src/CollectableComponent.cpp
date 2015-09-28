@@ -56,12 +56,6 @@ void CollectableComponent::update(float time) {
 	
 }
 
-/** Renders the component
- ** window: canvas on which to draw the component
- ** 
-**/
-void CollectableComponent::render(sf::RenderWindow *window) {
-}
 
 /** Reset the component
  **

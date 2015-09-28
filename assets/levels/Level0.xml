@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <Level0 Name = "Hello World!" Background = "level0_background.jpg">
 	<Player>
-		<Location X = "Value" Y = "Value"/>
+		<Location X = "0" Y = "0" Width = "10" Height = "10"/>
 	</Player>
 	<NPC>
-		<Location X = "Value" Y = "Value"/>
+		<Location X = "40" Y = "60" Width = "10" Height = "10"/>
 	</NPC>
 	<WaterFlower>
-		<Location X = "Value" Y = "Value"/>
+		<Location X = "100" Y = "100" Width = "10" Height = "10"/>
 	</WaterFlower>
 	<Obstacle>
-		<Location X = "Value" Y = "Value"/>
+		<Location X = "300" Y = "300" Width = "10" Height = "10"/>
 	</Obstacle>
 </Level0>

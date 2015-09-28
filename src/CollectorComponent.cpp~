@@ -43,7 +43,7 @@ bool CollectorComponent::Init(pugi::xml_node* elem) {
 				vases = std::strtol(attr.value(), &temp, 10);				
 				if (*temp != '\0') {
 					std::cout << "CollectorComponent::Init: Failed to initialize: Error reading attribute for " << attr.name() << std::endl;
-					return false
+					return false;
 				}					
 			}
 		}
@@ -62,13 +62,6 @@ void CollectorComponent::PostInit(void) {
 **/
 void CollectorComponent::update(float time) {
 	
-}
-
-/** Renders the component
- ** window: canvas on which to draw the component
- ** 
-**/
-void CollectorComponent::render(sf::RenderWindow *window) {
 }
 
 /** Reset the component

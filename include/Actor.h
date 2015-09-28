@@ -13,9 +13,9 @@ class Actor {
 		ActorComponents components;
 		ActorId getId(void);		
 		
-		explicit Actor(ActorId actorid);
+		explicit Actor(void);
 		bool Init(pugi::xml_node* elem);
-		void PostInit(void);
+		void PostInit(pugi::xml_node* elem);
 		~Actor(void);
 
 		void move(float time);
@@ -52,7 +52,8 @@ class Actor {
 		sf::Vector2f position;
 		sf::Texture texture;
 		sf::Vector2f size;
-		
+		sf::Sprite sprite;
+
 		int direction;
 		int instance;
 		int* game_state;

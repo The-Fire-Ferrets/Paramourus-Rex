@@ -86,6 +86,3 @@ void CraftableComponent::restart(void) {
 void CraftableComponent::quit(void) {
 
 }
-
-void CraftableComponent::setBags(int b) {
-	bags = b;

@@ -22,7 +22,6 @@ class ActorComponent {
 		virtual void reset(void) {};
 		virtual void restart(void) {};
 		virtual void quit(void) {};
-		virtual void render(sf::RenderWindow *window) {};
 		virtual ComponentId getId(void) = 0;
 		std::string getType(void);
 

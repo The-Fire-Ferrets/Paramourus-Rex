@@ -1,4 +1,4 @@
 <?xml version="1.0"?>
-<Obstacle Texture = "obstacle_texture.jpg" Sprite = "obstacle_sprite.jpg">
+<Obstacle Type = "Obstacle" Texture = "Obstacle.png" Sprite = "Obstacle.png">
 
 </Obstacle>

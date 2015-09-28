@@ -13,7 +13,7 @@ sf::Time elapsed;
 float elapsed_ms;
 
 //To Load configuration
-const char* config = {"Config.xml"};
+std::string config = "Config";
 pugi::xml_document doc;
 pugi::xml_parse_result result;
 

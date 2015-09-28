@@ -5,14 +5,16 @@ int main(int argc, char* argv[])
 	//Configuration variables
 	
 	//Load configuration
-   	if (!(result = doc.load_file(config))) {
-		std::cout << "Main: Failed to load" << std::endl;
+   	if (!(result = doc.load_file( ("./assets/" + config + ".xml").c_str() ))) {
+		std::cout << "Main: Failed to load config" << std::endl;
 		std::cout << "Filename: " << config << " Load result: " << result.description() << std::endl;
 	}
 
 	//Used to iterate over XML file to get attributes
 	char * temp;
-	pugi::xml_node tools = doc.child(((std::string) config).substr(0, ((std::string) config).size() - 4).c_str());
+	char temp_path[30];
+
+	pugi::xml_node tools = doc.child(config.c_str());
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
 			if (!strcmp(attr.name(), "Height")) {
@@ -34,7 +36,7 @@ int main(int argc, char* argv[])
 	sf::RenderWindow App(sf::VideoMode(window_width, window_height,64), "The Last Dinosaur by Will Hollingsworth, Bina Kakusa, Belol Nessar, and Meghan Tinkler", sf::Style::Titlebar|sf::Style::Close);
 	
 	//Array holding levels in the order to be played
-	const char* levels[] = {"Level0.xml"};
+	const char* levels[] = {"Level0"};
 	
 	//Holds the current game state
 	// 0 = At the map; 1 = In a level; 2 = Talking to female; 3 = At craftable; 4 = quit game
@@ -58,6 +60,9 @@ int main(int argc, char* argv[])
 		switch(state) {
 			case 0: //Create level, for now just load HelloWorldLevel
 				LevelFactory::CreateLevel(levels[0], &state);
+				for (int i = 0; i < LevelFactory::getNumActors(); i ++)
+					std::cout << LevelFactory::actors[i]->getId() << std::endl;
+
 				state = 1;
 				break;
 			case 1:
@@ -70,7 +75,7 @@ int main(int argc, char* argv[])
 				break;
 			case 4:
 				for (int i = 0; i < LevelFactory::getNumActors(); i ++)
-					actors_list[i]->quit();
+					LevelFactory::actors[i]->quit();
 				return 0;
 			default: 
 				break;

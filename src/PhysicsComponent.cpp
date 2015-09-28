@@ -57,14 +57,6 @@ void PhysicsComponent::update(float time) {
 	
 }
 
-/** Renders the component
- ** window: canvas on which to draw the component
- ** 
-**/
-void PhysicsComponent::render(sf::RenderWindow *window) {
-
-}
-
 /** Reset the component
  **
 **/
