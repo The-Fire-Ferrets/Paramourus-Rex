@@ -9,11 +9,15 @@
 #include <math.h>
 #include <string.h>
 #include <string>
-
+#include <list>
+#include "FastDelegate.h"
 #define PI 3.14159265
 
 class Actor;
 class ActorComponent;
+class EventInterface;
+class EventManagerInterface;
+class ContactEvent;
 
 typedef std::string ActorId;
 typedef std::string ComponentId;
@@ -23,3 +27,13 @@ typedef std::shared_ptr<ActorComponent> StrongActorComponentPtr;
 typedef ActorComponent *(*ActorComponentCreator)(void);
 typedef std::map<ComponentId, ActorComponentCreator> ActorComponentCreatorMap;
 typedef std::map<ComponentId, StrongActorComponentPtr> ActorComponents;
+
+typedef unsigned long EventType;
+typedef std::shared_ptr<EventManagerInterface> EventManagerInterfacePtr;
+typedef std::shared_ptr<const EventInterface> EventInterfacePtr;
+typedef fastdelegate::FastDelegate1<EventInterfacePtr> EventDelegate;
+typedef std::list<const EventInterface*> EventQueue;
+typedef std::shared_ptr<EventQueue> EventQueuePtr;
+typedef std::list<EventDelegate> EventDelegateList;
+typedef std::map<const EventType, EventDelegateList> EventDelegateMap;
+

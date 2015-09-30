@@ -30,6 +30,13 @@ PhysicsComponent::PhysicsComponent(void) {
 	instance = instances;		
 }
 
+PhysicsComponent::~PhysicsComponent(void) {	
+	//unregisters the listener in the event manager
+	if(!EventManagerInterface::get()->removeDelegate(delegateFunc, ContactEvent::event_type)) {
+		//std::cout << "PhysicsComponent::~PhysicsComponent: Unable to unregister delegate function" << std::endl;
+	}
+}
+
 /** Initilizer
  ** elem : node pointing to section of XML configuration holding more attribute defaults to setup
  ** Sets up additional attribute defaults
@@ -48,13 +55,29 @@ bool PhysicsComponent::Init(pugi::xml_node* elem) {;
  ** Setups up additional attributes based on game configuration
 **/
 void PhysicsComponent::PostInit(void) {
-
+	//Creates a listener for the contact event and registers it with the event manager
+	//using std::placeholders::_1;
+	//delegateFunc = std::bind(&Actor::madeContact, owner, _1);
+	delegateFunc = fastdelegate::MakeDelegate(owner->getCopy(), &Actor::madeContact);
+	if(!EventManagerInterface::get()->addDelegate(delegateFunc, ContactEvent::event_type)) {
+		//std::cout << "PhysicsComponent::Init: Unable to register delegate function" << std::endl;
+	}
 }
-/** Updates each of the components attributes
+
+/** Checks to see if the bound of two actor intersect and sends ContactEvent to the event manager
  ** time: current game time
 **/
 void PhysicsComponent::update(float time) {
-	
+	for (int i = 0; i < LevelView::getNumActors(); i ++) {
+		StrongActorPtr other_actor = LevelView::actors[i];
+		if (owner->getInstance() != other_actor->getInstance()) {
+			if ((owner->getBoundary())->intersects(*(other_actor->getBoundary()))) {
+				if (!EventManagerInterface::get()->queueEvent(new ContactEvent(time, owner))) {
+					std::cout << "PhysicsComponent::update: Unable to queue event" << std::endl;
+				}			
+			}
+		}
+	}
 }
 
 /** Reset the component
@@ -75,5 +98,5 @@ void PhysicsComponent::restart(void) {
  **
 **/
 void PhysicsComponent::quit(void) {
-
+	this->~PhysicsComponent();
 }

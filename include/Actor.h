@@ -3,6 +3,8 @@
 
 #include "Constants.h"
 #include "ActorComponent.h"
+#include "EventInterface.h"
+#include "ContactEvent.h"
 
 class Actor {
 	friend class ActorFactory;
@@ -26,6 +28,8 @@ class Actor {
 		void restart(void);
 		void quit(void);
 		
+		void madeContact(EventInterfacePtr e);
+
 		sf::Vector2f getPosition(void);
 		void setPosition(sf::Vector2f pos);
 		
@@ -43,6 +47,8 @@ class Actor {
 			
 		sf::FloatRect* getBoundary(void);		
 
+		Actor* getCopy(void);
+		const Actor* getCopy(void) const;
 	private:
 		ActorId id;
 		

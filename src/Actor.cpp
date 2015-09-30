@@ -257,3 +257,27 @@ int Actor::getDirection(void) {
 int Actor::getInstance(void) {
 	return instance;
 }
+
+/** Return a reference to the current actor
+ **
+**/
+Actor* Actor::getCopy(void) {
+	return this;
+}
+
+const Actor* Actor::getCopy(void) const {
+	return this;
+}
+
+/** Receives events when the actor contacts another actor
+ **
+**/
+void Actor::madeContact(EventInterfacePtr e) {
+	EventType event_type = e->getEventType();
+	if (event_type == ContactEvent::event_type) {
+		std::shared_ptr<const ContactEvent> eCast = std::static_pointer_cast<const ContactEvent>(e);
+			if ((eCast->getActor())->getInstance() != instance) {
+				std::cout << id << " made contact with " << (eCast->getActor())->getId() << std::endl;
+			}
+	}
+}

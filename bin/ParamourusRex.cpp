@@ -1,8 +1,14 @@
 #include "ParamourusRex.h"
 
+#include "ContactEvent.h"
+
 int main(int argc, char* argv[])
-{
-	//Configuration variables
+{	
+	//Instantiate a global EventManager
+	EventManager* eventmanager = new EventManager();
+	EventManagerInterfacePtr eventmanagerptr;
+	eventmanagerptr.reset(eventmanager);
+	EventManagerInterface::set(eventmanagerptr);
 	
 	//Load configuration
    	if (!(result = doc.load_file( ("./assets/" + config + ".xml").c_str() ))) {
@@ -54,8 +60,11 @@ int main(int argc, char* argv[])
 		elapsed = fr_clock.getElapsedTime();
 		elapsed_ms = elapsed.asSeconds();
 		while(App.pollEvent(Event)) {
-			if(Event.type == sf::Event::Closed)
+			if(Event.type == sf::Event::Closed) {
+				for (int i = 0; i < LevelView::getNumActors(); i ++)
+					LevelView::actors[i]->quit();
 				App.close();
+			}
 		}
 		switch(state) {
 			case 0: //Create level, for now just load HelloWorldLevel
@@ -99,6 +108,11 @@ int main(int argc, char* argv[])
 				break;
 		}
 		App.display();
+
+		//Proccess all events
+		if (!eventmanagerptr->processEvents()) {	
+			std::cout << "Main: Failed to process events" << std::endl;
+		}
 	}
 
 	return 0;

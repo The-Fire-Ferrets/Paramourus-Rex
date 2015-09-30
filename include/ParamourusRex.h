@@ -3,6 +3,7 @@
 
 #include "Constants.h"
 #include "LevelView.h"
+#include "EventManager.h"
 
 //Configuration variables
 int window_height;
