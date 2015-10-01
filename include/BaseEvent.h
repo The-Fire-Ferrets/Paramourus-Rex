@@ -15,6 +15,6 @@ class BaseEvent : public EventInterface {
 		virtual const EventType& getEventType(void) const override = 0;
 		float GetTimeStamp(void) const override;
 		virtual void Serialize(const std::ostream& o);
-		virtual const EventInterface* copy(void) const = 0;
+		virtual const EventInterface* copy(void) const override = 0;
 };
 #endif
