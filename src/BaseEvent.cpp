@@ -3,7 +3,7 @@
 /** Constructor
  **
 **/  
-BaseEvent::BaseEvent(const float timeStamp = 0.0f)  : time_stamp(timeStamp) {
+BaseEvent::BaseEvent(const float timeStamp)  : time_stamp(timeStamp) {
 
 }
 
