@@ -20,7 +20,7 @@ class Actor {
 		void PostInit(pugi::xml_node* elem);
 		~Actor(void);
 
-		void move(float time);
+		void move(float time, sf::Vector2f direction);
 		
 		void update(float time);
 		void render(sf::RenderWindow *window);
@@ -32,9 +32,6 @@ class Actor {
 
 		sf::Vector2f getPosition(void);
 		void setPosition(sf::Vector2f pos);
-		
-		int getDirection(void);
-		void setDirection(int dir);	
 		
 		sf::Vector2f getSize(void);
 		void setSize(sf::Vector2f sz);
@@ -60,7 +57,6 @@ class Actor {
 		sf::Vector2f size;
 		sf::Sprite sprite;
 
-		int direction;
 		int instance;
 		int* game_state;
 		int state;

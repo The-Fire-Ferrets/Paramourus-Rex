@@ -19,11 +19,22 @@ class InputComponent : public ActorComponent {
 
 		static ComponentId id;
 		ComponentId getId(void) override;
+
+    sf::Vector2f getDirection() const;
+    void setDirection(const sf::Vector2f& dir);
+
+    // the four cardinal directions and a convenient list
+    const sf::Vector2f NORTH;
+    const sf::Vector2f SOUTH;
+    const sf::Vector2f EAST;
+    const sf::Vector2f WEST;
+    const sf::Vector2f cardinals[4];
 		
 	private:
 		static ActorComponent* create();
 		static int instances;
 		static const bool registered;
-};
 
+    sf::Vector2f direction;
+};
 #endif

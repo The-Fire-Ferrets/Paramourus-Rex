@@ -1,4 +1,8 @@
 #include "InputComponent.h"
+#include <algorithm> // std::find()
+#include <cstdlib>   // std::rand()
+
+#include <SFML/Window/Keyboard.hpp> // sf::Keyboard, sf::Key
 
 //Unique instance id among instances of the same component
 int InputComponent::instances = -1;
@@ -14,6 +18,22 @@ ComponentId InputComponent::getId(void) {
 	return id;
 }
 
+/** Returns the direction in which the actor is currently moving
+ **
+**/
+sf::Vector2f InputComponent::getDirection() const {
+  return direction;
+}
+
+/** Sets the direction in which the actor is currently moving
+ **
+**/
+void InputComponent::setDirection(const sf::Vector2f& dir) {
+  if (std::find(cardinals, cardinals+4, dir) != cardinals+4) {
+    direction = dir;
+  }
+}
+
 /** Returns a reference to the components constructor
  **
 **/
@@ -26,7 +46,13 @@ ActorComponent* InputComponent::create() {
 /** Constructor
  ** Sets up unique instance ID
 **/
-InputComponent::InputComponent(void) {
+InputComponent::InputComponent(void) :
+  NORTH(sf::Vector2f(0.f, -1.f)),     // these would be static const members
+  SOUTH(sf::Vector2f(0.f, 1.f)),      // except that prevents the use of std::find()
+  EAST(sf::Vector2f(1.f, 0.f)),       // which was kind of the whole point
+  WEST(sf::Vector2f(-1.f, 0.f)),
+  cardinals{ NORTH, SOUTH, EAST, WEST }
+{
 	instance = instances;
 }
 
@@ -61,10 +87,27 @@ void InputComponent::PostInit(void) {
 **/
 void InputComponent::update(float time) {
 	if (type == "Artificial") {
-		//Perform AI Stuff
+    // TODO: this should be done with path finding
+    this->setDirection(cardinals[std::rand() % 4]);
+    owner->move(time, direction);
 	}
 	else if (type == "Keyboard") {
+    // TODO: I'd like to move controls to a configuration file so we could 
+    // choose between up/down/left/right, wasd, and hjkl.
+
 		//Reads Input and perform actions
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+      this->setDirection(NORTH);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+      this->setDirection(SOUTH);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+      this->setDirection(WEST);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+      this->setDirection(EAST);
+    }
+
+    // move actor
+    owner->move(time, direction);
 	}
 }
 
