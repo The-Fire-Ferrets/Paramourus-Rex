@@ -1,5 +1,5 @@
-#ifndef THELASTDINOSAUR_H
-#define THELASTDINOSAUR_H
+#ifndef PARAMOURUSREX_H
+#define PARAMOURUSREX_H
 
 #include "Constants.h"
 #include "LevelView.h"

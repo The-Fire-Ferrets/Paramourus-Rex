@@ -109,8 +109,9 @@ void Actor::PostInit(pugi::xml_node* elem) {
  ** Prevents actors from moving past the top and bottom boundaries
  ** if the obstacle pointer is set (by a physics component o fthe actor or another actor after contact) it prevents the actors from moving into each other
 **/
-void Actor::move(float time) {	
+void Actor::move(float time, sf::Vector2f direction) {	
 	//Move Actor
+  position += direction * time;
 	sprite.setPosition(position);
 }
 
@@ -245,20 +246,6 @@ sf::Vector2f Actor::getPosition(void) {
 void Actor::setPosition(sf::Vector2f pos) {
 	position = pos;
 	updateBoundary();
-}
-
-/** Set the actors direction
- **
-**/
-void Actor::setDirection(int dir) {
-	direction = dir;
-}
-
-/** Return the actors current direction
- **
-**/
-int Actor::getDirection(void) {
-	return direction;
 }
 
 /** Return the actors instance
