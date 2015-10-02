@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include "ActorComponent.h"
 #include "ActorFactory.h"
+#include "CollectableComponent.h"
 
 class CollectorComponent : public ActorComponent {
 
@@ -13,6 +14,7 @@ class CollectorComponent : public ActorComponent {
 		void PostInit(void) override;
 
 		void update(float time) override;
+		void update(EventInterfacePtr e) override;
 		void reset(void) override;
 		void restart(void) override;
 		void quit(void) override;
@@ -26,8 +28,10 @@ class CollectorComponent : public ActorComponent {
 	private:
 		static ActorComponent* create();
 		int vases;
+		int flowers;
 		static int instances;
 		static const bool registered;
+		StrongActorPtr* flower_list[];
 };
 
 #endif

@@ -12,6 +12,7 @@
 #include <list>
 #include <cfloat>         // for FLT_EPSILON
 #include "FastDelegate.h"
+
 #define PI 3.14159265
 
 class Actor;

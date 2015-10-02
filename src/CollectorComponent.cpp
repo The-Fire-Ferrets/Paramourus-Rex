@@ -28,6 +28,7 @@ ActorComponent* CollectorComponent::create() {
 **/
 CollectorComponent::CollectorComponent(void) {
 	instance = instances;
+	flowers = 0;
 }
 
 /** Initializer
@@ -48,6 +49,7 @@ bool CollectorComponent::Init(pugi::xml_node* elem) {
 			}
 		}
 	}
+	flower_list[vases];
 	return true;
 }
 
@@ -62,6 +64,24 @@ void CollectorComponent::PostInit(void) {
 **/
 void CollectorComponent::update(float time) {
 	
+}
+
+/** Receives event when the actor has collected something
+ ** Adds flower to cllection
+ ** Updates it cases
+**/
+void CollectorComponent::update(EventInterfacePtr e) {
+	EventType event_type = e->getEventType();
+	StrongActorPtr other_actor = LevelView::actors[e->getSender()];
+	if (event_type == ContactEvent::event_type) {
+		if (other_actor->hasComponent(CollectableComponent::id)) {
+			std::cout << owner->getId() << "  collecting " << other_actor->getId() << std::endl;
+			if (vases > 0) {			
+				vases--;
+				flower_list[flowers++] = &other_actor;
+			}		
+		}
+	}	
 }
 
 /** Reset the component

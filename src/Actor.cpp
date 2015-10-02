@@ -25,6 +25,7 @@ ActorId Actor::getId(void) {
 Actor::Actor(void) {
 	instance = instances++;
 	state = 0;
+	visible = true;
 }
 
 
@@ -134,7 +135,8 @@ void Actor::update(float time) {
  ** window: current game render window
 **/
 void Actor::render(sf::RenderWindow *window) {
-	window->draw(sprite);
+	if (visible)
+		window->draw(sprite);
 }
 
 /** Reset each of the actors components after scoring
@@ -276,12 +278,41 @@ const Actor* Actor::getCopy(void) const {
 }
 
 /** Receives events when the actor contacts another actor
- **
+ ** e: event received
+ ** Sends each of its components to process the event according to their implementations
 **/
 void Actor::madeContact(EventInterfacePtr e) {
 	EventType event_type = e->getEventType();
 	if (event_type == ContactEvent::event_type) {
 		//std::shared_ptr<const ContactEvent> eCast = std::static_pointer_cast<const ContactEvent>(e);
-		std::cout << id << " made contact with " << LevelView::actors[e->getSender()]->getId() << std::endl;
+		std::cout << LevelView::actors[e->getSender()]->getId() << " made contact with " << id << std::endl;
 	}
+	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it) {
+		(it->second)->update(e);
+	}
+}
+
+/** Used to check of the actor contains a given compoment
+ ** Component: component id to check if contained
+**/
+bool Actor::hasComponent(ComponentId component) {
+	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it) {
+		if ((it->second)->getId() == component)
+			return true;
+	}
+	return false;
+}
+
+/** Sets whether the actor is rendered or not
+ ** v: visibility to set
+**/
+void Actor::setVisible(bool v) {
+	visible = v;
+}
+
+/** Returns whether or not the actor is rendering itself
+ ** 
+**/
+bool Actor::getVisible(void) {
+	return visible;
 }

@@ -116,6 +116,13 @@ void InputComponent::update(float time) {
 	}
 }
 
+/** Receives event when the actor is being contacted by another actor and responds by accordingly
+ **
+**/
+void InputComponent::update(EventInterfacePtr e) {
+	
+}
+
 /** Reset the component
  **
 **/

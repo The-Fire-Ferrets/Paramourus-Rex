@@ -28,6 +28,7 @@ ActorComponent* CollectableComponent::create() {
 **/
 CollectableComponent::CollectableComponent(void) {
 	instance = instances;
+	collector = NULL;
 }
 
 /** Initializer
@@ -40,6 +41,7 @@ bool CollectableComponent::Init(pugi::xml_node* elem) {
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
 		}
 	}
+
 	return true;
 }
 
@@ -56,6 +58,25 @@ void CollectableComponent::update(float time) {
 	
 }
 
+/** Receives event when the actor is being contacted by another actor
+ ** If contacting actor has a collectabecomponent, send actor contactevent to ackowledge collection
+ ** Removes itself from the board
+**/
+void CollectableComponent::update(EventInterfacePtr e) {
+	EventType event_type = e->getEventType();
+	StrongActorPtr other_actor = LevelView::actors[e->getSender()];
+	if (event_type == ContactEvent::event_type) {
+		if (other_actor->hasComponent(CollectorComponent::id)) {
+			std::cout << owner->getId() << "  collected by " << other_actor->getId() << std::endl;
+			if (!EventManagerInterface::get()->queueEvent(new ContactEvent(e->getTimeStamp(), owner->getInstance(), other_actor->getInstance()))) {
+				std::cout << "CollectableComponent::update: Unable to queue event" << std::endl;
+			}
+			owner->setVisible(false);
+			collector = other_actor;
+			owner->setPosition(sf::Vector2f(-1000, 0));
+		}
+	}	
+}
 
 /** Reset the component
  **

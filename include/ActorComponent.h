@@ -19,6 +19,8 @@ class ActorComponent {
 		virtual void PostInit(void) {};
 
 		virtual void update(float time) {};
+		virtual void update(EventInterfacePtr e) {};
+
 		virtual void reset(void) {};
 		virtual void restart(void) {};
 		virtual void quit(void) {};

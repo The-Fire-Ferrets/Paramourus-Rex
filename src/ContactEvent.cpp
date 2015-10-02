@@ -23,13 +23,6 @@ const EventType& ContactEvent::getEventType(void) const {
 	return event_type;
 }
 
-/** Get the event time stamp
- **
-**/
-float ContactEvent::GetTimeStamp(void) const {
-	return time_stamp;
-}
-
 /** Serialize event data
  **
 **/

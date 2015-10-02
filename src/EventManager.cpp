@@ -83,7 +83,6 @@ bool EventManager::processEvents(void) {
 		EventInterfacePtr event;
 		event.reset(process_queue->front());
 		process_queue->pop_front();
-		std::cout << event->getSender() << " " << event->getReceiver() << std::endl;
 		if(!triggerEvent(event)) {
 			return false;
 		}

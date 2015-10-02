@@ -29,7 +29,7 @@ void BaseEvent::Serialize(const std::ostream& o) {
 /** Get the event time stamp
  **
 **/ 
-float BaseEvent::GetTimeStamp(void) const {
+float BaseEvent::getTimeStamp(void) const {
 	return time_stamp;
 }
 

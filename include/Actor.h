@@ -31,12 +31,16 @@ class Actor {
 		void quit(void);
 
 		void madeContact(EventInterfacePtr e);
+		bool hasComponent(ComponentId component);
 
 		sf::Vector2f getPosition(void);
 		void setPosition(sf::Vector2f pos);
 
 		sf::Vector2f getSize(void);
 		void setSize(sf::Vector2f sz);
+
+		void setVisible(bool v);
+		bool getVisible(void);
 
 		int getState(void);
 		void setState(int actorState);
@@ -63,7 +67,7 @@ class Actor {
 		int instance;
 		int* game_state;
 		int state;
-
+		bool visible;
 		sf::FloatRect* obstacle;
 		sf::FloatRect* boundary;
 

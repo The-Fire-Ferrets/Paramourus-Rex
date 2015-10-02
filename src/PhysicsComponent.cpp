@@ -71,6 +71,12 @@ void PhysicsComponent::update(float time) {
 	}
 }
 
+/** Receives event when the actor is being contacted by another actor and responds by accordingly
+ **
+**/
+void PhysicsComponent::update(EventInterfacePtr e) {
+	
+}
 /** Reset the component
  **
 **/
