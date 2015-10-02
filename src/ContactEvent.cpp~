@@ -7,7 +7,7 @@ EventType ContactEvent::event_type = EventType(&(ContactEvent::event_type));
  ** timeStamp: the event timeStamp
  ** a: a reference to the actor
 **/
-ContactEvent::ContactEvent(const float timeStamp, const ActorInstance from, const ActorInstance to)  :  BaseEvent(timeStamp, from, to) {
+ContactEvent::ContactEvent(const float timeStamp, StrongActorPtr& from, StrongActorPtr& to)  :  BaseEvent(timeStamp, from, to) {
 
 }
 

@@ -8,7 +8,7 @@ class ContactEvent : public BaseEvent {
 	public:
 		static EventType event_type;
 
-		explicit ContactEvent(const float timeStamp, const ActorInstance from, const ActorInstance to);
+		explicit ContactEvent(const float timeStamp, ActorInstance from, ActorInstance to);
 		//explicit ContactEvent(std::istream& in);		
 		
 		const EventType& getEventType(void) const override;

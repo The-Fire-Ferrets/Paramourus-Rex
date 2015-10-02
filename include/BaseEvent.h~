@@ -15,8 +15,8 @@ class BaseEvent : public EventInterface {
 		virtual void Serialize(const std::ostream& o);
 		virtual const EventInterface* copy(void) const = 0;
 
-		const ActorInstance getSender(void) const override;
-		const ActorInstance getReceiver(void) const override;
+		const ActorInstance getSender(void) const = 0;
+		const ActorInstance getReceiver(void) const = 0;
 	protected:
 		const float time_stamp;
 		const ActorInstance sender;

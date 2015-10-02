@@ -36,6 +36,6 @@ typedef fastdelegate::FastDelegate1<EventInterfacePtr> EventDelegate;
 typedef std::list<const EventInterface*> EventQueue;
 typedef std::shared_ptr<EventQueue> EventQueuePtr;
 typedef std::list<EventDelegate> EventDelegateList;
-typedef std::pair<const EventType, const ActorInstance> EventInstance;
+typedef std::pair<EventType, const ActorInstance> EventInstance;
 typedef std::map<const EventInstance, EventDelegateList> EventDelegateMap;
 

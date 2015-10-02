@@ -42,7 +42,6 @@ void LevelView::CreateLevel(const char* resource, int* state) {
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
 		actors[num_actors] = ActorFactory::CreateActor(tool.name(), state);
 		actors[num_actors]->PostInit(&tool);
-		num_actors++;
 	}
 }
 

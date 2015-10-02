@@ -22,7 +22,6 @@ public:
 	virtual bool processEvents(void) = 0;
 
 	virtual void quit(void) {};
-
 	static EventManagerInterfacePtr get(void);
 	static void set(EventManagerInterfacePtr manager);
 };

@@ -17,11 +17,11 @@ class EventManager : public EventManagerInterface {
 
 		EventDelegateMap eventDelegateMap;
 
-		bool queueEvent(const EventInterface* event) override;
-		bool addDelegate(const EventDelegate& d, const EventInstance& type) override;
-		bool removeDelegate(const EventDelegate& d, const EventInstance& type) override;
-		bool triggerEvent(const EventInterfacePtr& event) override;
-		bool processEvents(void) override;
+		virtual bool queueEvent(const EventInterface* event) override;
+		virtual bool addDelegate(const EventDelegate& d, const EventInstance& type) override;
+		virtual bool removeDelegate(const EventDelegate& d, const EventInstance& type) override;
+		virtual bool triggerEvent(const EventInterfacePtr& event) override;
+		virtual bool processEvents(void) override;
 		void quit(void) override;
 };
 #endif

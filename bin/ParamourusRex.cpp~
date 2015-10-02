@@ -18,6 +18,8 @@ int main(int argc, char* argv[])
 
 	//Used to iterate over XML file to get attributes
 	char * temp;
+	char temp_path[30];
+
 	pugi::xml_node tools = doc.child(config.c_str());
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {

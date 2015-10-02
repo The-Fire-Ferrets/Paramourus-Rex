@@ -35,7 +35,7 @@ float BaseEvent::GetTimeStamp(void) const {
 /** Return the instance of the sender
  **
 **/
-const ActorInstance BaseEvent::getSender(void) const {
+const ActorInstance BaseEvent:getSender(void) const {
 	return sender;
 }
 

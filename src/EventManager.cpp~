@@ -100,5 +100,6 @@ void EventManager::quit(void) {
 	}
 	while(!register_queue->empty()) {
 		register_queue->pop_front();
-	}	
+	}
+	std::cout << "HERE" << std::endl;	
 }

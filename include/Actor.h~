@@ -4,7 +4,6 @@
 #include "Constants.h"
 #include "ActorComponent.h"
 #include "EventInterface.h"
-#include "EventManagerInterface.h"
 #include "ContactEvent.h"
 #include "LevelView.h"
 
