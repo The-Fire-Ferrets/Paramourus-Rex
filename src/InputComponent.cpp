@@ -29,6 +29,7 @@ sf::Vector2f InputComponent::getDirection() const {
  **
 **/
 void InputComponent::setDirection(const sf::Vector2f& dir) {
+  // reset direction only if it is a cardinal direction
   if (std::find(cardinals, cardinals+4, dir) != cardinals+4) {
     direction = dir;
   }
@@ -86,11 +87,14 @@ void InputComponent::PostInit(void) {
  ** time: current game time
 **/
 void InputComponent::update(float time) {
+  float distance = time * velocity;
+
 	if (type == "Artificial") {
     // TODO: this should be done with path finding
     this->setDirection(cardinals[std::rand() % 4]);
-    owner->move(time, direction);
+    owner->move(distance, direction);
 	}
+
 	else if (type == "Keyboard") {
     // TODO: I'd like to move controls to a configuration file so we could 
     // choose between up/down/left/right, wasd, and hjkl.
@@ -98,19 +102,19 @@ void InputComponent::update(float time) {
 		//Reads Input and perform actions
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
       this->setDirection(NORTH);
+      owner->move(distance, direction);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
       this->setDirection(SOUTH);
+      owner->move(distance, direction);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
       this->setDirection(WEST);
+      owner->move(distance, direction);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
       this->setDirection(EAST);
+      owner->move(distance, direction);
     }
-
-    // move actor
-    owner->move(time, direction);
 	}
 }
-
 
 /** Reset the component
  **

@@ -31,7 +31,7 @@ Actor::Actor(void) {
  **
 **/
 Actor::~Actor(void) {
-	
+
 }
 
 /** Initializer
@@ -41,7 +41,7 @@ Actor::~Actor(void) {
 bool Actor::Init(pugi::xml_node* elem) {
 	for (pugi::xml_attribute attr = elem->first_attribute(); attr; attr = attr.next_attribute()) {
 		if (!strcmp(attr.name(),"Type"))
-  			id = attr.value(); 
+  			id = attr.value();
 		else if (!strcmp(attr.name(),"Texture"))
   			texture_filename = attr.value();
 		else if (!strcmp(attr.name(),"Sprite"))
@@ -51,7 +51,7 @@ bool Actor::Init(pugi::xml_node* elem) {
 			return false;
 		}
 	}
-	
+
 	boundary = new sf::FloatRect();
 
 	delegateFunc = fastdelegate::MakeDelegate(getCopy(), &Actor::madeContact);
@@ -107,9 +107,10 @@ void Actor::PostInit(pugi::xml_node* elem) {
  ** Prevents actors from moving past the top and bottom boundaries
  ** if the obstacle pointer is set (by a physics component o fthe actor or another actor after contact) it prevents the actors from moving into each other
 **/
-void Actor::move(float time, sf::Vector2f direction) {	
+void Actor::move(float distance, sf::Vector2f direction) {
 	//Move Actor
-  position += direction * time;
+  sf::Vector2f p = this->getPosition();
+  this->setPosition(p + direction * distance);
 	sprite.setPosition(position);
 }
 
@@ -154,7 +155,7 @@ void Actor::quit(void) {
 	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it) {
 		(it->second)->quit();
 	}
-	
+
 	if(!EventManagerInterface::get()->removeDelegate(delegateFunc, EventInstance(ContactEvent::event_type, getInstance()))) {
 		std::cout << "Actor::~Actor: Unable to unregister delegate function" << std::endl;
 	}
@@ -168,7 +169,7 @@ void Actor::AddComponent(StrongActorComponentPtr component) {
 }
 
 /** Updates the actors boundaries to be used by a PhysicsComponent
- ** 
+ **
 **/
 void Actor::updateBoundary(void) {
 	*boundary = sf::FloatRect(position.x, position.y, size.x, size.y);

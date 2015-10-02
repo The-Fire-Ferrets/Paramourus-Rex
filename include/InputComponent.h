@@ -29,11 +29,12 @@ class InputComponent : public ActorComponent {
     const sf::Vector2f EAST;
     const sf::Vector2f WEST;
     const sf::Vector2f cardinals[4];
-		
+
 	private:
 		static ActorComponent* create();
 		static int instances;
 		static const bool registered;
+    static constexpr float velocity = 50.f;
 
     sf::Vector2f direction;
 };

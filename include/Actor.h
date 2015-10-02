@@ -13,48 +13,48 @@ class Actor {
 	public:
 		static int instances;
 		int getInstance(void);
-		
+
 		ActorComponents components;
-		ActorId getId(void);		
-		
+		ActorId getId(void);
+
 		explicit Actor(void);
 		bool Init(pugi::xml_node* elem);
 		void PostInit(pugi::xml_node* elem);
 		~Actor(void);
 
-		void move(float time, sf::Vector2f direction);
-		
+		void move(float distance, sf::Vector2f direction);
+
 		void update(float time);
 		void render(sf::RenderWindow *window);
 		void reset(void);
 		void restart(void);
 		void quit(void);
-		
+
 		void madeContact(EventInterfacePtr e);
 
 		sf::Vector2f getPosition(void);
 		void setPosition(sf::Vector2f pos);
-		
+
 		sf::Vector2f getSize(void);
 		void setSize(sf::Vector2f sz);
-		
+
 		int getState(void);
 		void setState(int actorState);
 		int* getGameState(void);
 		void setGameState(int state);
 		void resetGameState(int* state);
-			
-		sf::FloatRect* getBoundary(void);		
+
+		sf::FloatRect* getBoundary(void);
 
 		Actor* getCopy(void);
 		const Actor* getCopy(void) const;
 	private:
 		EventDelegate delegateFunc;
 		ActorId id;
-		
+
 		std::string texture_filename;
 		std::string sprite_filename;
-		
+
 		sf::Vector2f position;
 		sf::Texture texture;
 		sf::Vector2f size;
@@ -66,7 +66,7 @@ class Actor {
 
 		sf::FloatRect* obstacle;
 		sf::FloatRect* boundary;
-		
+
 		void AddComponent(StrongActorComponentPtr component);
 		void updateBoundary(void);
 };
