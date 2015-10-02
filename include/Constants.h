@@ -10,6 +10,7 @@
 #include <string.h>
 #include <string>
 #include <list>
+#include <cfloat>         // for FLT_EPSILON
 #include "FastDelegate.h"
 #define PI 3.14159265
 
@@ -38,4 +39,3 @@ typedef std::shared_ptr<EventQueue> EventQueuePtr;
 typedef std::list<EventDelegate> EventDelegateList;
 typedef std::pair<const EventType, const ActorInstance> EventInstance;
 typedef std::map<const EventInstance, EventDelegateList> EventDelegateMap;
-

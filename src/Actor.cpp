@@ -1,4 +1,5 @@
 #include "Actor.h"
+#include "Constants.h" // for window_[width|height]
 
 //unique instance id among actors
 int Actor::instances = 0;
@@ -109,7 +110,13 @@ void Actor::PostInit(pugi::xml_node* elem) {
 **/
 void Actor::move(float distance, sf::Vector2f direction) {
 	//Move Actor
-  sf::Vector2f p = this->getPosition();
+  sf::Vector2f p = this->getPosition() + direction * distance;
+  // don't allow movement off the screen
+  if (p.x < FLT_EPSILON)          p.x = FLT_EPSILON;
+  if (p.y < FLT_EPSILON)          p.y = FLT_EPSILON;
+  if (p.x > 800.f-size.x)         p.x = 800.f - size.x;
+  if (p.y > 800.f-size.y)         p.y = 800.f - size.y;
+
   this->setPosition(p + direction * distance);
 	sprite.setPosition(position);
 }
