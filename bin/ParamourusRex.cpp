@@ -60,7 +60,6 @@ int main(int argc, char* argv[])
 		while(App.pollEvent(Event)) {
 			if(Event.type == sf::Event::Closed) {
 				state = 4;
-				App.close();
 			}
 		}
 		switch(state) {
@@ -80,6 +79,7 @@ int main(int argc, char* argv[])
 				for (int i = 0; i < LevelView::getNumActors(); i ++)
 					LevelView::actors[i]->quit();
 				eventmanagerptr->quit();
+				App.close();
 				break;
 			default: 
 				break;

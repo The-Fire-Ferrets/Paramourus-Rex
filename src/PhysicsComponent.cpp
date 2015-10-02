@@ -89,5 +89,5 @@ void PhysicsComponent::restart(void) {
  **
 **/
 void PhysicsComponent::quit(void) {
-	this->~PhysicsComponent();
+	//this->~PhysicsComponent();
 }

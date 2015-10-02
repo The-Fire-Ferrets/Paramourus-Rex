@@ -31,9 +31,7 @@ Actor::Actor(void) {
  **
 **/
 Actor::~Actor(void) {
-	if(!EventManagerInterface::get()->removeDelegate(delegateFunc, EventInstance(ContactEvent::event_type, getInstance()))) {
-		std::cout << "Actor::~Actor: Unable to unregister delegate function" << std::endl;
-	}
+	
 }
 
 /** Initializer
@@ -156,7 +154,10 @@ void Actor::quit(void) {
 	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it) {
 		(it->second)->quit();
 	}
-	//this->~Actor();
+	
+	if(!EventManagerInterface::get()->removeDelegate(delegateFunc, EventInstance(ContactEvent::event_type, getInstance()))) {
+		std::cout << "Actor::~Actor: Unable to unregister delegate function" << std::endl;
+	}
 }
 
 /** Adds a component to the actor
