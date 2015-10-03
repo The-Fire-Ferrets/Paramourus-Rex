@@ -3,8 +3,10 @@
 /** Constructor
  **
 **/  
-BaseEvent::BaseEvent(const float timeStamp = 0.0f, const ActorInstance from = -1, const ActorInstance to = -1)  : time_stamp(timeStamp), sender(from), receiver(to) {
-
+BaseEvent::BaseEvent(const float timeStamp, const ActorInstance from, const ActorInstance to) :
+  time_stamp(timeStamp),
+  sender(from),
+  receiver(to) {
 
 }
 

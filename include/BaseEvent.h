@@ -6,7 +6,7 @@
 
 class BaseEvent : public EventInterface {
 	public:
-		explicit BaseEvent(const float timeStamp, const ActorInstance from, const ActorInstance to);
+		explicit BaseEvent(const float timeStamp = 0.0f, const ActorInstance from = -1, const ActorInstance to = -1);
 		//explicit BaseEvent(std::istream& in);
 		virtual ~BaseEvent(void);
 		
