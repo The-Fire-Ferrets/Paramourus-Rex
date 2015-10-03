@@ -112,12 +112,17 @@ void Actor::PostInit(pugi::xml_node* elem) {
 void Actor::move(float distance, sf::Vector2f direction) {
 	//Move Actor
   sf::Vector2f p = this->getPosition() + direction * distance;
-  // don't allow movement off the screen
+
+  // disallow movement off the screen
+  unsigned width = Configuration::instance()->getWindowWidth();
+  unsigned height = Configuration::instance()->getWindowHeight();
+
   if (p.x < FLT_EPSILON)          p.x = FLT_EPSILON;
   if (p.y < FLT_EPSILON)          p.y = FLT_EPSILON;
-  if (p.x > 800.f-size.x)         p.x = 800.f - size.x;
-  if (p.y > 800.f-size.y)         p.y = 800.f - size.y;
+  if (p.x > width-size.x)         p.x = width - size.x;
+  if (p.y > height-size.y)        p.y = height - size.y;
 
+  // set the position
   this->setPosition(p + direction * distance);
 	sprite.setPosition(position);
 }

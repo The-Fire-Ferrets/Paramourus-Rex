@@ -38,6 +38,9 @@ int main(int argc, char* argv[])
 		}
 	}
 
+  // set up the global configuration
+  Configuration::instance()->setWindowDimensions(window_width, window_height);
+
 	sf::RenderWindow App(sf::VideoMode(window_width, window_height,64), "Paramourus Rex by Will Hollingsworth, Bina Kakusa, Belol Nessar, and Meghan Tinkler", sf::Style::Titlebar|sf::Style::Close);
 
 	//Array holding levels in the order to be played
