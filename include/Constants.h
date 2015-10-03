@@ -12,6 +12,7 @@
 #include <list>
 #include <cfloat>         // for FLT_EPSILON
 #include "FastDelegate.h"
+#include "Configuration.h"
 
 #define PI 3.14159265
 
@@ -20,6 +21,7 @@ class ActorComponent;
 class EventInterface;
 class EventManagerInterface;
 class ContactEvent;
+class Configuration;
 
 typedef std::string ActorId;
 typedef unsigned long ActorInstance;
