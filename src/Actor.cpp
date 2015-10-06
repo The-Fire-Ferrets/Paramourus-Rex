@@ -98,7 +98,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 	}
 
 	boundary = new sf::FloatRect(position.x, position.y, size.x, size.y);
-	texture.loadFromFile(("./assets/textures/" + texture_filename).c_str());
+	texture.loadFromFile(("./assets/sprites/" + texture_filename).c_str());
 	sprite = sf::Sprite(texture, sf::IntRect(position.x, position.y, size.x, size.y));
 	sprite.setPosition(position);
 }

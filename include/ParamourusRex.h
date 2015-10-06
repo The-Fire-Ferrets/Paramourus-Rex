@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include "LevelView.h"
 #include "EventManager.h"
+#include "DialogueView.h"
 
 //Configuration variables
 int window_height;

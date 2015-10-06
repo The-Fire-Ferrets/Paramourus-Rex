@@ -18,6 +18,14 @@ class DialogueView {
 		void update(const char* resource, int* state);
 		void changeState(int* state);
 		std::string getDialogue(const char* resource, int* state);
+
+		//ALL VIEW CLASSES MUST IMPLEMENT BELOW METHODS. SEE LEVELVIEW FOR EXAMPLE
+		/*
+		static void Create(const char* resource, int* state);
+		static void update(sf::RenderWindow *window, int* state, float time);
+		static void update(EventInterfacePtr e);
+		static void render(sf::RenderWindow *window);
+		*/
 };
 
 #endif

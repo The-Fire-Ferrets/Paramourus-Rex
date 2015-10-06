@@ -69,13 +69,12 @@ int main(int argc, char* argv[])
 			}
 		}
 		switch(state) {
-			case 0: //Create level, for now just load HelloWorldLevel
-				LevelView::CreateLevel(levels[0], &state);
-				state = 1;
+			case 0: 
+				LevelView::Create(levels[0], &state);
+				state = 1; 
 				break;
-			case 1:
-				for (int i = 0; i < LevelView::getNumActors(); i ++)
-					LevelView::actors[i]->update(elapsed_ms);
+			case 1:	
+				LevelView::update(&App, &state, elapsed_ms); 
 				break;
 			case 2: //Display Diana
 				// get text to render -- unclear how this connects just yet
@@ -86,8 +85,6 @@ int main(int argc, char* argv[])
 			case 3: //Display craftable
 				break;
 			case 4:
-				for (int i = 0; i < LevelView::getNumActors(); i ++)
-					LevelView::actors[i]->quit();
 				eventmanagerptr->quit();
 				App.close();
 				break;
@@ -102,9 +99,8 @@ int main(int argc, char* argv[])
 		switch(state) {
 			case 0: //Display map
 				break;
-			case 1: //Display level
-				for (int i = 0; i < LevelView::getNumActors(); i ++)
-					LevelView::actors[i]->render(&App);
+			case 1: 
+				LevelView::render(&App); 
 				break;
 			case 2: //Display female
 				break;
@@ -112,19 +108,18 @@ int main(int argc, char* argv[])
 				break;
 			case 4: //Display exit screen
 				break;
-			default:
+			default: 
 				break;
 		}
 		App.display();
 
 		//Proccess all events
 		switch(state) {
-			case 4:
+			case 4:	
 				break;
-			default:
-				if (!eventmanagerptr->processEvents()) {
-					std::cout << "Main: Failed to process events" << std::endl;
-				}
+			default: 
+				if (!eventmanagerptr->processEvents())
+					std::cout << "Main: Failed to process events" << std::endl; 
 				break;
 		}
 	}
