@@ -101,8 +101,8 @@ int LevelView::getNumActors(void) {
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	float timer_time = 10000 - level_clock.getElapsedTime().asMilliseconds();
 	if (timer_time <= 0) {
-		*state = 5;
-		//cleanUp();
+		*state = 0;
+		cleanUp();
 	}
 	else {
 		timer_string = std::to_string(timer_time / 1000);
@@ -139,6 +139,8 @@ void LevelView::cleanUp(void) {
 		actors[i]->quit();
 	}
 	num_actors = 0;
+	EventManagerInterface::get()->reset();
+	ActorFactory::reset();
 }
 
 

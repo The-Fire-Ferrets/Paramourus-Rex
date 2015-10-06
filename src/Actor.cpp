@@ -173,7 +173,7 @@ void Actor::quit(void) {
 	if(!EventManagerInterface::get()->removeDelegate(delegateFunc, EventInstance(ContactEvent::event_type, getInstance()))) {
 		std::cout << "Actor::~Actor: Unable to unregister delegate function" << std::endl;
 	}
-	this->~Actor();
+	//this->~Actor();
 }
 
 /** Adds a component to the actor

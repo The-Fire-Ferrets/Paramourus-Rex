@@ -102,3 +102,15 @@ void EventManager::quit(void) {
 	}
 	EventManagerInterface::set(NULL);	
 }
+
+/**  reset all events in the queue
+ **
+**/
+void EventManager::reset(void) {
+	while(!process_queue->empty()) {
+		process_queue->pop_front();
+	}
+	while(!register_queue->empty()) {
+		register_queue->pop_front();
+	}	
+}
