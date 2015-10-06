@@ -49,6 +49,9 @@ int main(int argc, char* argv[])
 	//Holds the current game state
 	// 0 = At the map; 1 = In a level; 2 = Talking to Diana; 3 = At craftable; 4 = quit game
 	int state = 0;
+	
+	// Current dialogue being displayed if any
+	std::string text = "";
 
 	/**
 	 ** Main Game Loop
@@ -75,6 +78,10 @@ int main(int argc, char* argv[])
 					LevelView::actors[i]->update(elapsed_ms);
 				break;
 			case 2: //Display Diana
+				// get text to render -- unclear how this connects just yet
+				// will be worked on further
+				//text = DialogueView::update(levels[0], &state);
+				state = 2;
 				break;
 			case 3: //Display craftable
 				break;
