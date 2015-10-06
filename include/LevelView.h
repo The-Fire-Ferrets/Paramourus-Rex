@@ -16,6 +16,7 @@ class LevelView  {
 		static std::string timer_string;
 		static sf::Font font;
 		static sf::Vector2f timer_position;
+		static void cleanUp(void);
 	public:
 		static StrongActorPtr actors[];		
 		static std::string getName(void);

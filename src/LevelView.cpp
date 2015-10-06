@@ -83,6 +83,8 @@ void LevelView::Create(const char* resource, int* state) {
 		num_actors++;
 	}
 	*state = 1;
+	start();
+	std::cout << "HERE" << std::endl;
 }
 
 std::string LevelView::getName(void) {
@@ -98,8 +100,10 @@ int LevelView::getNumActors(void) {
 **/
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	float timer_time = 10000 - level_clock.getElapsedTime().asMilliseconds();
-	if (timer_time <= 0)
+	if (timer_time <= 0) {
 		*state = 5;
+		//cleanUp();
+	}
 	else {
 		timer_string = std::to_string(timer_time / 1000);
 		timer.setString(timer_string);
@@ -128,6 +132,13 @@ void LevelView::render(sf::RenderWindow *window) {
 
 void LevelView::start(void) {
 	level_clock.restart();
+}
+
+void LevelView::cleanUp(void) {
+	for (int i = 0; i < num_actors; i ++) {
+		actors[i]->quit();
+	}
+	num_actors = 0;
 }
 
 

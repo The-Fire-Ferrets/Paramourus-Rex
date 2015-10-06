@@ -38,6 +38,10 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	//Loads the map
+	const char* map = {"Map"};	
+	MapView::Create(map);
+
   // set up the global configuration
   Configuration::instance()->setWindowDimensions(window_width, window_height);
 
@@ -70,8 +74,9 @@ int main(int argc, char* argv[])
 		}
 		switch(state) {
 			case 0: 
-				LevelView::Create(levels[0], &state);
-				state = 1; 
+				//LevelView::Create(levels[0], &state);
+				//state = 1; 
+				MapView::update(&App, &state, elapsed_ms);
 				break;
 			case 1:	
 				LevelView::update(&App, &state, elapsed_ms); 
@@ -82,7 +87,9 @@ int main(int argc, char* argv[])
 				//text = DialogueView::update(levels[0], &state);
 				state = 2;
 				break;
-			case 3: //Display craftable
+			case 3: 
+				state = 1;
+				LevelView::start();
 				break;
 			case 4:
 				eventmanagerptr->quit();
@@ -97,7 +104,7 @@ int main(int argc, char* argv[])
 		App.clear(sf::Color::Black);
 
 		switch(state) {
-			case 0: //Display map
+			case 0: MapView::render(&App);
 				break;
 			case 1: 
 				LevelView::render(&App); 

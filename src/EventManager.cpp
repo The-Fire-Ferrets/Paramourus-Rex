@@ -41,7 +41,7 @@ bool EventManager::addDelegate(const EventDelegate& d, const EventInstance& type
  ** d: the function to be called when the event type is received
  ** type: the event type to listen for
 **/
-bool EventManager::removeDelegate(const EventDelegate& d, const EventInstance& type) {
+bool EventManager::removeDelegate(const EventDelegate& d, const EventInstance& type) {	
 	auto eventDelegatePair = eventDelegateMap.find(type);
 	if (eventDelegatePair != eventDelegateMap.end()) {
 		EventDelegateList& delegateList = eventDelegatePair->second;
