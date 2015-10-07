@@ -82,9 +82,7 @@ void LevelView::Create(const char* resource, int* state) {
 		actors[num_actors]->PostInit(&tool);
 		num_actors++;
 	}
-	*state = 1;
-	start();
-	std::cout << "HERE" << std::endl;
+	*state = 2;
 }
 
 std::string LevelView::getName(void) {
