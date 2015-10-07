@@ -103,7 +103,9 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		cleanUp();
 	}
 	else {
-		timer_string = std::to_string(timer_time / 1000);
+		std::ostringstream out;
+		out << std::setprecision(4) << timer_time/1000;
+		timer_string = out.str();
 		timer.setString(timer_string);
 		for (int i = 0; i < num_actors; i ++)
 			actors[i]->update(time);
@@ -128,10 +130,16 @@ void LevelView::render(sf::RenderWindow *window) {
 		actors[i]->render(window);
 }
 
+/** Ready the level for start
+ **
+**/
 void LevelView::start(void) {
 	level_clock.restart();
 }
 
+/** Clean up level after completion
+ **
+**/
 void LevelView::cleanUp(void) {
 	for (int i = 0; i < num_actors; i ++) {
 		actors[i]->quit();

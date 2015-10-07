@@ -11,6 +11,8 @@
 #include <string>
 #include <list>
 #include <cfloat>         // for FLT_EPSILON
+#include <iomanip>
+#include <sstream>
 #include "FastDelegate.h"
 #include "Configuration.h"
 

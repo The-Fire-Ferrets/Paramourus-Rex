@@ -18,7 +18,6 @@ ComponentId CollectableComponent::getId(void) {
  **
 **/
 ActorComponent* CollectableComponent::create() { 
-	//update the instance count
 	instances++;
 	return new CollectableComponent();
 }
@@ -68,9 +67,8 @@ void CollectableComponent::update(EventInterfacePtr e) {
 	if (event_type == ContactEvent::event_type) {
 		if (other_actor->hasComponent(CollectorComponent::id)) {
 			std::cout << owner->getId() << "  collected by " << other_actor->getId() << std::endl;
-			if (!EventManagerInterface::get()->queueEvent(new ContactEvent(e->getTimeStamp(), owner->getInstance(), other_actor->getInstance()))) {
+			if (!EventManagerInterface::get()->queueEvent(new ContactEvent(e->getTimeStamp(), owner->getInstance(), other_actor->getInstance())))
 				std::cout << "CollectableComponent::update: Unable to queue event" << std::endl;
-			}
 			owner->setVisible(false);
 			collector = other_actor;
 			owner->setPosition(sf::Vector2f(-1000, 0));

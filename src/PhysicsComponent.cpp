@@ -42,10 +42,8 @@ bool PhysicsComponent::Init(pugi::xml_node* elem) {;
 	for (pugi::xml_node tool = elem->first_child(); tool; tool = tool.next_sibling()) {
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
 		}
-	}
-	
-	return true;
-	
+	}	
+	return true;	
 }
 
 /** Final Initilizer
@@ -63,9 +61,8 @@ void PhysicsComponent::update(float time) {
 		StrongActorPtr other_actor = LevelView::actors[i];
 		if (owner->getInstance() != other_actor->getInstance()) {
 			if ((owner->getBoundary())->intersects(*(other_actor->getBoundary()))) {
-				if (!EventManagerInterface::get()->queueEvent(new ContactEvent(time, owner->getInstance(), other_actor->getInstance()))) {
-					std::cout << "PhysicsComponent::update: Unable to queue event" << std::endl;
-				}		
+				if (!EventManagerInterface::get()->queueEvent(new ContactEvent(time, owner->getInstance(), other_actor->getInstance())))
+					std::cout << "PhysicsComponent::update: Unable to queue event" << std::endl;	
 			}
 		}
 	}
@@ -95,5 +92,5 @@ void PhysicsComponent::restart(void) {
  **
 **/
 void PhysicsComponent::quit(void) {
-	//this->~PhysicsComponent();
+
 }

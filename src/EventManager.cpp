@@ -63,9 +63,8 @@ bool EventManager::triggerEvent(const EventInterfacePtr& event) {
 	auto eventDelegatePair = eventDelegateMap.find(type);
 	if (eventDelegatePair  != eventDelegateMap.end()) {
 		EventDelegateList& delegateList = eventDelegatePair->second;
-		for (auto itr = delegateList.begin(); itr != delegateList.end(); ++itr) {
+		for (auto itr = delegateList.begin(); itr != delegateList.end(); ++itr)
 			(*itr)(event);
-		}
 		return true;
 	}
 	return false;
@@ -83,9 +82,8 @@ bool EventManager::processEvents(void) {
 		EventInterfacePtr event;
 		event.reset(process_queue->front());
 		process_queue->pop_front();
-		if(!triggerEvent(event)) {
+		if(!triggerEvent(event))
 			return false;
-		}
 	}
 	return true;
 }
@@ -94,12 +92,7 @@ bool EventManager::processEvents(void) {
  **
 **/
 void EventManager::quit(void) {
-	while(!process_queue->empty()) {
-		process_queue->pop_front();
-	}
-	while(!register_queue->empty()) {
-		register_queue->pop_front();
-	}
+	reset();
 	EventManagerInterface::set(NULL);	
 }
 
@@ -107,10 +100,9 @@ void EventManager::quit(void) {
  **
 **/
 void EventManager::reset(void) {
-	while(!process_queue->empty()) {
+	while(!process_queue->empty())
 		process_queue->pop_front();
-	}
-	while(!register_queue->empty()) {
+
+	while(!register_queue->empty())
 		register_queue->pop_front();
-	}	
 }

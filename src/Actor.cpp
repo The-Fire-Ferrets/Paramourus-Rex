@@ -99,7 +99,8 @@ void Actor::PostInit(pugi::xml_node* elem) {
 
 	boundary = new sf::FloatRect(position.x, position.y, size.x, size.y);
 	texture.loadFromFile(("./assets/sprites/" + texture_filename).c_str());
-	sprite = sf::Sprite(texture, sf::IntRect(position.x, position.y, size.x, size.y));
+	sprite = sf::Sprite(texture, sf::IntRect(0, 0, (texture.getSize()).x, (texture.getSize()).y));
+	sprite.setScale(size.x/(texture.getSize()).x, size.y/(texture.getSize()).y);
 	sprite.setPosition(position);
 }
 
@@ -111,29 +112,31 @@ void Actor::PostInit(pugi::xml_node* elem) {
 **/
 void Actor::move(float distance, sf::Vector2f direction) {
 	//Move Actor
-  sf::Vector2f p = this->getPosition() + direction * distance;
+	sf::Vector2f p = this->getPosition() + direction * distance;
 
-  // disallow movement off the screen
-  unsigned width = Configuration::instance()->getWindowWidth();
-  unsigned height = Configuration::instance()->getWindowHeight();
+	// disallow movement off the screen
+	unsigned width = Configuration::instance()->getWindowWidth();
+	unsigned height = Configuration::instance()->getWindowHeight();
 
-  if (p.x < FLT_EPSILON)          p.x = FLT_EPSILON;
-  if (p.y < FLT_EPSILON)          p.y = FLT_EPSILON;
-  if (p.x > width-size.x)         p.x = width - size.x;
-  if (p.y > height-size.y)        p.y = height - size.y;
+	if (p.x < FLT_EPSILON)
+		p.x = FLT_EPSILON;
+	if (p.y < FLT_EPSILON)
+		p.y = FLT_EPSILON;
+	if (p.x > width-size.x)
+		p.x = width - size.x;
+	if (p.y > height-size.y)
+		p.y = height - size.y;
 
-  // set the position
-  this->setPosition(p + direction * distance);
-	sprite.setPosition(position);
+	// set the position
+	this->setPosition(p + direction * distance);
 }
 
 /** Updates each of the actor's components
  ** time: current game time
 **/
 void Actor::update(float time) {
-	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it) {
+	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
 		(it->second)->update(time);
-	}
 }
 
 /** Renders each of the actors components
@@ -148,32 +151,27 @@ void Actor::render(sf::RenderWindow *window) {
  **
 **/
 void Actor::reset(void) {
-	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it) {
+	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
 		(it->second)->reset();
-	}
 }
 
 /** Restarts each of the actors components after someone wins
  **
 **/
 void Actor::restart(void) {
-	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it) {
+	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
 		(it->second)->restart();
-	}
 }
 
 /** Cleans up each of the actors components after quiting
  **
 **/
 void Actor::quit(void) {
-	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it) {
+	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
 		(it->second)->quit();
-	}
 
-	if(!EventManagerInterface::get()->removeDelegate(delegateFunc, EventInstance(ContactEvent::event_type, getInstance()))) {
+	if(!EventManagerInterface::get()->removeDelegate(delegateFunc, EventInstance(ContactEvent::event_type, getInstance())))
 		std::cout << "Actor::~Actor: Unable to unregister delegate function" << std::endl;
-	}
-	//this->~Actor();
 }
 
 /** Adds a component to the actor
@@ -263,6 +261,7 @@ sf::Vector2f Actor::getPosition(void) {
 void Actor::setPosition(sf::Vector2f pos) {
 	position = pos;
 	updateBoundary();
+	sprite.setPosition(position);
 }
 
 /** Return the actors instance
@@ -289,23 +288,20 @@ const Actor* Actor::getCopy(void) const {
 **/
 void Actor::madeContact(EventInterfacePtr e) {
 	EventType event_type = e->getEventType();
-	if (event_type == ContactEvent::event_type) {
-		//std::shared_ptr<const ContactEvent> eCast = std::static_pointer_cast<const ContactEvent>(e);
+	if (event_type == ContactEvent::event_type)
 		std::cout << LevelView::actors[e->getSender()]->getId() << " made contact with " << id << std::endl;
-	}
-	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it) {
+
+	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
 		(it->second)->update(e);
-	}
 }
 
 /** Used to check of the actor contains a given compoment
  ** Component: component id to check if contained
 **/
 bool Actor::hasComponent(ComponentId component) {
-	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it) {
+	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
 		if ((it->second)->getId() == component)
 			return true;
-	}
 	return false;
 }
 

@@ -105,10 +105,16 @@ void CollectorComponent::quit(void) {
 
 }
 
+/** Sets the numnber of vases
+ ** b: new number of vases
+**/
 void CollectorComponent::setVases(int b) {
 	vases = b;
 }
 
+/** Returns the number of vases
+ **
+**/
 int CollectorComponent::getVases(void) {
 	return vases;
 }
