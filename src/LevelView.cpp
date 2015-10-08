@@ -149,4 +149,9 @@ void LevelView::cleanUp(void) {
 	ActorFactory::reset();
 }
 
-
+/** Quit level
+ **
+**/
+void LevelView::quit(void) {
+	cleanUp();
+}

@@ -22,6 +22,7 @@ class LevelView  {
 		static std::string getName(void);
 		static int getNumActors(void);
 		static void start();
+		static void quit(void);
 
 		//ALL VIEW CLASSES MUST IMPLEMENT BELOW METHODS
 		static void Create(const char* resource, int* state);

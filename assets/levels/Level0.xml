@@ -1,15 +1,24 @@
 <?xml version="1.0"?>
 <Level0 Name = "Hello World!" Background = "Level0.png" Text_X = "650" Text_Y = "0" Font = "arial.ttf" Text_Size = "30">
 	<Player>
-		<Location X = "0" Y = "0" Width = "10" Height = "10"/>
+		<Location X = "0" Y = "0" Width = "25" Height = "25"/>
 	</Player>
 	<NPC>
-		<Location X = "40" Y = "60" Width = "10" Height = "10"/>
+		<Location X = "40" Y = "60" Width = "25" Height = "25"/>
 	</NPC>
 	<WaterFlower>
-		<Location X = "100" Y = "100" Width = "10" Height = "10"/>
+		<Location X = "100" Y = "100" Width = "25" Height = "25"/>
 	</WaterFlower>
+	<FireFlower>
+		<Location X = "160" Y = "100" Width = "25" Height = "25"/>
+	</FireFlower>
+	<AirFlower>
+		<Location X = "15" Y = "200" Width = "25" Height = "25"/>
+	</AirFlower>
+	<EarthFlower>
+		<Location X = "100" Y = "400" Width = "25" Height = "25"/>
+	</EarthFlower>
 	<Obstacle>
-		<Location X = "300" Y = "300" Width = "10" Height = "10"/>
+		<Location X = "300" Y = "300" Width = "25" Height = "25"/>
 	</Obstacle>
 </Level0>

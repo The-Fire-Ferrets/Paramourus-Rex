@@ -28,6 +28,7 @@ ActorComponent* PhysicsComponent::create() {
 **/
 PhysicsComponent::PhysicsComponent(void) {
 	instance = instances;		
+	last_actor = NULL;
 }
 
 PhysicsComponent::~PhysicsComponent(void) {	
@@ -53,19 +54,26 @@ void PhysicsComponent::PostInit(void) {
 
 }
 
-/** Checks to see if the bound of two actor intersect and sends ContactEvent to the event manager
+/** Checks to see if the bound of two actor intersect and sends ContactEvent to the event manager, keeps track of last actor made contact with
  ** time: current game time
 **/
 void PhysicsComponent::update(float time) {
+	bool madeContact = false;
 	for (int i = 0; i < LevelView::getNumActors(); i ++) {
 		StrongActorPtr other_actor = LevelView::actors[i];
 		if (owner->getInstance() != other_actor->getInstance()) {
 			if ((owner->getBoundary())->intersects(*(other_actor->getBoundary()))) {
-				if (!EventManagerInterface::get()->queueEvent(new ContactEvent(time, owner->getInstance(), other_actor->getInstance())))
-					std::cout << "PhysicsComponent::update: Unable to queue event" << std::endl;	
+				madeContact = true;
+				if (last_actor != other_actor) 
+					if (!EventManagerInterface::get()->queueEvent(new ContactEvent(time, owner->getInstance(), other_actor->getInstance())) )
+						std::cout << "PhysicsComponent::update: Unable to queue event" << std::endl;
+				last_actor = other_actor;
 			}
 		}
 	}
+	if (!madeContact)
+		last_actor = NULL;
+		
 }
 
 /** Receives event when the actor is being contacted by another actor and responds by accordingly
