@@ -27,8 +27,7 @@ ActorComponent* PhysicsComponent::create() {
  ** Sets up unique instance ID
 **/
 PhysicsComponent::PhysicsComponent(void) {
-	instance = instances;		
-	last_actor = NULL;
+	instance = instances;
 }
 
 PhysicsComponent::~PhysicsComponent(void) {	
@@ -62,17 +61,28 @@ void PhysicsComponent::update(float time) {
 	for (int i = 0; i < LevelView::getNumActors(); i ++) {
 		StrongActorPtr other_actor = LevelView::actors[i];
 		if (owner->getInstance() != other_actor->getInstance()) {
+			//Checks to see if actor was in the last contact episode
+			std::vector<StrongActorPtr>::iterator it;
+			for (it = last_actors.begin(); it != last_actors.end(); it++) {
+					if (*it == other_actor) {
+						break;
+					}
+			}
 			if ((owner->getBoundary())->intersects(*(other_actor->getBoundary()))) {
 				madeContact = true;
-				if (last_actor != other_actor) 
+				if (it == last_actors.end()) {
 					if (!EventManagerInterface::get()->queueEvent(new ContactEvent(time, owner->getInstance(), other_actor->getInstance())) )
 						std::cout << "PhysicsComponent::update: Unable to queue event" << std::endl;
-				last_actor = other_actor;
+					last_actors.push_back(other_actor);
+				}
+			}
+			else if(it != last_actors.end()) {
+				last_actors.erase(it);
 			}
 		}
 	}
 	if (!madeContact)
-		last_actor = NULL;
+		last_actors.clear();
 		
 }
 

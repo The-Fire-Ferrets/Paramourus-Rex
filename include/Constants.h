@@ -10,6 +10,7 @@
 #include <string.h>
 #include <string>
 #include <list>
+#include <vector>
 #include <cfloat>         // for FLT_EPSILON
 #include <iomanip>
 #include <sstream>
