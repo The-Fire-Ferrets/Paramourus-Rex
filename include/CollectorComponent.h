@@ -19,7 +19,7 @@ class CollectorComponent : public ActorComponent {
 		void restart(void) override;
 		void quit(void) override;
 
-		void setVases(int b);
+		void setVases(int v);
 		int getVases(void);
 		
 		static ComponentId id;

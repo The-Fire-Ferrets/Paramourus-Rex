@@ -121,7 +121,31 @@ void InputComponent::update(float time) {
  **
 **/
 void InputComponent::update(EventInterfacePtr e) {
-	
+  // get pointer to the other actor involved in the contact
+  EventType event_type = e->getEventType();
+  StrongActorPtr other_actor = LevelView::actors[e->getSender()];
+
+  // is the player making contact?
+  if (event_type == ContactEvent::event_type && type == "Keyboard") {
+
+    // is the other actor an NPC or an obstacle?
+    if (other_actor->hasComponent(CollectorComponent::id) || other_actor->components.empty())
+    {
+      // cast base class to derived so we can use derived class methods
+      std::shared_ptr<CollectorComponent> cc;
+      std::shared_ptr<ActorComponent>     ac;
+
+      ac = owner->components[CollectorComponent::id];
+      cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
+
+      int vases = cc->getVases();
+      std::cerr << "vases before: " << vases << std::endl;
+      cc->setVases(vases-1);
+
+      vases = cc->getVases();
+      std::cerr << "vases after: " << vases << std::endl;
+    }
+  }
 }
 
 /** Reset the component
