@@ -100,6 +100,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 				DialogueView::Create(levels[i].c_str(), state);
 				LevelView::start();
 				*state = 1;
+
 			}
 		}
 	}
