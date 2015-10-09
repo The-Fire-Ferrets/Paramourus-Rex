@@ -92,14 +92,15 @@ void MapView::Create(const char* resource) {
  **
 **/
 void MapView::update(sf::RenderWindow *window, int* state, float time) {
-	
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		const sf::Vector2i pos = sf::Mouse::getPosition(*window);
 		for (int i = 0; i < num_levels; i++) {
-			if (sprites[i].getGlobalBounds().contains(pos.x, pos.y))
+			if (sprites[i].getGlobalBounds().contains(pos.x, pos.y)) {
 				LevelView::Create(levels[i].c_str(), state);
 				DialogueView::Create(levels[i].c_str(), state);
+				LevelView::start();
 				*state = 1;
+			}
 		}
 	}
 }

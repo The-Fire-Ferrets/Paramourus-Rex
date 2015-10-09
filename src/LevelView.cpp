@@ -94,7 +94,6 @@ void LevelView::Create(const char* resource, int* state) {
 	gameView = sf::View(sf::FloatRect(0, 0, Configuration::instance()->getWindowWidth()/4, Configuration::instance()->getWindowHeight()/4));
 	//Set minimap to see entire map
 	minimapView = sf::View(sf::FloatRect(0, 0, Configuration::instance()->getWindowWidth(), Configuration::instance()->getWindowHeight()));
-	*state = 2;
 }
 
 std::string LevelView::getName(void) {

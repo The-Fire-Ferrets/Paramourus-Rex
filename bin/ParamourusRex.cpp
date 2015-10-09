@@ -22,7 +22,6 @@ int main(int argc, char* argv[])
 	//Create window
 	sf::RenderWindow App(sf::VideoMode(window_width, window_height,64), "Paramourus Rex by Will Hollingsworth, Bina Kakusa, Belol Nessar, and Meghan Tinkler", sf::Style::Titlebar|sf::Style::Close);
 	sf::View defaultView = App.getDefaultView();
-
 	//Loads the map
 	const char* map = {"Map"};	
 	MapView::Create(map);

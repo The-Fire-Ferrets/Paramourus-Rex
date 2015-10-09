@@ -34,7 +34,8 @@ sf::Sprite DialogueView::Phil;
 ** state: current game state (state should be 2 if in dialogue view)
 **/
 void DialogueView::Create(const char* resource, int* state){
-	
+	//Reset the index before each iteration
+	index = 0;
 	// reference to XML file we are getting our info from
 	pugi::xml_document doc;
 
@@ -138,9 +139,6 @@ void DialogueView::Create(const char* resource, int* state){
 		}
 	    }
 	}
-	
-
-	*state = 2;
 
 }
 
@@ -149,24 +147,24 @@ void DialogueView::Create(const char* resource, int* state){
 ** it switches to the next desired block of text.  Called from main.
 **/
 void DialogueView::update(sf::RenderWindow *window, int* state){
-	//if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-	sf::Event event;
-	while (window->pollEvent(event)){
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+	//sf::Event event;
+	//while (window->pollEvent(event)){
 	  /*** ISSUE CURRENTLY HERE: Tried doing the MouseButtonPressed event,
 	   * but it was rapidly indexing here for the duration of the mouse click --
 	   * i.e., no matter how quickly I clicked, it would call this and index about
 	   * 50 times, giving no opportunity for the text to display. Working on fixing.
 	   ***/
-	    if (event.type == sf::Event::MouseButtonReleased){
-		index++;
+	    //if (event.type == sf::Event::MouseButtonReleased){
+		std::cout << index << std::endl;
 		if (index > numDialogues){
-		    *state = 1;
-		    LevelView::start();
+		    *state = 0;
 		}
 		else{
 		  text.setString(boxes[index]);
 		}
-	    }
+		index++;
+	    //}
 	}
 }
 
