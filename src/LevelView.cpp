@@ -112,7 +112,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	float timer_time = 10000 - level_clock.getElapsedTime().asMilliseconds();
 
 	if (timer_time <= 0) {
-		*state = 0;
+		*state = 2;
 		cleanUp();
 	}
 	else {

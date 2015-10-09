@@ -32,8 +32,6 @@ int main(int argc, char* argv[])
 	// 0 = At the map; 1 = In a level; 2 = Talking to Diana; 3 = At craftable; 4 = quit game
 	int state = 0;
 	
-	//Creates Dialogue for now, not sure where to put this
-	DialogueView::Create("Level0", &state);
 
 	/**
 	 ** Main Game Loop
@@ -58,9 +56,7 @@ int main(int argc, char* argv[])
 				LevelView::update(&App, &state, elapsed_ms); 
 				break;
 			case 2: //Display Diana
-				  DialogueView::update(&App, &state);
-				  state = 2;
-
+				DialogueView::update(&App, &state);
 				break;
 			case 3: 
 				//CraftView::update(&App, &state, elapsed_ms);

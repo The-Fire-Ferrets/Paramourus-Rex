@@ -160,7 +160,8 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 	    if (event.type == sf::Event::MouseButtonReleased){
 		index++;
 		if (index > numDialogues){
-		    *state = 5;
+		    *state = 1;
+		    LevelView::start();
 		}
 		else{
 		  text.setString(boxes[index]);

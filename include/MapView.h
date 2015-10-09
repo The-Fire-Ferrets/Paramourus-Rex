@@ -3,6 +3,8 @@
 
 #include "Constants.h"
 #include "LevelView.h"
+#include "DialogueView.h"
+
 class MapView {
 	private:
 		static const int size;

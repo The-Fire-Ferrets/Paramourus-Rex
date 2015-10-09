@@ -98,6 +98,8 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 		for (int i = 0; i < num_levels; i++) {
 			if (sprites[i].getGlobalBounds().contains(pos.x, pos.y))
 				LevelView::Create(levels[i].c_str(), state);
+				DialogueView::Create(levels[i].c_str(), state);
+				*state = 1;
 		}
 	}
 }
