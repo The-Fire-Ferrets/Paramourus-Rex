@@ -106,7 +106,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 			}
 		}
 	}
-	else {
+	else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
 		pressed = false;
 	}
 }

@@ -167,7 +167,7 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 		index++;
 	    //}
 	}
-	else {
+	else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)){
 		pressed = false;
 	}
 }
