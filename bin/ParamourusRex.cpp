@@ -71,16 +71,16 @@ int main(int argc, char* argv[])
 		switch(state) {
 			case 0: 
 				LevelView::Create(levels[0], &state);
+				DialogueView::Create(levels[0], &state);
 				state = 1; 
 				break;
 			case 1:	
 				LevelView::update(&App, &state, elapsed_ms); 
 				break;
 			case 2: //Display Diana
-				// get text to render -- unclear how this connects just yet
-				// will be worked on further
-				//text = DialogueView::update(levels[0], &state);
-				state = 2;
+				  DialogueView::update(&App, &state);
+				  //DialogueView::render(&App);
+				  state = 2;
 				break;
 			case 3: //Display craftable
 				break;
@@ -103,6 +103,7 @@ int main(int argc, char* argv[])
 				LevelView::render(&App); 
 				break;
 			case 2: //Display female
+				DialogueView::render(&App);
 				break;
 			case 3: //Display craftable
 				break;
