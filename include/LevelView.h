@@ -17,6 +17,9 @@ class LevelView  {
 		static sf::Font font;
 		static sf::Vector2f timer_position;
 		static void cleanUp(void);
+		static sf::View gameView;
+		static sf::View minimapView;
+		static StrongActorPtr player;
 	public:
 		static StrongActorPtr actors[];		
 		static std::string getName(void);

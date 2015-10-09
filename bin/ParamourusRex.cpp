@@ -21,6 +21,7 @@ int main(int argc, char* argv[])
 
 	//Create window
 	sf::RenderWindow App(sf::VideoMode(window_width, window_height,64), "Paramourus Rex by Will Hollingsworth, Bina Kakusa, Belol Nessar, and Meghan Tinkler", sf::Style::Titlebar|sf::Style::Close);
+	sf::View defaultView = App.getDefaultView();
 
 	//Loads the map
 	const char* map = {"Map"};	
@@ -78,18 +79,23 @@ int main(int argc, char* argv[])
 		App.clear(sf::Color::Black);
 
 		switch(state) {
-			case 0: MapView::render(&App);
+			case 0: 
+				App.setView(defaultView);		
+				MapView::render(&App);
 				break;
 			case 1: 
 				LevelView::render(&App); 
 				break;
 			case 2:
+				App.setView(defaultView);
 				//DialogueView::render(&App);
 				break;
 			case 3:
+				App.setView(defaultView);
 				//CraftView::render(&App);
 				break;
 			case 4:
+				App.setView(defaultView);
 				//ExitView::render(&App);
 				break;
 			default: 
