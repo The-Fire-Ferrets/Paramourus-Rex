@@ -37,7 +37,7 @@ void LevelView::Create(const char* resource, int* state) {
 	pugi::xml_parse_result result;
 	std::string resource_str(resource);
     	if (!(result = doc.load_file(("./assets/levels/" + resource_str + ".xml").c_str()))) {
-		std::cout << "LevelView::CreateLevel(...): Failed to load" << std::endl;
+		std::cout << "LevelView::Create(...): Failed to load" << std::endl;
 		std::cout << "Filename: " << resource << " Load result: " << result.description() << std::endl;
 	}
 
@@ -59,19 +59,19 @@ void LevelView::Create(const char* resource, int* state) {
 		else if (!strcmp(attr.name(), "Text_Size")) {
 			timer.setCharacterSize(std::strtol(attr.value(), &temp, 10));
 			if (*temp != '\0') {
-				std::cout << "LevelView::CreateLevel: Error reading attribute for " << attr.name() << std::endl;
+				std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
 			}
 		}
 		else if (!strcmp(attr.name(), "Text_X")) {
 			timer_position.x = (std::strtol(attr.value(), &temp, 10));
 			if (*temp != '\0') {
-				std::cout << "LevelView::CreateLevel: Error reading attribute for " << attr.name() << std::endl;
+				std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
 			}
 		}
 		else if (!strcmp(attr.name(), "Text_Y")) {
 			timer_position.y = (std::strtol(attr.value(), &temp, 10));
 			if (*temp != '\0') {
-				std::cout << "LevelView::CreateLevel: Error reading attribute for " << attr.name() << std::endl;
+				std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
 			}
 		}
 	}
@@ -99,7 +99,7 @@ int LevelView::getNumActors(void) {
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	float timer_time = 10000 - level_clock.getElapsedTime().asMilliseconds();
 	if (timer_time <= 0)
-		*state = 5;
+		*state = 2;
 	else {
 		timer_string = std::to_string(timer_time / 1000);
 		timer.setString(timer_string);
@@ -111,7 +111,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 
 /** Checks for events and update accordingly
  **
-**/
+*
 void LevelView::update(EventInterfacePtr e) {
 
 }
