@@ -130,3 +130,7 @@ bool ActorFactory::registerComponent(ComponentId* id, ActorComponentCreator crea
 		return false;
 	}
 }
+
+void ActorFactory::reset(void) {
+	Actor::instances = 0;
+}

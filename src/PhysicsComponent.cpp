@@ -27,7 +27,7 @@ ActorComponent* PhysicsComponent::create() {
  ** Sets up unique instance ID
 **/
 PhysicsComponent::PhysicsComponent(void) {
-	instance = instances;		
+	instance = instances;
 }
 
 PhysicsComponent::~PhysicsComponent(void) {	
@@ -42,10 +42,8 @@ bool PhysicsComponent::Init(pugi::xml_node* elem) {;
 	for (pugi::xml_node tool = elem->first_child(); tool; tool = tool.next_sibling()) {
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
 		}
-	}
-	
-	return true;
-	
+	}	
+	return true;	
 }
 
 /** Final Initilizer
@@ -55,20 +53,37 @@ void PhysicsComponent::PostInit(void) {
 
 }
 
-/** Checks to see if the bound of two actor intersect and sends ContactEvent to the event manager
+/** Checks to see if the bound of two actor intersect and sends ContactEvent to the event manager, keeps track of last actor made contact with
  ** time: current game time
 **/
 void PhysicsComponent::update(float time) {
+	bool madeContact = false;
 	for (int i = 0; i < LevelView::getNumActors(); i ++) {
 		StrongActorPtr other_actor = LevelView::actors[i];
 		if (owner->getInstance() != other_actor->getInstance()) {
+			//Checks to see if actor was in the last contact episode
+			std::vector<StrongActorPtr>::iterator it;
+			for (it = last_actors.begin(); it != last_actors.end(); it++) {
+					if (*it == other_actor) {
+						break;
+					}
+			}
 			if ((owner->getBoundary())->intersects(*(other_actor->getBoundary()))) {
-				if (!EventManagerInterface::get()->queueEvent(new ContactEvent(time, owner->getInstance(), other_actor->getInstance()))) {
-					std::cout << "PhysicsComponent::update: Unable to queue event" << std::endl;
-				}		
+				madeContact = true;
+				if (it == last_actors.end()) {
+					if (!EventManagerInterface::get()->queueEvent(new ContactEvent(time, owner->getInstance(), other_actor->getInstance())) )
+						std::cout << "PhysicsComponent::update: Unable to queue event" << std::endl;
+					last_actors.push_back(other_actor);
+				}
+			}
+			else if(it != last_actors.end()) {
+				last_actors.erase(it);
 			}
 		}
 	}
+	if (!madeContact)
+		last_actors.clear();
+		
 }
 
 /** Receives event when the actor is being contacted by another actor and responds by accordingly
@@ -95,5 +110,5 @@ void PhysicsComponent::restart(void) {
  **
 **/
 void PhysicsComponent::quit(void) {
-	//this->~PhysicsComponent();
+
 }

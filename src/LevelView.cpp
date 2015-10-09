@@ -22,6 +22,12 @@ std::string LevelView::timer_string = "10:00";
 sf::Font LevelView::font;
 //Timer position
 sf::Vector2f LevelView::timer_position;
+//game view
+sf::View LevelView::gameView;
+//minimap view
+sf::View LevelView::minimapView;
+//reference to player
+StrongActorPtr LevelView::player;
 
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
@@ -80,9 +86,15 @@ void LevelView::Create(const char* resource, int* state) {
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
 		actors[num_actors] = ActorFactory::CreateActor(tool.name(), state);
 		actors[num_actors]->PostInit(&tool);
+		if (num_actors == 0)
+			player = actors[num_actors];
 		num_actors++;
 	}
-	*state = 1;
+	//Set views so can only see a quarter of the map at once
+	gameView = sf::View(sf::FloatRect(0, 0, Configuration::instance()->getWindowWidth()/4, Configuration::instance()->getWindowHeight()/4));
+	//Set minimap to see entire map
+	minimapView = sf::View(sf::FloatRect(0, 0, Configuration::instance()->getWindowWidth(), Configuration::instance()->getWindowHeight()));
+	*state = 2;
 }
 
 std::string LevelView::getName(void) {
@@ -98,11 +110,22 @@ int LevelView::getNumActors(void) {
 **/
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	float timer_time = 10000 - level_clock.getElapsedTime().asMilliseconds();
-	if (timer_time <= 0)
-		*state = 2;
+
+	if (timer_time <= 0) {
+		*state = 0;
+		cleanUp();
+	}
 	else {
-		timer_string = std::to_string(timer_time / 1000);
+		std::ostringstream out;
+		out << std::setprecision(4) << timer_time/1000;
+		timer_string = out.str();
 		timer.setString(timer_string);
+		//Set timer to bottom right corner
+		sf::Vector2f gameView_bottom_corner = gameView.getCenter();
+		gameView_bottom_corner.x += gameView.getSize().x/2 - timer.getGlobalBounds().width;
+		gameView_bottom_corner.y += gameView.getSize().y/2 - timer.getGlobalBounds().height*1.5;
+		timer.setPosition(gameView_bottom_corner);
+
 		for (int i = 0; i < num_actors; i ++)
 			actors[i]->update(time);
 	}
@@ -120,14 +143,51 @@ void LevelView::update(EventInterfacePtr e) {
  **
 **/
 void LevelView::render(sf::RenderWindow *window) {
+	//Get the player location and center gameView to it
+	sf::Vector2f player_pos = player->getPosition();
+	sf::Vector2f player_size = player->getSize();
+	gameView.setCenter(player_pos.x + player_size.x/2, player_pos.y + player_size.y/2); 
+	gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
+	window->setView(gameView);
+	//Update graphics	
+	window->draw(background);
+	window->draw(timer);
+	for (int i = 0; i < num_actors; i ++)
+		actors[i]->render(window);
+
+	//Set minimap view
+	minimapView.setViewport(sf::FloatRect(0.90f, 0, 0.10f, 0.10f));
+	window->setView(minimapView);
+	
+	//Update graphics
 	window->draw(background);
 	window->draw(timer);
 	for (int i = 0; i < num_actors; i ++)
 		actors[i]->render(window);
 }
 
+/** Ready the level for start
+ **
+**/
 void LevelView::start(void) {
 	level_clock.restart();
 }
 
+/** Clean up level after completion
+ **
+**/
+void LevelView::cleanUp(void) {
+	for (int i = 0; i < num_actors; i ++) {
+		actors[i]->quit();
+	}
+	num_actors = 0;
+	EventManagerInterface::get()->reset();
+	ActorFactory::reset();
+}
 
+/** Quit level
+ **
+**/
+void LevelView::quit(void) {
+	cleanUp();
+}

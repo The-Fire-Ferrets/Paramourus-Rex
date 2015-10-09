@@ -22,17 +22,16 @@ ComponentId InputComponent::getId(void) {
  **
 **/
 sf::Vector2f InputComponent::getDirection() const {
-  return direction;
+	return direction;
 }
 
 /** Sets the direction in which the actor is currently moving
  **
 **/
 void InputComponent::setDirection(const sf::Vector2f& dir) {
-  // reset direction only if it is a cardinal direction
-  if (std::find(cardinals, cardinals+4, dir) != cardinals+4) {
-    direction = dir;
-  }
+	// reset direction only if it is a cardinal direction
+	if (std::find(cardinals, cardinals+4, dir) != cardinals+4)
+		direction = dir;
 }
 
 /** Returns a reference to the components constructor
@@ -65,9 +64,8 @@ bool InputComponent::Init(pugi::xml_node* elem) {
 	//Iterate over the component's attributes
 	for (pugi::xml_node tool = elem->first_child(); tool; tool = tool.next_sibling()) {
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {		
-			if (!strcmp(attr.name(),"Type")) {
+			if (!strcmp(attr.name(),"Type"))
 				type = attr.value();
-			}
 			else {
 				std::cout << "InputComponent::Init: Failed to initialize" << std::endl;
 				return false;
@@ -81,38 +79,41 @@ bool InputComponent::Init(pugi::xml_node* elem) {
  ** Setups up additional attributes based on game configuration
 **/
 void InputComponent::PostInit(void) {
+
 }
 
 /** Updates the component's attributes
  ** time: current game time
 **/
 void InputComponent::update(float time) {
-  float distance = time * velocity;
+	float distance = time * velocity;
 
 	if (type == "Artificial") {
-    // TODO: this should be done with path finding
-    this->setDirection(cardinals[std::rand() % 4]);
-    owner->move(distance, direction);
+		// TODO: this should be done with path finding
+		this->setDirection(cardinals[std::rand() % 4]);
+		owner->move(distance, direction);
 	}
 
 	else if (type == "Keyboard") {
-    // TODO: I'd like to move controls to a configuration file so we could 
-    // choose between up/down/left/right, wasd, and hjkl.
-
+		// TODO: I'd like to move controls to a configuration file so we could 
+		// choose between up/down/left/right, wasd, and hjkl.
 		//Reads Input and perform actions
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-      this->setDirection(NORTH);
-      owner->move(distance, direction);
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-      this->setDirection(SOUTH);
-      owner->move(distance, direction);
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-      this->setDirection(WEST);
-      owner->move(distance, direction);
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-      this->setDirection(EAST);
-      owner->move(distance, direction);
-    }
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+			this->setDirection(NORTH);
+			owner->move(distance, direction);
+		} 
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+			this->setDirection(SOUTH);
+			owner->move(distance, direction);
+		} 
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+			this->setDirection(WEST);
+			owner->move(distance, direction);
+		} 
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+			this->setDirection(EAST);
+			owner->move(distance, direction);
+		}
 	}
 }
 
@@ -120,7 +121,31 @@ void InputComponent::update(float time) {
  **
 **/
 void InputComponent::update(EventInterfacePtr e) {
-	
+  // get pointer to the other actor involved in the contact
+  EventType event_type = e->getEventType();
+  StrongActorPtr other_actor = LevelView::actors[e->getSender()];
+
+  // is the player making contact?
+  if (event_type == ContactEvent::event_type && type == "Keyboard") {
+
+    // is the other actor an NPC or an obstacle?
+    if (other_actor->hasComponent(CollectorComponent::id) || other_actor->components.empty())
+    {
+      // cast base class to derived so we can use derived class methods
+      std::shared_ptr<CollectorComponent> cc;
+      std::shared_ptr<ActorComponent>     ac;
+
+      ac = owner->components[CollectorComponent::id];
+      cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
+
+      int vases = cc->getVases();
+      std::cerr << "vases before: " << vases << std::endl;
+      cc->setVases(vases-1);
+
+      vases = cc->getVases();
+      std::cerr << "vases after: " << vases << std::endl;
+    }
+  }
 }
 
 /** Reset the component

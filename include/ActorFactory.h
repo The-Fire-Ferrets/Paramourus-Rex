@@ -12,6 +12,7 @@ class ActorFactory {
 		static StrongActorPtr CreateActor(const char* resource, int* state);
 		static bool registerComponent(ComponentId* id, ActorComponentCreator creator);
 		static StrongActorPtr actorInstances[];
+		static void reset(void);
 
 	protected:
 		static ComponentId* actorComponentIds[];

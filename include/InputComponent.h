@@ -3,6 +3,7 @@
 
 #include "Constants.h"
 #include "ActorComponent.h"
+#include "CollectorComponent.h"
 #include "ActorFactory.h"
 
 class InputComponent : public ActorComponent {

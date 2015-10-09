@@ -3,6 +3,7 @@
 
 #include "Constants.h"
 #include "LevelView.h"
+#include "MapView.h"
 #include "EventManager.h"
 #include "DialogueView.h"
 

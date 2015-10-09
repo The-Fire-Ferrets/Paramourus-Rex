@@ -31,6 +31,7 @@ class PhysicsComponent : public ActorComponent {
 		static ActorComponent* create();
 		static const bool registered;
 		static int instances;
+		std::vector<StrongActorPtr> last_actors;
 };
 
 #endif

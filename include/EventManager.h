@@ -23,6 +23,7 @@ class EventManager : public EventManagerInterface {
 		bool triggerEvent(const EventInterfacePtr& event) override;
 		bool processEvents(void) override;
 		void quit(void) override;
+		void reset(void) override;
 };
 #endif
 
