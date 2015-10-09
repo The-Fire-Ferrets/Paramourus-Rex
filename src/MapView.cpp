@@ -91,7 +91,7 @@ void MapView::Create(const char* resource) {
 /** Checks to see if level was clicked on and switches to it
  **
 **/
-void MapView::update(sf::RenderWindow *window, int* state, float time) {
+void MapView::update(sf::RenderWindow *window, int* state, float time) {	
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		const sf::Vector2i pos = sf::Mouse::getPosition(*window);
 		for (int i = 0; i < num_levels; i++) {

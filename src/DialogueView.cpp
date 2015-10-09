@@ -27,7 +27,7 @@ sf::Vector2f DialogueView::dianaPos;
 sf::Vector2f DialogueView::philPos;
 sf::Sprite DialogueView::Diana;
 sf::Sprite DialogueView::Phil;
-
+bool DialogueView::pressed = false;
 
 /** Searches for the correct dialogue box the player is on and populates the text with what you want Diana to be saying 
 ** resource: filename for XML  file we are getting the dialogue from. Currently just level0, only level we have.
@@ -147,7 +147,8 @@ void DialogueView::Create(const char* resource, int* state){
 ** it switches to the next desired block of text.  Called from main.
 **/
 void DialogueView::update(sf::RenderWindow *window, int* state){
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed){
+		pressed = true;
 	//sf::Event event;
 	//while (window->pollEvent(event)){
 	  /*** ISSUE CURRENTLY HERE: Tried doing the MouseButtonPressed event,
@@ -165,6 +166,9 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 		}
 		index++;
 	    //}
+	}
+	else {
+		pressed = false;
 	}
 }
 
