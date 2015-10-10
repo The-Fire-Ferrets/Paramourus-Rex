@@ -112,3 +112,18 @@ void PhysicsComponent::restart(void) {
 void PhysicsComponent::quit(void) {
 
 }
+
+/** Check for intersections between this compoenent's owner
+ ** and other actor's.
+**/
+bool PhysicsComponent::query(void) {
+  // is the owner currently in another actor's bounding box?
+  for (auto it = last_actors.begin(); it != last_actors.end(); ++it) {
+    if ( (*it)->getBoundary()->intersects( *(owner->getBoundary()) ) ) {
+      return false;
+    }
+  }
+
+  // if not, it is okay to move in the direction we want
+  return true;
+}

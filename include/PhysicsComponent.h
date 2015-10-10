@@ -24,6 +24,7 @@ class PhysicsComponent : public ActorComponent {
 		void reset(void) override;
 		void restart(void) override;
 		void quit(void) override;
+    bool query(void);
 
 		ComponentId getId(void) override;
 
