@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <Level0 NumDialogues = "12" Background = "Level0.png" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" Text_X = "20" Text_Y = "600" Font = "arial.ttf" Text_Size = "30">
-  <Dialogue Text = "The year is 65,000,000 B.C. and life is pretty okay --  or as okay as it gets as the son of a travelling VelociReporter." Background = "" />
-	<Dialogue Text = "Your name is Phillip Osoraptor, and you've finally moved back to your home valley, reuniting with one of your only childhood friends, Diana Tyrana." Background = ""/>
-	<Dialogue Text = "Diana seems to remember you fondly, but you find yourself nervous and stuttering whenever your herds meet at the watering hole. Each day you tell yourself it'll work out better tomorrow." Background = "" />
-	<Dialogue Text = "With hopes of reconnecting with Diana in your heart and maybe finally settling down, life in your new valley seems hopeful and promising." Background = ""/>
-	<Dialogue Text = "...Well, until the whole meteor thing happens at least." Background = "" />
-	<Dialogue Text = "It's been a few months since then, and your once lush and beautiful valley is now barren and dry. There are no more Raptor Races or games of Brontosaurus Ball; most herds are migrating out of the valley in a desperate hope for survival." Background = ""/>
-	<Dialogue Text = "But way more importantly, everyone's trying to get with your girl." Background = "" />
-	<Dialogue Text = "With many of the female dinosaurs gone, everyone's attention has turned to  Diana to try to continue their species survival." Background = "" />
-	<Dialogue Text = "If only there were some way to finally show her that you cared about her first..." Background = ""/>
-	<Dialogue Text = "Hey, Phil! It's good to see a friendly face around... It's been kind of lonely since the meteor, what with everyone leaving, huh?" Background = "" />
-	<Dialogue Text = "The valley still feels too much like home to me to leave just yet. I guess I mostly just miss how green everything was. I mean, I'm no herbivore, but that doesn't mean I couldn't still appreciate all the flower fields, you know?" Background = "" />
-	<Dialogue Text = "Just wishful thinking, I guess. Anyway, I better get back to my herd... It was nice talking to you, Phil." Background = "" />
+  <Dialogue ID = "1" Text ="The year is 65,000,000 B.C. and life is pretty okay -- or as&#10;okay as it gets as the son of a&#10;travelling VelociReporter." Background = "" />
+	<Dialogue ID = "2" Text = "Your name is Phillip Osoraptor, and you've finally&#10;moved back to your home valley, reuniting with&#10;one of your only childhood friends, Diana Tyrana." Background = ""/>
+	<Dialogue ID = "3" Text = "Diana seems to remember you fondly, but you find&#10;yourself nervous and stuttering whenever your herds meet&#10;at the watering hole. Each day you tell yourself it'll work&#10;out better tomorrow." Background = "" />
+	<Dialogue ID = "3" Text = "With hopes of reconnecting with Diana in your heart&#10;and maybe finally settling down, life in your new valley seems&#10;hopeful and promising." Background = ""/>
+	<Dialogue ID = "4" Text = "...Well, until the whole meteor thing happens at&#10;least." Background = "" />
+	<Dialogue ID = "5" Text = "It's been a few months since then, and your once&#10;lush and beautiful valley is now barren and dry. There are no more&#10;Raptor Races or games of Brontosaurus Ball; most&#10;herds are migrating out of the valley in a desperate hope for&#10;survival." Background = ""/>
+	<Dialogue ID = "6" Text = "But way more importantly, everyone's trying to get with your girl." Background = "" />
+	<Dialogue ID = "7" Text = "With many of the female dinosaurs gone, everyone's&#10;attention has turned to Diana to try to continue&#10;their species survival." Background = "" />
+	<Dialogue ID = "8" Text = "If only there were some way to finally show her that&#10;you cared about her first..." Background = ""/>
+	<Dialogue ID = "9" Text = "Hey, Phil! It's good to see a friendly face around...&#10;It's been kind of lonely since the meteor, what with&#10;everyone leaving, huh?" Background = "" />
+	<Dialogue ID = "10" Text = "The valley still feels too much like home to me to&#10;leave just yet. I guess I mostly just miss how green everything&#10;was. I mean, I'm no herbivore, but that doesn't mean I couldn't&#10;still appreciate all the flower fields, you know?" Background = "" />
+	<Dialogue ID = "11" Text = "Just wishful thinking, I guess. Anyway, I better&#10;get back to my herd... It was nice talking to you,&#10;Phil." Background = "" />
 </Level0>
