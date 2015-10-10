@@ -96,9 +96,6 @@ void InputComponent::update(float time) {
   sf::Vector2f last_direction = this->getDirection();
   sf::Vector2f next_direction;
 
-  ac = owner->components[PhysicsComponent::id];
-  pc = std::dynamic_pointer_cast<PhysicsComponent>(ac);
-
 	if (type == "Artificial") {
 		// TODO: this should be done with path finding
     next_direction = cardinals[std::rand() % 4]; 
@@ -123,10 +120,8 @@ void InputComponent::update(float time) {
     else return; // No input provided.
 	}
 
-  this ->setDirection(next_direction);
-  if (pc->query() || next_direction != last_direction) {
+    this ->setDirection(next_direction);
     owner->move(distance, direction);
-  }
 }
 
 /** Receives event when the actor is being contacted by another actor and responds by accordingly

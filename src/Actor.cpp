@@ -1,6 +1,6 @@
 #include "Actor.h"
 #include "Constants.h" // for window_[width|height]
-
+#include "PhysicsComponent.h"
 //unique instance id among actors
 int Actor::instances = 0;
 
@@ -127,8 +127,16 @@ void Actor::move(float distance, sf::Vector2f direction) {
 	if (p.y > height-size.y)
 		p.y = height - size.y;
 
-	// set the position
-	this->setPosition(p + direction * distance);
+	//Get the bounds after movement and check if the movement is allowed
+	sf::FloatRect bound_after = sf::FloatRect(p + direction * distance, getSize());
+	std::shared_ptr<ActorComponent>     ac;
+	std::shared_ptr<PhysicsComponent>   pc;
+	ac = components[PhysicsComponent::id];
+	pc = std::dynamic_pointer_cast<PhysicsComponent>(ac);
+	if (pc->query(bound_after, direction)) {
+		// set the position
+		this->setPosition(p + direction * distance);
+	}
 }
 
 /** Updates each of the actor's components

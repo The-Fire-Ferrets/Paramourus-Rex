@@ -24,7 +24,7 @@ class PhysicsComponent : public ActorComponent {
 		void reset(void) override;
 		void restart(void) override;
 		void quit(void) override;
-    bool query(void);
+		bool query(sf::FloatRect bound, sf::Vector2f dir);
 
 		ComponentId getId(void) override;
 
@@ -33,6 +33,7 @@ class PhysicsComponent : public ActorComponent {
 		static const bool registered;
 		static int instances;
 		std::vector<StrongActorPtr> last_actors;
+		sf::Vector2f last_dir;
 };
 
 #endif
