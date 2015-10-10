@@ -188,6 +188,7 @@ void DialogueView::render(sf::RenderWindow *window){
     backlay.setFillColor(sf::Color::White);
     backlay.setSize(sf::Vector2f(760,200));
     backlay.setOutlineThickness(5);
+    text.setColor(sf::Color::Black);
     
     window->draw(background);
     window->draw(backlay);
