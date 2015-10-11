@@ -10,6 +10,7 @@
 
 class Actor {
 	friend class ActorFactory;
+	friend class ActorComponent;
 	public:
 		static int instances;
 		int getInstance(void);
@@ -30,7 +31,7 @@ class Actor {
 		void restart(void);
 		void quit(void);
 
-		void madeContact(EventInterfacePtr e);
+		void getEvent(EventInterfacePtr e);
 		bool hasComponent(ComponentId component);
 
 		sf::Vector2f getPosition(void);
@@ -48,13 +49,15 @@ class Actor {
 		void setGameState(int state);
 		void resetGameState(int* state);
 
+		void addDelegate(EventType type);
+
 		sf::FloatRect* getBoundary(void);
 
 		Actor* getCopy(void);
 		const Actor* getCopy(void) const;
 	private:
-		EventDelegate delegateFunc;
 		ActorId id;
+		std::vector<EventDelegate> delegateFuncList;
 
 		std::string texture_filename;
 		std::string sprite_filename;

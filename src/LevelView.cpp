@@ -5,7 +5,7 @@ const int LevelView::size = 20;
 //Number of actors populating the level
 int LevelView::num_actors = 0;
 //Array holding pointers of actors populating the level
-StrongActorPtr LevelView::actors[size];
+std::vector<StrongActorPtr> LevelView::actorList;
 //Holds background texture
 sf::Texture LevelView::background_texture;
 //Holds background
@@ -27,7 +27,7 @@ sf::View LevelView::gameView;
 //minimap view
 sf::View LevelView::minimapView;
 //reference to player
-StrongActorPtr LevelView::player;
+StrongActorPtr LevelView::player = NULL;
 
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
@@ -84,10 +84,19 @@ void LevelView::Create(const char* resource, int* state) {
 	timer.setPosition(timer_position);
 	//Iterates over XML to get components to add
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
-		actors[num_actors] = ActorFactory::CreateActor(tool.name(), state);
-		actors[num_actors]->PostInit(&tool);
-		if (num_actors == 0)
-			player = actors[num_actors];
+		if (num_actors == 0 && player == NULL) {		
+			actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
+			(actorList.back())->PostInit(&tool);
+			player = (actorList.back());
+		}
+		else if (num_actors == 0) {
+			actorList.push_back(player);
+			(actorList.back())->PostInit(&tool);
+		}
+		else {
+			actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
+			(actorList.back())->PostInit(&tool);
+		}
 		num_actors++;
 	}
 	//Set views so can only see a quarter of the map at once
@@ -125,8 +134,9 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		gameView_bottom_corner.y += gameView.getSize().y/2 - timer.getGlobalBounds().height*1.5;
 		timer.setPosition(gameView_bottom_corner);
 
-		for (int i = 0; i < num_actors; i ++)
-			actors[i]->update(time);
+		std::vector<StrongActorPtr>::iterator it;
+		for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
+			(*it)->update(time);
 	}
 	
 }
@@ -151,8 +161,9 @@ void LevelView::render(sf::RenderWindow *window) {
 	//Update graphics	
 	window->draw(background);
 	window->draw(timer);
-	for (int i = 0; i < num_actors; i ++)
-		actors[i]->render(window);
+	std::vector<StrongActorPtr>::iterator it;
+	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
+		(*it)->render(window);
 
 	//Set minimap view
 	minimapView.setViewport(sf::FloatRect(0.90f, 0, 0.10f, 0.10f));
@@ -161,8 +172,8 @@ void LevelView::render(sf::RenderWindow *window) {
 	//Update graphics
 	window->draw(background);
 	window->draw(timer);
-	for (int i = 0; i < num_actors; i ++)
-		actors[i]->render(window);
+	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
+		(*it)->render(window);
 }
 
 /** Ready the level for start
@@ -172,16 +183,33 @@ void LevelView::start(void) {
 	level_clock.restart();
 }
 
+/** Return the actor with given instance
+ **
+**/
+StrongActorPtr LevelView::getActor(int instance) {
+	std::vector<StrongActorPtr>::iterator it;
+	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++) {
+		if ((*it)->getInstance() == instance) {
+			return *it;
+		}
+	}
+	return NULL;
+}
 /** Clean up level after completion
  **
 **/
 void LevelView::cleanUp(void) {
-	for (int i = 0; i < num_actors; i ++) {
-		actors[i]->quit();
+	player->reset();
+	std::vector<StrongActorPtr>::iterator it;
+	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++) {
+		if (*it != player) {
+			(*it)->quit();
+		}
 	}
 	num_actors = 0;
 	EventManagerInterface::get()->reset();
 	ActorFactory::reset();
+	actorList.clear();
 }
 
 /** Quit level

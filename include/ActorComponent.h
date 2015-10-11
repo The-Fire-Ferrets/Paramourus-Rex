@@ -2,7 +2,7 @@
 #define ACTORCOMPONENT_H
 
 #include "Constants.h"
-
+#include "CollectEvent.h"
 class ActorComponent {
 
 	friend class ActorFactory;

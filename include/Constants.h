@@ -24,6 +24,7 @@ class ActorComponent;
 class EventInterface;
 class EventManagerInterface;
 class ContactEvent;
+class CollectEvent;
 class Configuration;
 
 typedef std::string ActorId;

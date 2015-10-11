@@ -41,12 +41,12 @@ bool EventManager::addDelegate(const EventDelegate& d, const EventInstance& type
  ** d: the function to be called when the event type is received
  ** type: the event type to listen for
 **/
-bool EventManager::removeDelegate(const EventDelegate& d, const EventInstance& type) {	
-	auto eventDelegatePair = eventDelegateMap.find(type);
-	if (eventDelegatePair != eventDelegateMap.end()) {
-		EventDelegateList& delegateList = eventDelegatePair->second;
-		for (auto itr = delegateList.begin(); itr != delegateList.end(); ++itr) {
-			if (d == (*itr)) {
+bool EventManager::removeDelegate(const EventDelegate& d) {
+	EventDelegateMap::iterator it;
+	for (it = eventDelegateMap.begin(); it != eventDelegateMap.end(); it++) {
+		EventDelegateList& delegateList = it->second;
+		for (auto itr = delegateList.begin(); itr != delegateList.end(); ++itr) {			
+			if (*itr == d) {
 				delegateList.erase(itr);
 				return true;
 			}
@@ -63,8 +63,9 @@ bool EventManager::triggerEvent(const EventInterfacePtr& event) {
 	auto eventDelegatePair = eventDelegateMap.find(type);
 	if (eventDelegatePair  != eventDelegateMap.end()) {
 		EventDelegateList& delegateList = eventDelegatePair->second;
-		for (auto itr = delegateList.begin(); itr != delegateList.end(); ++itr)
+		for (auto itr = delegateList.begin(); itr != delegateList.end(); ++itr) {			
 			(*itr)(event);
+		}
 		return true;
 	}
 	return false;
@@ -93,7 +94,7 @@ bool EventManager::processEvents(void) {
 **/
 void EventManager::quit(void) {
 	reset();
-	EventManagerInterface::set(NULL);	
+	//EventManagerInterface::set(NULL);	
 }
 
 /**  reset all events in the queue

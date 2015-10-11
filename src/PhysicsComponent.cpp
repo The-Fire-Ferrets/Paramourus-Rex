@@ -59,8 +59,9 @@ void PhysicsComponent::PostInit(void) {
 **/
 void PhysicsComponent::update(float time) {
 	bool madeContact = false;
-	for (int i = 0; i < LevelView::getNumActors(); i ++) {
-		StrongActorPtr other_actor = LevelView::actors[i];
+	std::vector<StrongActorPtr>::iterator it_all;
+	for (it_all = LevelView::actorList.begin(); it_all != LevelView::actorList.end(); it_all++) {
+		StrongActorPtr other_actor = *it_all;
 		if (owner->getInstance() != other_actor->getInstance()) {
 			//Checks to see if actor was in the last contact episode
 			std::vector<StrongActorPtr>::iterator it;

@@ -6,4 +6,7 @@
 	<CraftableComponent>
 		<Properties Type = "Water"/>
 	</CraftableComponent>
+	<PhysicsComponent>
+		<Category Some_Attribute = "Value" />
+	</PhysicsComponent>
 </WaterFlower>

@@ -6,4 +6,7 @@
 	<CraftableComponent>
 		<Properties Type = "Air"/>
 	</CraftableComponent>
+	<PhysicsComponent>
+		<Category Some_Attribute = "Value" />
+	</PhysicsComponent>
 </AirFlower>
