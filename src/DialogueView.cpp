@@ -119,6 +119,7 @@ void DialogueView::Create(const char* resource, int* state){
 	}
 	
 	text.setPosition(dialogue_pos);
+	text.setColor(sf::Color::Black);
 	Diana.setPosition(dianaPos);
 	Phil.setPosition(philPos);
 	
@@ -149,24 +150,22 @@ void DialogueView::Create(const char* resource, int* state){
 ** it switches to the next desired block of text.  Called from main.
 **/
 void DialogueView::update(sf::RenderWindow *window, int* state){
-	//if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-	sf::Event event;
-	while (window->pollEvent(event)){
+	index = 0;
+	if (sf::Mouse::isButtonReleased(sf::Mouse::Left)){
 	  /*** ISSUE CURRENTLY HERE: Tried doing the MouseButtonPressed event,
 	   * but it was rapidly indexing here for the duration of the mouse click --
 	   * i.e., no matter how quickly I clicked, it would call this and index about
 	   * 50 times, giving no opportunity for the text to display. Working on fixing.
 	   ***/
-	    if (event.type == sf::Event::MouseButtonReleased){
-		index++;
 		if (index > numDialogues){
+		    std::cout << "index is: " << index << "\n";
 		    *state = 1;
 		    LevelView::start();
 		}
 		else{
+		  index++;
 		  text.setString(boxes[index]);
 		}
-	    }
 	}
 }
 
