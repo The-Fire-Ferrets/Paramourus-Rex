@@ -3,6 +3,8 @@
 
 #include "Constants.h"
 #include "ActorFactory.h"
+#include "CollectorComponent.h"
+#include "ActorComponent.h"
 
 class CraftView  {
 	private:
@@ -18,6 +20,7 @@ class CraftView  {
 		static sf::Clock level_clock;
 		static sf::Text text;
 		static sf::Font font;
+		static std::string flower_list[];
 		static sf::Vector2f text_pos;
 		static void cleanUp(void);
 	public:

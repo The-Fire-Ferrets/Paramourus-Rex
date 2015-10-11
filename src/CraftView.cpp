@@ -10,6 +10,9 @@ int CraftView::earthFlowers = 0;
 int CraftView::airFlowers = 0;
 int CraftView::totalFlowers;
 
+// holds list of flowers actor has collected
+std::string CraftView::flower_list[size];
+
 //Holds background texture
 sf::Texture CraftView::background_texture;
 //Holds background
@@ -63,8 +66,25 @@ int CraftView::getNumFlowers(void) {
  **
 **/
 void CraftView::update(sf::RenderWindow *window, int* state) {
-	// Add a flower to the inventory if it has been collected
-		
+	// Add a flower to the inventory if it has been collected.
+	// Accessing this info from CollectorComponent.
+	const char*  actor;
+	StrongActorPtr* actorPtr;		
+
+	for (actorPtr  = CollectorComponent::getFlowers(); actor = actorPtr->getId();actorPtr++){
+		if (!strcmp("FireFlower", actor)){
+			fireFlowers++;
+		}
+		else if (!strcmp("WaterFlower", actor)){
+			waterFlowers++;
+		}
+		else if (!strcmp("AirFlower", actor)){
+			airFlowers++;
+		}
+		else if (!strcmp("EarthFlower", actor)){
+			earthFlowers++;
+		}
+	}		
 	
 }
 
