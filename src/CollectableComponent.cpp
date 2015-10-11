@@ -70,6 +70,7 @@ void CollectableComponent::update(EventInterfacePtr e) {
 		owner->setVisible(false);
 		collector = other_actor;
 		owner->setPosition(sf::Vector2f(-1000, 0));
+		LevelView::removeActor(owner->getInstance());
 	}
 }
 

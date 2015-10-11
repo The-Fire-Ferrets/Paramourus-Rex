@@ -195,6 +195,18 @@ StrongActorPtr LevelView::getActor(int instance) {
 	}
 	return NULL;
 }
+
+/** Return the actor with given instance
+ **
+**/
+void LevelView::removeActor(int instance) {
+	std::vector<StrongActorPtr>::iterator it;
+	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++) {
+		if ((*it)->getInstance() == instance) {
+			actorList.erase(it);
+		}
+	}
+}
 /** Clean up level after completion
  **
 **/

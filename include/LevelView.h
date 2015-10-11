@@ -27,6 +27,7 @@ class LevelView  {
 		static void start();
 		static void quit(void);
 		static StrongActorPtr getActor(int instance);
+		static void removeActor(int instance);
 
 		//ALL VIEW CLASSES MUST IMPLEMENT BELOW METHODS
 		static void Create(const char* resource, int* state);
