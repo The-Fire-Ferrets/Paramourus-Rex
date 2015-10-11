@@ -13,7 +13,7 @@ public:
 	virtual ~EventManagerInterface(void) {};
 
 	virtual bool addDelegate(const EventDelegate& d, const EventInstance& type) = 0;
-	virtual bool removeDelegate(const EventDelegate& d, const EventInstance& type) = 0;
+	virtual bool removeDelegate(const EventDelegate& d) = 0;
 
 	virtual bool triggerEvent(const EventInterfacePtr& event) = 0;
 	

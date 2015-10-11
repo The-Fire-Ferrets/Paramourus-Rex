@@ -64,8 +64,8 @@ int main(int argc, char* argv[])
 				break;
 			case 4:
 				//ExitView::update(&App, &state, elapsed_ms);
-				LevelView::quit();
-				eventmanagerptr->quit();
+				//LevelView::quit();
+				//eventmanagerptr->quit();
 				App.close();
 				break;
 			default:

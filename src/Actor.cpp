@@ -1,17 +1,10 @@
 #include "Actor.h"
 #include "Constants.h" // for window_[width|height]
-
+#include "PhysicsComponent.h"
 //unique instance id among actors
 int Actor::instances = 0;
 
-/** Gets the current actors unique instance ID
- **
-**/
-/** Returns the actors unique ID
-int Actor::getInstance(void) {
-	return instance;
-}
-
+/** Gets the current actors ID
  **
 **/
 ActorId Actor::getId(void) {
@@ -55,11 +48,7 @@ bool Actor::Init(pugi::xml_node* elem) {
 	}
 
 	boundary = new sf::FloatRect();
-
-	delegateFunc = fastdelegate::MakeDelegate(getCopy(), &Actor::madeContact);
-	if(!EventManagerInterface::get()->addDelegate(delegateFunc, EventInstance(ContactEvent::event_type, getInstance()))) {
-		std::cout << "Actor::Init: Unable to register delegate function" << std::endl;
-	}
+	addDelegate(ContactEvent::event_type);
 	return true;
 }
 
@@ -127,8 +116,16 @@ void Actor::move(float distance, sf::Vector2f direction) {
 	if (p.y > height-size.y)
 		p.y = height - size.y;
 
-	// set the position
-	this->setPosition(p + direction * distance);
+	//Get the bounds after movement and check if the movement is allowed
+	sf::FloatRect bound_after = sf::FloatRect(p + direction * distance, getSize());
+	std::shared_ptr<ActorComponent>     ac;
+	std::shared_ptr<PhysicsComponent>   pc;
+	ac = components[PhysicsComponent::id];
+	pc = std::dynamic_pointer_cast<PhysicsComponent>(ac);
+	if (pc->query(bound_after, direction)) {
+		// set the position
+		this->setPosition(p + direction * distance);
+	}
 }
 
 /** Updates each of the actor's components
@@ -170,8 +167,10 @@ void Actor::quit(void) {
 	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
 		(it->second)->quit();
 
-	if(!EventManagerInterface::get()->removeDelegate(delegateFunc, EventInstance(ContactEvent::event_type, getInstance())))
-		std::cout << "Actor::~Actor: Unable to unregister delegate function" << std::endl;
+	for (std::vector<EventDelegate>::iterator it = delegateFuncList.begin(); it != delegateFuncList.end(); it++)
+		if(!EventManagerInterface::get()->removeDelegate(*it))
+			std::cout << "Actor::~Actor: Unable to unregister delegate function" << std::endl;
+	
 }
 
 /** Adds a component to the actor
@@ -286,10 +285,10 @@ const Actor* Actor::getCopy(void) const {
  ** e: event received
  ** Sends each of its components to process the event according to their implementations
 **/
-void Actor::madeContact(EventInterfacePtr e) {
+void Actor::getEvent(EventInterfacePtr e) {
 	EventType event_type = e->getEventType();
 	if (event_type == ContactEvent::event_type)
-		std::cout << LevelView::actors[e->getSender()]->getId() << " made contact with " << id << std::endl;
+		std::cout << LevelView::getActor(e->getSender())->getId() << " made contact with " << id << std::endl;
 
 	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
 		(it->second)->update(e);
@@ -317,4 +316,14 @@ void Actor::setVisible(bool v) {
 **/
 bool Actor::getVisible(void) {
 	return visible;
+}
+
+/** Adds listener for given event to this actor
+ **
+**/
+void Actor::addDelegate(EventType type) {
+	delegateFuncList.push_back(fastdelegate::MakeDelegate(getCopy(), &Actor::getEvent));
+	if(!EventManagerInterface::get()->addDelegate(delegateFuncList.back(), EventInstance(type, getInstance()))) {
+		std::cout << "Actor::Init: Unable to register delegate function" << std::endl;
+	}
 }

@@ -21,11 +21,13 @@ class LevelView  {
 		static sf::View minimapView;
 		static StrongActorPtr player;
 	public:
-		static StrongActorPtr actors[];		
+		static std::vector<StrongActorPtr> actorList;	
 		static std::string getName(void);
 		static int getNumActors(void);
 		static void start();
 		static void quit(void);
+		static StrongActorPtr getActor(int instance);
+		static void removeActor(int instance);
 
 		//ALL VIEW CLASSES MUST IMPLEMENT BELOW METHODS
 		static void Create(const char* resource, int* state);

@@ -28,6 +28,7 @@ ActorComponent* PhysicsComponent::create() {
 **/
 PhysicsComponent::PhysicsComponent(void) {
 	instance = instances;
+	last_dir = sf::Vector2f(0,0);
 }
 
 PhysicsComponent::~PhysicsComponent(void) {	
@@ -58,8 +59,9 @@ void PhysicsComponent::PostInit(void) {
 **/
 void PhysicsComponent::update(float time) {
 	bool madeContact = false;
-	for (int i = 0; i < LevelView::getNumActors(); i ++) {
-		StrongActorPtr other_actor = LevelView::actors[i];
+	std::vector<StrongActorPtr>::iterator it_all;
+	for (it_all = LevelView::actorList.begin(); it_all != LevelView::actorList.end(); it_all++) {
+		StrongActorPtr other_actor = *it_all;
 		if (owner->getInstance() != other_actor->getInstance()) {
 			//Checks to see if actor was in the last contact episode
 			std::vector<StrongActorPtr>::iterator it;
@@ -111,4 +113,57 @@ void PhysicsComponent::restart(void) {
 **/
 void PhysicsComponent::quit(void) {
 
+}
+
+/** Check for intersections between this compoenent's owner
+ ** and other actor's.
+**/
+bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
+  // is the owner currently in another actor's bounding box?
+  for (auto it = last_actors.begin(); it != last_actors.end(); it++) {
+    if ( (*it)->getBoundary()->intersects(bound)) {
+	//If not moving in the direction in the direction that caused contact previously, OK to move
+	if (last_dir != sf::Vector2f(0,0) && last_dir != dir)
+		return true;
+	last_dir = dir;	
+
+	//If caused contact but on an edge, ignore it and only return false if a majoriry of the player is making contact
+	//Allows for smoother movement and continued movement
+	if (dir.x == 1) {
+		if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width, bound.top  + bound.height / 4)))
+			return false;
+		else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width, bound.top + bound.height / 2)))      
+			return false;
+		else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width, bound.top + 3* bound.height / 4)))
+			return false;
+	}	
+	else if (dir.x == -1) {
+		if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left, bound.top  + bound.height / 4)))    
+			return false;
+		else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left, bound.top + bound.height / 2)))    
+			return false;
+		else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left, bound.top + 3*bound.height / 4)))    
+			return false;
+	}	
+	else if (dir.y == 1) {
+		if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left  + bound.width / 4, bound.top + bound.height)))     
+			return false;
+		else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width/2, bound.top + bound.height)))     
+			return false;
+		else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + 3 * bound.width / 4, bound.top + bound.height)))     
+			return false;
+	}	
+	else if (dir.y == -1) {
+		if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left  + bound.width / 4, bound.top)))     
+			return false;
+		else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width/2, bound.top)))     
+			return false;
+		else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + 3* bound.width / 4, bound.top)))     
+			return false;		
+	}
+    }
+  }
+  last_dir = sf::Vector2f(0,0);
+  // if not, it is okay to move in the direction we want
+  return true;
 }

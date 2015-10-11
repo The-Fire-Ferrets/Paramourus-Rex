@@ -19,7 +19,7 @@ class EventManager : public EventManagerInterface {
 
 		bool queueEvent(const EventInterface* event) override;
 		bool addDelegate(const EventDelegate& d, const EventInstance& type) override;
-		bool removeDelegate(const EventDelegate& d, const EventInstance& type) override;
+		bool removeDelegate(const EventDelegate& d) override;
 		bool triggerEvent(const EventInterfacePtr& event) override;
 		bool processEvents(void) override;
 		void quit(void) override;

@@ -48,6 +48,7 @@ bool CollectableComponent::Init(pugi::xml_node* elem) {
  ** Setups up additional attributes based on game configuration
 **/
 void CollectableComponent::PostInit(void) {
+	owner->addDelegate(CollectEvent::event_type);	
 }
 
 /** Updates the component's attributes
@@ -63,17 +64,14 @@ void CollectableComponent::update(float time) {
 **/
 void CollectableComponent::update(EventInterfacePtr e) {
 	EventType event_type = e->getEventType();
-	StrongActorPtr other_actor = LevelView::actors[e->getSender()];
-	if (event_type == ContactEvent::event_type) {
-		if (other_actor->hasComponent(CollectorComponent::id)) {
-			std::cout << owner->getId() << "  collected by " << other_actor->getId() << std::endl;
-			if (!EventManagerInterface::get()->queueEvent(new ContactEvent(e->getTimeStamp(), owner->getInstance(), other_actor->getInstance())))
-				std::cout << "CollectableComponent::update: Unable to queue event" << std::endl;
-			owner->setVisible(false);
-			collector = other_actor;
-			owner->setPosition(sf::Vector2f(-1000, 0));
-		}
-	}	
+	StrongActorPtr other_actor = LevelView::getActor(e->getSender());
+	if (event_type == CollectEvent::event_type) {
+		std::cout << owner->getId() << " " << owner->getInstance() << "  collected by " << other_actor->getId() << " " << other_actor->getInstance() << std::endl;
+		owner->setVisible(false);
+		collector = other_actor;
+		owner->setPosition(sf::Vector2f(-1000, 0));
+		LevelView::removeActor(owner->getInstance());
+	}
 }
 
 /** Reset the component

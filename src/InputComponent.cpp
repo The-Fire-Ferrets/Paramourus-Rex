@@ -1,4 +1,6 @@
 #include "InputComponent.h"
+#include "PhysicsComponent.h"
+#include "CollectorComponent.h"
 #include <algorithm> // std::find()
 #include <cstdlib>   // std::rand()
 
@@ -87,11 +89,16 @@ void InputComponent::PostInit(void) {
 **/
 void InputComponent::update(float time) {
 	float distance = time * velocity;
+  // cast base class to derived so we can use derived class methods
+  std::shared_ptr<PhysicsComponent>   pc;
+  std::shared_ptr<ActorComponent>     ac;
+
+  sf::Vector2f last_direction = this->getDirection();
+  sf::Vector2f next_direction;
 
 	if (type == "Artificial") {
 		// TODO: this should be done with path finding
-		this->setDirection(cardinals[std::rand() % 4]);
-		owner->move(distance, direction);
+    next_direction = cardinals[std::rand() % 4]; 
 	}
 
 	else if (type == "Keyboard") {
@@ -99,53 +106,29 @@ void InputComponent::update(float time) {
 		// choose between up/down/left/right, wasd, and hjkl.
 		//Reads Input and perform actions
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-			this->setDirection(NORTH);
-			owner->move(distance, direction);
+      next_direction = NORTH;
 		} 
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-			this->setDirection(SOUTH);
-			owner->move(distance, direction);
+      next_direction = SOUTH;
 		} 
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-			this->setDirection(WEST);
-			owner->move(distance, direction);
+      next_direction = WEST;
 		} 
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-			this->setDirection(EAST);
-			owner->move(distance, direction);
+      next_direction = EAST;
 		}
+    else return; // No input provided.
 	}
+
+    this ->setDirection(next_direction);
+    owner->move(distance, direction);
 }
 
 /** Receives event when the actor is being contacted by another actor and responds by accordingly
  **
 **/
 void InputComponent::update(EventInterfacePtr e) {
-  // get pointer to the other actor involved in the contact
-  EventType event_type = e->getEventType();
-  StrongActorPtr other_actor = LevelView::actors[e->getSender()];
 
-  // is the player making contact?
-  if (event_type == ContactEvent::event_type && type == "Keyboard") {
-
-    // is the other actor an NPC or an obstacle?
-    if (other_actor->hasComponent(CollectorComponent::id) || other_actor->components.empty())
-    {
-      // cast base class to derived so we can use derived class methods
-      std::shared_ptr<CollectorComponent> cc;
-      std::shared_ptr<ActorComponent>     ac;
-
-      ac = owner->components[CollectorComponent::id];
-      cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
-
-      int vases = cc->getVases();
-      std::cerr << "vases before: " << vases << std::endl;
-      cc->setVases(vases-1);
-
-      vases = cc->getVases();
-      std::cerr << "vases after: " << vases << std::endl;
-    }
-  }
 }
 
 /** Reset the component

@@ -4,8 +4,6 @@
 const int ActorFactory::size = 20;
 //Array holding the registered components
 ComponentId* ActorFactory::actorComponentIds[size];
-//Array holding pointers to created actors
-StrongActorPtr ActorFactory::actorInstances[size];
 //Array holding reference to actor component creators
 ActorComponentCreator ActorFactory::actorComponentCreators[size];
 
@@ -56,9 +54,6 @@ StrongActorPtr ActorFactory::CreateActor(const char* resource, int* state) {
 			return StrongActorPtr();
 		}
 	}
-	
-	//Registers the actor to the factor array
-	actorInstances[actor->getInstance()] = actor;
 
 	return actor;
 }
@@ -132,5 +127,5 @@ bool ActorFactory::registerComponent(ComponentId* id, ActorComponentCreator crea
 }
 
 void ActorFactory::reset(void) {
-	Actor::instances = 0;
+	//Actor::instances = 1;
 }
