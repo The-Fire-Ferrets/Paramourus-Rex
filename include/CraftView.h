@@ -4,33 +4,29 @@
 #include "Constants.h"
 #include "ActorFactory.h"
 
-class LevelView  {
+class CraftView  {
 	private:
 		static const int size;
-		static int num_actors;
+		static int totalFlowers;
+		static int fireFlowers;
+		static int waterFlowers;
+		static int earthFlowers;
+		static int airFlowers;
 		static sf::Texture background_texture;
 		static sf::Sprite background;
 		static std::string name;
 		static sf::Clock level_clock;
-		static sf::Text timer;
-		static std::string timer_string;
+		static sf::Text text;
 		static sf::Font font;
-		static sf::Vector2f timer_position;
+		static sf::Vector2f text_pos;
 		static void cleanUp(void);
-		static sf::View gameView;
-		static sf::View minimapView;
-		static StrongActorPtr player;
 	public:
-		static StrongActorPtr actors[];		
-		static std::string getName(void);
-		static int getNumActors(void);
+		static int getNumFlowers(void);
 		static void start();
-		static void quit(void);
-
-		//ALL VIEW CLASSES MUST IMPLEMENT BELOW METHODS
-		static void Create(const char* resource, int* state);
-		static void update(sf::RenderWindow *window, int* state, float time);
+		static void Create(const char *resource, int *state);
 		static void update(EventInterfacePtr e);
+		static void update(sf::RenderWindow *window, int *state);
+		static void quit(void);
 		static void render(sf::RenderWindow *window);
 };
 
