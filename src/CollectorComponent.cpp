@@ -49,7 +49,6 @@ bool CollectorComponent::Init(pugi::xml_node* elem) {
 			}
 		}
 	}
-	flower_list[vases];
 	return true;
 }
 
@@ -79,7 +78,8 @@ void CollectorComponent::update(EventInterfacePtr e) {
 				if (!EventManagerInterface::get()->queueEvent(new CollectEvent(e->getTimeStamp(), owner->getInstance(), other_actor->getInstance())))
 					std::cout << "CollectableComponent::update: Unable to queue event" << std::endl;		
 				setVases(getVases()-1);
-				flower_list[flowers++] = &other_actor;
+				flowerList.push_back(other_actor);
+				flowers++;
 				std::cout << owner->getId() << "  collecting " << other_actor->getId() << " vase number now " << vases << std::endl;			}		
 		}
 		else if (owner->getId() == "Player") {

@@ -31,7 +31,7 @@ class CollectorComponent : public ActorComponent {
 		int flowers;
 		static int instances;
 		static const bool registered;
-		StrongActorPtr* flower_list[];
+		std::vector<StrongActorPtr> flowerList;
 };
 
 #endif
