@@ -27,6 +27,8 @@ class DialogueView {
 		static sf::Vector2f philPos;
 		static sf::Vector2f dialogue_pos;
 
+		static bool pressed;
+
 	public:
 		static std::string boxes[];
 		static void Create(const char* resource, int* state);
