@@ -6,7 +6,8 @@ const int ActorFactory::size = 20;
 ComponentId* ActorFactory::actorComponentIds[size];
 //Array holding reference to actor component creators
 ActorComponentCreator ActorFactory::actorComponentCreators[size];
-
+//List holding component creators
+std::vector<ComponentId> ActorFactory::componentCreatorList;
 /** Creates an actor and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -115,6 +116,9 @@ bool ActorFactory::registerComponent(ComponentId* id, ActorComponentCreator crea
 	}
 	
 	//Adds references to the component id and its creator to arrays  (using a map would be better but couldn't find a way to implement a growing map statically)
+	//std::cout << componentCreatorList.size() << std::endl;
+	componentCreatorList.push_back(*id);
+	//std::cout << componentCreatorList.size() << std::endl;
 	if (idx >= 0) {
 		ActorFactory::actorComponentCreators[idx] = creator;
 		ActorFactory::actorComponentIds[idx] = id;

@@ -327,3 +327,13 @@ void Actor::addDelegate(EventType type) {
 		std::cout << "Actor::Init: Unable to register delegate function" << std::endl;
 	}
 }
+
+/** Checks to see if the Actor has the given attribute by checking the type of its components
+ **
+**/
+bool Actor::hasAttribute(std::string attr) {
+	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
+		if ((it->second)->getType() == attr)
+			return true;
+	return false;
+}

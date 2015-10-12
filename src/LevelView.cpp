@@ -164,6 +164,7 @@ void LevelView::render(sf::RenderWindow *window) {
 	std::vector<StrongActorPtr>::iterator it;
 	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
 		(*it)->render(window);
+	player->render(window);
 
 	//Set minimap view
 	minimapView.setViewport(sf::FloatRect(0.90f, 0, 0.10f, 0.10f));
@@ -174,6 +175,7 @@ void LevelView::render(sf::RenderWindow *window) {
 	window->draw(timer);
 	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
 		(*it)->render(window);
+	player->render(window);
 }
 
 /** Ready the level for start

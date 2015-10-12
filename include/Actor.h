@@ -33,6 +33,7 @@ class Actor {
 
 		void getEvent(EventInterfacePtr e);
 		bool hasComponent(ComponentId component);
+		bool hasAttribute(std::string attr);
 
 		sf::Vector2f getPosition(void);
 		void setPosition(sf::Vector2f pos);

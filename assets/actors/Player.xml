@@ -7,6 +7,6 @@
 		<Items Vases = "6" />
 	</CollectorComponent>
 	<PhysicsComponent>
-		<Category Some_Attribute = "Value" />
+		<Properties Type = "Transparent" />
 	</PhysicsComponent>
 </Player>

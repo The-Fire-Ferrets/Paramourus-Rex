@@ -14,6 +14,7 @@ class ActorFactory {
 		static void reset(void);
 
 	protected:
+		static std::vector<ComponentId> componentCreatorList;
 		static ComponentId* actorComponentIds[];
 		static ActorComponentCreator actorComponentCreators[];
 		static StrongActorComponentPtr CreateComponent(pugi::xml_node* elem);
