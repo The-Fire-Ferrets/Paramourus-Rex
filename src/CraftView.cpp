@@ -70,7 +70,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	// Accessing this info from CollectorComponent.
 	const char*  actor;
 	StrongActorPtr* actorPtr;		
-
+	// Implementation will change here to directly include access from LevelView::player once merge occurs.
 	//for (actorPtr  = CollectorComponent::getFlowers(); actor = actorPtr->getId();actorPtr++){
 		if (!strcmp("FireFlower", actor)){
 			fireFlowers++;
