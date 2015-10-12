@@ -21,7 +21,7 @@ class CollectorComponent : public ActorComponent {
 
 		void setVases(int v);
 		int getVases(void);
-		static StrongActorPtr* getFlowers(void);		
+		StrongActorPtr* getFlowers(void);		
 		static ComponentId id;
 		ComponentId getId(void) override;
 		
@@ -31,7 +31,7 @@ class CollectorComponent : public ActorComponent {
 		int flowers;
 		static int instances;
 		static const bool registered;
-		static StrongActorPtr* flower_list[];
+		StrongActorPtr* flower_list[];
 };
 
 #endif

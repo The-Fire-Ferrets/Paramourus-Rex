@@ -71,7 +71,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	const char*  actor;
 	StrongActorPtr* actorPtr;		
 
-	for (actorPtr  = CollectorComponent::getFlowers(); actor = actorPtr->getId();actorPtr++){
+	//for (actorPtr  = CollectorComponent::getFlowers(); actor = actorPtr->getId();actorPtr++){
 		if (!strcmp("FireFlower", actor)){
 			fireFlowers++;
 		}
@@ -84,7 +84,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 		else if (!strcmp("EarthFlower", actor)){
 			earthFlowers++;
 		}
-	}		
+	//}		
 	
 }
 
