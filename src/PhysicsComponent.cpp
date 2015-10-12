@@ -42,6 +42,12 @@ PhysicsComponent::~PhysicsComponent(void) {
 bool PhysicsComponent::Init(pugi::xml_node* elem) {;
 	for (pugi::xml_node tool = elem->first_child(); tool; tool = tool.next_sibling()) {
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
+			if (!strcmp(attr.name(),"Type"))
+				type = attr.value();
+			else {
+				std::cout << "PhysicsComponent::Init: Failed to initialize" << std::endl;
+				return false;
+			}
 		}
 	}	
 	return true;	
@@ -121,7 +127,7 @@ void PhysicsComponent::quit(void) {
 bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
   // is the owner currently in another actor's bounding box?
   for (auto it = last_actors.begin(); it != last_actors.end(); it++) {
-    if ( (*it)->getBoundary()->intersects(bound)) {
+    if ( (*it)->hasAttribute("Opaque") && (*it)->getBoundary()->intersects(bound)) {
 	//If not moving in the direction in the direction that caused contact previously, OK to move
 	if (last_dir != sf::Vector2f(0,0) && last_dir != dir)
 		return true;

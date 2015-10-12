@@ -7,6 +7,6 @@
 		<Properties Type = "Water"/>
 	</CraftableComponent>
 	<PhysicsComponent>
-		<Category Some_Attribute = "Value" />
+		<Properties Type = "Transparent" />
 	</PhysicsComponent>
 </WaterFlower>

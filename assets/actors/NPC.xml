@@ -7,6 +7,6 @@
 		<Items Bags = "0" />
 	</CollectorComponent>
 	<PhysicsComponent>
-		<Category Some_Attribute = "Value" />
+		<Properties Type = "Transparent" />
 	</PhysicsComponent>
 </NPC>
