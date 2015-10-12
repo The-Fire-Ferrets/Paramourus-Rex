@@ -113,8 +113,8 @@ void CollectorComponent::quit(void) {
 /** Returns the list of collected flowers
 **
 **/
-StrongActorPtr *CollectorComponent::getFlowers(void){
-	return *flower_list;
+std::vector<StrongActorPtr> CollectorComponent::getFlowers(void){
+	return flowerList;
 }
 
 /** Sets the numnber of vases
