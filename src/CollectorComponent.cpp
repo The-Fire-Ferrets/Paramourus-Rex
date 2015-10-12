@@ -110,6 +110,13 @@ void CollectorComponent::quit(void) {
 
 }
 
+/** Returns the list of collected flowers
+**
+**/
+StrongActorPtr *CollectorComponent::getFlowers(void){
+	return *flower_list;
+}
+
 /** Sets the numnber of vases
  ** b: new number of vases
 **/

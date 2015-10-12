@@ -18,7 +18,8 @@ sf::Vector2f MapView::sizes[size];
 sf::Sprite MapView::background;
 //Map Background texture
 sf::Texture MapView::background_texture;
-
+//Make sure to respond to only 1 click
+bool MapView::pressed = false;
 
 /** Creates the map from the give configuration file
  **
@@ -91,16 +92,22 @@ void MapView::Create(const char* resource) {
 /** Checks to see if level was clicked on and switches to it
  **
 **/
-void MapView::update(sf::RenderWindow *window, int* state, float time) {
-	
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+void MapView::update(sf::RenderWindow *window, int* state, float time) {	
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
+		pressed = true;
 		const sf::Vector2i pos = sf::Mouse::getPosition(*window);
 		for (int i = 0; i < num_levels; i++) {
-			if (sprites[i].getGlobalBounds().contains(pos.x, pos.y))
+			if (sprites[i].getGlobalBounds().contains(pos.x, pos.y)) {
 				LevelView::Create(levels[i].c_str(), state);
 				DialogueView::Create(levels[i].c_str(), state);
+				LevelView::start();
 				*state = 1;
+
+			}
 		}
+	}
+	else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
+		pressed = false;
 	}
 }
 

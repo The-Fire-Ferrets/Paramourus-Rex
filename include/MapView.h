@@ -16,6 +16,7 @@ class MapView {
 		static sf::Texture textures[];
 		static sf::Vector2f positions[];
 		static sf::Vector2f sizes[];
+		static bool pressed;
 	public:
 		static void Create(const char* resource);
 		

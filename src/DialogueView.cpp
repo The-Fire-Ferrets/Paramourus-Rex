@@ -27,14 +27,15 @@ sf::Vector2f DialogueView::dianaPos;
 sf::Vector2f DialogueView::philPos;
 sf::Sprite DialogueView::Diana;
 sf::Sprite DialogueView::Phil;
-
+bool DialogueView::pressed = false;
 
 /** Searches for the correct dialogue box the player is on and populates the text with what you want Diana to be saying 
 ** resource: filename for XML  file we are getting the dialogue from. Currently just level0, only level we have.
 ** state: current game state (state should be 2 if in dialogue view)
 **/
 void DialogueView::Create(const char* resource, int* state){
-	
+	//Reset the index before each iteration
+	index = 0;
 	// reference to XML file we are getting our info from
 	pugi::xml_document doc;
 
@@ -119,6 +120,7 @@ void DialogueView::Create(const char* resource, int* state){
 	}
 	
 	text.setPosition(dialogue_pos);
+	text.setColor(sf::Color::Black);
 	Diana.setPosition(dianaPos);
 	Phil.setPosition(philPos);
 	
@@ -138,9 +140,6 @@ void DialogueView::Create(const char* resource, int* state){
 		}
 	    }
 	}
-	
-
-	*state = 2;
 
 }
 
@@ -149,24 +148,19 @@ void DialogueView::Create(const char* resource, int* state){
 ** it switches to the next desired block of text.  Called from main.
 **/
 void DialogueView::update(sf::RenderWindow *window, int* state){
-	//if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-	sf::Event event;
-	while (window->pollEvent(event)){
-	  /*** ISSUE CURRENTLY HERE: Tried doing the MouseButtonPressed event,
-	   * but it was rapidly indexing here for the duration of the mouse click --
-	   * i.e., no matter how quickly I clicked, it would call this and index about
-	   * 50 times, giving no opportunity for the text to display. Working on fixing.
-	   ***/
-	    if (event.type == sf::Event::MouseButtonReleased){
-		index++;
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed){
+		pressed = true;
+		std::cout << index << std::endl;
 		if (index > numDialogues){
-		    *state = 1;
-		    LevelView::start();
+		    *state = 0;
 		}
 		else{
 		  text.setString(boxes[index]);
 		}
-	    }
+		index++;
+	}
+	else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+		pressed = false;
 	}
 }
 
@@ -186,6 +180,7 @@ void DialogueView::render(sf::RenderWindow *window){
     backlay.setFillColor(sf::Color::White);
     backlay.setSize(sf::Vector2f(760,200));
     backlay.setOutlineThickness(5);
+    text.setColor(sf::Color::Black);
     
     window->draw(background);
     window->draw(backlay);
