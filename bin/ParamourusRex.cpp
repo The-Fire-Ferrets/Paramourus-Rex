@@ -15,12 +15,9 @@ int main(int argc, char* argv[])
 	//Load Configuration
 	if (!loadConfiguration())
 		std::cout << "Main: Failed to load configuration" << std::endl;
-	
-	//Set up the global configuration
-  	Configuration::instance()->setWindowDimensions(window_width, window_height);
 
 	//Create window
-	sf::RenderWindow App(sf::VideoMode(window_width, window_height,64), "Paramourus Rex by Will Hollingsworth, Bina Kakusa, Belol Nessar, and Meghan Tinkler", sf::Style::Titlebar|sf::Style::Close);
+	sf::RenderWindow App(sf::VideoMode(Configuration::getWindowWidth(), Configuration::getWindowHeight(),64), "Paramourus Rex by Will Hollingsworth, Bina Kakusa, Belol Nessar, and Meghan Tinkler", sf::Style::Titlebar|sf::Style::Close);
 	sf::View defaultView = App.getDefaultView();
 	//Loads the map
 	const char* map = {"Map"};	
@@ -115,6 +112,10 @@ int main(int argc, char* argv[])
  **
 **/
 bool loadConfiguration(void) {
+	//Configuration Variables
+	unsigned int window_height;
+	unsigned int window_width;
+
 	//Load configuration
   	if (!(result = doc.load_file( ("./assets/" + config + ".xml").c_str() ))) {
 		std::cout << "Main: Failed to load config" << std::endl;
@@ -142,6 +143,10 @@ bool loadConfiguration(void) {
 				}
 			}
 		}
-	}	
+	}
+
+	//Set up the global configuration
+  	Configuration::setWindowDimensions(window_width, window_height);
+
 	return true;
 }

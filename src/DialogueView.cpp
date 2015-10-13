@@ -60,7 +60,7 @@ void DialogueView::Create(const char* resource, int* state){
 		}
 		else if (!strcmp(attr.name(), "Background")) {
 			background_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
-			background = sf::Sprite(background_texture, sf::IntRect(0, 0, 800, 800));
+			background = sf::Sprite(background_texture, sf::IntRect(0, 0, Configuration::getWindowWidth(), Configuration::getWindowHeight()));
 			background.setPosition(sf::Vector2f(0,0));
 		}
 		else if (!strcmp(attr.name(), "Font")) {

@@ -20,6 +20,7 @@ class LevelView  {
 		static sf::View gameView;
 		static sf::View minimapView;
 		static StrongActorPtr player;
+		static int duration;
 	public:
 		static std::vector<StrongActorPtr> actorList;	
 		static std::string getName(void);

@@ -7,10 +7,6 @@
 #include "EventManager.h"
 #include "DialogueView.h"
 
-//Configuration variables
-int window_height;
-int window_width;
-
 //Timing and tracking
 sf::Clock fr_clock;
 sf::Time elapsed;

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level0 Name = "Hello World!" Background = "Level0.png" Text_X = "650" Text_Y = "0" Font = "arial.ttf" Text_Size = "10">
+<Level0 Name = "Hello World!" Background = "Level0.png" Text_X = "650" Text_Y = "0" Font = "arial.ttf" Text_Size = "10" Duration = "10000">
 	<Player>
 		<Location X = "0" Y = "0" Width = "10" Height = "10"/>
 	</Player>

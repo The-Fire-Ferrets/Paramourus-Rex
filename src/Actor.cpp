@@ -104,8 +104,8 @@ void Actor::move(float distance, sf::Vector2f direction) {
 	sf::Vector2f p = this->getPosition() + direction * distance;
 
 	// disallow movement off the screen
-	unsigned width = Configuration::instance()->getWindowWidth();
-	unsigned height = Configuration::instance()->getWindowHeight();
+	unsigned width = Configuration::getWindowWidth();
+	unsigned height = Configuration::getWindowHeight();
 
 	if (p.x < FLT_EPSILON)
 		p.x = FLT_EPSILON;

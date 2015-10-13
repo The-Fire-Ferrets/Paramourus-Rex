@@ -1,4 +1,4 @@
-<?xml version="1.v0"?>
+<?xml version="1.0"?>
 <Level0 NumDialogues = "12" Background = "Level0.png" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" Text_X = "20" Text_Y = "600" Font = "arial.ttf" Text_Size = "30">
   <Dialogue ID = "1" Text ="The year is 65,000,000 B.C. and life is pretty okay -- or as&#10;okay as it gets as the son of a&#10;travelling VelociReporter." Background = "" />
 	<Dialogue ID = "2" Text = "Your name is Phillip Osoraptor, and you've finally&#10;moved back to your home valley, reuniting with&#10;one of your only childhood friends, Diana Tyrana." Background = ""/>

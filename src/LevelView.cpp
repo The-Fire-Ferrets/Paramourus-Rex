@@ -28,6 +28,8 @@ sf::View LevelView::gameView;
 sf::View LevelView::minimapView;
 //reference to player
 StrongActorPtr LevelView::player = NULL;
+//Level duration in ms
+int LevelView::duration;
 
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
@@ -55,7 +57,7 @@ void LevelView::Create(const char* resource, int* state) {
 			name = attr.value();
 		else if (!strcmp(attr.name(), "Background")) {
 			background_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
-			background = sf::Sprite(background_texture, sf::IntRect(0, 0, 800, 800));
+			background = sf::Sprite(background_texture, sf::IntRect(0, 0, Configuration::getWindowWidth(), Configuration::getWindowHeight()));
 			background.setPosition(sf::Vector2f(0,0));
 		}
 		else if (!strcmp(attr.name(), "Font")) {
@@ -80,6 +82,12 @@ void LevelView::Create(const char* resource, int* state) {
 				std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
 			}
 		}
+		else if (!strcmp(attr.name(), "Duration")) {
+			duration = (std::strtol(attr.value(), &temp, 10));
+			if (*temp != '\0') {
+				std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
+		}
 	}
 	timer.setPosition(timer_position);
 	//Iterates over XML to get components to add
@@ -100,9 +108,9 @@ void LevelView::Create(const char* resource, int* state) {
 		num_actors++;
 	}
 	//Set views so can only see a quarter of the map at once
-	gameView = sf::View(sf::FloatRect(0, 0, Configuration::instance()->getWindowWidth()/4, Configuration::instance()->getWindowHeight()/4));
+	gameView = sf::View(sf::FloatRect(0, 0, Configuration::getWindowWidth()/4, Configuration::getWindowHeight()/4));
 	//Set minimap to see entire map
-	minimapView = sf::View(sf::FloatRect(0, 0, Configuration::instance()->getWindowWidth(), Configuration::instance()->getWindowHeight()));
+	minimapView = sf::View(sf::FloatRect(0, 0, Configuration::getWindowWidth(), Configuration::getWindowHeight()));
 }
 
 std::string LevelView::getName(void) {
@@ -117,7 +125,7 @@ int LevelView::getNumActors(void) {
  **
 **/
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
-	float timer_time = 10000 - level_clock.getElapsedTime().asMilliseconds();
+	float timer_time = duration - level_clock.getElapsedTime().asMilliseconds();
 
 	if (timer_time <= 0) {
 		*state = 2;

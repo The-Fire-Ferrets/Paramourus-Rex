@@ -1,22 +1,8 @@
 #include "Configuration.h"
-Configuration* Configuration::globalConfigurationPtr = nullptr;
 
-/** Destructor
- ** 
-**/
-Configuration::~Configuration() {
-	// free the memory
-	delete globalConfigurationPtr;
-}
-
-/** Returns a pointer to the configuration
- **
-**/
-Configuration* Configuration::instance() {
-	if (!globalConfigurationPtr)
-		globalConfigurationPtr = new Configuration();
-	return globalConfigurationPtr;
-}
+//WIndow Height
+unsigned int Configuration::window_height = 0;
+unsigned int Configuration::window_width = 0;
 
 /** Sets the dimensions of the game window
  **
@@ -29,13 +15,13 @@ void Configuration::setWindowDimensions(unsigned width, unsigned height) {
 /** Returns the width of the game window
  **
 **/
-unsigned Configuration::getWindowWidth()  const {
+unsigned int Configuration::getWindowWidth() {
 	return window_width;
 }
 
 /** Returns the height of the game window
  **
 **/
-unsigned Configuration::getWindowHeight() const {
+unsigned int Configuration::getWindowHeight() {
 	return window_height;
 }
