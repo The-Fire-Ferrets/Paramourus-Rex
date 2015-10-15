@@ -9,74 +9,74 @@
 #include "LevelView.h"
 
 class Actor {
-	friend class ActorFactory;
-	friend class ActorComponent;
-	public:
-		static int instances;
-		int getInstance(void);
+    friend class ActorFactory;
+    friend class ActorComponent;
+    public:
+        static int instances;
+        int getInstance(void);
 
-		ActorComponents components;
-		ActorId getId(void);
+        ActorComponents components;
+        ActorId getId(void);
 
-		explicit Actor(void);
-		bool Init(pugi::xml_node* elem);
-		void PostInit(pugi::xml_node* elem);
-		~Actor(void);
+        explicit Actor(void);
+        bool Init(pugi::xml_node* elem);
+        void PostInit(pugi::xml_node* elem);
+        ~Actor(void);
 
-		void move(float distance, sf::Vector2f direction);
+        void move(float distance, sf::Vector2f direction);
 
-		void update(float time);
-		void render(sf::RenderWindow *window);
-		void reset(void);
-		void restart(void);
-		void quit(void);
+        void update(float time);
+        void render(sf::RenderWindow *window);
+        void reset(void);
+        void restart(void);
+        void quit(void);
 
-		void getEvent(EventInterfacePtr e);
-		bool hasComponent(ComponentId component);
-		bool hasAttribute(std::string attr);
+        void getEvent(EventInterfacePtr e);
+        bool hasComponent(ComponentId component);
+        bool hasAttribute(std::string attr);
 
-		sf::Vector2f getPosition(void);
-		void setPosition(sf::Vector2f pos);
+        sf::Vector2f getPosition(void);
+        void setPosition(sf::Vector2f pos);
 
-		sf::Vector2f getSize(void);
-		void setSize(sf::Vector2f sz);
+        sf::Vector2f getSize(void);
+        void setSize(sf::Vector2f sz);
 
-		void setVisible(bool v);
-		bool getVisible(void);
+        void setVisible(bool v);
+        bool getVisible(void);
 
-		int getState(void);
-		void setState(int actorState);
-		int* getGameState(void);
-		void setGameState(int state);
-		void resetGameState(int* state);
+        int getState(void);
+        void setState(int actorState);
+        int* getGameState(void);
+        void setGameState(int state);
+        void resetGameState(int* state);
 
-		void addDelegate(EventType type);
+        void addDelegate(EventType type);
 
-		sf::FloatRect* getBoundary(void);
+        sf::FloatRect* getBoundary(void);
 
-		Actor* getCopy(void);
-		const Actor* getCopy(void) const;
-	private:
-		ActorId id;
-		std::vector<EventDelegate> delegateFuncList;
+        Actor* getCopy(void);
+        const Actor* getCopy(void) const;
+    private:
+        ActorId id;
+        std::vector<EventDelegate> delegateFuncList;
 
-		std::string texture_filename;
-		std::string sprite_filename;
+        std::string texture_filename;
+        std::string sprite_filename;
 
-		sf::Vector2f position;
-		sf::Texture texture;
-		sf::Vector2f size;
-		sf::Sprite sprite;
+        sf::Vector2f position;
+        sf::Texture texture;
+        sf::Vector2f size;
+        sf::Sprite sprite;
 
-		int instance;
-		int* game_state;
-		int state;
-		bool visible;
-		sf::FloatRect* obstacle;
-		sf::FloatRect* boundary;
+        int instance;
+        int* game_state;
+        int state;
+        bool visible;
+        sf::FloatRect* obstacle;
+        sf::FloatRect* boundary;
 
-		void AddComponent(StrongActorComponentPtr component);
-		void updateBoundary(void);
+        void AddComponent(StrongActorComponentPtr component);
+        void updateBoundary(void);
 };
 
 #endif

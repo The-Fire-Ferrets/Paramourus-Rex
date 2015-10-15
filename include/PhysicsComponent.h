@@ -11,29 +11,29 @@
 
 class PhysicsComponent : public ActorComponent {
 
-	public:
-		PhysicsComponent(void);
-		~PhysicsComponent(void);
-		bool Init(pugi::xml_node* elem) override;
-		void PostInit(void) override;
+    public:
+        PhysicsComponent(void);
+        ~PhysicsComponent(void);
+        bool Init(pugi::xml_node* elem) override;
+        void PostInit(void) override;
 
-		static ComponentId id;
-		
-		void update(float time) override;	
-		void update(EventInterfacePtr e) override;
-		void reset(void) override;
-		void restart(void) override;
-		void quit(void) override;
-		bool query(sf::FloatRect bound, sf::Vector2f dir);
+        static ComponentId id;
 
-		ComponentId getId(void) override;
+        void update(float time) override;	
+        void update(EventInterfacePtr e) override;
+        void reset(void) override;
+        void restart(void) override;
+        void quit(void) override;
+        bool query(sf::FloatRect bound, sf::Vector2f dir);
 
-	private:
-		static ActorComponent* create();
-		static const bool registered;
-		static int instances;
-		std::vector<StrongActorPtr> last_actors;
-		sf::Vector2f last_dir;
+        ComponentId getId(void) override;
+
+    private:
+        static ActorComponent* create();
+        static const bool registered;
+        static int instances;
+        std::vector<StrongActorPtr> last_actors;
+        sf::Vector2f last_dir;
 };
 
 #endif
