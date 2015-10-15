@@ -1,11 +1,10 @@
 #include "InputComponent.h"
 #include "PhysicsComponent.h"
 #include "CollectorComponent.h"
+#include "AI.h"
 #include <algorithm> // std::find()
-#include <cstdlib>   // std::rand()
 
 #include <SFML/Window/Keyboard.hpp> // sf::Keyboard, sf::Key
-
 //Unique instance id among instances of the same component
 int InputComponent::instances = -1;
 //Unique component id
@@ -48,12 +47,7 @@ ActorComponent* InputComponent::create() {
 /** Constructor
  ** Sets up unique instance ID
 **/
-InputComponent::InputComponent(void) :
-  NORTH(sf::Vector2f(0.f, -1.f)),     // these would be static const members
-  SOUTH(sf::Vector2f(0.f, 1.f)),      // except that prevents the use of std::find()
-  EAST(sf::Vector2f(1.f, 0.f)),       // which was kind of the whole point
-  WEST(sf::Vector2f(-1.f, 0.f)),
-  cardinals{ NORTH, SOUTH, EAST, WEST }
+InputComponent::InputComponent(void)
 {
 	instance = instances;
 }
@@ -97,8 +91,16 @@ void InputComponent::update(float time) {
   sf::Vector2f next_direction;
 
 	if (type == "Artificial") {
-		// TODO: this should be done with path finding
-    next_direction = cardinals[std::rand() % 4]; 
+    AI ai(owner->getPosition());
+    sf::Vector2f flower_pos = ai.findClosestFlower();
+    sf::Vector2f player_pos = ai.findPlayer();
+
+    if (flower_pos == sf::Vector2f(-1.f, -1.f)) {
+      next_direction = ai.chooseDirection(player_pos);
+    }
+    else {
+      next_direction = ai.chooseDirection(flower_pos);
+    }
 	}
 
 	else if (type == "Keyboard") {

@@ -3,8 +3,10 @@
 
 #include "Constants.h"
 #include "ActorFactory.h"
+#include "AI.h"
 
 class LevelView  {
+  friend class AI;
 	private:
 		static const int size;
 		static int num_actors;

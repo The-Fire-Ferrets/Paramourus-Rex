@@ -3,12 +3,13 @@
 
 #include "Constants.h"
 #include "ActorComponent.h"
+#include "AI.h"
 #include "ActorFactory.h"
 #include "CollectorComponent.h"
 #include "ContactEvent.h"
 
 class CollectableComponent : public ActorComponent {
-
+  friend class AI;
 	public:
 		CollectableComponent();
 		bool Init(pugi::xml_node* elem) override;

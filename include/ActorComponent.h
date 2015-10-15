@@ -3,8 +3,10 @@
 
 #include "Constants.h"
 #include "CollectEvent.h"
-class ActorComponent {
+#include "AI.h"
 
+class ActorComponent {
+  friend class AI;
 	friend class ActorFactory;
 	
 	protected:

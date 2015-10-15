@@ -5,6 +5,13 @@
 #include "ActorComponent.h"
 #include "ActorFactory.h"
 
+// the four cardinal directions and a convenient list
+const sf::Vector2f NORTH = sf::Vector2f(0.f, -1.f);
+const sf::Vector2f SOUTH = sf::Vector2f(0.f, 1.f);
+const sf::Vector2f EAST = sf::Vector2f(1.f, 0.f);
+const sf::Vector2f WEST = sf::Vector2f(-1.f, 0.f);
+const sf::Vector2f cardinals[4] = { NORTH, SOUTH, EAST, WEST };
+
 class InputComponent : public ActorComponent {
 
 	public:
@@ -23,13 +30,6 @@ class InputComponent : public ActorComponent {
 
     sf::Vector2f getDirection() const;
     void setDirection(const sf::Vector2f& dir);
-
-    // the four cardinal directions and a convenient list
-    const sf::Vector2f NORTH;
-    const sf::Vector2f SOUTH;
-    const sf::Vector2f EAST;
-    const sf::Vector2f WEST;
-    const sf::Vector2f cardinals[4];
 
 	private:
 		static ActorComponent* create();

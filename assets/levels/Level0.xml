@@ -20,5 +20,7 @@
 	</EarthFlower>
 	<Obstacle>
 		<Location X = "300" Y = "300" Width = "10" Height = "10"/>
-	</Obstacle>
+  </Obstacle>
+  <Obstacle>
+    <Location X = "100" Y = "100" Width = "10" Height = "10"/>
 </Level0>
