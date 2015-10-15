@@ -4,7 +4,7 @@
 		<Control Type = "Artificial"/>
 	</InputComponent>	
 	<CollectorComponent>
-		<Items Bags = "0" />
+		<Items Vases = "5000" />
 	</CollectorComponent>
 	<PhysicsComponent>
 		<Properties Type = "Transparent" />
