@@ -86,6 +86,28 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		}
 	}
 
+	sf::Vector2f pos = position;
+	if (pos.x < 0 || pos.y < 0) {
+		bool new_position = false;
+		bool conflict = false;
+		while (!new_position) {
+			pos.x = rand() % Configuration::getWindowWidth();
+			pos.y = rand() % Configuration::getWindowHeight();
+
+			std::vector<StrongActorPtr>::iterator it_all;
+			for (it_all = LevelView::actorList.begin(); it_all != LevelView::actorList.end(); it_all++) {
+				if ((*it_all)->getPosition() == pos) {
+					conflict = true;
+					break;
+				}
+			}
+			if (!conflict)
+				new_position = true;
+			conflict = false;
+		}
+	}
+	position = pos;
+	std::cout << pos.x << " " << pos.y << " " << Configuration::getWindowWidth()<< std::endl;
 	boundary = new sf::FloatRect(position.x, position.y, size.x, size.y);
 	texture.loadFromFile(("./assets/sprites/" + texture_filename).c_str());
 	sprite = sf::Sprite(texture, sf::IntRect(0, 0, (texture.getSize()).x, (texture.getSize()).y));

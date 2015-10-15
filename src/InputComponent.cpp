@@ -86,7 +86,7 @@ void InputComponent::PostInit(void) {
  ** time: current game time
 **/
 void InputComponent::update(float time) {
-	float distance = time * velocity;
+	float distance = time * speed;
   // cast base class to derived so we can use derived class methods
   std::shared_ptr<PhysicsComponent>   pc;
   std::shared_ptr<ActorComponent>     ac;
@@ -127,7 +127,7 @@ void InputComponent::update(float time) {
 	}
 
     this ->setDirection(next_direction);
-    owner->move(distance * speed, direction);
+    owner->move(distance, direction);
 }
 
 /** Receives event when the actor is being contacted by another actor and responds by accordingly

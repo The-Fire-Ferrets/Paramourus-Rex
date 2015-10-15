@@ -96,16 +96,30 @@ void LevelView::Create(const char* resource, int* state) {
 			actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
 			(actorList.back())->PostInit(&tool);
 			player = (actorList.back());
+			num_actors++;
 		}
 		else if (num_actors == 0) {
 			actorList.push_back(player);
 			(actorList.back())->PostInit(&tool);
+			num_actors++;
 		}
 		else {
-			actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-			(actorList.back())->PostInit(&tool);
+			int generate = 1;
+			for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
+				if (!strcmp(attr.name(), "Generate")) {
+					generate = (std::strtol(attr.value(), &temp, 10));
+					if (*temp != '\0') {
+						std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
+					}
+				}
+			}
+			while (generate-- > 0) {
+				actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
+				(actorList.back())->PostInit(&tool);
+				num_actors++;
+				std::cout << num_actors << std::endl;
+			}
 		}
-		num_actors++;
 	}
 	//Set views so can only see a quarter of the map at once
 	gameView = sf::View(sf::FloatRect(0, 0, Configuration::getWindowWidth()/4, Configuration::getWindowHeight()/4));

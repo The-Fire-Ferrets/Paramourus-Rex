@@ -83,6 +83,7 @@ sf::Vector2f AI::chooseDirection(const sf::Vector2f dest) const {
   // TODO: is there a better way to organize this?  only way i can see obstacles 
   // being an issue is if abs(gap.x) == abs(gap.y) (ie, npc and obstacle are 
   // opposite corners on a square
+
   if (std::abs(gap.x) > std::abs(gap.y)) {
     if (gap.x < FLT_EPSILON && !obstacle) {
       direction = EAST;
@@ -150,10 +151,9 @@ bool AI::isObstacleInPath(const sf::Vector2f& dest) const {
 
     m1defined = slope((*it), npc_pos, m1);
     m2defined = slope(dest, npc_pos, m2);
-
     // if slopes are the same, just see if if the coordinate of the obstacle 
     // falls in the right range
-    if ((!m1defined && !m2defined) || std::abs(m1-m2) < 2.5f) {
+    if ((!m1defined && !m2defined) || std::abs(m1-m2) < 10.f) {
       return (npc_pos.x <= (*it).x && (*it).x <= dest.x && npc_pos.y <= (*it).y && (*it).y <= dest.y)
         || (dest.x <= (*it).x && (*it).x <= npc_pos.x && dest.y <= (*it).y && (*it).y <= npc_pos.y);
     }

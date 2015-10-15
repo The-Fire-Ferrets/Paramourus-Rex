@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <NPC Type = "NPC" Texture = "NPC.png" Sprite = "NPC.png">
 	<InputComponent>
-		<Control Type = "Artificial" Speed = ".5"/>
+		<Control Type = "Artificial" Speed = "25"/>
 	</InputComponent>	
 	<CollectorComponent>
 		<Items Vases = "5000" />

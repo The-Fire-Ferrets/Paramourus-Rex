@@ -36,7 +36,6 @@ class InputComponent : public ActorComponent {
 		static ActorComponent* create();
 		static int instances;
 		static const bool registered;
-    static constexpr float velocity = 50.f;
 
     sf::Vector2f direction;
 };

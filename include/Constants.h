@@ -5,6 +5,7 @@
 #include <map>
 #include <memory>
 #include <tr1/memory>
+#include <unordered_set>
 
 #include <math.h>
 #include <string.h>
