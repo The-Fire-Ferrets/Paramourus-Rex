@@ -32,6 +32,7 @@ class InputComponent : public ActorComponent {
     void setDirection(const sf::Vector2f& dir);
 
 	private:
+		float speed;
 		static ActorComponent* create();
 		static int instances;
 		static const bool registered;

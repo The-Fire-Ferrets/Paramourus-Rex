@@ -58,10 +58,14 @@ InputComponent::InputComponent(void)
 **/
 bool InputComponent::Init(pugi::xml_node* elem) {	
 	//Iterate over the component's attributes
+	char * temp;
 	for (pugi::xml_node tool = elem->first_child(); tool; tool = tool.next_sibling()) {
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {		
 			if (!strcmp(attr.name(),"Type"))
 				type = attr.value();
+			else if (!strcmp(attr.name(), "Speed")) {
+				speed = std::strtof(attr.value(), &temp);
+			}
 			else {
 				std::cout << "InputComponent::Init: Failed to initialize" << std::endl;
 				return false;
@@ -123,7 +127,7 @@ void InputComponent::update(float time) {
 	}
 
     this ->setDirection(next_direction);
-    owner->move(distance, direction);
+    owner->move(distance * speed, direction);
 }
 
 /** Receives event when the actor is being contacted by another actor and responds by accordingly
