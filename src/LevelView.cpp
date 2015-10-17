@@ -36,132 +36,132 @@ int LevelView::duration;
  ** state: current game state
  **/
 void LevelView::Create(const char* resource, int* state) {
-    //Reference to current location in Actor population array
-    //Holds referenced to loaded XML file	
-    num_actors = 0;
-    pugi::xml_document doc;
+	//Reference to current location in Actor population array
+	//Holds referenced to loaded XML file	
+	num_actors = 0;
+	pugi::xml_document doc;
 
-    //Error check to see if file was loaded correctly
-    pugi::xml_parse_result result;
-    std::string resource_str(resource);
-    if (!(result = doc.load_file(("./assets/levels/" + resource_str + ".xml").c_str()))) {
-        std::cout << "LevelView::Create(...): Failed to load" << std::endl;
-        std::cout << "Filename: " << resource << " Load result: " << result.description() << std::endl;
-    }
+	//Error check to see if file was loaded correctly
+	pugi::xml_parse_result result;
+	std::string resource_str(resource);
+	if (!(result = doc.load_file(("./assets/levels/" + resource_str + ".xml").c_str()))) {
+		std::cout << "LevelView::Create(...): Failed to load" << std::endl;
+		std::cout << "Filename: " << resource << " Load result: " << result.description() << std::endl;
+	}
 
-    //Used to iterate over XML file to get attributes
-    pugi::xml_node tools = doc.child(resource);
-    char* temp;	
-    for (pugi::xml_attribute attr = tools.first_attribute(); attr; attr = attr.next_attribute()) {
-        if (!strcmp(attr.name(), "Name"))
-            name = attr.value();
-        else if (!strcmp(attr.name(), "Background")) {
-            background_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
-            background = sf::Sprite(background_texture, sf::IntRect(0, 0, Configuration::getWindowWidth(), Configuration::getWindowHeight()));
-            background.setPosition(sf::Vector2f(0,0));
-        }
-        else if (!strcmp(attr.name(), "Font")) {
-            font.loadFromFile(("./assets/" + (std::string)attr.value()).c_str());
-            timer = sf::Text(timer_string, font);
-        }
-        else if (!strcmp(attr.name(), "Text_Size")) {
-            timer.setCharacterSize(std::strtol(attr.value(), &temp, 10));
-            if (*temp != '\0') {
-                std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
-            }
-        }
-        else if (!strcmp(attr.name(), "Text_X")) {
-            timer_position.x = (std::strtol(attr.value(), &temp, 10));
-            if (*temp != '\0') {
-                std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
-            }
-        }
-        else if (!strcmp(attr.name(), "Text_Y")) {
-            timer_position.y = (std::strtol(attr.value(), &temp, 10));
-            if (*temp != '\0') {
-                std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
-            }
-        }
-        else if (!strcmp(attr.name(), "Duration")) {
-            duration = (std::strtol(attr.value(), &temp, 10));
-            if (*temp != '\0') {
-                std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
-            }
-        }
-    }
-    timer.setPosition(timer_position);
-    //Iterates over XML to get components to add
-    for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
-        if (num_actors == 0 && player == NULL) {		
-            actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-            (actorList.back())->PostInit(&tool);
-            player = (actorList.back());
-            num_actors++;
-        }
-        else if (num_actors == 0) {
-            actorList.push_back(player);
-            (actorList.back())->PostInit(&tool);
-            num_actors++;
-        }
-        else {
-            int generate = 1;
-            for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
-                if (!strcmp(attr.name(), "Generate")) {
-                    generate = (std::strtol(attr.value(), &temp, 10));
-                    if (*temp != '\0') {
-                        std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
-                    }
-                }
-            }
-            while (generate-- > 0) {
-                actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-                (actorList.back())->PostInit(&tool);
-                num_actors++;
-                std::cout << num_actors << std::endl;
-            }
-        }
-    }
-    //Set views so can only see a quarter of the map at once
-    gameView = sf::View(sf::FloatRect(0, 0, Configuration::getWindowWidth()/4, Configuration::getWindowHeight()/4));
-    //Set minimap to see entire map
-    minimapView = sf::View(sf::FloatRect(0, 0, Configuration::getWindowWidth(), Configuration::getWindowHeight()));
+	//Used to iterate over XML file to get attributes
+	pugi::xml_node tools = doc.child(resource);
+	char* temp;	
+	for (pugi::xml_attribute attr = tools.first_attribute(); attr; attr = attr.next_attribute()) {
+		if (!strcmp(attr.name(), "Name"))
+			name = attr.value();
+		else if (!strcmp(attr.name(), "Background")) {
+			background_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
+			background = sf::Sprite(background_texture, sf::IntRect(0, 0, Configuration::getWindowWidth(), Configuration::getWindowHeight()));
+			background.setPosition(sf::Vector2f(0,0));
+		}
+		else if (!strcmp(attr.name(), "Font")) {
+			font.loadFromFile(("./assets/" + (std::string)attr.value()).c_str());
+			timer = sf::Text(timer_string, font);
+		}
+		else if (!strcmp(attr.name(), "Text_Size")) {
+			timer.setCharacterSize(std::strtol(attr.value(), &temp, 10));
+			if (*temp != '\0') {
+				std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
+		}
+		else if (!strcmp(attr.name(), "Text_X")) {
+			timer_position.x = (std::strtol(attr.value(), &temp, 10));
+			if (*temp != '\0') {
+				std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
+		}
+		else if (!strcmp(attr.name(), "Text_Y")) {
+			timer_position.y = (std::strtol(attr.value(), &temp, 10));
+			if (*temp != '\0') {
+				std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
+		}
+		else if (!strcmp(attr.name(), "Duration")) {
+			duration = (std::strtol(attr.value(), &temp, 10));
+			if (*temp != '\0') {
+				std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
+		}
+	}
+	timer.setPosition(timer_position);
+	//Iterates over XML to get components to add
+	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
+		if (num_actors == 0 && player == NULL) {		
+			actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
+			(actorList.back())->PostInit(&tool);
+			player = (actorList.back());
+			num_actors++;
+		}
+		else if (num_actors == 0) {
+			actorList.push_back(player);
+			(actorList.back())->PostInit(&tool);
+			num_actors++;
+		}
+		else {
+			int generate = 1;
+			for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
+				if (!strcmp(attr.name(), "Generate")) {
+					generate = (std::strtol(attr.value(), &temp, 10));
+					if (*temp != '\0') {
+						std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
+					}
+				}
+			}
+			while (generate-- > 0) {
+				actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
+				(actorList.back())->PostInit(&tool);
+				num_actors++;
+				std::cout << num_actors << std::endl;
+			}
+		}
+	}
+	//Set views so can only see a quarter of the map at once
+	gameView = sf::View(sf::FloatRect(0, 0, Configuration::getWindowWidth()/4, Configuration::getWindowHeight()/4));
+	//Set minimap to see entire map
+	minimapView = sf::View(sf::FloatRect(0, 0, Configuration::getWindowWidth(), Configuration::getWindowHeight()));
 }
 
 std::string LevelView::getName(void) {
-    return name;
+	return name;
 }
 
 int LevelView::getNumActors(void) {
-    return num_actors;
+	return num_actors;
 }
 
 /** Checks to see if level was clicked on and switches to it
  **
  **/
-            void LevelView::update(sf::RenderWindow *window, int* state, float time) {
-                float timer_time = duration - level_clock.getElapsedTime().asMilliseconds();
+void LevelView::update(sf::RenderWindow *window, int* state, float time) {
+	float timer_time = duration - level_clock.getElapsedTime().asMilliseconds();
 
-                if (timer_time <= 0) {
-                    *state = 2;
-                    cleanUp();
-                }
-                else {
-                    std::ostringstream out;
-                    out << std::setprecision(4) << timer_time/1000;
-                    timer_string = out.str();
-                    timer.setString(timer_string);
-                    //Set timer to bottom right corner
-                    sf::Vector2f gameView_bottom_corner = gameView.getCenter();
-                    gameView_bottom_corner.x += gameView.getSize().x/2 - timer.getGlobalBounds().width;
-                    gameView_bottom_corner.y += gameView.getSize().y/2 - timer.getGlobalBounds().height*1.5;
-                    timer.setPosition(gameView_bottom_corner);
+	if (timer_time <= 0) {
+		*state = 2;
+		cleanUp();
+	}
+	else {
+		std::ostringstream out;
+		out << std::setprecision(4) << timer_time/1000;
+		timer_string = out.str();
+		timer.setString(timer_string);
+		//Set timer to bottom right corner
+		sf::Vector2f gameView_bottom_corner = gameView.getCenter();
+		gameView_bottom_corner.x += gameView.getSize().x/2 - timer.getGlobalBounds().width;
+		gameView_bottom_corner.y += gameView.getSize().y/2 - timer.getGlobalBounds().height*1.5;
+		timer.setPosition(gameView_bottom_corner);
 
-                    std::vector<StrongActorPtr>::iterator it;
-                    for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
-                        (*it)->update(time);
-                }
+		std::vector<StrongActorPtr>::iterator it;
+		for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
+			(*it)->update(time);
+	}
 
-            }
+}
 
 /** Checks for events and update accordingly
  **
@@ -169,88 +169,89 @@ int LevelView::getNumActors(void) {
  void LevelView::update(EventInterfacePtr e) {
 
  }
+ */
 
-        /** Renders the map onto the window
-         **
-         **/
-            void LevelView::render(sf::RenderWindow *window) {
-                //Get the player location and center gameView to it
-                sf::Vector2f player_pos = player->getPosition();
-                sf::Vector2f player_size = player->getSize();
-                gameView.setCenter(player_pos.x + player_size.x/2, player_pos.y + player_size.y/2); 
-                gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
-                window->setView(gameView);
-                //Update graphics	
-                window->draw(background);
-                window->draw(timer);
-                std::vector<StrongActorPtr>::iterator it;
-                for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
-                    (*it)->render(window);
-                player->render(window);
+/** Renders the map onto the window
+**
+**/
+void LevelView::render(sf::RenderWindow *window) {
+	//Get the player location and center gameView to it
+	sf::Vector2f player_pos = player->getPosition();
+	sf::Vector2f player_size = player->getSize();
+	gameView.setCenter(player_pos.x + player_size.x/2, player_pos.y + player_size.y/2); 
+	gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
+	window->setView(gameView);
+	//Update graphics	
+	window->draw(background);
+	window->draw(timer);
+	std::vector<StrongActorPtr>::iterator it;
+	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
+		(*it)->render(window);
+	player->render(window);
 
-                //Set minimap view
-                minimapView.setViewport(sf::FloatRect(0.90f, 0, 0.10f, 0.10f));
-                window->setView(minimapView);
+	//Set minimap view
+	minimapView.setViewport(sf::FloatRect(0.90f, 0, 0.10f, 0.10f));
+	window->setView(minimapView);
 
-                //Update graphics
-                window->draw(background);
-                window->draw(timer);
-                for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
-                    (*it)->render(window);
-                player->render(window);
-            }
+	//Update graphics
+	window->draw(background);
+	window->draw(timer);
+	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
+		(*it)->render(window);
+	player->render(window);
+}
 
 /** Ready the level for start
  **
  **/
 void LevelView::start(void) {
-    level_clock.restart();
+	level_clock.restart();
 }
 
 /** Return the actor with given instance
  **
  **/
-            StrongActorPtr LevelView::getActor(int instance) {
-                std::vector<StrongActorPtr>::iterator it;
-                for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++) {
-                    if ((*it)->getInstance() == instance) {
-                        return *it;
-                    }
-                }
-                return NULL;
-            }
+StrongActorPtr LevelView::getActor(int instance) {
+	std::vector<StrongActorPtr>::iterator it;
+	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++) {
+		if ((*it)->getInstance() == instance) {
+			return *it;
+		}
+	}
+	return NULL;
+}
 
 /** Return the actor with given instance
  **
  **/
-                    void LevelView::removeActor(int instance) {
-                        std::vector<StrongActorPtr>::iterator it;
-                        for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++) {
-                            if ((*it)->getInstance() == instance) {
-                                actorList.erase(it);
-                            }
-                        }
-                    }
+void LevelView::removeActor(int instance) {
+	std::vector<StrongActorPtr>::iterator it;
+	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++) {
+		if ((*it)->getInstance() == instance) {
+			actorList.erase(it);
+		}
+	}
+}
 /** Clean up level after completion
  **
  **/
 void LevelView::cleanUp(void) {
-    player->reset();
-    std::vector<StrongActorPtr>::iterator it;
-    for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++) {
-        if (*it != player) {
-            (*it)->quit();
-        }
-    }
-    num_actors = 0;
-    EventManagerInterface::get()->reset();
-    ActorFactory::reset();
-    actorList.clear();
+	player->reset();
+	std::vector<StrongActorPtr>::iterator it;
+	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++) {
+		if (*it != player) {
+			(*it)->quit();
+		}
+	}
+	num_actors = 0;
+	EventManagerInterface::get()->reset();
+	ActorFactory::reset();
+	actorList.clear();
 }
 
 /** Quit level
  **
  **/
-                void LevelView::quit(void) {
-                    cleanUp();
-                }
+void LevelView::quit(void) {
+	cleanUp();
+}
