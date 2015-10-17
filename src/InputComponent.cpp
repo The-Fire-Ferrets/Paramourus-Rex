@@ -95,16 +95,21 @@ void InputComponent::update(float time) {
     sf::Vector2f next_direction;
 
     if (type == "Artificial") {
-        AI ai(owner->getPosition());
-        sf::Vector2f flower_pos = ai.findClosestFlower();
-        sf::Vector2f player_pos = ai.findPlayer();
+		static unsigned i = 0;
+		if (++i == 50) {
+			AI ai(owner->getPosition());
+			sf::Vector2f flower_pos = ai.findClosestFlower();
+			sf::Vector2f player_pos = ai.findPlayer();
 
-        if (flower_pos == sf::Vector2f(-1.f, -1.f)) {
-            next_direction = ai.chooseDirection(player_pos);
-        }
-        else {
-            next_direction = ai.chooseDirection(flower_pos);
-        }
+			if (flower_pos == sf::Vector2f(-1.f, -1.f)) {
+				next_direction = ai.chooseDirection(player_pos);
+			}
+			else {
+				next_direction = ai.chooseDirection(flower_pos);
+			}
+			i = 0;
+		}
+		else next_direction = last_direction;
     }
 
     else if (type == "Keyboard") {

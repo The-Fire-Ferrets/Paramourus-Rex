@@ -19,9 +19,9 @@
 		<Location X = "100" Y = "400" Width = "10" Height = "10"/>
 	</EarthFlower>
 	<Obstacle>
-		<Location X = "300" Y = "300" Width = "10" Height = "10"/>
+		<Location X = "110" Y = "110" Width = "10" Height = "10"/>
   	</Obstacle>
- 	 <Obstacle Generate = "200">
+ 	 <Obstacle Generate = "2">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Obstacle>
 </Level0>
