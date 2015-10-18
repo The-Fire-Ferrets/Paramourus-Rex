@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Player Type = "Player" Texture = "Player.png" Sprite = "Player.png">
+<Player Type = "Player" SpriteUp = "PlayerUp.png" SpriteDown = "PlayerDown.png" SpriteRight = "PlayerRight.png" SpriteLeft = "PlayerLeft.png">
 	<InputComponent>
 		<Control Type = "Keyboard" Speed = "50"/>
 	</InputComponent>	

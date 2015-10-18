@@ -10,7 +10,13 @@
 /** Constructor
  ** sets the position of the NPC so it can be remembered for path finding
  **/
+
+AI::AI() {
+	direction_bit = 0;
+}
+
 AI::AI(sf::Vector2f pos) {
+	direction_bit = 0;
 	this->setNPCPosition(pos);
 }
 
@@ -25,7 +31,7 @@ void AI::setNPCPosition(const sf::Vector2f& pos) {
 
 /** Returns the position of the NPC used internally for path finding
  **/
-sf::Vector2f AI::getNPCPosition(void) const {
+sf::Vector2f AI::getNPCPosition(void) {
 	return npc_pos;
 }
 
@@ -33,7 +39,7 @@ sf::Vector2f AI::getNPCPosition(void) const {
 /** Looks over all the flowers in the current level, and returns the one closest
  ** the NPC
  **/
-sf::Vector2f AI::findClosestFlower(void) const {
+sf::Vector2f AI::findClosestFlower(void) {
 	// find all flowers
 	std::vector<sf::Vector2f> flower_locations;
 	for (auto it = LevelView::actorList.begin(); it != LevelView::actorList.end(); ++it) {
@@ -67,187 +73,112 @@ sf::Vector2f AI::findClosestFlower(void) const {
 	return closest;
 }
 
-sf::Vector2f AI::findPlayer(void) const {
+sf::Vector2f AI::findPlayer(void) {
 	return LevelView::player->getPosition();
 }
 
 /** Determines which direction to move it to head toward the destination dest
  **/
-sf::Vector2f AI::chooseDirection(const sf::Vector2f dest) const {
-	sf::Vector2f distance = dest - npc_pos;;
-	sf::Vector2f direction;
-	std::vector<sf::Vector2f> excluded_dirs;
+sf::Vector2f AI::chooseDirection(const sf::Vector2f dest) {
+	sf::Vector2f distance = dest - npc_pos;
 
-	// try each direction heuristically such that we can move there without
-	// hitting something
-	do {
-		direction = this->selectNextDirection(distance, excluded_dirs);
-		excluded_dirs.push_back(direction);
-	} while (this->hasCollisionOnPath(direction) && excluded_dirs.size() <= 3);
-
-	return direction;
+	// Updates collision and changes direction to sides without collision
+	updateCollision();
+	return selectNextDirection(distance);
 }
 
-/** Determines whether an obastacle exists along the path to the destination
+/** Determines whether the obstacles in previous collision are still in contact
  ** dest.
  **/
-bool AI::hasCollisionOnPath(const sf::Vector2f& dir) const {
-	// find all obstacles
-	sf::Vector2f new_pos = npc_pos + dir;
-	for (auto it = LevelView::actorList.begin(); it != LevelView::actorList.end(); ++it) {
-		// is interaction with this actor possible
-		if ((*it)->hasComponent(PhysicsComponent::id)) {
-			std::shared_ptr<ActorComponent> ac;
-			std::shared_ptr<PhysicsComponent> pc;
+void AI::updateCollision() {
+	std::shared_ptr<ActorComponent> ac;
+	std::shared_ptr<PhysicsComponent> pc;
 
-			ac = (*it)->components[PhysicsComponent::id];
-			pc = std::dynamic_pointer_cast<PhysicsComponent>(ac);
-
-			// is it an obstacle?
-			if (pc->getType() == "Opaque") {
-				sf::Vector2f obstacle_pos = (*it)->getPosition();
-
-				// if moving in this direction would place us closer to the
-				// obstacle, it's probably a bad idea
-				if (distance(npc_pos, obstacle_pos) < 20.f && distance(new_pos, obstacle_pos) < distance(npc_pos, obstacle_pos)) {
-					return true;
-				}
-			}
-		}
+	ac = owner->components[PhysicsComponent::id];
+	pc = std::dynamic_pointer_cast<PhysicsComponent>(ac);
+	int hit[4] = {0,0,0,0};
+	//Checks to see if actors from previosu collision still exist and on which side
+	for (auto it = pc->last_actors.begin(); it != pc->last_actors.end(); ++it) {
+		if (*it == actor_direction[0])
+			hit[0] = 1;
+		else if (*it == actor_direction[1])
+			hit[1] = 1;
+		else if (*it == actor_direction[2])
+			hit[2] = 1;
+		else if (*it == actor_direction[3])
+			hit[3] = 1;
+		
 	}
 
-	// no collisions with any obstacle
-	return false;
+	//Flips the bit for that side to allow movement if no longer colliding
+	for (int i = 0; i < 4; i++) {
+		if (!hit[i]) {
+			flipDirectionBit(i+1);
+			actor_direction[i] = NULL;
+		}
+	}
 }
 
 /** Chooses a new direction based upon the distance between the npc and the
- ** destination, potentially excluding certain direction.
+ ** destination, potentially excluding certain directions.
  **/
-sf::Vector2f AI::selectNextDirection(const sf::Vector2f& distance, const std::vector<sf::Vector2f>& excluded) const {
-	std::cerr << distance.x << " " << distance.y << " " << excluded.size() << std::endl;
-	// do we have further to travel in the x direction?
+sf::Vector2f AI::selectNextDirection(const sf::Vector2f& distance) {
+	
 	if (std::abs(distance.x) > std::abs(distance.y)) {
-		// going east?
-		if (distance.x > FLT_EPSILON) {
-			// try moving east
-			if (std::find(excluded.begin(), excluded.end(), EAST) == excluded.end()) {
-				return EAST;
-			}
-
-			// going south?
-			else if (distance.y > FLT_EPSILON) {
-				if (std::find(excluded.begin(), excluded.end(), SOUTH) == excluded.end()) {
-					return SOUTH;
-				}
-				else if (std::find(excluded.begin(), excluded.end(), NORTH) == excluded.end()) {
-					return NORTH;
-				}
-				else return WEST;
-			}
-
-			// going north
-			else {
-				if (std::find(excluded.begin(), excluded.end(), NORTH) == excluded.end()) {
-					return NORTH;
-				}
-				else if (std::find(excluded.begin(), excluded.end(), SOUTH) == excluded.end()) {
-					return SOUTH;
-				}
-				else return WEST;
-			}
-
+		if (distance.x > FLT_EPSILON && !getDirectionBit(1)) {
+		    return EAST;
 		}
-
-		// going west
-		else {
-			// try moving west
-			if (std::find(excluded.begin(), excluded.end(), WEST) == excluded.end()) {
-				return WEST;
-			}
-
-			// going south?
-			else if (distance.y > FLT_EPSILON) {
-				if (std::find(excluded.begin(), excluded.end(), SOUTH) == excluded.end()) {
-					return SOUTH;
-				}
-				else if (std::find(excluded.begin(), excluded.end(), NORTH) == excluded.end()) {
-					return NORTH;
-				}
-				else return EAST;
-			}
-
-			// going north
-			else {
-				if (std::find(excluded.begin(), excluded.end(), NORTH) == excluded.end()) {
-					return NORTH;
-				}
-				else if (std::find(excluded.begin(), excluded.end(), SOUTH) == excluded.end()) {
-					return SOUTH;
-				}
-				else return EAST;
-			}
+		else if (distance.x < FLT_EPSILON && !getDirectionBit(2)){
+		    return WEST;
 		}
-	}
-	// we have further to travel in the y direction
-	else {
-		// going south?
-		if (distance.y > FLT_EPSILON) {
-			// try moving east
-			if (std::find(excluded.begin(), excluded.end(), SOUTH) == excluded.end()) {
-				return SOUTH;
-			}
-
-			// going east?
-			else if (distance.x > FLT_EPSILON) {
-				if (std::find(excluded.begin(), excluded.end(), EAST) == excluded.end()) {
-					return EAST;
-				}
-				else if (std::find(excluded.begin(), excluded.end(), WEST) == excluded.end()) {
-					return WEST;
-				}
-				else return NORTH;
-			}
-
-			// going west
-			else {
-				if (std::find(excluded.begin(), excluded.end(), WEST) == excluded.end()) {
-					return WEST;
-				}
-				else if (std::find(excluded.begin(), excluded.end(), EAST) == excluded.end()) {
-					return EAST;
-				}
-				else return NORTH;
-			}
+		else if (distance.y > FLT_EPSILON && !getDirectionBit(4)) {
+		        return SOUTH;
 		}
-
-		// going north
-		else {
-			// try moving north
-			if (std::find(excluded.begin(), excluded.end(), NORTH) == excluded.end()) {
-				return NORTH;
-			}
-
-			// going east?
-			else if (distance.x > FLT_EPSILON) {
-				if (std::find(excluded.begin(), excluded.end(), EAST) == excluded.end()) {
-					return EAST;
-				}
-				else if (std::find(excluded.begin(), excluded.end(), WEST) == excluded.end()) {
-					return WEST;
-				}
-				else return SOUTH;
-			}
-
-			// going west
-			else {
-				if (std::find(excluded.begin(), excluded.end(), WEST) == excluded.end()) {
-					return WEST;
-				}
-				else if (std::find(excluded.begin(), excluded.end(), EAST) == excluded.end()) {
-					return EAST;
-				}
-				else return SOUTH;
-			}
+		else if (distance.y < FLT_EPSILON && !getDirectionBit(3)) {
+			return NORTH;
 		}
-	}
+	    }
+	    else {
+		if (distance.y > FLT_EPSILON && !getDirectionBit(4)) {
+		    return SOUTH;
+		}
+		else if (distance.y < FLT_EPSILON && !getDirectionBit(3)){
+		    return NORTH;
+		}
+		else if (distance.x > FLT_EPSILON && !getDirectionBit(1)) {
+		        return EAST;
+		}
+		else if (distance.x < FLT_EPSILON && !getDirectionBit(2)) {
+			return WEST;
+		}
+	    }
+	return sf::Vector2f(-1.f,-1.f);
+}
+
+/** Sets the value of the given bit
+ **
+**/
+void AI::setDirectionBit(int bit_num) {
+	direction_bit = direction_bit | 1<<(bit_num - 1);
+}
+
+/** Returns the value of the given bit
+ **
+**/
+bool AI::getDirectionBit(int bit_num) {
+	return direction_bit & 1<<(bit_num - 1);
+}
+
+/** Flips the given bit
+ **
+**/
+void AI::flipDirectionBit(int bit_num) {
+	direction_bit = direction_bit ^ 1<<(bit_num - 1);
+}
+
+/** Resets all directions to 0
+ **
+**/
+void AI::resetDirectionBit() {
+	direction_bit = 0;
 }

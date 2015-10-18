@@ -3,7 +3,8 @@
 #include "PhysicsComponent.h"
 //unique instance id among actors
 int Actor::instances = 0;
-
+//Number of directions possible
+const int Actor::num_directions = 4;
 /** Gets the current actors ID
  **
  **/
@@ -16,9 +17,9 @@ ActorId Actor::getId(void) {
  ** Sets some attributes to their defaults
  **/
 Actor::Actor(void) {
-    instance = instances++;
-    state = 0;
-    visible = true;
+	instance = instances++;
+	state = 0;
+	visible = true;
 }
 
 
@@ -37,16 +38,20 @@ bool Actor::Init(pugi::xml_node* elem) {
     for (pugi::xml_attribute attr = elem->first_attribute(); attr; attr = attr.next_attribute()) {
         if (!strcmp(attr.name(),"Type"))
             id = attr.value();
-        else if (!strcmp(attr.name(),"Texture"))
-            texture_filename = attr.value();
-        else if (!strcmp(attr.name(),"Sprite"))
-            sprite_filename = attr.value();
+        else if (!strcmp(attr.name(),"SpriteUp") || !strcmp(attr.name(),"Sprite")) {
+            sprite_filename[0] = attr.value();
+	}
+	else if (!strcmp(attr.name(),"SpriteDown"))
+            sprite_filename[1] = attr.value();
+	else if (!strcmp(attr.name(),"SpriteLeft"))
+            sprite_filename[2] = attr.value();
+	else if (!strcmp(attr.name(),"SpriteRight"))
+            sprite_filename[3] = attr.value();
         else {
             std::cout << "Actor::Init: Failed to initialize" << std::endl;
             return false;
         }
     }
-
     boundary = new sf::FloatRect();
     addDelegate(ContactEvent::event_type);
     return true;
@@ -109,10 +114,16 @@ void Actor::PostInit(pugi::xml_node* elem) {
     position = pos;
     std::cout << pos.x << " " << pos.y << " " << Configuration::getWindowWidth()<< std::endl;
     boundary = new sf::FloatRect(position.x, position.y, size.x, size.y);
-    texture.loadFromFile(("./assets/sprites/" + texture_filename).c_str());
-    sprite = sf::Sprite(texture, sf::IntRect(0, 0, (texture.getSize()).x, (texture.getSize()).y));
-    sprite.setScale(size.x/(texture.getSize()).x, size.y/(texture.getSize()).y);
-    sprite.setPosition(position);
+	for (int i = 0; i < num_directions; i++) {
+		if (!sprite_filename[i].empty())
+    			sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[i]).c_str());
+		else
+			sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[0]).c_str());
+    		sprite[i] = sf::Sprite(sprite_texture[i], sf::IntRect(0, 0, (sprite_texture[i].getSize()).x, (sprite_texture[i].getSize()).y));
+   		sprite[i].setScale(size.x/(sprite_texture[i].getSize()).x, size.y/(sprite_texture[i].getSize()).y);
+    		sprite[i].setPosition(position);
+	}
+	sprite_idx = 0;
 }
 
 
@@ -128,6 +139,15 @@ void Actor::PostInit(pugi::xml_node* elem) {
         // disallow movement off the screen
         unsigned width = Configuration::getWindowWidth();
         unsigned height = Configuration::getWindowHeight();
+
+	if (direction.x < 0)
+		sprite_idx = 2;
+	else if (direction.x > 0)
+		sprite_idx = 3;
+	else if (direction.y < 0)
+		sprite_idx = 0;
+	else if (direction.y > 0)
+		sprite_idx = 1;
 
         if (p.x < FLT_EPSILON)
             p.x = FLT_EPSILON;
@@ -163,7 +183,7 @@ void Actor::update(float time) {
  **/
         void Actor::render(sf::RenderWindow *window) {
             if (visible)
-                window->draw(sprite);
+                window->draw(sprite[sprite_idx]);
         }
 
 /** Reset each of the actors components after scoring
@@ -282,7 +302,8 @@ sf::Vector2f Actor::getPosition(void) {
 void Actor::setPosition(sf::Vector2f pos) {
     position = pos;
     updateBoundary();
-    sprite.setPosition(position);
+	for (int i = 0; i < num_directions; i++)
+    		sprite[i].setPosition(position);
 }
 
 /** Return the actors instance

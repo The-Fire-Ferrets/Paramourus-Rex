@@ -79,7 +79,8 @@ bool InputComponent::Init(pugi::xml_node* elem) {
  ** Setups up additional attributes based on game configuration
  **/
 void InputComponent::PostInit(void) {
-
+	ai.setNPCPosition(owner->getPosition());
+	ai.owner = owner;
 }
 
 /** Updates the component's attributes
@@ -97,7 +98,7 @@ void InputComponent::update(float time) {
     if (type == "Artificial") {
 		static unsigned i = 0;
 		if (++i == 50) {
-			AI ai(owner->getPosition());
+			ai.setNPCPosition(owner->getPosition());
 			sf::Vector2f flower_pos = ai.findClosestFlower();
 			sf::Vector2f player_pos = ai.findPlayer();
 
@@ -138,9 +139,34 @@ void InputComponent::update(float time) {
 /** Receives event when the actor is being contacted by another actor and responds by accordingly
  **
  **/
-            void InputComponent::update(EventInterfacePtr e) {
-
-            }
+void InputComponent::update(EventInterfacePtr e) {
+	// If a contact event is received, updates the AIs direction bit to notify which side caused collision and sets the actor that caused that collision
+	if (type == "Artificial") {
+		EventType event_type = e->getEventType();
+    		if (event_type == ContactEvent::event_type) {
+			sf::Vector2f last_direction = getDirection();
+			StrongActorPtr other_actor = LevelView::getActor(e->getSender());
+			std::cout << last_direction.x << " " << last_direction.y << std::endl;
+			if (other_actor->hasAttribute("Opaque"))
+				if (last_direction.x == 1) {
+					ai.setDirectionBit(1);
+					ai.actor_direction[0] = other_actor;
+				}
+				else if (last_direction.x == -1) {
+					ai.setDirectionBit(2);
+					ai.actor_direction[1] = other_actor;
+				}
+				else if (last_direction.y == -1) {
+					ai.setDirectionBit(3);
+					ai.actor_direction[2] = other_actor;
+				}
+				else if (last_direction.y == 1) {
+					ai.setDirectionBit(4);
+					ai.actor_direction[3] = other_actor;
+				}
+		}
+	}
+}
 
 /** Reset the component
  **

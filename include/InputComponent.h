@@ -36,7 +36,7 @@ class InputComponent : public ActorComponent {
         static ActorComponent* create();
         static int instances;
         static const bool registered;
-
+	AI ai;
         sf::Vector2f direction;
 };
 #endif

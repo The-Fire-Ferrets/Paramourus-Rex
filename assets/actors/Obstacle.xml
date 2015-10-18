@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Obstacle Type = "Obstacle" Texture = "Obstacle.png" Sprite = "Obstacle.png">
+<Obstacle Type = "Obstacle"  Sprite = "Cactus.png">
 	<PhysicsComponent>
 		<Properties Type = "Opaque" />
 	</PhysicsComponent>

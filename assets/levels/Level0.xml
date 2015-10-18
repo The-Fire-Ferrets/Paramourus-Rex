@@ -21,7 +21,7 @@
 	<Obstacle>
 		<Location X = "110" Y = "110" Width = "10" Height = "10"/>
   	</Obstacle>
- 	 <Obstacle Generate = "2">
+ 	 <Obstacle Generate = "50">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Obstacle>
 </Level0>

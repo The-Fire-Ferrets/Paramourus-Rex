@@ -58,15 +58,16 @@ class Actor {
         const Actor* getCopy(void) const;
     private:
         ActorId id;
+	const static int num_directions;
         std::vector<EventDelegate> delegateFuncList;
 
-        std::string texture_filename;
-        std::string sprite_filename;
+        std::string sprite_filename[4];
 
         sf::Vector2f position;
-        sf::Texture texture;
-        sf::Vector2f size;
-        sf::Sprite sprite;
+	sf::Texture sprite_texture[4];
+	sf::Vector2f size;
+	sf::Sprite sprite[4];
+	int sprite_idx;
 
         int instance;
         int* game_state;
