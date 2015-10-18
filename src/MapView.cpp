@@ -83,8 +83,9 @@ void MapView::Create(const char* resource) {
     }
 
     for (int i = 0; i < num_levels; i++) {
-        sprites[i] = sf::Sprite(textures[i], sf::IntRect(positions[i].x, positions[i].y, sizes[i].x, sizes[i].y));
-        sprites[i].setPosition(positions[i]);
+        sprites[i] = sf::Sprite(textures[i], sf::IntRect(0, 0, textures[i].getSize().x, textures[i].getSize().y));
+        sprites[i].setScale(sizes[i].x/(textures[i].getSize()).x, sizes[i].y/(textures[i].getSize()).y);
+	sprites[i].setPosition(positions[i]);
     }
 
 }
@@ -98,11 +99,15 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
         for (int i = 0; i < num_levels; i++) {
             if (sprites[i].getGlobalBounds().contains(pos.x, pos.y)) {
-                LevelView::Create(levels[i].c_str(), state);
-                DialogueView::Create(levels[i].c_str(), state);
-                LevelView::start();
-                *state = 1;
-
+		if (i > 0) {
+		        LevelView::Create(levels[i].c_str(), state);
+		        DialogueView::Create(levels[i].c_str(), state);
+		        LevelView::start();
+		        *state = 1;
+		}
+		else {
+			*state = 3;
+		}
             }
         }
     }

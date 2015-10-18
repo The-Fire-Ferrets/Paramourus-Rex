@@ -112,7 +112,6 @@ void Actor::PostInit(pugi::xml_node* elem) {
         }
     }
     position = pos;
-    std::cout << pos.x << " " << pos.y << " " << Configuration::getWindowWidth()<< std::endl;
     boundary = new sf::FloatRect(position.x, position.y, size.x, size.y);
 	for (int i = 0; i < num_directions; i++) {
 		if (!sprite_filename[i].empty())

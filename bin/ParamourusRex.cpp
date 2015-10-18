@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 				DialogueView::update(&App, &state);
 				break;
 			case 3: 
-				//CraftView::update(&App, &state, elapsed_ms);
+				CraftView::update(&App, &state);
 				//Should change to state 0 so user returns to map when done crafting
 				break;
 			case 4:
@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 				break;
 			case 3:
 				App.setView(defaultView);
-				//CraftView::render(&App);
+				CraftView::render(&App);
 				break;
 			case 4:
 				App.setView(defaultView);

@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include "LevelView.h"
 #include "MapView.h"
+#include "CraftView.h"
 #include "EventManager.h"
 #include "DialogueView.h"
 
