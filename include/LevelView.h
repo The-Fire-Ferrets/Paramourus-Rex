@@ -11,7 +11,9 @@ class LevelView  {
         static const int size;
         static int num_actors;
         static sf::Texture background_texture;
+	static sf::Texture edge_texture;
         static sf::Sprite background;
+	static sf::Sprite edge;
         static std::string name;
         static sf::Clock level_clock;
         static sf::Text timer;

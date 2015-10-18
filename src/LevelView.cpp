@@ -8,8 +8,12 @@ int LevelView::num_actors = 0;
 std::vector<StrongActorPtr> LevelView::actorList;
 //Holds background texture
 sf::Texture LevelView::background_texture;
+//Edge texture
+sf::Texture LevelView::edge_texture;
 //Holds background
 sf::Sprite LevelView::background;
+//Holds edge
+sf::Sprite LevelView::edge;
 //Holds level name
 std::string LevelView::name;
 //Level clock
@@ -51,14 +55,21 @@ void LevelView::Create(const char* resource, int* state) {
 
 	//Used to iterate over XML file to get attributes
 	pugi::xml_node tools = doc.child(resource);
-	char* temp;	
+	char* temp;
 	for (pugi::xml_attribute attr = tools.first_attribute(); attr; attr = attr.next_attribute()) {
 		if (!strcmp(attr.name(), "Name"))
 			name = attr.value();
 		else if (!strcmp(attr.name(), "Background")) {
 			background_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
-			background = sf::Sprite(background_texture, sf::IntRect(0, 0, Configuration::getWindowWidth(), Configuration::getWindowHeight()));
+			background = sf::Sprite(background_texture, sf::IntRect(0, 0, background_texture.getSize().x, background_texture.getSize().y));
+			background.scale((1.0*Configuration::getWindowWidth())/(background_texture.getSize().x), (1.0*Configuration::getWindowHeight())/(background_texture.getSize().y));
 			background.setPosition(sf::Vector2f(0,0));
+		}
+		else if (!strcmp(attr.name(), "Edge")) {
+			edge_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
+			edge = sf::Sprite(edge_texture, sf::IntRect(0, 0, edge_texture.getSize().x, edge_texture.getSize().y));
+			edge.scale((1.5*Configuration::getWindowWidth())/(edge_texture.getSize().x), (1.5*Configuration::getWindowHeight())/(edge_texture.getSize().y));
+			edge.setPosition(sf::Vector2f(-100,-100));
 		}
 		else if (!strcmp(attr.name(), "Font")) {
 			font.loadFromFile(("./assets/" + (std::string)attr.value()).c_str());
@@ -182,6 +193,7 @@ void LevelView::render(sf::RenderWindow *window) {
 	gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
 	window->setView(gameView);
 	//Update graphics	
+	window->draw(edge);
 	window->draw(background);
 	window->draw(timer);
 	std::vector<StrongActorPtr>::iterator it;
@@ -194,6 +206,7 @@ void LevelView::render(sf::RenderWindow *window) {
 	window->setView(minimapView);
 
 	//Update graphics
+	window->draw(edge);
 	window->draw(background);
 	window->draw(timer);
 	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
