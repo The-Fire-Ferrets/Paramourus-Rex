@@ -39,7 +39,7 @@ int LevelView::duration;
  ** resource: filename for xml
  ** state: current game state
  **/
-void LevelView::Create(const char* resource, int* state) {
+void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	//Reference to current location in Actor population array
 	//Holds referenced to loaded XML file	
 	num_actors = 0;
@@ -124,11 +124,44 @@ void LevelView::Create(const char* resource, int* state) {
 					}
 				}
 			}
-			while (generate-- > 0) {
-				actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-				(actorList.back())->PostInit(&tool);
-				num_actors++;
-				std::cout << num_actors << std::endl;
+			if (!strcmp(tool.name(), "WaterFlower")) {
+				int count = flowers[3];
+				while(count-- > 0) {
+					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
+					(actorList.back())->PostInit(&tool);
+					num_actors++;
+				}
+			}
+			else if (!strcmp(tool.name(), "FireFlower")) {
+				int count = flowers[0];
+				while(count-- > 0) {
+					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
+					(actorList.back())->PostInit(&tool);
+					num_actors++;
+				}
+			}
+			else if (!strcmp(tool.name(), "EarthFlower")) {
+				int count = flowers[1];
+				while(count-- > 0) {
+					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
+					(actorList.back())->PostInit(&tool);
+					num_actors++;
+				}
+			}
+			else if (!strcmp(tool.name(), "AirFlower")) {
+				int count = flowers[2];
+				while(count-- > 0) {
+					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
+					(actorList.back())->PostInit(&tool);
+					num_actors++;
+				}
+			}
+			else {
+				while (generate-- > 0) {
+					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
+					(actorList.back())->PostInit(&tool);
+					num_actors++;
+				}
 			}
 		}
 	}

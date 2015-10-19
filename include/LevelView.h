@@ -35,7 +35,7 @@ class LevelView  {
         static void removeActor(int instance);
 
         //ALL VIEW CLASSES MUST IMPLEMENT BELOW METHODS
-        static void Create(const char* resource, int* state);
+        static void Create(const char* resource, int* state, int flowers[]);
         static void update(sf::RenderWindow *window, int* state, float time);
         static void update(EventInterfacePtr e);
         static void render(sf::RenderWindow *window);

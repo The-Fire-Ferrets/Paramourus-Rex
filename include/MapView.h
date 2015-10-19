@@ -16,7 +16,21 @@ class MapView {
         static sf::Texture textures[];
         static sf::Vector2f positions[];
         static sf::Vector2f sizes[];
+	static float fireflowers[];
+	static float earthflowers[];
+	static float airflowers[];
+	static float waterflowers[];
+	static int fireflowers_count[];
+	static int earthflowers_count[];
+	static int airflowers_count[];
+	static int waterflowers_count[];
+	static std::string flowers_string[];
+	static sf::Text flowers_text[];
+	static sf::Font font;
+	static int flowers;
         static bool pressed;
+	static bool reset;
+	static void resetPopulationValues(void);
     public:
         static void Create(const char* resource);
 

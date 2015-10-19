@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Map Background = "Map.png">
+<Map Background = "Map.png" Font = "arial.ttf">
 	<CraftTable X = "730" Y = "0" Height = "50" Width = "60" Sprite = "CraftTable.png"/>
-	<Level0 X = "400" Y = "400" Height = "30" Width = "30" Sprite = "Level0.png"/>
+	<Level0 X = "400" Y = "400" Height = "30" Width = "30" Sprite = "Level0.png" FireFlower = ".6" EarthFlower = ".3" WaterFlower = ".05" AirFlower = ".05"/>
 </Map>

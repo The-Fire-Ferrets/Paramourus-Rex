@@ -16,11 +16,26 @@ sf::Vector2f MapView::positions[size];
 sf::Vector2f MapView::sizes[size];
 //Map Background sprite
 sf::Sprite MapView::background;
+//Hold probability of flowers
+float MapView::fireflowers[size];
+float MapView::earthflowers[size];
+float MapView::airflowers[size];
+float MapView::waterflowers[size];
+int MapView::fireflowers_count[size];
+int MapView::earthflowers_count[size];
+int MapView::airflowers_count[size];
+int MapView::waterflowers_count[size];
+std::string MapView::flowers_string[size];
+sf::Text MapView::flowers_text[size];
+sf::Font MapView::font;
+//Number flowers
+int MapView::flowers;
 //Map Background texture
 sf::Texture MapView::background_texture;
 //Make sure to respond to only 1 click
 bool MapView::pressed = false;
-
+//Reset population values
+bool MapView::reset = true;
 /** Creates the map from the give configuration file
  **
  **/
@@ -44,6 +59,9 @@ void MapView::Create(const char* resource) {
             background = sf::Sprite(background_texture, sf::IntRect(0, 0, Configuration::getWindowWidth(), Configuration::getWindowHeight()));
             background.setPosition(sf::Vector2f(0,0));
         }
+	 else if (!strcmp(attr.name(), "Font")) {
+			font.loadFromFile(("./assets/" + (std::string)attr.value()).c_str());
+	    }
     }
 
     //Iterates over XML to get components to add
@@ -78,6 +96,30 @@ void MapView::Create(const char* resource) {
                     std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
                 }
             }
+	    else if (!strcmp(attr.name(),"Height")) {
+                sizes[num_levels].y = std::strtol(attr.value(), &temp, 10);
+                if (*temp != '\0') {
+                    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+                }
+            }
+	    else if (!strcmp(attr.name(),"Height")) {
+                sizes[num_levels].y = std::strtol(attr.value(), &temp, 10);
+                if (*temp != '\0') {
+                    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+                }
+            }
+	    else if (!strcmp(attr.name(),"FireFlower")) {
+                fireflowers[num_levels] = std::strtof(attr.value(), &temp);
+            }
+	    else if (!strcmp(attr.name(),"AirFlower")) {
+                airflowers[num_levels] = std::strtof(attr.value(), &temp);
+            }
+	    else if (!strcmp(attr.name(),"WaterFlower")) {
+                waterflowers[num_levels] = std::strtof(attr.value(), &temp);
+            }
+	    else if (!strcmp(attr.name(),"EarthFlower")) {
+                earthflowers[num_levels] = std::strtof(attr.value(), &temp);
+            }
         }
 
     }
@@ -93,19 +135,25 @@ void MapView::Create(const char* resource) {
 /** Checks to see if level was clicked on and switches to it
  **
  **/
-void MapView::update(sf::RenderWindow *window, int* state, float time) {	
+void MapView::update(sf::RenderWindow *window, int* state, float time) {
+    if (reset) {
+	resetPopulationValues();
+    }	
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
         for (int i = 0; i < num_levels; i++) {
             if (sprites[i].getGlobalBounds().contains(pos.x, pos.y)) {
 		if (i > 0) {
-		        LevelView::Create(levels[i].c_str(), state);
+			int flowers[] = {fireflowers_count[i], earthflowers_count[i], airflowers_count[i], waterflowers_count[i]};
+		        LevelView::Create(levels[i].c_str(), state, flowers);
 		        DialogueView::Create(levels[i].c_str(), state);
 		        LevelView::start();
+			reset = true;
 		        *state = 1;
 		}
 		else {
+			reset = true;
 			*state = 3;
 		}
             }
@@ -116,6 +164,27 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
     }
 }
 
+/** Resets population values
+ **
+**/
+void MapView::resetPopulationValues(void) {
+	flowers = rand() % 10 + 10;
+	for (int i = 0; i < num_levels; i++) {
+		if (i > 0) {
+			fireflowers_count[i] = (int)(flowers * fireflowers[i]);
+			earthflowers_count[i] = (int)(flowers * earthflowers[i]);
+			waterflowers_count[i] = (int)(flowers * waterflowers[i]);
+			airflowers_count[i] = (int)(flowers * airflowers[i]);
+			flowers_string[i] = "F:" + std::to_string(fireflowers_count[i]) + " E:" + std::to_string(earthflowers_count[i]) + " A:" + std::to_string(airflowers_count[i]) + " W:" + std::to_string(waterflowers_count[i]);
+			flowers_text[i] = sf::Text(flowers_string[i], font);
+			flowers_text[i].setCharacterSize(15);
+			flowers_text[i].setStyle(sf::Text::Bold);
+			flowers_text[i].setColor(sf::Color::Black);
+			flowers_text[i].setPosition(positions[i] + sf::Vector2f(sizes[i].x/2 - flowers_text[i].getGlobalBounds().width/2, -1.5*flowers_text[i].getGlobalBounds().height));
+		}
+	}
+	reset = false;
+}
 /** Checks for events and update accordingly
  **
  **/
@@ -126,9 +195,12 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 /** Renders the map onto the window
  **
  **/
-        void MapView::render(sf::RenderWindow *window) {
-            window->draw(background);
-            for (int i = 0; i < num_levels; i++) {
-                window->draw(sprites[i]);
-            }
-        }
+void MapView::render(sf::RenderWindow *window) {
+	window->draw(background);
+	for (int i = 0; i < num_levels; i++) {
+		window->draw(sprites[i]);
+		if (i > 0) {
+			window->draw(flowers_text[i]);
+		}		
+	}
+}

@@ -31,8 +31,8 @@ sf::Vector2f InputComponent::getDirection() const {
  **/
 void InputComponent::setDirection(const sf::Vector2f& dir) {
     // reset direction only if it is a cardinal direction
-    if (std::find(cardinals, cardinals+4, dir) != cardinals+4)
-        direction = dir;
+	if (std::find(cardinals, cardinals+4, dir) != cardinals+4)    
+	direction = dir;
 }
 
 /** Returns a reference to the components constructor
@@ -97,7 +97,7 @@ void InputComponent::update(float time) {
 
     if (type == "Artificial") {
 		static unsigned i = 0;
-		if (++i == 50) {
+		if (++i) {
 			ai.setNPCPosition(owner->getPosition());
 			sf::Vector2f flower_pos = ai.findClosestFlower();
 			sf::Vector2f player_pos = ai.findPlayer();
@@ -117,7 +117,23 @@ void InputComponent::update(float time) {
         // TODO: I'd like to move controls to a configuration file so we could 
         // choose between up/down/left/right, wasd, and hjkl.
         //Reads Input and perform actions
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+            next_direction = NORTHEAST;
+	    distance *= cos(45);
+        }   
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+            next_direction = NORTHWEST;
+	    distance *= cos(45);
+        }      
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+            next_direction = SOUTHEAST;
+	    distance *= cos(45);
+        }    
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+            next_direction = SOUTHWEST;
+	    distance *= cos(45);
+        }        
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
             next_direction = NORTH;
         } 
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {

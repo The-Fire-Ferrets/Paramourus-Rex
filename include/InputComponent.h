@@ -7,7 +7,11 @@
 
 // the four cardinal directions and a convenient list
 const sf::Vector2f NORTH = sf::Vector2f(0.f, -1.f);
+const sf::Vector2f NORTHWEST = sf::Vector2f(-1.f, -1.f);
+const sf::Vector2f NORTHEAST = sf::Vector2f(1.f, -1.f);
 const sf::Vector2f SOUTH = sf::Vector2f(0.f, 1.f);
+const sf::Vector2f SOUTHWEST = sf::Vector2f(-1.f, 1.f);
+const sf::Vector2f SOUTHEAST = sf::Vector2f(1.f, 1.f);
 const sf::Vector2f EAST = sf::Vector2f(1.f, 0.f);
 const sf::Vector2f WEST = sf::Vector2f(-1.f, 0.f);
 const sf::Vector2f cardinals[4] = { NORTH, SOUTH, EAST, WEST };

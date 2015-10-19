@@ -123,8 +123,8 @@ void AI::updateCollision() {
  ** destination, potentially excluding certain directions.
  **/
 sf::Vector2f AI::selectNextDirection(const sf::Vector2f& distance) {
-	
-	if (std::abs(distance.x) > std::abs(distance.y)) {
+	int threshold = 0;
+	if (std::abs(distance.x) + threshold > std::abs(distance.y)) {
 		if (distance.x > FLT_EPSILON && !getDirectionBit(1)) {
 		    return EAST;
 		}
@@ -138,7 +138,7 @@ sf::Vector2f AI::selectNextDirection(const sf::Vector2f& distance) {
 			return NORTH;
 		}
 	    }
-	    else {
+	    else if (std::abs(distance.x) + threshold < std::abs(distance.y)) {
 		if (distance.y > FLT_EPSILON && !getDirectionBit(4)) {
 		    return SOUTH;
 		}
@@ -151,8 +151,22 @@ sf::Vector2f AI::selectNextDirection(const sf::Vector2f& distance) {
 		else if (distance.x < FLT_EPSILON && !getDirectionBit(2)) {
 			return WEST;
 		}
+		}
+	else  {
+		if (distance.y >= FLT_EPSILON && distance.x >= FLT_EPSILON) {
+		    return SOUTHEAST;
+		}
+		else if (distance.y <= FLT_EPSILON && distance.x <= FLT_EPSILON){
+		    return NORTHWEST;
+		}
+		else if (distance.x >= FLT_EPSILON && distance.y <= FLT_EPSILON) {
+		        return NORTHEAST;
+		}
+		else if (distance.x <= FLT_EPSILON && distance.y >= FLT_EPSILON) {
+			return SOUTHWEST;
+		}
 	    }
-	return sf::Vector2f(-1.f,-1.f);
+	return sf::Vector2f(0,0);
 }
 
 /** Sets the value of the given bit
