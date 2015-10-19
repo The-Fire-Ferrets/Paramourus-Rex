@@ -21,7 +21,4 @@
 	<FireFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</FireFlower>
- 	 <Obstacle Generate = "50">
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-	</Obstacle>
 </Level0>
