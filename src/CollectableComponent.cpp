@@ -66,10 +66,10 @@ void CollectableComponent::update(EventInterfacePtr e) {
     EventType event_type = e->getEventType();
     StrongActorPtr other_actor = LevelView::getActor(e->getSender());
     if (event_type == CollectEvent::event_type) {
-        std::cout << owner->getId() << " " << owner->getInstance() << "  collected by " << other_actor->getId() << " " << other_actor->getInstance() << std::endl;
         owner->setVisible(false);
         collector = other_actor;
         owner->setPosition(sf::Vector2f(-1000, 0));
+	std::cout << owner->getId() << " " << owner->getInstance() << "  collected by " << other_actor->getId() << " " << other_actor->getInstance() << std::endl;
         LevelView::removeActor(owner->getInstance());
     }
 }

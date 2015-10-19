@@ -115,17 +115,9 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			num_actors++;
 		}
 		else {
-			int generate = 1;
-			for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
-				if (!strcmp(attr.name(), "Generate")) {
-					generate = (std::strtol(attr.value(), &temp, 10));
-					if (*temp != '\0') {
-						std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
-					}
-				}
-			}
 			if (!strcmp(tool.name(), "WaterFlower")) {
 				int count = flowers[3];
+				//int count = 1;
 				while(count-- > 0) {
 					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
 					(actorList.back())->PostInit(&tool);
@@ -134,6 +126,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			}
 			else if (!strcmp(tool.name(), "FireFlower")) {
 				int count = flowers[0];
+				//int count  = 0;
 				while(count-- > 0) {
 					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
 					(actorList.back())->PostInit(&tool);
@@ -142,6 +135,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			}
 			else if (!strcmp(tool.name(), "EarthFlower")) {
 				int count = flowers[1];
+				//int count = 0;
 				while(count-- > 0) {
 					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
 					(actorList.back())->PostInit(&tool);
@@ -150,6 +144,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			}
 			else if (!strcmp(tool.name(), "AirFlower")) {
 				int count = flowers[2];
+				//int count = 0;
 				while(count-- > 0) {
 					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
 					(actorList.back())->PostInit(&tool);
@@ -157,6 +152,15 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 				}
 			}
 			else {
+				int generate = 1;
+				for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
+					if (!strcmp(attr.name(), "Generate")) {
+						generate = (std::strtol(attr.value(), &temp, 10));
+						if (*temp != '\0') {
+							std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
+						}
+					}
+				}
 				while (generate-- > 0) {
 					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
 					(actorList.back())->PostInit(&tool);
@@ -272,9 +276,10 @@ StrongActorPtr LevelView::getActor(int instance) {
  **/
 void LevelView::removeActor(int instance) {
 	std::vector<StrongActorPtr>::iterator it;
-	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++) {
+	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); ++it) {
 		if ((*it)->getInstance() == instance) {
 			actorList.erase(it);
+			break;
 		}
 	}
 }

@@ -300,10 +300,11 @@ sf::Vector2f Actor::getPosition(void) {
  **
  **/
 void Actor::setPosition(sf::Vector2f pos) {
-    position = pos;
-    updateBoundary();
-	for (int i = 0; i < num_directions; i++)
-    		sprite[i].setPosition(position);
+	position = pos;
+	updateBoundary();
+	for (int i = 0; i < num_directions; i++) {
+		sprite[i].setPosition(position);
+	}
 }
 
 /** Return the actors instance

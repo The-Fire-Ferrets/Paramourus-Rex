@@ -70,23 +70,24 @@ void CollectorComponent::update(float time) {
  ** Updates it cases
  **/
 void CollectorComponent::update(EventInterfacePtr e) {
-    EventType event_type = e->getEventType();
-    StrongActorPtr other_actor = LevelView::getActor(e->getSender());
-    if (event_type == ContactEvent::event_type) {
-        if (other_actor->hasComponent(CollectableComponent::id)) {
-            if (vases > 0) {
-                if (!EventManagerInterface::get()->queueEvent(new CollectEvent(e->getTimeStamp(), owner->getInstance(), other_actor->getInstance())))
-                    std::cout << "CollectableComponent::update: Unable to queue event" << std::endl;		
-                setVases(getVases()-1);
-                flowerList.push_back(other_actor);
-                flowers++;
-                std::cout << owner->getId() << "  collecting " << other_actor->getId() << " vase number now " << vases << std::endl;			}		
-        }
-        else if (owner->getId() == "Player") {
-            setVases(getVases()-1);
-            std::cout << owner->getId() << "  lost a vase and has " << vases << std::endl;
-        }
-    }	
+	EventType event_type = e->getEventType();
+	StrongActorPtr other_actor = LevelView::getActor(e->getSender());
+	if (event_type == ContactEvent::event_type) {
+		if (other_actor->hasComponent(CollectableComponent::id)) {
+			if (vases > 0) {
+				if (!EventManagerInterface::get()->queueEvent(new CollectEvent(e->getTimeStamp(), owner->getInstance(), other_actor->getInstance())))
+					std::cout << "CollectableComponent::update: Unable to queue event" << std::endl;		
+				setVases(getVases()-1);
+				flowerList.push_back(other_actor);
+				flowers++;
+				std::cout << owner->getId() << "  collecting " << other_actor->getId() << " vase number now " << vases << std::endl;			
+			}		
+		}
+		else if (owner->getId() == "Player") {
+			setVases(getVases()-1);
+			std::cout << owner->getId() << "  lost a vase and has " << vases << std::endl;
+		}
+	}	
 }
 
 /** Reset the component
