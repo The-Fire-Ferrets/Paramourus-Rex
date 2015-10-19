@@ -1,14 +1,11 @@
 <?xml version="1.0"?>
 <Level0 Name = "Hello World!" Background = "Level0.png" Edge = "Lava.png" Text_X = "650" Text_Y = "0" Font = "arial.ttf" Text_Size = "10" Duration = "100000">
 	<Player>
-		<Location X = "0" Y = "0" Width = "10" Height = "10"/>
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Player>
-	<NPC>
-		<Location X = "40" Y = "60" Width = "10" Height = "10"/>
+	<NPC Generate = "3">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</NPC>
-	<Obstacle>
-		<Location X = "110" Y = "110" Width = "10" Height = "10"/>
-  	</Obstacle>
 	<Obstacle Generate = "50">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Obstacle>

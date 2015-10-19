@@ -92,16 +92,17 @@ void Actor::PostInit(pugi::xml_node* elem) {
     }
 
     sf::Vector2f pos = position;
+    sf::FloatRect bound = sf::FloatRect(pos.x, pos.y, size.x, size.y);
     if (pos.x < 0 || pos.y < 0) {
         bool new_position = false;
         bool conflict = false;
         while (!new_position) {
-            pos.x = rand() % Configuration::getWindowWidth();
-            pos.y = rand() % Configuration::getWindowHeight();
-
+            pos.x = rand() % (int)(Configuration::getWindowWidth() - size.x);
+            pos.y = rand() % (int)(Configuration::getWindowHeight() - size.y);
+	    bound = sf::FloatRect(pos.x, pos.y, size.x, size.y);
             std::vector<StrongActorPtr>::iterator it_all;
             for (it_all = LevelView::actorList.begin(); it_all != LevelView::actorList.end(); it_all++) {
-                if ((*it_all)->getPosition() == pos) {
+                if ((*it_all)->getBoundary()->intersects(bound)) {
                     conflict = true;
                     break;
                 }
