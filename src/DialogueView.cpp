@@ -167,18 +167,25 @@ void DialogueView::Create(const char* resource, int* state){
 /** Checks for events and updates accordingly
  * **
  */
-            void DialogueView::update(EventInterfacePtr e){
+void DialogueView::update(EventInterfacePtr e){
 
-            }
+}
 
 
 // Draws the dialogue, Diana and Phil
 void DialogueView::render(sf::RenderWindow *window){
     sf::RectangleShape backlay;
-    backlay.setPosition(20, 560);
+    sf::Vector2u size = window->getSize();
+    unsigned int width = size.x/1.05;
+    unsigned int height = size.y/4;
+    unsigned int posX = size.x/40;
+    unsigned int posY = size.y/1.4;
+    
+    
+    backlay.setPosition(posX, posY);
     backlay.setOutlineColor(sf::Color::Black);
     backlay.setFillColor(sf::Color::White);
-    backlay.setSize(sf::Vector2f(760,200));
+    backlay.setSize(sf::Vector2f(width, height));
     backlay.setOutlineThickness(5);
     text.setColor(sf::Color::Black);
 

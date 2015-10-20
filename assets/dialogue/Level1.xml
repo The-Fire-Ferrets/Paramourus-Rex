@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<Level1 Dialogues = "1" Background = "Level1.png" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" Text_X = "20" Text_Y = "600" Font = "arial.ttf" Text_Size = "30">
+	<Win>
+		<Dialogue ID="1" Text="Oh, hey Phil! Hugh stopped by earlier and told me that you're the one that found this Sunflower... I don't know how in the world you found it, but it's incredible! It made me feel all bright and cheerful again. If there weren't so much dust around I'd go find a good sunning rock. I hate all this dust and ash - it was so much nicer when the air was all crisp and clean, huh? I love sunning on a cold day. " Background="">
+	</Win>
+	<Lose>
+		<Dialogue ID="1" Text="Oh, hey there Phil. Hugh stopped by earlier. He said you wanted to show me that flower you found or something? I don't know how you found something growing with all this dust and ash in the air. It was so much nicer when the air was all crisp and clean, huh? What I wouldn't do to breathe in some fresh air!" Background="">
+	</Lose>
+</Level1>

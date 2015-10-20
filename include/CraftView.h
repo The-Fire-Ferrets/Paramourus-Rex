@@ -5,6 +5,7 @@
 #include "ActorFactory.h"
 #include "CollectorComponent.h"
 #include "ActorComponent.h"
+#include "LevelView.h"
 
 class CraftView  {
     private:

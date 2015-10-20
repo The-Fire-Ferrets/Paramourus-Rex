@@ -69,21 +69,21 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
     // Add a flower to the inventory if it has been collected.
     // Accessing this info from CollectorComponent.
     const char*  actor;
-    StrongActorPtr* actorPtr;		
+    StrongActorPtr player = LevelView::getActor(0);
     // Implementation will change here to directly include access from LevelView::player once merge occurs.
     //for (actorPtr  = CollectorComponent::getFlowers(); actor = actorPtr->getId();actorPtr++){
-    if (!strcmp("FireFlower", actor)){
-        fireFlowers++;
-    }
-    else if (!strcmp("WaterFlower", actor)){
-        waterFlowers++;
-    }
-    else if (!strcmp("AirFlower", actor)){
-        airFlowers++;
-    }
-    else if (!strcmp("EarthFlower", actor)){
-        earthFlowers++;
-    }
+//     if (!strcmp("FireFlower", actor)){
+//         fireFlowers++;
+//     }
+//     else if (!strcmp("WaterFlower", actor)){
+//         waterFlowers++;
+//     }
+//     else if (!strcmp("AirFlower", actor)){
+//         airFlowers++;
+//     }
+//     else if (!strcmp("EarthFlower", actor)){
+//         earthFlowers++;
+//     }
     //}		
 
 }
@@ -103,13 +103,20 @@ void CraftView::update(EventInterfacePtr e) {
 void CraftView::render(sf::RenderWindow *window) {
     // Backlay for crafting companions text
     sf::RectangleShape backlay;
+    sf::Vector2u size = window->getSize();
+    unsigned int width = size.x/1.3;
+    unsigned int height = size.y/4;
+    unsigned int posX = size.x/6.6;
+    unsigned int posY = size.y/1.4;
+    
     // Backlay set off to the side to allow space for item select screens to the left
-    backlay.setPosition(120, 560);
+    backlay.setPosition(posX, posY);
     backlay.setOutlineColor(sf::Color::Black);
     backlay.setFillColor(sf::Color::White);
-    backlay.setSize(sf::Vector2f(660,200));
+    backlay.setSize(sf::Vector2f(width,height));
     backlay.setOutlineThickness(5);
     text.setColor(sf::Color::Black);
+    text.setPosition(150,600);
     text.setString("Welcome back, Phil!(&#10;) You have ___ flowers!");
 
     //Update graphics	
@@ -122,7 +129,7 @@ void CraftView::render(sf::RenderWindow *window) {
 /** Clean up level after completion
  **
  **/
-            void CraftView::cleanUp(void) {
+void CraftView::cleanUp(void) {
 
             }
 
