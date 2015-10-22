@@ -74,22 +74,26 @@ int main(int argc, char* argv[])
 
 		switch(state) {
 			case 0: 
-				App.setView(defaultView);		
+				App.setView(defaultView);
+				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));		
 				MapView::render(&App);
 				break;
 			case 1: 
 				LevelView::render(&App); 
 				break;
 			case 2:
-				App.setView(defaultView);
+				App.setView(defaultView);			
+				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));
 				DialogueView::render(&App);
 				break;
 			case 3:
 				App.setView(defaultView);
+				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));
 				CraftView::render(&App);
 				break;
 			case 4:
 				App.setView(defaultView);
+				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));	
 				//ExitView::render(&App);
 				break;
 			default: 
@@ -116,6 +120,13 @@ bool loadConfiguration(void) {
 	unsigned int window_height;
 	unsigned int window_width;
 
+	float gameview_height;
+	float gameview_width;
+	unsigned int gameview_center;
+
+	float minimapview_height;
+	float minimapview_width;
+
 	//Load configuration
   	if (!(result = doc.load_file( ("./assets/" + config + ".xml").c_str() ))) {
 		std::cout << "Main: Failed to load config" << std::endl;
@@ -128,25 +139,43 @@ bool loadConfiguration(void) {
 	pugi::xml_node tools = doc.child(config.c_str());
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
-			if (!strcmp(attr.name(), "Height")) {
+			if (!strcmp(tool.name(), "Window") && !strcmp(attr.name(), "Height")) {
 				window_height = std::strtol(attr.value(), &temp, 10);
 				if (*temp != '\0') {
 					std::cout << "Main: Failed to load configuration: Error reading attribute for " << attr.name() << std::endl;
 					return false;
 				}
 			}
-			else if (!strcmp(attr.name(), "Width")) {
+			else if (!strcmp(tool.name(), "Window") && !strcmp(attr.name(), "Width")) {
 				window_width = std::strtol(attr.value(), &temp, 10);
 				if (*temp != '\0') {
 					std::cout << "Main: Failed to load configuration: Error reading attribute for " << attr.name() << std::endl;
 					return false;
 				}
 			}
+			else if (!strcmp(tool.name(), "GameView") && !strcmp(attr.name(), "Height")) {
+				gameview_height = std::strtof(attr.value(), &temp);
+			}
+			else if (!strcmp(tool.name(), "GameView") && !strcmp(attr.name(), "Width")) {
+				gameview_width = std::strtof(attr.value(), &temp);
+			}
+			else if (!strcmp(tool.name(), "GameView") && !strcmp(attr.name(), "Center")) {
+				gameview_center = std::strtof(attr.value(), &temp);
+			}
+			else if (!strcmp(tool.name(), "MiniMapView") && !strcmp(attr.name(), "Height")) {
+				minimapview_height = std::strtof(attr.value(), &temp);
+			}
+			else if (!strcmp(tool.name(), "MiniMapView") && !strcmp(attr.name(), "Width")) {
+				minimapview_width = std::strtof(attr.value(), &temp);
+			}
 		}
 	}
 
 	//Set up the global configuration
   	Configuration::setWindowDimensions(window_width, window_height);
+	Configuration::setGameViewDimensions(gameview_width*window_width, gameview_height*window_height);
+	Configuration::setGameViewCenter(sf::Vector2f(gameview_center, gameview_center));
+	Configuration::setMiniMapViewDimensions(minimapview_width*window_width, minimapview_height*window_height);
 
 	return true;
 }

@@ -181,10 +181,14 @@ void Actor::update(float time) {
 /** Renders each of the actors components
  ** window: current game render window
  **/
-        void Actor::render(sf::RenderWindow *window) {
-            if (visible)
-                window->draw(sprite[sprite_idx]);
-        }
+void Actor::render(sf::RenderWindow *window) {
+    	if (visible) {
+        	window->draw(sprite[sprite_idx]);
+		for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
+			(it->second)->render(window);
+	}
+	
+}
 
 /** Reset each of the actors components after scoring
  **

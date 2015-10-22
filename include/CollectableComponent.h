@@ -17,6 +17,7 @@ class CollectableComponent : public ActorComponent {
 
         void update(float time) override;
         void update(EventInterfacePtr e) override;
+	void render(sf::RenderWindow *window) override;
         void reset(void) override;
         void restart(void) override;
         void quit(void) override;

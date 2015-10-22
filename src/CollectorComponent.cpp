@@ -47,8 +47,31 @@ bool CollectorComponent::Init(pugi::xml_node* elem) {
                     return false;
                 }					
             }
+		else  if (!strcmp(attr.name(), "Size")) {
+                vase_size = std::strtol(attr.value(), &temp, 10);				
+                if (*temp != '\0') {
+                    std::cout << "CollectorComponent::Init: Failed to initialize: Error reading attribute for " << attr.name() << std::endl;
+                    return false;
+                }					
+            }
+		else if (!strcmp(attr.name(), "FireFlower")) {
+			vase_fireflower.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
+		}
+		else if (!strcmp(attr.name(), "EarthFlower")) {
+			vase_earthflower.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
+		}
+		else if (!strcmp(attr.name(), "WaterFlower")) {
+			vase_waterflower.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
+		}
+		else if (!strcmp(attr.name(), "AirFlower")) {
+			vase_airflower.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
+		}
+		else if (!strcmp(attr.name(), "Empty")) {
+			vase_empty.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
+		}
         }
     }
+	
     return true;
 }
 
@@ -56,6 +79,13 @@ bool CollectorComponent::Init(pugi::xml_node* elem) {
  ** Setups up additional attributes based on game configuration
  **/
 void CollectorComponent::PostInit(void) {
+	if (owner->getId() == "Player") {
+		for (int i = 0; i < vases; i++) {
+			vase_sprites.push_back(sf::Sprite(vase_empty, sf::IntRect(0, 0, vase_empty.getSize().x, vase_empty.getSize().y)));
+			vase_sprites.back().scale(1.0*vase_size/(vase_empty.getSize().x), 1.0*vase_size/(vase_empty.getSize().y));
+			vase_sprites.back().setPosition(0,0);
+		}
+	}
 }
 
 /** Updates the component's attributes
@@ -74,18 +104,37 @@ void CollectorComponent::update(EventInterfacePtr e) {
 	StrongActorPtr other_actor = LevelView::getActor(e->getSender());
 	if (event_type == ContactEvent::event_type) {
 		if (other_actor->hasComponent(CollectableComponent::id)) {
-			if (vases > 0) {
+			if (flowers < vases) {
 				if (!EventManagerInterface::get()->queueEvent(new CollectEvent(e->getTimeStamp(), owner->getInstance(), other_actor->getInstance())))
 					std::cout << "CollectableComponent::update: Unable to queue event" << std::endl;		
-				setVases(getVases()-1);
-				flowerList.push_back(other_actor);
-				flowers++;
+				if (owner->getId() == "Player") {				
+					flowerList.push_back(other_actor);
+					if (other_actor->getId() == "FireFlower") {
+						vase_sprites[flowers++].setTexture(vase_fireflower);
+						//vase_sprites[flowers++].scale(1.0*vase_size/(vase_fireflower.getSize().x), 1.0*vase_size/(vase_fireflower.getSize().y));
+					}
+					else if (other_actor->getId() == "EarthFlower") {
+						vase_sprites[flowers++].setTexture(vase_earthflower);
+						//vase_sprites[flowers++].scale(1.0*vase_size/(vase_earthflower.getSize().x), 1.0*vase_size/(vase_earthflower.getSize().y));
+					}
+					else if (other_actor->getId() == "AirFlower") {
+						vase_sprites[flowers++].setTexture(vase_airflower);
+						//vase_sprites[flowers++].scale(1.0*vase_size/(vase_airflower.getSize().x), 1.0*vase_size/(vase_airflower.getSize().y));
+					}
+					else if (other_actor->getId() == "WaterFlower") {
+						vase_sprites[flowers++].setTexture(vase_waterflower);
+						//vase_sprites[flowers++].scale(1.0*vase_size/(vase_waterflower.getSize().x), 1.0*vase_size/(vase_waterflower.getSize().y));
+					}
+				}
 				std::cout << owner->getId() << "  collecting " << other_actor->getId() << " vase number now " << vases << std::endl;			
 			}		
 		}
 		else if (owner->getId() == "Player") {
-			setVases(getVases()-1);
-			std::cout << owner->getId() << "  lost a vase and has " << vases << std::endl;
+			if (vases > 0) {
+				vases--;
+				vase_sprites.erase(vase_sprites.end());
+				std::cout << owner->getId() << "  lost a vase and has " << vases << std::endl;
+			}
 		}
 	}	
 }
@@ -132,4 +181,34 @@ void CollectorComponent::setVases(int v) {
  **/
 int CollectorComponent::getVases(void) {
     return vases;
+}
+
+/** Renders component
+ ** window: current game render window
+ **/
+void CollectorComponent::render(sf::RenderWindow *window) {
+	if (owner->getId() == "Player") {
+		std::vector<sf::Sprite>::iterator it;
+		int i = 0;
+		int sep = 2;
+
+		sf::Vector2f gameView_top_corner = Configuration::getGameViewCenter();
+		gameView_top_corner.x -= Configuration::getGameViewWidth()/2;
+		gameView_top_corner.y -= Configuration::getGameViewHeight()/2;
+	
+		for (it = vase_sprites.begin(); it != vase_sprites.end(); ++it) {
+			if (*(owner->getGameState()) == 0) {
+				(*it).setScale(5.0*vase_size/(vase_empty.getSize().x), 5.0*vase_size/(vase_empty.getSize().y));
+				(*it).setPosition( gameView_top_corner.x + (i++)*(5* vase_size +sep), gameView_top_corner.y);
+
+			}
+			else {
+				(*it).setScale(1.0*vase_size/(vase_empty.getSize().x), 1.0*vase_size/(vase_empty.getSize().y));
+				(*it).setPosition( gameView_top_corner.x + (i++)*(vase_size +sep), gameView_top_corner.y);
+
+			}						
+			window->draw(*it);
+		}
+	}
+	
 }

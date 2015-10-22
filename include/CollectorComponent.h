@@ -15,6 +15,7 @@ class CollectorComponent : public ActorComponent {
 
         void update(float time) override;
         void update(EventInterfacePtr e) override;
+	void render(sf::RenderWindow *window) override;
         void reset(void) override;
         void restart(void) override;
         void quit(void) override;
@@ -28,10 +29,18 @@ class CollectorComponent : public ActorComponent {
     private:
         static ActorComponent* create();
         int vases;
+	int vase_size;
         int flowers;
         static int instances;
         static const bool registered;
         std::vector<StrongActorPtr> flowerList;
+
+	std::vector<sf::Sprite> vase_sprites;
+	sf::Texture vase_empty;
+	sf::Texture vase_fireflower;
+	sf::Texture vase_earthflower;
+	sf::Texture vase_waterflower;
+	sf::Texture vase_airflower;
 };
 
 #endif

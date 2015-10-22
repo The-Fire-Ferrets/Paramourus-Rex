@@ -4,7 +4,7 @@
 #include "Constants.h"
 #include "LevelView.h"
 #include "DialogueView.h"
-
+#include "CollectorComponent.h"
 class MapView {
     private:
         static const int size;

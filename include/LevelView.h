@@ -20,19 +20,20 @@ class LevelView  {
         static std::string timer_string;
         static sf::Font font;
         static sf::Vector2f timer_position;
-        static void cleanUp(void);
         static sf::View gameView;
         static sf::View minimapView;
-        static StrongActorPtr player;
         static int duration;
+
     public:
         static std::vector<StrongActorPtr> actorList;	
+	static StrongActorPtr player;
         static std::string getName(void);
         static int getNumActors(void);
         static void start();
         static void quit(void);
         static StrongActorPtr getActor(int instance);
         static void removeActor(int instance);
+	static void cleanUp(void);
 
         //ALL VIEW CLASSES MUST IMPLEMENT BELOW METHODS
         static void Create(const char* resource, int* state, int flowers[]);

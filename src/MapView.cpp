@@ -139,12 +139,19 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
     if (reset) {
 	resetPopulationValues();
     }	
+
+    if (LevelView::player == NULL) {
+	int flowers[] = {fireflowers_count[1], earthflowers_count[1], airflowers_count[1], waterflowers_count[1]};
+	LevelView::Create(levels[1].c_str(), state, flowers);
+	LevelView::cleanUp();
+    }
+
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
         for (int i = 0; i < num_levels; i++) {
             if (sprites[i].getGlobalBounds().contains(pos.x, pos.y)) {
-		if (i > 0) {
+		if (i > 1) {
 			int flowers[] = {fireflowers_count[i], earthflowers_count[i], airflowers_count[i], waterflowers_count[i]};
 		        LevelView::Create(levels[i].c_str(), state, flowers);
 		        DialogueView::Create(levels[i].c_str(), state);
@@ -170,7 +177,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 void MapView::resetPopulationValues(void) {
 	flowers = rand() % 10 + 10;
 	for (int i = 0; i < num_levels; i++) {
-		if (i > 0) {
+		if (i > 1) {
 			fireflowers_count[i] = (int)(flowers * fireflowers[i]);
 			earthflowers_count[i] = (int)(flowers * earthflowers[i]);
 			waterflowers_count[i] = (int)(flowers * waterflowers[i]);
@@ -199,8 +206,14 @@ void MapView::render(sf::RenderWindow *window) {
 	window->draw(background);
 	for (int i = 0; i < num_levels; i++) {
 		window->draw(sprites[i]);
-		if (i > 0) {
+		if (i > 1) {
 			window->draw(flowers_text[i]);
 		}		
 	}
+	std::shared_ptr<ActorComponent>     ac;
+        std::shared_ptr<CollectorComponent>   cc;
+        ac = LevelView::player->components[CollectorComponent::id];
+        cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
+
+	cc->render(window);
 }
