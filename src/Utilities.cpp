@@ -1,7 +1,7 @@
 #include "Utilities.h"
 #include <cmath> // std::pow(), std::sqrt(), std::abs()
 #include <cfloat> // FLT_EPSILON
-#include <stdexcept> // std::domain_error
+#include <sstream> 
 
 /** Returns the distance between the points p and q
  **/
@@ -20,4 +20,18 @@ bool slope(sf::Vector2f p, sf::Vector2f q, float& m) {
     }
     m = dy/dx;
     return true;
+}
+
+/** Splits the input string at the spaces.
+ **/
+std::vector<std::string> split(std::string str, char delim) {
+	std::stringstream ss(str);
+	std::vector<std::string> words;
+	std::string word;
+
+	while (std::getline(ss, word, delim)) {
+		words.push_back(word);
+	}
+
+	return words;
 }
