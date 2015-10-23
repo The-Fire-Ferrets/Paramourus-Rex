@@ -77,7 +77,6 @@ void CraftView::Create(const char* resource, int* state) {
             }
         }
     }
-      printf("finished\n");
     
     //Iterates over XML to get components to add
     for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
@@ -89,37 +88,37 @@ void CraftView::Create(const char* resource, int* state) {
     
     // Checks player for current inventory.
     // Accessing this info from LevelView::Player's CollectorComponent.
-    const char*  actor;
-    StrongActorPtr player = LevelView::player;
-    StrongActorComponentPtr ac = player->components[CollectorComponent::id];
-    std::shared_ptr<CollectorComponent> cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
-    std::vector<StrongActorPtr> flowers = cc->getFlowers();
-    
-    printf("problem?\n");
-    // we now have the list of flowers; want to iterate through it to determine how many of each flower
-    // the player actually has, as well as restore the actor's number of vases to its full count
-    for (int i=0; i < flowers.size() ; i++){
-      //here, flowerList is a vector full of StrongActorPtrs. we need to determine the id of each strongactorptr 
-      //to determine if it is a fire flower, water flower, air flower, or earth flower
-	if (flowers[i]->getId() == "FireFlower"){
-	    fireFlowers++;
-	}
-	else if (flowers[i]->getId() == "WaterFlower"){
-	    waterFlowers++;
-	}
-	else if (flowers[i]->getId() == "AirFlower"){
-	    airFlowers++;
-	}
-	else if (flowers[i]->getId() == "EarthFlower"){
-	    earthFlowers++;
-	}
-	
-	//restore player's vases now that it's cleared space in inventory
-	totalFlowers++;
-	cc->setVases(cc->getVases()+1);
+
+    if (LevelView::player != NULL){
+      StrongActorPtr player = LevelView::player;
+      StrongActorComponentPtr ac = player->components[CollectorComponent::id];
+      std::shared_ptr<CollectorComponent> cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
+      std::vector<StrongActorPtr> flowers = cc->getFlowers();
+
+      
+      // we now have the list of flowers; want to iterate through it to determine how many of each flower
+      // the player actually has, as well as restore the actor's number of vases to its full count
+      for (int i=0; i < flowers.size() ; i++){
+	//here, flowerList is a vector full of StrongActorPtrs. we need to determine the id of each strongactorptr 
+	//to determine if it is a fire flower, water flower, air flower, or earth flower
+	  if (flowers[i]->getId() == "FireFlower"){
+	      fireFlowers++;
+	  }
+	  else if (flowers[i]->getId() == "WaterFlower"){
+	      waterFlowers++;
+	  }
+	  else if (flowers[i]->getId() == "AirFlower"){
+	      airFlowers++;
+	  }
+	  else if (flowers[i]->getId() == "EarthFlower"){
+	      earthFlowers++;
+	  }
+	  
+	  //restore player's vases now that it's cleared space in inventory
+	  totalFlowers++;
+	  cc->setVases(cc->getVases()+1);
+      }
     }
-    
-    printf("working?\n");
     
 }
 
