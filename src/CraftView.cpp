@@ -17,6 +17,8 @@ std::string CraftView::flower_list[size];
 sf::Texture CraftView::background_texture;
 //Holds background
 sf::Sprite CraftView::background;
+// Holds map sprite
+sf::Sprite CraftView::map;
 //Holds level name
 std::string CraftView::name;
 //Hold text font
@@ -24,6 +26,8 @@ sf::Font CraftView::font;
 // Holds text "craftable companion" will be speaking
 sf::Text CraftView::text;
 sf::Vector2f CraftView::text_pos;
+
+bool CraftView::pressed;
 
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
@@ -76,6 +80,15 @@ void CraftView::Create(const char* resource, int* state) {
                 std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
             }
         }
+//         else if (!strcmp(attr.name(), "Map")) {
+//             sf::Image image;
+// 	    if (!image.LoadFromFile((std::string)attr.value())){
+// 		std::cout << "CraftView::Create: Failed to load " << attr.value();
+// 	    }
+// 	    map.SetImage(image);
+// 	    map.resize(20,20);
+// 	    map.SetPosition(10,680);
+//         }
     }
     
     //Iterates over XML to get components to add
@@ -119,7 +132,6 @@ void CraftView::Create(const char* resource, int* state) {
 	  cc->setVases(cc->getVases()+1);
       }
     }
-    
 }
 
 int CraftView::getNumFlowers(void) {
@@ -130,7 +142,19 @@ int CraftView::getNumFlowers(void) {
  **
  **/
 void CraftView::update(sf::RenderWindow *window, int* state) {
-
+  
+      // Anticipates clicking in different areas of the screen 
+      if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
+        pressed = true;
+        const sf::Vector2i pos = sf::Mouse::getPosition(*window);
+        if (map.getGlobalBounds().contains(pos.x, pos.y)) {
+		  *state = 0;
+        }
+      }
+      
+      else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
+        pressed = false;
+      }
 
 }
 
@@ -169,6 +193,7 @@ void CraftView::render(sf::RenderWindow *window) {
     window->draw(background);
     window->draw(backlay);
     window->draw(text);
+    //window->draw(map);
 }
 
 

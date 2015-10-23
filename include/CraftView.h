@@ -17,6 +17,7 @@ class CraftView  {
         static int airFlowers;
         static sf::Texture background_texture;
         static sf::Sprite background;
+	static sf::Sprite map;
         static std::string name;
         static sf::Clock level_clock;
         static sf::Text text;
@@ -26,6 +27,7 @@ class CraftView  {
         static void cleanUp(void);
     public:
         static int getNumFlowers(void);
+	static bool pressed;
         static void start();
         static void Create(const char *resource, int *state);
         static void update(EventInterfacePtr e);
