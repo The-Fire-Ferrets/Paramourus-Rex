@@ -154,6 +154,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 		}
 		else {
 			reset = true;
+			CraftView::Create("Craft",state);
 			*state = 3;
 		}
             }

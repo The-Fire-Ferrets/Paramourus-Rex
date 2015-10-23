@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include "LevelView.h"
 #include "DialogueView.h"
+#include "CraftView.h"
 
 class MapView {
     private:

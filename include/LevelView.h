@@ -7,6 +7,7 @@
 
 class LevelView  {
     friend class AI;
+    friend class CraftView;
     private:
         static const int size;
         static int num_actors;
