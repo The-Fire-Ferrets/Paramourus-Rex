@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <Map Background = "Map.png" Font = "arial.ttf">
 	<CraftTable X = "730" Y = "0" Height = "50" Width = "60" Sprite = "CraftTable.png"/>
-	<Level0 X = "400" Y = "400" Height = "30" Width = "30" Sprite = "Level0.png" FireFlower = ".6" EarthFlower = ".3" WaterFlower = ".05" AirFlower = ".05"/>
+	<Level0  X = "-100" Y = "-100" Height = "30" Width = "30" Sprite = "Level0.png" FireFlower = "0" EarthFlower = "0" WaterFlower = "0" AirFlower = "0"/>
+	<Level1 X = "400" Y = "250" Height = "30" Width = "30" Sprite = "Level1.png" FireFlower = ".6" EarthFlower = ".3" WaterFlower = ".05" AirFlower = ".05"/>
+	<Level2 X = "200" Y = "30" Height = "30" Width = "30" Sprite = "Level2.png" FireFlower = ".05" EarthFlower = ".05" WaterFlower = ".8" AirFlower = ".1"/>
+	<Level3 X = "700" Y = "550" Height = "30" Width = "30" Sprite = "Level3.png" FireFlower = "0" EarthFlower = ".6" WaterFlower = ".2" AirFlower = ".2"/>
+	<Level4 X = "720" Y = "100" Height = "30" Width = "30" Sprite = "Level4.png" FireFlower = ".2" EarthFlower = "0" WaterFlower = ".1" AirFlower = ".7"/>
+	<Level5 X = "80" Y = "480" Height = "30" Width = "30" Sprite = "Level5.png" FireFlower = ".5" EarthFlower = ".4" WaterFlower = ".05" AirFlower = ".05"/>
 </Map>

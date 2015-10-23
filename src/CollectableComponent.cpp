@@ -88,6 +88,13 @@ void CollectableComponent::restart(void) {
 
 }
 
+/** Renders component
+ ** window: current game render window
+ **/
+void CollectableComponent::render(sf::RenderWindow *window) {
+	
+}
+
 /** Cleans up after quiting
  **
  **/

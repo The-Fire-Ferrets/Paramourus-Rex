@@ -46,6 +46,12 @@ bool CraftableComponent::Init(pugi::xml_node* elem) {
     return true;
 }
 
+/** Renders component
+ ** window: current game render window
+ **/
+void CraftableComponent::render(sf::RenderWindow *window) {
+	
+}
 /** Final Initilizer
  ** Setups up additional attributes based on game configuration
  **/

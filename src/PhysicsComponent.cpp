@@ -173,3 +173,10 @@ bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
     // if not, it is okay to move in the direction we want
     return true;
 }
+
+/** Renders component
+ ** window: current game render window
+ **/
+void PhysicsComponent::render(sf::RenderWindow *window) {
+	
+}

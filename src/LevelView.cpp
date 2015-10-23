@@ -170,9 +170,9 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 		}
 	}
 	//Set views so can only see a quarter of the map at once
-	gameView = sf::View(sf::FloatRect(0, 0, Configuration::getWindowWidth()/4, Configuration::getWindowHeight()/4));
+	gameView = sf::View(sf::FloatRect(0, 0, Configuration::getGameViewWidth(), Configuration::getGameViewHeight()));
 	//Set minimap to see entire map
-	minimapView = sf::View(sf::FloatRect(0, 0, Configuration::getWindowWidth(), Configuration::getWindowHeight()));
+	minimapView = sf::View(sf::FloatRect(0, 0, Configuration::getMiniMapViewWidth(), Configuration::getMiniMapViewHeight()));
 }
 
 std::string LevelView::getName(void) {
@@ -198,15 +198,15 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		out << std::setprecision(4) << timer_time/1000;
 		timer_string = out.str();
 		timer.setString(timer_string);
-		//Set timer to bottom right corner
-		sf::Vector2f gameView_bottom_corner = gameView.getCenter();
-		gameView_bottom_corner.x += gameView.getSize().x/2 - timer.getGlobalBounds().width;
-		gameView_bottom_corner.y += gameView.getSize().y/2 - timer.getGlobalBounds().height*1.5;
-		timer.setPosition(gameView_bottom_corner);
-
 		std::vector<StrongActorPtr>::iterator it;
 		for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
 			(*it)->update(time);
+
+		//Set timer to bottom right corner
+		sf::Vector2f gameView_bottom_corner = Configuration::getGameViewCenter();
+		gameView_bottom_corner.x += Configuration::getGameViewWidth()/2 - timer.getGlobalBounds().width;
+		gameView_bottom_corner.y += Configuration::getGameViewHeight()/2 - timer.getGlobalBounds().height*1.5;
+		timer.setPosition(gameView_bottom_corner);
 	}
 
 }
@@ -226,17 +226,19 @@ void LevelView::render(sf::RenderWindow *window) {
 	//Get the player location and center gameView to it
 	sf::Vector2f player_pos = player->getPosition();
 	sf::Vector2f player_size = player->getSize();
-	gameView.setCenter(player_pos.x + player_size.x/2, player_pos.y + player_size.y/2); 
+	gameView.setCenter(player_pos.x + player_size.x/2, player_pos.y + player_size.y/2);
+	Configuration::setGameViewDimensions(gameView.getSize().x, gameView.getSize().y);
+	Configuration::setGameViewCenter(gameView.getCenter());
 	gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
 	window->setView(gameView);
 	//Update graphics	
 	window->draw(edge);
 	window->draw(background);
-	window->draw(timer);
 	std::vector<StrongActorPtr>::iterator it;
 	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
 		(*it)->render(window);
 	player->render(window);
+	window->draw(timer);
 
 	//Set minimap view
 	minimapView.setViewport(sf::FloatRect(0.90f, 0, 0.10f, 0.10f));
@@ -277,10 +279,11 @@ StrongActorPtr LevelView::getActor(int instance) {
 void LevelView::removeActor(int instance) {
 	std::vector<StrongActorPtr>::iterator it;
 	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); ++it) {
-		if ((*it)->getInstance() == instance) {
-			actorList.erase(it);
-			break;
-		}
+		if (*it != NULL)
+			if ((*it)->getInstance() == instance) {
+				actorList.erase(it);
+				break;
+			}
 	}
 }
 /** Clean up level after completion

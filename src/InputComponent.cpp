@@ -198,6 +198,13 @@ void InputComponent::restart(void) {
 
 }
 
+/** Renders component
+ ** window: current game render window
+ **/
+void InputComponent::render(sf::RenderWindow *window) {
+	
+}
+
 /** Cleans up after quiting
  **
  **/

@@ -5,6 +5,7 @@
 #include "LevelView.h"
 #include "DialogueView.h"
 #include "CraftView.h"
+#include "CollectorComponent.h"
 
 class MapView {
     private:

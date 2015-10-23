@@ -29,6 +29,8 @@ class DialogueView {
 
         static bool pressed;
 
+		static std::string fitStringToDialogueBox(std::string str);
+
     public:
         static std::string boxes[];
         static void Create(const char* resource, int* state);
