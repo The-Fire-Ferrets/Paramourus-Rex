@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<Level1 Name = "Hello World!" Background = "Level1.png" Edge = "Lava.png" Text_X = "650" Text_Y = "0" Font = "arial.ttf" Text_Size = "10" Duration = "100000">
+<Level2 Name = "Impact Desert" Background = "Level1.png" Edge = "Water.png" Text_X = "650" Text_Y = "0" Font = "arial.ttf" Text_Size = "10" Duration = "50000">
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Player>
-	<NPC Generate = "3">
+	<NPC Generate = "5">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</NPC>
 	<Obstacle Generate = "50">
@@ -21,4 +21,4 @@
 	<FireFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</FireFlower>
-</Level1>
+</Level2>
