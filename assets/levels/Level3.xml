@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<Level3 Name = "Hello World!" Background = "Level3.png" Edge = "Forest.png" Text_X = "650" Text_Y = "0" Font = "arial.ttf" Text_Size = "10" Duration = "10000">
+<Level3 Name = "Hello World!" Background = "Level3.png" Edge = "Forest.png" Text_X = "650" Text_Y = "0" Font = "arial.ttf" Text_Size = "10" Duration = "30000">
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Player>
-	<NPC Generate = "3">
+	<NPC Generate = "5">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</NPC>
 	<Obstacle Generate = "50">
