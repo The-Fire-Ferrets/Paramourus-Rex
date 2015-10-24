@@ -39,6 +39,9 @@ bool DialogueView::pressed = false;
  ** state: current game state (state should be 2 if in dialogue view)
  **/
 void DialogueView::Create(const char* resource, int* state){
+	dialogues.clear();
+	boxes.clear();
+
 	//Reset the index before each iteration
 	index = 0;
 	// reference to XML file we are getting our info from
