@@ -80,15 +80,15 @@ void CraftView::Create(const char* resource, int* state) {
                 std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
             }
         }
-//         else if (!strcmp(attr.name(), "Map")) {
-//             sf::Image image;
-// 	    if (!image.LoadFromFile((std::string)attr.value())){
-// 		std::cout << "CraftView::Create: Failed to load " << attr.value();
-// 	    }
-// 	    map.SetImage(image);
-// 	    map.resize(20,20);
-// 	    map.SetPosition(10,680);
-//         }
+        else if (!strcmp(attr.name(), "Map")) {
+            sf::Texture texture;
+    	    if (!texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+    		  std::cout << "CraftView::Create: Failed to load " << attr.value();
+    	    }
+    	    map = sf::Sprite(texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/26.6, Configuration::getWindowHeight()/26.6));
+    	    //map.setScale(30/(texture.getSize()).x, 30/(texture.getSize()).y);
+    	    map.setPosition(Configuration::getWindowWidth()/1.05,Configuration::getWindowHeight()/40);
+        }
     }
     
     //Iterates over XML to get components to add
@@ -193,7 +193,7 @@ void CraftView::render(sf::RenderWindow *window) {
     window->draw(background);
     window->draw(backlay);
     window->draw(text);
-    //window->draw(map);
+    window->draw(map);
 }
 
 

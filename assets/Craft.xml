@@ -1,4 +1,4 @@
 <?xml version="1.0"?>
-<Craft Background = "Forest.png" Map = "Map.png" Font = "arial.ttf" Text_Size = "30" Text_X="150" Text_Y = "450">
+<Craft Background = "Forest.png" Map = "Cactus.png" Font = "arial.ttf" Text_Size = "30" Text_X="150" Text_Y = "450">
   <DialogueBox ID = "1" Text_Size = "30" Text_X="120" Text_Y = "600"></DialogueBox>
 </Craft> 
