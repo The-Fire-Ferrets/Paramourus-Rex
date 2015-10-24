@@ -159,7 +159,7 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 	if (mouse_pos.x > 0.f && mouse_pos.x < Configuration::getWindowWidth()
 			&& mouse_pos.y > 0.f && mouse_pos.y < Configuration::getWindowHeight())
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed){
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed || index == 0){
 			pressed = true;
 			std::cout << index << " " << boxes.size() << std::endl;
 			if (index >= boxes.size()){
