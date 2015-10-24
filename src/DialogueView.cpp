@@ -188,11 +188,6 @@ void DialogueView::update(EventInterfacePtr e){
 // Draws the dialogue, Diana and Phil
 void DialogueView::render(sf::RenderWindow *window){
 	sf::RectangleShape backlay;
-	/* sf::Vector2u size = window->getSize(); */
-	/* unsigned int width = size.x/1.05; */
-	/* unsigned int height = size.y/4; */
-	/* unsigned int posX = size.x/40; */
-	/* unsigned int posY = size.y/1.4; */
 
 	unsigned int width = Configuration::getWindowWidth()/1.05;
 	unsigned int height = Configuration::getWindowHeight()/4;
@@ -223,7 +218,7 @@ std::vector<std::string> DialogueView::fitStringToDialogueBox(std::string str) {
 	int height = Configuration::getWindowHeight()/4;
 	int beginY = Configuration::getWindowHeight()/1.4;
 	int endY = beginY+height;
-	int max_height = (endY-beginY)*1.5; // doesn't fill up enough space without a little extra room
+	int max_height = (endY-beginY);
 
 	// text object used to see how close each word puts us to the bounds
 	sf::Text temp;
@@ -233,39 +228,39 @@ std::vector<std::string> DialogueView::fitStringToDialogueBox(std::string str) {
 	// current string and width
 	std::vector<std::string> boxes;
 	std::string fitted_string = "";
-	float current_width = 0.f, current_height = 0.f;
+	float current_width = 0.f;
 	float word_width = 0.f, word_height = 0.f;
-	
+
 	// split the dialogue into words;
 	std::vector<std::string> words = split(str, ' ');
 
 	// for each word...
 	for (std::string word : words) {
-		// get the bounding box (a hack; for whatever reason, the global bounds 
-		// ignore leading and trailing ws)
+		// get the bounding box
 		temp.setString(word + " ");
 		word_width = temp.findCharacterPos(temp.getString().getSize()).x;
-		word_height = std::max(
-				temp.getGlobalBounds().height - temp.getGlobalBounds().top + font.getLineSpacing(temp.getCharacterSize()),
-				word_height);
+
+		// general word height (changes, hence the max)
+		sf::FloatRect bounds = temp.getGlobalBounds();
+		int line_spacing = font.getLineSpacing(temp.getCharacterSize());
+		word_height = std::max(bounds.height-bounds.top+line_spacing, word_height);
+
+		// the height of the full string so far
+		temp.setString(fitted_string);
+		float full_height = temp.getGlobalBounds().height - temp.getGlobalBounds().top;
 
 		// will it go past the horizontal bound?
 		if (current_width + word_width > max_width) {
-			current_height += word_height;
-			std::cout << current_height << " " << max_height << " " << word_height << std::endl;
-
 			// will it go past the vertical bound?
-			if (max_height - current_height < word_height) {
+			if (max_height - full_height < word_height) {
 				boxes.push_back(fitted_string);
 				fitted_string = word + " ";
 				current_width = word_width;
-				current_height = 0.f;
 			}
 			else {
 				fitted_string += "\n" + word + " ";
 				current_width = word_width;
 			}
-
 		}
 		else {
 			// just add to string
