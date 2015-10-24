@@ -3,6 +3,7 @@
 
 #include "Constants.h"
 #include "ActorFactory.h"
+#include <vector>
 
 class DialogueView {
 
@@ -29,10 +30,11 @@ class DialogueView {
 
         static bool pressed;
 
-		static std::string fitStringToDialogueBox(std::string str);
+		static std::vector<std::string> fitStringToDialogueBox(std::string str);
 
     public:
-        static std::string boxes[];
+        static std::vector<std::string> boxes;     // what gets displayed on screen
+		static std::vector<std::string> dialogues; // what gets read in from the XML
         static void Create(const char* resource, int* state);
         static void update(sf::RenderWindow *window, int* state);
         static void update(EventInterfacePtr e);

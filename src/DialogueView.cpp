@@ -1,6 +1,8 @@
 #include "DialogueView.h" 
 #include "Utilities.h"
 #include <vector>
+#include <algorithm>
+#include <cmath>
 
 // Total size of pointer arrays
 const int DialogueView::size = 20;
@@ -10,7 +12,8 @@ const int DialogueView::size = 20;
 int DialogueView::numDialogues = 0;
 int DialogueView::index = 0;
 // Array holding pointers to the dialogue that's to fill the boxes at cutscenes
-std::string DialogueView::boxes[size];
+std::vector<std::string> DialogueView::boxes;
+std::vector<std::string> DialogueView::dialogues;
 // Text in the specific node we are looking at that will show up in Dialogue box
 std::string DialogueView::dialogue_str;
 //Dialogue setPosition
@@ -126,14 +129,11 @@ void DialogueView::Create(const char* resource, int* state){
 	Diana.setPosition(dianaPos);
 	Phil.setPosition(philPos);
 
-	int count = 0;
-
 	// navigating through xml files and storing the actual dialogue into array
 	for (pugi::xml_node tool = tools.first_child(); tool; tool =tool.next_sibling()){
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
 			if (!strcmp(attr.name(), "Text")){
-				boxes[count] = attr.value();
-				count++;
+				dialogues.push_back(attr.value());
 			}
 			// store values in seperate array, if it's even necessary to change background -- may just take this out
 			// if background remains static?
@@ -143,6 +143,11 @@ void DialogueView::Create(const char* resource, int* state){
 		}
 	}
 
+	// generatre dialogue boxes
+	for (std::string dialogue : dialogues) {
+		std::vector<std::string> fitted = fitStringToDialogueBox(dialogue);
+		boxes.insert(boxes.end(), fitted.begin(), fitted.end());
+	}
 }
 
 
@@ -150,19 +155,25 @@ void DialogueView::Create(const char* resource, int* state){
  ** it switches to the next desired block of text.  Called from main.
  **/
 void DialogueView::update(sf::RenderWindow *window, int* state){
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed){
-		pressed = true;
-		std::cout << index << std::endl;
-		if (index > numDialogues){
-			*state = 0;
+	sf::Vector2i mouse_pos = sf::Mouse::getPosition(*window);
+	if (mouse_pos.x > 0.f && mouse_pos.x < Configuration::getWindowWidth()
+			&& mouse_pos.y > 0.f && mouse_pos.y < Configuration::getWindowHeight())
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed){
+			pressed = true;
+			std::cout << index << " " << boxes.size() << std::endl;
+			if (index >= boxes.size()){
+				*state = 0;
+			}
+			else{
+				text.setString(boxes[index]);
+				//text.setString(fitStringToDialogueBox(boxes[index]));
+			}
+			index++;
 		}
-		else{
-			text.setString(fitStringToDialogueBox(boxes[index]));
+		else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+			pressed = false;
 		}
-		index++;
-	}
-	else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-		pressed = false;
 	}
 }
 
@@ -177,12 +188,16 @@ void DialogueView::update(EventInterfacePtr e){
 // Draws the dialogue, Diana and Phil
 void DialogueView::render(sf::RenderWindow *window){
 	sf::RectangleShape backlay;
-	sf::Vector2u size = window->getSize();
-	unsigned int width = size.x/1.05;
-	unsigned int height = size.y/4;
-	unsigned int posX = size.x/40;
-	unsigned int posY = size.y/1.4;
+	/* sf::Vector2u size = window->getSize(); */
+	/* unsigned int width = size.x/1.05; */
+	/* unsigned int height = size.y/4; */
+	/* unsigned int posX = size.x/40; */
+	/* unsigned int posY = size.y/1.4; */
 
+	unsigned int width = Configuration::getWindowWidth()/1.05;
+	unsigned int height = Configuration::getWindowHeight()/4;
+	unsigned int posX = Configuration::getWindowWidth()/40;
+	unsigned int posY = Configuration::getWindowHeight()/1.4;
 
 	backlay.setPosition(posX, posY);
 	backlay.setOutlineColor(sf::Color::Black);
@@ -190,6 +205,7 @@ void DialogueView::render(sf::RenderWindow *window){
 	backlay.setSize(sf::Vector2f(width, height));
 	backlay.setOutlineThickness(5);
 	text.setColor(sf::Color::Black);
+	text.setPosition(posX, posY);
 
 	window->draw(background);
 	window->draw(backlay);
@@ -197,11 +213,17 @@ void DialogueView::render(sf::RenderWindow *window){
 	// once Diana and Phil sprites are finished, will be rendered here as well
 }
 
-std::string DialogueView::fitStringToDialogueBox(std::string str) {
+std::vector<std::string> DialogueView::fitStringToDialogueBox(std::string str) {
 	// get dialogue box bounds
-	unsigned int width = Configuration::getWindowWidth()/1.05;
-	unsigned int beginX = Configuration::getWindowWidth()/40;
-	unsigned int max_width = beginX+width;
+	int width = Configuration::getWindowWidth()/1.05;
+	int beginX = Configuration::getWindowWidth()/40;
+	int endX = beginX+width;
+	int max_width = endX-beginX;
+
+	int height = Configuration::getWindowHeight()/4;
+	int beginY = Configuration::getWindowHeight()/1.4;
+	int endY = beginY+height;
+	int max_height = (endY-beginY)*1.5; // doesn't fill up enough space without a little extra room
 
 	// text object used to see how close each word puts us to the bounds
 	sf::Text temp;
@@ -209,30 +231,49 @@ std::string DialogueView::fitStringToDialogueBox(std::string str) {
 	temp.setCharacterSize(text.getCharacterSize());
 
 	// current string and width
+	std::vector<std::string> boxes;
 	std::string fitted_string = "";
-	float current_width = beginX;
+	float current_width = 0.f, current_height = 0.f;
+	float word_width = 0.f, word_height = 0.f;
 	
 	// split the dialogue into words;
 	std::vector<std::string> words = split(str, ' ');
 
 	// for each word...
 	for (std::string word : words) {
-		// calculate the width
+		// get the bounding box (a hack; for whatever reason, the global bounds 
+		// ignore leading and trailing ws)
 		temp.setString(word + " ");
-		float word_width = temp.findCharacterPos(temp.getString().getSize()).x; //  a hack; for whatever reason, the global bounds ignore leading and trailing ws
+		word_width = temp.findCharacterPos(temp.getString().getSize()).x;
+		word_height = std::max(
+				temp.getGlobalBounds().height - temp.getGlobalBounds().top + font.getLineSpacing(temp.getCharacterSize()),
+				word_height);
 
 		// will it go past the horizontal bound?
 		if (current_width + word_width > max_width) {
-			fitted_string += "\n" + word + " ";
-			current_width = word_width;
+			current_height += word_height;
+			std::cout << current_height << " " << max_height << " " << word_height << std::endl;
+
+			// will it go past the vertical bound?
+			if (max_height - current_height < word_height) {
+				boxes.push_back(fitted_string);
+				fitted_string = word + " ";
+				current_width = word_width;
+				current_height = 0.f;
+			}
+			else {
+				fitted_string += "\n" + word + " ";
+				current_width = word_width;
+			}
+
 		}
 		else {
+			// just add to string
 			fitted_string += word + " ";
 			current_width += word_width;
 		}
-
 	}
 
 	// done
-	return fitted_string;
+	return boxes;
 }
