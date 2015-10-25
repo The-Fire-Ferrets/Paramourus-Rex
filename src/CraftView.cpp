@@ -12,6 +12,7 @@ int CraftView::totalFlowers;
 
 // holds list of flowers actor has collected
 std::string CraftView::flower_list[size];
+std::vector<StrongActorPtr> CraftView::actorList;
 
 //Holds background texture
 sf::Texture CraftView::background_texture;
@@ -108,6 +109,8 @@ void CraftView::Create(const char* resource, int* state) {
       std::shared_ptr<CollectorComponent> cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
       std::vector<StrongActorPtr> flowers = cc->getFlowers();
 
+	  // add flowers to persistent list to make available to other classes
+	  CraftView::actorList.insert(CraftView::actorList.end(), flowers.begin(), flowers.end());
       
       // we now have the list of flowers; want to iterate through it to determine how many of each flower
       // the player actually has, as well as restore the actor's number of vases to its full count
@@ -209,4 +212,13 @@ void CraftView::cleanUp(void) {
  **/
 void CraftView::quit(void) {
     cleanUp();
+}
+
+StrongActorPtr CraftView::getFlower(int instance) {
+	for (auto it = CraftView::actorList.begin(); it != CraftView::actorList.end(); it++) {
+		if ((*it)->getInstance() == instance) {
+			return *it;
+		}
+	}
+	return nullptr;
 }

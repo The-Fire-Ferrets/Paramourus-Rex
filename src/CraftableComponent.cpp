@@ -40,7 +40,8 @@ bool CraftableComponent::Init(pugi::xml_node* elem) {
     for (pugi::xml_node tool = elem->first_child(); tool; tool = tool.next_sibling()) {
         for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
             if (!strcmp(attr.name(), "Type")) {
-                type = attr.value();								
+                type = attr.value();
+				elements.push_back(type);
             }
         }
     }
@@ -72,7 +73,9 @@ void CraftableComponent::update(float time) {
  **/
 void CraftableComponent::update(EventInterfacePtr e) {
     EventType event_type = e->getEventType();
-    StrongActorPtr other_actor = LevelView::getActor(e->getSender());
+    /* StrongActorPtr sender = LevelView::getActor(e->getSender()); */
+	/* StrongActorPtr receiver = LevelView::get */
+
 
 	// item crafted
     if (event_type == CraftEvent::event_type) {

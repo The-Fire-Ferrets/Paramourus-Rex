@@ -5,6 +5,9 @@
 #include "ActorComponent.h"
 #include "ActorFactory.h"
 
+#include <vector>
+#include <string>
+
 class CraftableComponent : public ActorComponent {
 
     public:
@@ -21,12 +24,13 @@ class CraftableComponent : public ActorComponent {
         void quit(void) override;
 
         static ComponentId id;
-        ComponentId getId(void) override;
+        ComponentId getId(void) const override;
 
     private:
         static ActorComponent* create();
         static int instances;
         static const bool registered;
+		std::vector<std::string> elements; // Long ago, the four nations lived together in harmony
 };
 
 #endif

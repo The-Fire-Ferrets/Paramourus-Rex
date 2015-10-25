@@ -163,7 +163,7 @@ void InputComponent::update(EventInterfacePtr e) {
 			sf::Vector2f last_direction = getDirection();
 			StrongActorPtr other_actor = LevelView::getActor(e->getSender());
 			std::cout << last_direction.x << " " << last_direction.y << std::endl;
-			if (other_actor->hasAttribute("Opaque"))
+			if (other_actor->hasAttribute("Opaque")) {
 				if (last_direction.x == 1) {
 					ai.setDirectionBit(1);
 					ai.actor_direction[0] = other_actor;
@@ -180,6 +180,7 @@ void InputComponent::update(EventInterfacePtr e) {
 					ai.setDirectionBit(4);
 					ai.actor_direction[3] = other_actor;
 				}
+			}
 		}
 	}
 }
