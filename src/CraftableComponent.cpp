@@ -32,6 +32,13 @@ CraftableComponent::CraftableComponent(void) {
     instance = instances;
 }
 
+/** Destructor
+ **
+ **/
+CraftableComponent::~CraftableComponent() {
+	elements.clear();
+}
+
 /** Initializer
  ** elem : node pointing to section of XML configuration holding more attribute defaults to setup
  ** Sets up additional attribute defaults
@@ -91,6 +98,9 @@ void CraftableComponent::update(EventInterfacePtr e) {
 		this->elements.insert(this->elements.end(), cc->elements.begin(), cc->elements.end());
 
 		CraftView::removeFlower(sender);
+
+		// update the reference counter, delete if counter goes to 0
+		sender.reset();
     }
 }
 

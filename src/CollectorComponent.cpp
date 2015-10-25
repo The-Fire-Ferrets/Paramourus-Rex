@@ -31,6 +31,13 @@ CollectorComponent::CollectorComponent(void) {
     flowers = 0;
 }
 
+/** Destructor
+ **
+ **/
+CollectorComponent::~CollectorComponent() {
+	vase_sprites.clear();
+}
+
 /** Initializer
  ** elem : node pointing to section of XML configuration holding more attribute defaults to setup
  ** Sets up additional attribute defaults

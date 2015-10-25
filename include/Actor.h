@@ -65,10 +65,10 @@ class Actor {
         std::string sprite_filename[4];
 
         sf::Vector2f position;
-	sf::Texture sprite_texture[4];
-	sf::Vector2f size;
-	sf::Sprite sprite[4];
-	int sprite_idx;
+		sf::Texture sprite_texture[4];
+		sf::Vector2f size;
+		sf::Sprite sprite[4];
+		int sprite_idx;
 
         int instance;
         int* game_state;

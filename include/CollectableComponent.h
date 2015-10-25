@@ -12,6 +12,7 @@ class CollectableComponent : public ActorComponent {
 	friend class AI;
 	public:
 		CollectableComponent();
+		~CollectableComponent();
 
 		bool Init(pugi::xml_node* elem) override;
 		void PostInit(void) override;

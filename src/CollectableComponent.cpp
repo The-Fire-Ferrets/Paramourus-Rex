@@ -31,6 +31,14 @@ CollectableComponent::CollectableComponent(void) {
     collector = NULL;
 }
 
+/** Destructor
+ ** updates the reference hount on the collector
+ **/
+CollectableComponent::~CollectableComponent() {
+	// deletes when ref count is 0
+	collector.reset();
+}
+
 /** Initializer
  ** elem : node pointing to section of XML configuration holding more attribute defaults to setup
  ** Sets up additional attribute defaults

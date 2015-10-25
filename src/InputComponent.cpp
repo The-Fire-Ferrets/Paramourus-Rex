@@ -52,6 +52,13 @@ InputComponent::InputComponent(void)
     instance = instances;
 }
 
+/** Destructor
+ **
+ **/
+InputComponent::~InputComponent() {
+
+}
+
 /** Initializer
  ** elem : node pointing to section of XML configuration holding more attribute defaults to setup
  ** Sets up additional attribute defaults

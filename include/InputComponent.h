@@ -20,6 +20,8 @@ class InputComponent : public ActorComponent {
 
     public:
         InputComponent();
+		~InputComponent();
+
         bool Init(pugi::xml_node* elem) override;
         void PostInit(void) override;
 
@@ -41,7 +43,7 @@ class InputComponent : public ActorComponent {
         static ActorComponent* create();
         static int instances;
         static const bool registered;
-	AI ai;
-        sf::Vector2f direction;
+		AI ai;
+		sf::Vector2f direction;
 };
 #endif

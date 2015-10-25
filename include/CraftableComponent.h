@@ -12,6 +12,7 @@ class CraftableComponent : public ActorComponent {
 
     public:
         CraftableComponent();
+		~CraftableComponent();
 
         bool Init(pugi::xml_node* elem) override;
         void PostInit(void) override;

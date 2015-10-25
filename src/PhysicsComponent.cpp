@@ -31,8 +31,11 @@ PhysicsComponent::PhysicsComponent(void) {
     last_dir = sf::Vector2f(0,0);
 }
 
+/** Destructor
+ **
+ **/
 PhysicsComponent::~PhysicsComponent(void) {	
-
+	last_actors.clear();
 }
 
 /** Initilizer

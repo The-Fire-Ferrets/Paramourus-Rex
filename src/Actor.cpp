@@ -34,7 +34,14 @@ Actor::Actor(void) {
  **
  **/
 Actor::~Actor(void) {
+	delete obstacle;
+	delete boundary;
+	for (auto& kv : components) {
+		// decrease the reference count of the pointer
+		kv.second.reset();
+	}
 
+	this->delegateFuncList.clear();
 }
 
 /** Initializer
