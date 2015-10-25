@@ -24,14 +24,14 @@ class InputComponent : public ActorComponent {
         void PostInit(void) override;
 
         void update(float time) override;
-        void update(EventInterfacePtr e) override;
-	void render(sf::RenderWindow *window) override;
+		void update(EventInterfacePtr e) override;
+		void render(sf::RenderWindow *window) override;
         void reset(void) override;
         void restart(void) override;
         void quit(void) override;
 
         static ComponentId id;
-        ComponentId getId(void) override;
+        ComponentId getId(void) const override;
 
         sf::Vector2f getDirection() const;
         void setDirection(const sf::Vector2f& dir);

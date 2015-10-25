@@ -15,7 +15,7 @@ const bool InputComponent::registered = ActorFactory::registerComponent(&id, &cr
 /** Returns the id shared by all components of this type
  **
  **/
-ComponentId InputComponent::getId(void) {
+ComponentId InputComponent::getId(void) const {
     return id;
 }
 

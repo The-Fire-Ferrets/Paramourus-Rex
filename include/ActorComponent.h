@@ -26,8 +26,10 @@ class ActorComponent {
 		virtual void reset(void) {};
         virtual void restart(void) {};
         virtual void quit(void) {};
-        virtual ComponentId getId(void) = 0;
+        virtual ComponentId getId(void) const = 0;
         std::string getType(void);
+
+		bool operator==(const ActorComponent& rhs) const;
 
     private:
         void SetOwner(StrongActorPtr p_owner);

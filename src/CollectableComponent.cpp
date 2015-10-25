@@ -11,7 +11,7 @@ const bool CollectableComponent::registered = ActorFactory::registerComponent(&i
 /** Returns the id shared by all components of this type
  **
  **/
-ComponentId CollectableComponent::getId(void) {
+ComponentId CollectableComponent::getId(void) const {
     return id;
 }
 

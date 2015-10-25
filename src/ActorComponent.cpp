@@ -21,3 +21,10 @@ int ActorComponent::getInstance(void) {
 std::string ActorComponent::getType(void) {
     return type;
 }
+
+/** test for equality; the components must be of the same type
+ ** and be of the same instance of that type
+ **/
+bool ActorComponent::operator==(const ActorComponent& rhs) const {
+	return (this->instance == rhs.instance) && (this->getId() == rhs.getId());
+}

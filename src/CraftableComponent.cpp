@@ -1,4 +1,5 @@
 #include "CraftableComponent.h"
+#include "CraftEvent.h"
 
 //Unique instance id among instances of the same component
 int CraftableComponent::instances = -1;
@@ -10,7 +11,7 @@ const bool CraftableComponent::registered = ActorFactory::registerComponent(&id,
 /** Returns the id shared by all components of this type
  **
  **/
-ComponentId CraftableComponent::getId(void) {
+ComponentId CraftableComponent::getId(void) const {
     return id;
 }
 
@@ -56,6 +57,7 @@ void CraftableComponent::render(sf::RenderWindow *window) {
  ** Setups up additional attributes based on game configuration
  **/
 void CraftableComponent::PostInit(void) {
+    owner->addDelegate(CraftEvent::event_type);
 }
 
 /** Updates the component's attributes
@@ -69,7 +71,12 @@ void CraftableComponent::update(float time) {
  **
  **/
 void CraftableComponent::update(EventInterfacePtr e) {
+    EventType event_type = e->getEventType();
+    StrongActorPtr other_actor = LevelView::getActor(e->getSender());
 
+	// item crafted
+    if (event_type == CraftEvent::event_type) {
+    }
 }
 
 /** Reset the component

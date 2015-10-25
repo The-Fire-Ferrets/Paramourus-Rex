@@ -24,7 +24,7 @@ class CollectableComponent : public ActorComponent {
 		void quit(void) override;
 
 		static ComponentId id;
-		ComponentId getId(void) override;
+		ComponentId getId(void) const override;
 
 	private:
 		static ActorComponent* create();

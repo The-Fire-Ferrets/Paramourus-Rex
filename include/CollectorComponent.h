@@ -24,7 +24,7 @@ class CollectorComponent : public ActorComponent {
         int getVases(void);
         std::vector<StrongActorPtr> getFlowers(void);		
         static ComponentId id;
-        ComponentId getId(void) override;
+        ComponentId getId(void) const override;
 
     private:
         static ActorComponent* create();

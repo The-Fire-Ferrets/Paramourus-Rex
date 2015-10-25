@@ -10,7 +10,7 @@ const bool CollectorComponent::registered = ActorFactory::registerComponent(&id,
 /** Returns the id shared by all components of this type
  **
  **/
-ComponentId CollectorComponent::getId(void) {
+ComponentId CollectorComponent::getId(void) const {
     return id;
 }
 
