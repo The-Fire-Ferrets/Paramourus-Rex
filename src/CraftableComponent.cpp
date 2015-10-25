@@ -1,5 +1,6 @@
 #include "CraftableComponent.h"
 #include "CraftEvent.h"
+#include "CraftView.h"
 
 //Unique instance id among instances of the same component
 int CraftableComponent::instances = -1;
@@ -73,12 +74,21 @@ void CraftableComponent::update(float time) {
  **/
 void CraftableComponent::update(EventInterfacePtr e) {
     EventType event_type = e->getEventType();
-    /* StrongActorPtr sender = LevelView::getActor(e->getSender()); */
-	/* StrongActorPtr receiver = LevelView::get */
+    StrongActorPtr sender = CraftView::getFlower(e->getSender());
+	StrongActorPtr receiver = CraftView::getFlower(e->getReceiver());
 
 
 	// item crafted
-    if (event_type == CraftEvent::event_type) {
+    if (event_type == CraftEvent::event_type && this->owner == receiver) {
+		// get a pointer to the sender's colletable component
+		std::shared_ptr<ActorComponent> ac;
+		std::shared_ptr<CraftableComponent> cc;
+
+		ac = sender->components[CraftableComponent::id];
+		cc = std::dynamic_pointer_cast<CraftableComponent>(ac);
+
+		// deep copy all elements
+		this->elements.insert(this->elements.end(), cc->elements.begin(), cc->elements.end());
     }
 }
 

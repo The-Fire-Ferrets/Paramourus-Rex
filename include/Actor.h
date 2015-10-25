@@ -16,7 +16,8 @@ class Actor {
         int getInstance(void);
 
         ActorComponents components;
-        ActorId getId(void);
+        ActorId getId(void) const;
+		bool operator==(const Actor& rhs) const;
 
         explicit Actor(void);
         bool Init(pugi::xml_node* elem);
@@ -58,8 +59,8 @@ class Actor {
         const Actor* getCopy(void) const;
     private:
         ActorId id;
-	const static int num_directions;
-        std::vector<EventDelegate> delegateFuncList;
+		const static int num_directions;
+		std::vector<EventDelegate> delegateFuncList;
 
         std::string sprite_filename[4];
 

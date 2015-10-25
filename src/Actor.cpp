@@ -8,8 +8,15 @@ const int Actor::num_directions = 4;
 /** Gets the current actors ID
  **
  **/
-ActorId Actor::getId(void) {
+ActorId Actor::getId(void) const {
     return id;
+}
+
+/** test for equality: two actors have same id
+ **
+ **/
+bool Actor::operator==(const Actor& rhs) const {
+	return this->getId() == rhs.getId();
 }
 
 /** Constructor
