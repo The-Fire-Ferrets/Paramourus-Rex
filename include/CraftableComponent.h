@@ -9,12 +9,13 @@ class CraftableComponent : public ActorComponent {
 
     public:
         CraftableComponent();
+
         bool Init(pugi::xml_node* elem) override;
         void PostInit(void) override;
 
         void update(float time) override;
-        void update(EventInterfacePtr e) override;
-	void render(sf::RenderWindow *window) override;
+		void update(EventInterfacePtr e) override;
+		void render(sf::RenderWindow *window) override;
         void reset(void) override;
         void restart(void) override;
         void quit(void) override;

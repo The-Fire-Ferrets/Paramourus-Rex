@@ -1,4 +1,5 @@
 #include "CollectableComponent.h"
+#include "CraftEvent.h"
 
 //Unique instance id among instances of the same component
 int CollectableComponent::instances = -1;
@@ -48,7 +49,7 @@ bool CollectableComponent::Init(pugi::xml_node* elem) {
  ** Setups up additional attributes based on game configuration
  **/
 void CollectableComponent::PostInit(void) {
-    owner->addDelegate(CollectEvent::event_type);	
+    owner->addDelegate(CollectEvent::event_type);
 }
 
 /** Updates the component's attributes
@@ -65,6 +66,8 @@ void CollectableComponent::update(float time) {
 void CollectableComponent::update(EventInterfacePtr e) {
     EventType event_type = e->getEventType();
     StrongActorPtr other_actor = LevelView::getActor(e->getSender());
+
+	// item collection
     if (event_type == CollectEvent::event_type) {
         owner->setVisible(false);
         collector = other_actor;
@@ -98,6 +101,6 @@ void CollectableComponent::render(sf::RenderWindow *window) {
 /** Cleans up after quiting
  **
  **/
-    void CollectableComponent::quit(void) {
+void CollectableComponent::quit(void) {
 
-    }
+}

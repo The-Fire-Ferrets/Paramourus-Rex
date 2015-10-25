@@ -89,6 +89,6 @@ void CraftableComponent::restart(void) {
 /** Cleans up after quiting
  **
  **/
-    void CraftableComponent::quit(void) {
+void CraftableComponent::quit(void) {
 
-    }
+}

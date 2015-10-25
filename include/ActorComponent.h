@@ -22,8 +22,8 @@ class ActorComponent {
 
         virtual void update(float time) {};
         virtual void update(EventInterfacePtr e) {};
-	virtual void render(sf::RenderWindow *window) {};
-        virtual void reset(void) {};
+		virtual void render(sf::RenderWindow *window) {};
+		virtual void reset(void) {};
         virtual void restart(void) {};
         virtual void quit(void) {};
         virtual ComponentId getId(void) = 0;
