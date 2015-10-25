@@ -89,6 +89,8 @@ void CraftableComponent::update(EventInterfacePtr e) {
 
 		// deep copy all elements
 		this->elements.insert(this->elements.end(), cc->elements.begin(), cc->elements.end());
+
+		CraftView::removeFlower(sender);
     }
 }
 

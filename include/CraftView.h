@@ -37,6 +37,7 @@ class CraftView  {
         static void render(sf::RenderWindow *window);
 		static std::vector<StrongActorPtr> actorList;
 		static StrongActorPtr getFlower(int instance);
+		static bool removeFlower(StrongActorPtr flower);
 };
 
 #endif

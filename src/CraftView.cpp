@@ -214,6 +214,9 @@ void CraftView::quit(void) {
     cleanUp();
 }
 
+/** Returns a pointer to flower instance, if present
+ **
+ **/
 StrongActorPtr CraftView::getFlower(int instance) {
 	for (auto it = CraftView::actorList.begin(); it != CraftView::actorList.end(); it++) {
 		if ((*it)->getInstance() == instance) {
@@ -221,4 +224,18 @@ StrongActorPtr CraftView::getFlower(int instance) {
 		}
 	}
 	return nullptr;
+}
+
+/** Removes the given flower, if present
+ ** TODO: does not modify counts of WEFA flowers or the flower_list
+ **/
+bool CraftView::removeFlower(StrongActorPtr flower) {
+	for (auto it = CraftView::actorList.begin(); it != CraftView::actorList.end(); it++) {
+		if ( *(*it) == (*flower) ) {
+			CraftView::actorList.erase(it);
+			return true;
+		}
+	}
+
+	return false;
 }
