@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<WaterFlower Type = "WaterFlower"  Sprite = "WaterFlower.png">
+<WaterFlower Type = "WaterFlower"  Sprite = "WaterFlower.png"  SpriteMinimap = "WaterFlowerSpot.png">
 	<CollectableComponent>
 		<Category Some_Attribute = "Value" />
 	</CollectableComponent>

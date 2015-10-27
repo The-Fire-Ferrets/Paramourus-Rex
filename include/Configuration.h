@@ -13,12 +13,14 @@ class Configuration
 	static unsigned int gameview_height;
 	static unsigned int gameview_width;
 	static sf::Vector2f gameview_center;
+	static sf::Texture minimap_border;
 
     public:
         static void setWindowDimensions(unsigned width, unsigned height);
 	static void setGameViewDimensions(unsigned width, unsigned height);
 	static void setGameViewCenter(sf::Vector2f center);
 	static void setMiniMapViewDimensions(unsigned width, unsigned height);
+	static void setMinimapBorder(sf::Texture mb);
         static unsigned int getWindowWidth();
         static unsigned int getWindowHeight();
 
@@ -26,6 +28,7 @@ class Configuration
 	static unsigned int getGameViewHeight();
 	static sf::Vector2f getGameViewCenter();
 	
+	static sf::Texture getMinimapBorder(void);
 	static unsigned int getMiniMapViewWidth();
 	static unsigned int getMiniMapViewHeight();
 };

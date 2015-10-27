@@ -27,7 +27,7 @@ class Actor {
         void move(float distance, sf::Vector2f direction);
 
         void update(float time);
-        void render(sf::RenderWindow *window);
+        void render(sf::RenderWindow *window, bool minimap);
         void reset(void);
         void restart(void);
         void quit(void);
@@ -63,12 +63,14 @@ class Actor {
 		std::vector<EventDelegate> delegateFuncList;
 
         std::string sprite_filename[4];
-
+	std::string spriteMinimap_filename;
         sf::Vector2f position;
-		sf::Texture sprite_texture[4];
-		sf::Vector2f size;
-		sf::Sprite sprite[4];
-		int sprite_idx;
+	sf::Texture sprite_texture[4];
+	sf::Texture spriteMinimap_texture;
+	sf::Vector2f size;
+	sf::Sprite sprite[4];
+	sf::Sprite sprite_minimap;
+	int sprite_idx;
 
         int instance;
         int* game_state;
@@ -76,6 +78,7 @@ class Actor {
         bool visible;
         sf::FloatRect* obstacle;
         sf::FloatRect* boundary;
+	bool renderToMinimap;
 
         void AddComponent(StrongActorComponentPtr component);
         void updateBoundary(void);

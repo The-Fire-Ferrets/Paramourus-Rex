@@ -193,7 +193,7 @@ int CollectorComponent::getVases(void) {
 /** Renders component
  ** window: current game render window
  **/
-void CollectorComponent::render(sf::RenderWindow *window) {
+void CollectorComponent::render(sf::RenderWindow *window, bool minimap) {
 	if (owner->getId() == "Player") {
 		std::vector<sf::Sprite>::iterator it;
 		int i = 0;

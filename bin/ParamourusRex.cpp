@@ -126,6 +126,7 @@ bool loadConfiguration(void) {
 
 	float minimapview_height;
 	float minimapview_width;
+	sf::Texture minimap_border;
 
 	//Load configuration
   	if (!(result = doc.load_file( ("./assets/" + config + ".xml").c_str() ))) {
@@ -168,6 +169,9 @@ bool loadConfiguration(void) {
 			else if (!strcmp(tool.name(), "MiniMapView") && !strcmp(attr.name(), "Width")) {
 				minimapview_width = std::strtof(attr.value(), &temp);
 			}
+			else if (!strcmp(tool.name(), "MiniMapView") && !strcmp(attr.name(), "MinimapBorder")) {
+				minimap_border.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
+			}
 		}
 	}
 
@@ -176,6 +180,6 @@ bool loadConfiguration(void) {
 	Configuration::setGameViewDimensions(gameview_width*window_width, gameview_height*window_height);
 	Configuration::setGameViewCenter(sf::Vector2f(gameview_center, gameview_center));
 	Configuration::setMiniMapViewDimensions(minimapview_width*window_width, minimapview_height*window_height);
-
+	Configuration::setMinimapBorder(minimap_border);
 	return true;
 }

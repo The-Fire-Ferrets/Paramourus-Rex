@@ -23,6 +23,7 @@ class LevelView  {
         static sf::Vector2f timer_position;
         static sf::View gameView;
         static sf::View minimapView;
+	static sf::Sprite minimap_border;
         static int duration;
 
     public:

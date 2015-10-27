@@ -176,7 +176,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
  **
 **/
 void MapView::resetPopulationValues(void) {
-	flowers = rand() % 5 + 5;
+	flowers = rand() % 20 + 5;
 	for (int i = 0; i < num_levels; i++) {
 		if (i > 1) {
 			fireflowers_count[i] = (int)(flowers * fireflowers[i]);
@@ -216,5 +216,5 @@ void MapView::render(sf::RenderWindow *window) {
         ac = LevelView::player->components[CollectorComponent::id];
         cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
 
-	cc->render(window);
+	cc->render(window, false);
 }

@@ -209,7 +209,7 @@ void InputComponent::restart(void) {
 /** Renders component
  ** window: current game render window
  **/
-void InputComponent::render(sf::RenderWindow *window) {
+void InputComponent::render(sf::RenderWindow *window, bool minimap) {
 	
 }
 

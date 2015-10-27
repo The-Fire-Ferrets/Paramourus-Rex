@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<FireFlower Type = "FireFlower"  Sprite = "FireFlower.png">
+<FireFlower Type = "FireFlower"  Sprite = "FireFlower.png"  SpriteMinimap = "FireFlowerSpot.png">
 	<CollectableComponent>
 		<Category Some_Attribute = "Value" />
 	</CollectableComponent>

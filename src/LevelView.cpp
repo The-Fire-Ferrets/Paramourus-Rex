@@ -34,6 +34,8 @@ sf::View LevelView::minimapView;
 StrongActorPtr LevelView::player = NULL;
 //Level duration in ms
 int LevelView::duration;
+//Minimap border
+sf::Sprite LevelView::minimap_border;
 
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
@@ -169,10 +171,14 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			}
 		}
 	}
+	
+	minimap_border = sf::Sprite(Configuration::getMinimapBorder(), sf::IntRect(0, 0, (Configuration::getMinimapBorder().getSize()).x, (Configuration::getMinimapBorder().getSize()).y));
+	minimap_border.setScale(1.0*Configuration::getWindowWidth()/(Configuration::getMinimapBorder().getSize()).x, 1.0*Configuration::getWindowHeight()/(Configuration::getMinimapBorder().getSize()).y);	
+	minimap_border.setPosition(sf::Vector2f(0,0));
 	//Set views so can only see a quarter of the map at once
 	gameView = sf::View(sf::FloatRect(0, 0, Configuration::getGameViewWidth(), Configuration::getGameViewHeight()));
 	//Set minimap to see entire map
-	minimapView = sf::View(sf::FloatRect(0, 0, Configuration::getMiniMapViewWidth(), Configuration::getMiniMapViewHeight()));
+	minimapView = sf::View(sf::FloatRect(0, 0, Configuration::getMiniMapViewWidth() + 100, Configuration::getMiniMapViewHeight() + 100));
 }
 
 std::string LevelView::getName(void) {
@@ -234,23 +240,24 @@ void LevelView::render(sf::RenderWindow *window) {
 	//Update graphics	
 	window->draw(edge);
 	window->draw(background);
+	window->draw(minimap_border);
 	std::vector<StrongActorPtr>::iterator it;
 	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
-		(*it)->render(window);
-	player->render(window);
+		(*it)->render(window, false);
+	player->render(window, false);
 	window->draw(timer);
 
 	//Set minimap view
-	minimapView.setViewport(sf::FloatRect(0.90f, 0, 0.10f, 0.10f));
+	minimapView.setViewport(sf::FloatRect(.9, 0, .1, .1));
 	window->setView(minimapView);
 
 	//Update graphics
-	window->draw(edge);
 	window->draw(background);
 	window->draw(timer);
 	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
-		(*it)->render(window);
-	player->render(window);
+		(*it)->render(window, true);
+	player->render(window, true);
+	//window->draw(minimap_border);
 }
 
 /** Ready the level for start

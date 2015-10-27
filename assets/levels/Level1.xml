@@ -9,6 +9,9 @@
 	<Obstacle Generate = "50">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Obstacle>
+	<Crater>
+    		<Location X = "400" Y = "300" Width = "100" Height = "100"/>
+	</Crater>
 	<WaterFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</WaterFlower>

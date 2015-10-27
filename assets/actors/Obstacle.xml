@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Obstacle Type = "Obstacle"  Sprite = "Cactus.png">
+<Obstacle Type = "Obstacle"  Sprite = "Cactus.png"  SpriteMinimap = "">
 	<PhysicsComponent>
 		<Properties Type = "Opaque" />
 	</PhysicsComponent>

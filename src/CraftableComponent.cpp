@@ -59,7 +59,7 @@ bool CraftableComponent::Init(pugi::xml_node* elem) {
 /** Renders component
  ** window: current game render window
  **/
-void CraftableComponent::render(sf::RenderWindow *window) {
+void CraftableComponent::render(sf::RenderWindow *window, bool minimap) {
 	
 }
 /** Final Initilizer

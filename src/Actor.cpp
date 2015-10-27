@@ -61,6 +61,13 @@ bool Actor::Init(pugi::xml_node* elem) {
             sprite_filename[2] = attr.value();
 	else if (!strcmp(attr.name(),"SpriteRight"))
             sprite_filename[3] = attr.value();
+	else if (!strcmp(attr.name(),"SpriteMinimap"))
+		if (!strcmp(attr.value(), ""))
+			renderToMinimap = false;
+		else {
+			renderToMinimap = true;
+			spriteMinimap_filename = attr.value();
+		}
         else {
             std::cout << "Actor::Init: Failed to initialize" << std::endl;
             return false;
@@ -137,6 +144,13 @@ void Actor::PostInit(pugi::xml_node* elem) {
    		sprite[i].setScale(size.x/(sprite_texture[i].getSize()).x, size.y/(sprite_texture[i].getSize()).y);
     		sprite[i].setPosition(position);
 	}
+	if (renderToMinimap) {
+		spriteMinimap_texture.loadFromFile(("./assets/sprites/" + spriteMinimap_filename).c_str());
+		sprite_minimap = sf::Sprite(spriteMinimap_texture, sf::IntRect(0, 0, (spriteMinimap_texture.getSize()).x, (spriteMinimap_texture.getSize()).y));
+		sprite_minimap.setScale(10.0 * size.x/(spriteMinimap_texture.getSize()).x, 10.0 * size.y/(spriteMinimap_texture.getSize()).y);
+		sprite_minimap.setPosition(position);
+	}
+
 	sprite_idx = 0;
 }
 
@@ -195,11 +209,16 @@ void Actor::update(float time) {
 /** Renders each of the actors components
  ** window: current game render window
  **/
-void Actor::render(sf::RenderWindow *window) {
+void Actor::render(sf::RenderWindow *window, bool minimap) {
     	if (visible) {
-        	window->draw(sprite[sprite_idx]);
+		if (minimap && renderToMinimap) {
+			window->draw(sprite_minimap);
+		}
+		else if (!minimap) {
+        		window->draw(sprite[sprite_idx]);
+		}
 		for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
-			(it->second)->render(window);
+			(it->second)->render(window, minimap);
 	}
 	
 }
@@ -323,6 +342,8 @@ void Actor::setPosition(sf::Vector2f pos) {
 	for (int i = 0; i < num_directions; i++) {
 		sprite[i].setPosition(position);
 	}
+	if (renderToMinimap)
+		sprite_minimap.setPosition(position);
 }
 
 /** Return the actors instance

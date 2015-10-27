@@ -180,6 +180,6 @@ bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
 /** Renders component
  ** window: current game render window
  **/
-void PhysicsComponent::render(sf::RenderWindow *window) {
+void PhysicsComponent::render(sf::RenderWindow *window, bool minimap) {
 	
 }

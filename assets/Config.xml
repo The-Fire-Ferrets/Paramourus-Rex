@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Config>
 	<Window Width = "800" Height = "600"/>
-	<MiniMapView Width = "1" Height = "1"/>
+	<MiniMapView Width = "1" Height = "1" Border = "MinimapBorder.png"/>
 	<GameView Width = ".2" Height = ".2" Center = "0"/>
 </Config>

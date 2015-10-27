@@ -6,6 +6,7 @@ unsigned int Configuration::window_width = 0;
 
 unsigned int Configuration::minimapview_height = 0;
 unsigned int Configuration::minimapview_width = 0;
+sf::Texture Configuration::minimap_border;
 
 unsigned int Configuration::gameview_height = 0;
 unsigned int Configuration::gameview_width = 0;
@@ -89,4 +90,18 @@ unsigned int Configuration::getMiniMapViewWidth() {
  **/
 unsigned int Configuration::getMiniMapViewHeight() {
     return minimapview_height;
+}
+
+/** Returns minimap border
+ **
+ **/
+sf::Texture Configuration::getMinimapBorder(void) {
+	return minimap_border;
+}
+
+/** Set minimapborder
+ **
+ **/
+void Configuration::setMinimapBorder(sf::Texture mb) {
+	minimap_border = minimap_border;
 }
