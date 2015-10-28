@@ -18,7 +18,7 @@ class ActorComponent {
         virtual ~ActorComponent(void) {};
         virtual bool Init(pugi::xml_node* elem) = 0;
         int getInstance(void);
-        virtual void PostInit(void) {};
+        virtual bool PostInit(pugi::xml_node* elem) = 0;
 
         virtual void update(float time) {};
         virtual void update(EventInterfacePtr e) {};
@@ -33,6 +33,7 @@ class ActorComponent {
 
     private:
         void SetOwner(StrongActorPtr p_owner);
+	bool initial_init = true;
 
 };
 

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<Obstacle Type = "Wall"  Sprite = "Cactus.png"  SpriteMinimap = "">
+	<PhysicsComponent>
+		<Properties Type = "Opaque" />
+	</PhysicsComponent>
+</Obstacle>

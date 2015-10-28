@@ -15,7 +15,7 @@ class PhysicsComponent : public ActorComponent {
         PhysicsComponent(void);
         ~PhysicsComponent(void);
         bool Init(pugi::xml_node* elem) override;
-        void PostInit(void) override;
+        bool PostInit(pugi::xml_node* elem) override;
 
         static ComponentId id;
 

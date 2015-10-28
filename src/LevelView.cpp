@@ -179,6 +179,8 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	gameView = sf::View(sf::FloatRect(0, 0, Configuration::getGameViewWidth(), Configuration::getGameViewHeight()));
 	//Set minimap to see entire map
 	minimapView = sf::View(sf::FloatRect(0, 0, Configuration::getMiniMapViewWidth() + 100, Configuration::getMiniMapViewHeight() + 100));
+
+
 }
 
 std::string LevelView::getName(void) {

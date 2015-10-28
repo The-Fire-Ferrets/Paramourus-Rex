@@ -69,8 +69,11 @@ class Actor {
 	sf::Texture spriteMinimap_texture;
 	sf::Vector2f size;
 	sf::Sprite sprite[4];
+	sf::VertexArray sprite_vertexarray;
+	bool use_vertexarray = false;
 	sf::Sprite sprite_minimap;
 	int sprite_idx;
+	bool initial_init = true;
 
         int instance;
         int* game_state;

@@ -86,7 +86,9 @@ bool CollectorComponent::Init(pugi::xml_node* elem) {
 /** Final Initilizer
  ** Setups up additional attributes based on game configuration
  **/
-void CollectorComponent::PostInit(void) {
+bool CollectorComponent::PostInit(pugi::xml_node* elem) {
+	if (elem != NULL)
+	Init(elem);
 	if (owner->getId() == "Player") {
 		for (int i = 0; i < vases; i++) {
 			vase_sprites.push_back(sf::Sprite(vase_empty, sf::IntRect(0, 0, vase_empty.getSize().x, vase_empty.getSize().y)));
@@ -95,6 +97,7 @@ void CollectorComponent::PostInit(void) {
 		}
 	}
 	owner->addDelegate(CollectEvent::event_type);
+	return true;
 }
 
 /** Updates the component's attributes

@@ -56,8 +56,11 @@ bool CollectableComponent::Init(pugi::xml_node* elem) {
 /** Final Initilizer
  ** Setups up additional attributes based on game configuration
  **/
-void CollectableComponent::PostInit(void) {
+bool CollectableComponent::PostInit(pugi::xml_node* elem) {
+	if (elem != NULL)
+	Init(elem);
     owner->addDelegate(CollectEvent::event_type);
+	return true;
 }
 
 /** Updates the component's attributes

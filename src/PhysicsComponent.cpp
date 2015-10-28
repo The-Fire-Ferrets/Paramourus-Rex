@@ -47,10 +47,6 @@ bool PhysicsComponent::Init(pugi::xml_node* elem) {;
         for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
             if (!strcmp(attr.name(),"Type"))
                 type = attr.value();
-            else {
-                std::cout << "PhysicsComponent::Init: Failed to initialize" << std::endl;
-                return false;
-            }
         }
     }	
     return true;	
@@ -59,8 +55,10 @@ bool PhysicsComponent::Init(pugi::xml_node* elem) {;
 /** Final Initilizer
  ** Setups up additional attributes based on game configuration
  **/
-void PhysicsComponent::PostInit(void) {
-
+bool PhysicsComponent::PostInit(pugi::xml_node* elem) {
+	if (elem != NULL)
+	Init(elem);
+	return true;
 }
 
 /** Checks to see if the bound of two actor intersect and sends ContactEvent to the event manager, keeps track of last actor made contact with

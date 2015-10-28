@@ -23,7 +23,7 @@ class InputComponent : public ActorComponent {
 		~InputComponent();
 
         bool Init(pugi::xml_node* elem) override;
-        void PostInit(void) override;
+        bool PostInit(pugi::xml_node* elem) override;
 
         void update(float time) override;
 		void update(EventInterfacePtr e) override;

@@ -65,8 +65,11 @@ void CraftableComponent::render(sf::RenderWindow *window, bool minimap) {
 /** Final Initilizer
  ** Setups up additional attributes based on game configuration
  **/
-void CraftableComponent::PostInit(void) {
+bool CraftableComponent::PostInit(pugi::xml_node* elem) {
+	if (elem != NULL)
+	Init(elem);
     owner->addDelegate(CraftEvent::event_type);
+	return true;
 }
 
 /** Updates the component's attributes

@@ -1,8 +1,18 @@
 <?xml version="1.0"?>
-<Level4 Name = "Hello World!" Background = "Level4.png" Edge = "Sky.png" Text_X = "650" Text_Y = "0" Font = "arial.ttf" Text_Size = "10" Duration = "70000">
+<Level4 Name = "Hello World!" Background = "Level4.png" Edge = "Sky.png" Text_X = "650" Text_Y = "0" Font = "arial.ttf" Text_Size = "10" Duration = "70000">	
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Player>
+	<Obstacle Type = "Wall"  Sprite = "Rock.png"  SpriteMinimap = "" VertexArray = "5 133 0 133 10 200 0 200 75 200 150">		
+		<PhysicsComponent>
+			<Properties Type = "Opaque" />
+		</PhysicsComponent>
+	</Obstacle>
+	<Obstacle Type = "Wall"  Sprite = "Rock.png"  SpriteMinimap = "" VertexArray = "9 133 300 400 300 400 375 133 375 333 450 133 450 266 450 133 525 200 525">		
+		<PhysicsComponent>
+			<Properties Type = "Opaque" />
+		</PhysicsComponent>
+	</Obstacle>
 	<NPC Generate = "8">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</NPC>
