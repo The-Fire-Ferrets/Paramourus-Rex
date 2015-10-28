@@ -35,7 +35,7 @@ Actor::Actor(void) {
  **/
 Actor::~Actor(void) {
 	delete obstacle;
-	delete boundary;
+	boundary.clear();
 	for (auto& kv : components) {
 		// decrease the reference count of the pointer
 		kv.second.reset();
@@ -89,14 +89,15 @@ bool Actor::Init(pugi::xml_node* elem) {
 					sprite_vertexarray = sf::VertexArray(sf::TrianglesStrip, vertices);
 				}
 				else if (v_count % 2) {
+					sprite_vertexarray[v_idx].texCoords.x = std::strtol(string_temp.c_str(), &temp, 10);
 					sprite_vertexarray[v_idx].position.x = std::strtol(string_temp.c_str(), &temp, 10);
 					if (*temp != '\0') {
 					    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
 					}
 				}
 				else {
-					sprite_vertexarray[v_idx].position.y = std::strtol(string_temp.c_str(), &temp, 10);
-					sprite_vertexarray[v_idx++].color = sf::Color::Red;
+					sprite_vertexarray[v_idx].texCoords.y = std::strtol(string_temp.c_str(), &temp, 10);
+					sprite_vertexarray[v_idx++].position.y = std::strtol(string_temp.c_str(), &temp, 10);
 					if (*temp != '\0') {
 					    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
 					}
@@ -109,7 +110,7 @@ bool Actor::Init(pugi::xml_node* elem) {
 			
     }
 	if (initial_init) {
-	    boundary = new sf::FloatRect();
+	    boundary.push_back(new sf::FloatRect());
 	    addDelegate(ContactEvent::event_type);
 		initial_init = false;
 	}
@@ -169,7 +170,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		    bound = sf::FloatRect(pos.x, pos.y, size.x, size.y);
 		    std::vector<StrongActorPtr>::iterator it_all;
 		    for (it_all = LevelView::actorList.begin(); it_all != LevelView::actorList.end(); it_all++) {
-		        if ((*it_all)->getBoundary()->intersects(bound)) {
+		        if ((*it_all)->intersects(bound)) {
 		            conflict = true;
 		            break;
 		        }
@@ -180,7 +181,8 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		}
 	    }
 	    position = pos;
-	    boundary = new sf::FloatRect(position.x, position.y, size.x, size.y);
+		boundary.clear();
+	    boundary.push_back(new sf::FloatRect(position.x, position.y, size.x, size.y));
 		for (int i = 0; i < num_directions; i++) {
 			if (!sprite_filename[i].empty())
 	    			sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[i]).c_str());
@@ -198,6 +200,14 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		}
 
 		sprite_idx = 0;
+	}
+	else {
+		for (int i = 0; i < num_directions; i++)
+			if (!sprite_filename[i].empty())
+				sprite_texture[i].loadFromFile(("./assets/backgrounds/" + sprite_filename[i]).c_str());
+			else
+				sprite_texture[i].loadFromFile(("./assets/backgrounds/" + sprite_filename[0]).c_str());
+			
 	}
 }
 
@@ -259,7 +269,7 @@ void Actor::update(float time) {
 void Actor::render(sf::RenderWindow *window, bool minimap) {
     	if (visible) {
 		if (use_vertexarray) {
-			window->draw(sprite_vertexarray);
+			window->draw(sprite_vertexarray, &(sprite_texture[0]));
 		}
 		else if (minimap && renderToMinimap) {
 			window->draw(sprite_minimap);
@@ -312,12 +322,23 @@ void Actor::quit(void) {
 /** Updates the actors boundaries to be used by a PhysicsComponent
  **
  **/
-    void Actor::updateBoundary(void) {
-	if (use_vertexarray)
-	*boundary = sprite_vertexarray.getBounds();
-	else
-        *boundary = sf::FloatRect(position.x, position.y, size.x, size.y);
-    }
+void Actor::updateBoundary(void) {
+	if (use_vertexarray) {
+		boundary.clear();
+		sf::Vector2f pos;
+		int width;
+		int height;
+		for (int i = 3; i < sprite_vertexarray.getVertexCount(); i += 4) {
+			pos = sprite_vertexarray[i-3].position;
+			width = sprite_vertexarray[i].position.x - pos.x;
+			height = sprite_vertexarray[i].position.y - pos.y;
+			boundary.push_back(new  sf::FloatRect(pos.x, pos.y, width, height));
+		}
+	}	
+	else {
+		*boundary.back() = sf::FloatRect(position.x, position.y, size.x, size.y);
+	}
+}
 
 
 // Mutators and accesors
@@ -325,9 +346,9 @@ void Actor::quit(void) {
 /** returns the actors boundary
  **
  **/
-        sf::FloatRect* Actor::getBoundary(void) {
-            return boundary;
-        }
+std::vector<sf::FloatRect*> Actor::getBoundary(void) {
+	return boundary;
+}
 
 /** returns the actors state
  **
@@ -477,3 +498,35 @@ void Actor::addDelegate(EventType type) {
                 return true;
         return false;
     }
+
+/** Checks to see if the Actors intersect
+ **
+ **/
+bool Actor::intersects(StrongActorPtr other_actor) {
+	std::vector<sf::FloatRect*> other_boundary = other_actor->getBoundary();
+	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
+		for (std::vector<sf::FloatRect*>::iterator other_it = other_boundary.begin(); other_it != other_boundary.end(); ++other_it)
+			if ((*it)->intersects(**other_it))
+				return true;
+	return false;
+}
+
+/** Checks to see if the Actor and boundary intersect
+ **
+ **/
+bool Actor::intersects(sf::FloatRect bound) {
+	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
+		if ((*it)->intersects(bound))
+			return true;
+	return false;
+}
+
+/** Checks to see if the Actor contains point
+ **
+ **/
+bool Actor::contains(sf::Vector2f pnt) {
+	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
+		if ((*it)->contains(pnt))
+			return true;
+	return false;
+}

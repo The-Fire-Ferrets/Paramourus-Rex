@@ -36,6 +36,8 @@ sf::Texture MapView::background_texture;
 bool MapView::pressed = false;
 //Reset population values
 bool MapView::reset = true;
+//View state 0: Loading, 1: Normal
+int MapView::view_state = 1;
 /** Creates the map from the give configuration file
  **
  **/
@@ -137,31 +139,45 @@ void MapView::Create(const char* resource) {
  **/
 void MapView::update(sf::RenderWindow *window, int* state, float time) {
     if (reset) {
+	view_state = 0;
+	render(window);
 	resetPopulationValues();
+	view_state = 1;
     }	
 
     if (LevelView::player == NULL) {
+	view_state = 0;
+	render(window);
 	int flowers[] = {fireflowers_count[1], earthflowers_count[1], airflowers_count[1], waterflowers_count[1]};
 	LevelView::Create(levels[1].c_str(), state, flowers);
+	DialogueView::Create(levels[1].c_str(), state);
+	view_state = 1;
+	*state = 2;
 	LevelView::cleanUp();
     }
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && view_state == 1) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
         for (int i = 0; i < num_levels; i++) {
             if (sprites[i].getGlobalBounds().contains(pos.x, pos.y)) {
 		if (i > 1) {
+			view_state = 0;
+			render(window);
 			int flowers[] = {fireflowers_count[i], earthflowers_count[i], airflowers_count[i], waterflowers_count[i]};
 		        LevelView::Create(levels[i].c_str(), state, flowers);
 		        DialogueView::Create(levels[i].c_str(), state);
 		        LevelView::start();
 			reset = true;
+			view_state = 1;
 		        *state = 1;
 		}
 		else {
+			view_state = 0;
+			render(window);
 			reset = true;
 			CraftView::Create("Craft",state);
+			view_state = 1;
 			*state = 3;
 		}
             }
@@ -203,18 +219,25 @@ void MapView::resetPopulationValues(void) {
 /** Renders the map onto the window
  **
  **/
-void MapView::render(sf::RenderWindow *window) {
-	window->draw(background);
-	for (int i = 0; i < num_levels; i++) {
-		window->draw(sprites[i]);
-		if (i > 1) {
-			window->draw(flowers_text[i]);
-		}		
+void MapView::render(sf::RenderWindow *window) {	
+	if (view_state == 0) {
+		window->clear(sf::Color::White);
+		window->draw(Configuration::getLoadingSprite());
+		window->display();
 	}
-	std::shared_ptr<ActorComponent>     ac;
-        std::shared_ptr<CollectorComponent>   cc;
-        ac = LevelView::player->components[CollectorComponent::id];
-        cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
+	else if (view_state == 1) {
+		window->draw(background);
+		for (int i = 0; i < num_levels; i++) {
+			window->draw(sprites[i]);
+			if (i > 1) {
+				window->draw(flowers_text[i]);
+			}		
+		}
+		std::shared_ptr<ActorComponent>     ac;
+		std::shared_ptr<CollectorComponent>   cc;
+		ac = LevelView::player->components[CollectorComponent::id];
+		cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
 
-	cc->render(window, false);
+		cc->render(window, false);
+	}
 }

@@ -33,6 +33,7 @@ class MapView {
         static bool pressed;
 	static bool reset;
 	static void resetPopulationValues(void);
+	static int view_state;
     public:
         static void Create(const char* resource);
 

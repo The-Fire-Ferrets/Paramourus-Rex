@@ -3,12 +3,12 @@
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Player>
-	<Obstacle Type = "Wall"  Sprite = "Rock.png"  SpriteMinimap = "" VertexArray = "5 133 0 133 10 200 0 200 75 200 150">		
+	<Obstacle Type = "Wall"  Sprite = "Forest.png"  SpriteMinimap = "" VertexArray = "4 133 0 150 0 133 150 150 150">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque" />
 		</PhysicsComponent>
 	</Obstacle>
-	<Obstacle Type = "Wall"  Sprite = "Rock.png"  SpriteMinimap = "" VertexArray = "9 133 300 400 300 400 375 133 375 333 450 133 450 266 450 133 525 200 525">		
+	<Obstacle Type = "Wall"  Sprite = "Forest.png"  SpriteMinimap = "" VertexArray = "12 133 300 400 300 133 350 400 350 133 350 350 350 133 400 350 400 133 400 300 400 133 500 300 500">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque" />
 		</PhysicsComponent>

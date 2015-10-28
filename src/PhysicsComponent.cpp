@@ -77,7 +77,7 @@ void PhysicsComponent::update(float time) {
                     break;
                 }
             }
-            if ((owner->getBoundary())->intersects(*(other_actor->getBoundary()))) {
+            if (owner->intersects(other_actor)) {
                 madeContact = true;
                 if (it == last_actors.end()) {
                     if (!EventManagerInterface::get()->queueEvent(new ContactEvent(time, owner->getInstance(), other_actor->getInstance())) )
@@ -128,7 +128,7 @@ void PhysicsComponent::restart(void) {
 bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
     // is the owner currently in another actor's bounding box?
     for (auto it = last_actors.begin(); it != last_actors.end(); it++) {
-        if ( (*it)->hasAttribute("Opaque") && (*it)->getBoundary()->intersects(bound)) {
+        if ( (*it)->hasAttribute("Opaque") && (*it)->intersects(bound)) {
             //If not moving in the direction in the direction that caused contact previously, OK to move
             if (last_dir != sf::Vector2f(0,0) && last_dir != dir)
                 return true;
@@ -137,35 +137,35 @@ bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
             //If caused contact but on an edge, ignore it and only return false if a majoriry of the player is making contact
             //Allows for smoother movement and continued movement
             if (dir.x == 1) {
-                if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width, bound.top  + bound.height / 4)))
+                if ((*it)->contains(sf::Vector2f(bound.left + bound.width, bound.top  + bound.height / 4)))
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width, bound.top + bound.height / 2)))      
+                else if ((*it)->contains(sf::Vector2f(bound.left + bound.width, bound.top + bound.height / 2)))      
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width, bound.top + 3* bound.height / 4)))
+                else if ((*it)->contains(sf::Vector2f(bound.left + bound.width, bound.top + 3* bound.height / 4)))
                     return false;
             }	
             else if (dir.x == -1) {
-                if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left, bound.top  + bound.height / 4)))    
+                if ((*it)->contains(sf::Vector2f(bound.left, bound.top  + bound.height / 4)))    
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left, bound.top + bound.height / 2)))    
+                else if ((*it)->contains(sf::Vector2f(bound.left, bound.top + bound.height / 2)))    
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left, bound.top + 3*bound.height / 4)))    
+                else if ((*it)->contains(sf::Vector2f(bound.left, bound.top + 3*bound.height / 4)))    
                     return false;
             }	
             else if (dir.y == 1) {
-                if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left  + bound.width / 4, bound.top + bound.height)))     
+                if ((*it)->contains(sf::Vector2f(bound.left  + bound.width / 4, bound.top + bound.height)))     
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width/2, bound.top + bound.height)))     
+                else if ((*it)->contains(sf::Vector2f(bound.left + bound.width/2, bound.top + bound.height)))     
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + 3 * bound.width / 4, bound.top + bound.height)))     
+                else if ((*it)->contains(sf::Vector2f(bound.left + 3 * bound.width / 4, bound.top + bound.height)))     
                     return false;
             }	
             else if (dir.y == -1) {
-                if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left  + bound.width / 4, bound.top)))     
+                if ((*it)->contains(sf::Vector2f(bound.left  + bound.width / 4, bound.top)))     
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width/2, bound.top)))     
+                else if ((*it)->contains(sf::Vector2f(bound.left + bound.width/2, bound.top)))     
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + 3* bound.width / 4, bound.top)))     
+                else if ((*it)->contains(sf::Vector2f(bound.left + 3* bound.width / 4, bound.top)))     
                     return false;		
             }
         }

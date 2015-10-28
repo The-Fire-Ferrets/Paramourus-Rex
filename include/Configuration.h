@@ -14,6 +14,8 @@ class Configuration
 	static unsigned int gameview_width;
 	static sf::Vector2f gameview_center;
 	static sf::Texture minimap_border;
+	static sf::Texture loading_texture;
+	static sf::Sprite loading_sprite;
 
     public:
         static void setWindowDimensions(unsigned width, unsigned height);
@@ -31,5 +33,9 @@ class Configuration
 	static sf::Texture getMinimapBorder(void);
 	static unsigned int getMiniMapViewWidth();
 	static unsigned int getMiniMapViewHeight();
+
+	static sf::Texture getLoadingTexture(void);
+	static void setLoadingTexture(sf::Texture t);
+	static sf::Sprite getLoadingSprite(void);
 };
 #endif

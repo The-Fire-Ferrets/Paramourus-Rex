@@ -46,6 +46,8 @@ int main(int argc, char* argv[])
 		}
 		switch(state) {
 			case 0: 
+				App.setView(defaultView);
+				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));
 				MapView::update(&App, &state, elapsed_ms);
 				break;
 			case 1:	
@@ -128,6 +130,8 @@ bool loadConfiguration(void) {
 	float minimapview_width;
 	sf::Texture minimap_border;
 
+	sf::Texture loading_texture;
+
 	//Load configuration
   	if (!(result = doc.load_file( ("./assets/" + config + ".xml").c_str() ))) {
 		std::cout << "Main: Failed to load config" << std::endl;
@@ -172,6 +176,9 @@ bool loadConfiguration(void) {
 			else if (!strcmp(tool.name(), "MiniMapView") && !strcmp(attr.name(), "MinimapBorder")) {
 				minimap_border.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
 			}
+			else if (!strcmp(tool.name(), "LoadingView") && !strcmp(attr.name(), "LoadingScreen")) {
+				loading_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
+			}
 		}
 	}
 
@@ -181,5 +188,6 @@ bool loadConfiguration(void) {
 	Configuration::setGameViewCenter(sf::Vector2f(gameview_center, gameview_center));
 	Configuration::setMiniMapViewDimensions(minimapview_width*window_width, minimapview_height*window_height);
 	Configuration::setMinimapBorder(minimap_border);
+	Configuration::setLoadingTexture(loading_texture);
 	return true;
 }

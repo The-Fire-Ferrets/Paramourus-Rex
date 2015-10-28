@@ -53,7 +53,10 @@ class Actor {
 	void resetVases(void);
         void addDelegate(EventType type);
 
-        sf::FloatRect* getBoundary(void);
+        std::vector<sf::FloatRect*> getBoundary(void);
+	bool intersects(StrongActorPtr other_actor);
+	bool intersects(sf::FloatRect bound);
+	bool contains(sf::Vector2f pnt);
 
         Actor* getCopy(void);
         const Actor* getCopy(void) const;
@@ -80,7 +83,7 @@ class Actor {
         int state;
         bool visible;
         sf::FloatRect* obstacle;
-        sf::FloatRect* boundary;
+        std::vector<sf::FloatRect*> boundary;
 	bool renderToMinimap;
 
         void AddComponent(StrongActorComponentPtr component);
