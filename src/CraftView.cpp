@@ -241,6 +241,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
         if (map.getGlobalBounds().contains(pos.x, pos.y)) {
+		LevelView::player->reset();
 		  *state = 0;
         }
         

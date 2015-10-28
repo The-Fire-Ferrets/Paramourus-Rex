@@ -50,7 +50,7 @@ class Actor {
         int* getGameState(void);
         void setGameState(int state);
         void resetGameState(int* state);
-
+	void resetVases(void);
         void addDelegate(EventType type);
 
         sf::FloatRect* getBoundary(void);

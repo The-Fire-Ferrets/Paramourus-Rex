@@ -48,7 +48,8 @@ bool CollectorComponent::Init(pugi::xml_node* elem) {
     for (pugi::xml_node tool = elem->first_child(); tool; tool = tool.next_sibling()) {
         for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
             if (!strcmp(attr.name(), "Vases")) {
-                vases = std::strtol(attr.value(), &temp, 10);				
+                vases = std::strtol(attr.value(), &temp, 10);
+		vases_num = vases;				
                 if (*temp != '\0') {
                     std::cout << "CollectorComponent::Init: Failed to initialize: Error reading attribute for " << attr.name() << std::endl;
                     return false;
@@ -138,6 +139,10 @@ void CollectorComponent::update(EventInterfacePtr e) {
 		}
 		else if (owner->getId() == "Player") {
 			if (vases > 0) {
+				if (vases == flowers) {
+					flowers--;
+					flowerList.erase(flowerList.end());
+				}
 				vases--;
 				vase_sprites.erase(vase_sprites.end());
 				std::cout << owner->getId() << "  lost a vase and has " << vases << std::endl;
@@ -150,7 +155,13 @@ void CollectorComponent::update(EventInterfacePtr e) {
  **
  **/
     void CollectorComponent::reset(void) {
-
+	vases = vases_num;
+	flowers = 0;
+	flowerList.clear();
+	vase_sprites.clear();
+	for (int i = 0; i < vases; i++) {
+			vase_sprites.push_back(sf::Sprite(vase_empty, sf::IntRect(0, 0, vase_empty.getSize().x, vase_empty.getSize().y)));
+	}
     }
 
 /** Restart the component

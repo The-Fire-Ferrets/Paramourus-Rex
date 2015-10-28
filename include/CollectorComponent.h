@@ -31,7 +31,8 @@ class CollectorComponent : public ActorComponent {
     private:
         static ActorComponent* create();
         int vases;
-		int vase_size;
+		int vases_num;
+	int vase_size;
         int flowers;
         static int instances;
         static const bool registered;

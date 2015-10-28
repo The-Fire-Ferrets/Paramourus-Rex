@@ -297,7 +297,6 @@ void LevelView::removeActor(int instance) {
  **
  **/
 void LevelView::cleanUp(void) {
-	player->reset();
 	std::vector<StrongActorPtr>::iterator it;
 	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++) {
 		if (*it != player) {
