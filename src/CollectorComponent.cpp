@@ -126,7 +126,7 @@ void CollectorComponent::update(EventInterfacePtr e) {
 			}		
 		}
 		else if (owner->getId() == "Player") {
-			if (vases > 0) {
+			if (vases > 0 && other_actor->causesDamage()) {
 				if (vases == flowers) {
 					flowers--;
 					flowerList.erase(flowerList.end());

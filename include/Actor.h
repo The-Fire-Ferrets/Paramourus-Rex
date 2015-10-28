@@ -52,11 +52,11 @@ class Actor {
         void resetGameState(int* state);
 	void resetVases(void);
         void addDelegate(EventType type);
-
         std::vector<sf::FloatRect*> getBoundary(void);
 	bool intersects(StrongActorPtr other_actor);
 	bool intersects(sf::FloatRect bound);
 	bool contains(sf::Vector2f pnt);
+	bool causesDamage(void);
 
         Actor* getCopy(void);
         const Actor* getCopy(void) const;
@@ -64,7 +64,7 @@ class Actor {
         ActorId id;
 		const static int num_directions;
 		std::vector<EventDelegate> delegateFuncList;
-
+	bool damage = false;
         std::string sprite_filename[4];
 	std::string spriteMinimap_filename;
         sf::Vector2f position;
@@ -85,7 +85,6 @@ class Actor {
         sf::FloatRect* obstacle;
         std::vector<sf::FloatRect*> boundary;
 	bool renderToMinimap;
-
         void AddComponent(StrongActorComponentPtr component);
         void updateBoundary(void);
 };

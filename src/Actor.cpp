@@ -69,6 +69,12 @@ bool Actor::Init(pugi::xml_node* elem) {
 			renderToMinimap = true;
 			spriteMinimap_filename = attr.value();
 		}
+	else if (!strcmp(attr.name(),"Damage")) {
+			if(!strcmp(attr.value(),"True"))
+               			damage = true;
+			else if(!strcmp(attr.value(),"False"))
+				damage = false;
+	}
 	else if (!strcmp(attr.name(),"VertexArray")) {
 		if (!strcmp(attr.value(), "")) {
 		}
@@ -154,6 +160,12 @@ void Actor::PostInit(pugi::xml_node* elem) {
 				    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
 				}
 			    }
+			else if (!strcmp(attr.name(),"Damage")) {
+				if(!strcmp(attr.value(),"True"))
+					damage = true;
+				else if(!strcmp(attr.value(),"False"))
+					damage = false;
+			}
 			}
 		}
 	}
@@ -529,4 +541,11 @@ bool Actor::contains(sf::Vector2f pnt) {
 		if ((*it)->contains(pnt))
 			return true;
 	return false;
+}
+
+/** returns whether causes damage
+ **
+ **/
+bool Actor::causesDamage(void) {
+    return damage;
 }

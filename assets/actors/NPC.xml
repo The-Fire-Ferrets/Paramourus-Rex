@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<NPC Type = "NPC" SpriteUp = "NPCUp.png" SpriteRight = "NPCRight.png" SpriteLeft = "NPCLeft.png" SpriteDown = "NPCDown.png"  SpriteMinimap = "">
+<NPC Type = "NPC" SpriteUp = "NPCUp.png" SpriteRight = "NPCRight.png" SpriteLeft = "NPCLeft.png" SpriteDown = "NPCDown.png"  SpriteMinimap = "" Damage = "True" >
 	<InputComponent>
 		<Control Type = "Artificial" Speed = "25"/>
 	</InputComponent>	
