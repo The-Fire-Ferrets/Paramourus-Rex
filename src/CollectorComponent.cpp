@@ -94,6 +94,7 @@ void CollectorComponent::PostInit(void) {
 			vase_sprites.back().setPosition(0,0);
 		}
 	}
+	owner->addDelegate(CollectEvent::event_type);
 }
 
 /** Updates the component's attributes
@@ -110,31 +111,15 @@ void CollectorComponent::update(float time) {
 void CollectorComponent::update(EventInterfacePtr e) {
 	EventType event_type = e->getEventType();
 	StrongActorPtr other_actor = LevelView::getActor(e->getSender());
+
+	if (other_actor == NULL)
+		return;
+
 	if (event_type == ContactEvent::event_type) {
 		if (other_actor->hasComponent(CollectableComponent::id)) {
-			if (flowers < vases) {
+			if (flowers < vases ) {
 				if (!EventManagerInterface::get()->queueEvent(new CollectEvent(e->getTimeStamp(), owner->getInstance(), other_actor->getInstance())))
 					std::cout << "CollectableComponent::update: Unable to queue event" << std::endl;		
-				if (owner->getId() == "Player") {				
-					flowerList.push_back(other_actor);
-					if (other_actor->getId() == "FireFlower") {
-						vase_sprites[flowers++].setTexture(vase_fireflower);
-						//vase_sprites[flowers++].scale(1.0*vase_size/(vase_fireflower.getSize().x), 1.0*vase_size/(vase_fireflower.getSize().y));
-					}
-					else if (other_actor->getId() == "EarthFlower") {
-						vase_sprites[flowers++].setTexture(vase_earthflower);
-						//vase_sprites[flowers++].scale(1.0*vase_size/(vase_earthflower.getSize().x), 1.0*vase_size/(vase_earthflower.getSize().y));
-					}
-					else if (other_actor->getId() == "AirFlower") {
-						vase_sprites[flowers++].setTexture(vase_airflower);
-						//vase_sprites[flowers++].scale(1.0*vase_size/(vase_airflower.getSize().x), 1.0*vase_size/(vase_airflower.getSize().y));
-					}
-					else if (other_actor->getId() == "WaterFlower") {
-						vase_sprites[flowers++].setTexture(vase_waterflower);
-						//vase_sprites[flowers++].scale(1.0*vase_size/(vase_waterflower.getSize().x), 1.0*vase_size/(vase_waterflower.getSize().y));
-					}
-				}
-				std::cout << owner->getId() << "  collecting " << other_actor->getId() << " vase number now " << vases << std::endl;			
 			}		
 		}
 		else if (owner->getId() == "Player") {
@@ -148,6 +133,29 @@ void CollectorComponent::update(EventInterfacePtr e) {
 				std::cout << owner->getId() << "  lost a vase and has " << vases << std::endl;
 			}
 		}
+	}
+	else if (event_type == CollectEvent::event_type) {	
+		LevelView::removeActor(other_actor->getInstance());		
+		if (owner->getId() == "Player") {				
+			flowerList.push_back(other_actor);
+			if (other_actor->getId() == "FireFlower") {
+				vase_sprites[flowers++].setTexture(vase_fireflower);
+				//vase_sprites[flowers++].scale(1.0*vase_size/(vase_fireflower.getSize().x), 1.0*vase_size/(vase_fireflower.getSize().y));
+			}
+			else if (other_actor->getId() == "EarthFlower") {
+				vase_sprites[flowers++].setTexture(vase_earthflower);
+				//vase_sprites[flowers++].scale(1.0*vase_size/(vase_earthflower.getSize().x), 1.0*vase_size/(vase_earthflower.getSize().y));
+			}
+			else if (other_actor->getId() == "AirFlower") {
+				vase_sprites[flowers++].setTexture(vase_airflower);
+				//vase_sprites[flowers++].scale(1.0*vase_size/(vase_airflower.getSize().x), 1.0*vase_size/(vase_airflower.getSize().y));
+			}
+			else if (other_actor->getId() == "WaterFlower") {
+				vase_sprites[flowers++].setTexture(vase_waterflower);
+				//vase_sprites[flowers++].scale(1.0*vase_size/(vase_waterflower.getSize().x), 1.0*vase_size/(vase_waterflower.getSize().y));
+			}
+		}
+		std::cout << owner->getId() << "  collecting " << other_actor->getId() << " vase number now " << vases << std::endl;	
 	}	
 }
 

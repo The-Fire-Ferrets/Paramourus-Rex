@@ -369,12 +369,16 @@ const Actor* Actor::getCopy(void) const {
  ** Sends each of its components to process the event according to their implementations
  **/
 void Actor::getEvent(EventInterfacePtr e) {
-    EventType event_type = e->getEventType();
-    if (event_type == ContactEvent::event_type)
-        std::cout << LevelView::getActor(e->getSender())->getId() << " made contact with " << id << std::endl;
+	EventType event_type = e->getEventType();
+	StrongActorPtr other_actor = LevelView::getActor(e->getSender());
+	if (other_actor == NULL)
+		return;
 
-    for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
-        (it->second)->update(e);
+	if (event_type == ContactEvent::event_type)
+		std::cout << other_actor->getId() << " made contact with " << id << std::endl;
+	
+	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
+		(it->second)->update(e);
 }
 
 /** Used to check of the actor contains a given compoment

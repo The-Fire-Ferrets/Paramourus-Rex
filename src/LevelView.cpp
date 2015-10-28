@@ -205,7 +205,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		timer_string = out.str();
 		timer.setString(timer_string);
 		std::vector<StrongActorPtr>::iterator it;
-		for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
+		for (it = actorList.begin(); it != actorList.end(); it++)
 			(*it)->update(time);
 
 		//Set timer to bottom right corner
@@ -242,7 +242,7 @@ void LevelView::render(sf::RenderWindow *window) {
 	window->draw(background);
 	window->draw(minimap_border);
 	std::vector<StrongActorPtr>::iterator it;
-	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
+	for (it = actorList.begin(); it != actorList.end(); it++)
 		(*it)->render(window, false);
 	player->render(window, false);
 	window->draw(timer);
@@ -254,7 +254,7 @@ void LevelView::render(sf::RenderWindow *window) {
 	//Update graphics
 	window->draw(background);
 	window->draw(timer);
-	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++)
+	for (it = actorList.begin(); it != actorList.end(); it++)
 		(*it)->render(window, true);
 	player->render(window, true);
 	//window->draw(minimap_border);
@@ -272,7 +272,7 @@ void LevelView::start(void) {
  **/
 StrongActorPtr LevelView::getActor(int instance) {
 	std::vector<StrongActorPtr>::iterator it;
-	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++) {
+	for (it = actorList.begin(); it != actorList.end(); it++) {
 		if ((*it)->getInstance() == instance) {
 			return *it;
 		}
@@ -285,12 +285,11 @@ StrongActorPtr LevelView::getActor(int instance) {
  **/
 void LevelView::removeActor(int instance) {
 	std::vector<StrongActorPtr>::iterator it;
-	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); ++it) {
-		if (*it != NULL)
-			if ((*it)->getInstance() == instance) {
-				actorList.erase(it);
-				break;
-			}
+	for (it = actorList.begin(); it != actorList.end(); ++it) {
+		if ((*it)->getInstance() == instance) {
+			actorList.erase(it);
+			break;
+		}
 	}
 }
 /** Clean up level after completion
@@ -298,7 +297,7 @@ void LevelView::removeActor(int instance) {
  **/
 void LevelView::cleanUp(void) {
 	std::vector<StrongActorPtr>::iterator it;
-	for (it = LevelView::actorList.begin(); it != LevelView::actorList.end(); it++) {
+	for (it = actorList.begin(); it != actorList.end(); it++) {
 		if (*it != player) {
 			(*it)->quit();
 		}
