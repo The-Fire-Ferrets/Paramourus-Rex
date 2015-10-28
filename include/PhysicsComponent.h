@@ -43,7 +43,6 @@ class PhysicsComponent : public ActorComponent {
         static const bool registered;
         static int instances;
 	int direction_bit;
-        sf::Vector2f last_dir;
 };
 
 #endif

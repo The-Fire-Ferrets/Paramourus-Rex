@@ -28,7 +28,6 @@ ActorComponent* PhysicsComponent::create() {
  **/
 PhysicsComponent::PhysicsComponent(void) {
     instance = instances;
-    last_dir = sf::Vector2f(0,0);
 	direction_bit = 0;
 }
 
