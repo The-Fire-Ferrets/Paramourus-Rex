@@ -182,7 +182,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		    bound = sf::FloatRect(pos.x, pos.y, size.x, size.y);
 		    std::vector<StrongActorPtr>::iterator it_all;
 		    for (it_all = LevelView::actorList.begin(); it_all != LevelView::actorList.end(); it_all++) {
-		        if ((*it_all)->intersects(bound)) {
+		        if ((*it_all)->intersects(bound) != NULL) {
 		            conflict = true;
 		            break;
 		        }
@@ -514,33 +514,33 @@ void Actor::addDelegate(EventType type) {
 /** Checks to see if the Actors intersect
  **
  **/
-bool Actor::intersects(StrongActorPtr other_actor) {
+sf::FloatRect* Actor::intersects(StrongActorPtr other_actor) {
 	std::vector<sf::FloatRect*> other_boundary = other_actor->getBoundary();
 	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
 		for (std::vector<sf::FloatRect*>::iterator other_it = other_boundary.begin(); other_it != other_boundary.end(); ++other_it)
 			if ((*it)->intersects(**other_it))
-				return true;
-	return false;
+				return *it;
+	return NULL;
 }
 
 /** Checks to see if the Actor and boundary intersect
  **
  **/
-bool Actor::intersects(sf::FloatRect bound) {
+sf::FloatRect* Actor::intersects(sf::FloatRect bound) {
 	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
 		if ((*it)->intersects(bound))
-			return true;
-	return false;
+			return *it;
+	return NULL;
 }
 
 /** Checks to see if the Actor contains point
  **
  **/
-bool Actor::contains(sf::Vector2f pnt) {
+sf::FloatRect* Actor::contains(sf::Vector2f pnt) {
 	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
 		if ((*it)->contains(pnt))
-			return true;
-	return false;
+			return *it;
+	return NULL;
 }
 
 /** returns whether causes damage

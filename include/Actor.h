@@ -53,9 +53,9 @@ class Actor {
 	void resetVases(void);
         void addDelegate(EventType type);
         std::vector<sf::FloatRect*> getBoundary(void);
-	bool intersects(StrongActorPtr other_actor);
-	bool intersects(sf::FloatRect bound);
-	bool contains(sf::Vector2f pnt);
+	sf::FloatRect* intersects(StrongActorPtr other_actor);
+	sf::FloatRect* intersects(sf::FloatRect bound);
+	sf::FloatRect* contains(sf::Vector2f pnt);
 	bool causesDamage(void);
 
         Actor* getCopy(void);
