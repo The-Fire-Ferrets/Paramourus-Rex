@@ -12,12 +12,13 @@ class DialogueView {
 		static const int size;
 		static int index;
 		static std::string dialogue_str;
-
+		
 		//images
 		static sf::Texture background_texture;
 		static sf::Sprite Diana;
 		static sf::Sprite Phil;
 		static sf::Sprite background;
+		static sf::RectangleShape backlay;
 
 		// text values
 		static sf::Font font;
