@@ -18,6 +18,7 @@ class DialogueView {
         static sf::Sprite Diana;
         static sf::Sprite Phil;
         static sf::Sprite background;
+	static sf::RectangleShape backlay;
 
         // text values
         static sf::Font font;
