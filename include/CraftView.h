@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include "ActorFactory.h"
 #include "CollectorComponent.h"
+#include "CraftableComponent.h"
 #include "ActorComponent.h"
 #include "LevelView.h"
 
@@ -40,6 +41,9 @@ class CraftView  {
 		static sf::RectangleShape craftButton;
 		static sf::Text button_text;
 
+		static std::vector<EventDelegate> delegateFuncList;
+		static bool has_delegates;
+
 	public:
 		static int getNumFlowers(void);
 		static bool pressed;
@@ -52,6 +56,9 @@ class CraftView  {
 		static std::vector<StrongActorPtr> actorList;
 		static StrongActorPtr getFlower(int instance);
 		static bool removeFlower(StrongActorPtr flower);
+		static void addDelegate(EventType type);
+
+
 };
 
 #endif

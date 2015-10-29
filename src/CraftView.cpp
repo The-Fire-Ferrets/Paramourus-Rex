@@ -1,4 +1,5 @@
 #include "CraftView.h"
+#include "CraftEvent.h"
 
 //Total size of pointer arrays
 const int CraftView::size = 20;
@@ -51,6 +52,9 @@ bool CraftView::pressed;
 bool CraftView::box1;
 bool CraftView::box2;
 
+bool CraftView::has_delegates = false;
+std::vector<EventDelegate> CraftView::delegateFuncList;
+
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -60,6 +64,11 @@ void CraftView::Create(const char* resource, int* state) {
     //Holds referenced to loaded XML file	
     totalFlowers = 0;
     pugi::xml_document doc;
+
+	if (!has_delegates) {
+		CraftView::addDelegate(CraftEvent::event_type);
+		has_delegates = true;
+	}
 
     //Error check to see if file was loaded correctly
     pugi::xml_parse_result result;
@@ -225,6 +234,11 @@ void CraftView::Create(const char* resource, int* state) {
 	  removeFlower(flowers[i]);
       }
     }
+
+	// set text to initial greeting from Homer
+    std::string str = "Welcome back, Phil! You have " + std::to_string(totalFlowers) + " flowers!\nTo craft them, click on their icons."; 
+    text.setString(str);
+
 }
 
 int CraftView::getNumFlowers(void) {
@@ -309,7 +323,15 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
  **
  **/
 void CraftView::update(EventInterfacePtr e) {
+	// fiugre out who just got crafted so we can display their new state
+	EventType event_type = e->getEventType();
+	StrongActorPtr sender = CraftView::getFlower(e->getSender());
 
+	// item crafting completed
+	if (event_type == CraftEvent::event_type) {
+		StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
+		text.setString("Diana's sure to love this new " + ac->getType() + " flower, Phil!");
+	}
 }
 
 /** Renders the backdrop and menu selects onto the window, as well as option to
@@ -317,11 +339,6 @@ void CraftView::update(EventInterfacePtr e) {
  **
  **/
 void CraftView::render(sf::RenderWindow *window) {
-   /////////// Going to put this somewhere else in the code to make it cleaner, just haven't figured out where yet
-
-    std::string str = "Welcome back, Phil! You have " + std::to_string(totalFlowers) + " flowers!\nTo craft them, click on their icons."; 
-    text.setString(str);
-
     //Update graphics	
     window->draw(background);
     window->draw(backlay);
@@ -363,7 +380,7 @@ void CraftView::render(sf::RenderWindow *window) {
  **/
 void CraftView::cleanUp(void) {
 
-            }
+}
 
 /** Quit level
  **
@@ -396,4 +413,15 @@ bool CraftView::removeFlower(StrongActorPtr flower) {
 	}
 
 	return false;
+}
+
+/** Adds an event listener for the given event type
+ **
+ **/
+void CraftView::addDelegate(EventType type) {
+	EventDelegate delegate;  delegate.bind(&CraftView::update);
+	CraftView::delegateFuncList.push_back(delegate);
+	if (!EventManagerInterface::get()->addDelegate(delegateFuncList.back(), EventInstance(type, -1))) {
+		std::cout << "CraftView::Create: Unable to register delegate function" << std::endl;
+	}
 }
