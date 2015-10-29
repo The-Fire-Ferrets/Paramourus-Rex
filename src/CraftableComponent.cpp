@@ -104,7 +104,12 @@ void CraftableComponent::update(EventInterfacePtr e) {
 
 		// update the reference counter, delete if counter goes to 0
 		sender.reset();
-    }
+
+		// let the CraftView the event is finished
+		if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0.f, sender->getInstance(), -1))) {
+			std::cout << "CraftableComponent::update: unable to send response to CraftView" << std::endl;
+		}
+	}
 }
 
 /** Reset the component
