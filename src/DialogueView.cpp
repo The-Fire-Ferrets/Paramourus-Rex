@@ -134,9 +134,14 @@ void DialogueView::Create(const char* resource, int* state){
 
 	// navigating through xml files and storing the actual dialogue into array
 	for (pugi::xml_node tool = tools.first_child(); tool; tool =tool.next_sibling()){
+		std::string str = "";
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
+			if (!strcmp(attr.name(), "Speaker" && strcmp(attr.value(), "Narrator")) {
+				str += attr.value() + ": ";
+			}
 			if (!strcmp(attr.name(), "Text")){
-				dialogues.push_back(attr.value());
+				str += attr.value();
+				dialogues.push_back(str);
 			}
 			// store values in seperate array, if it's even necessary to change background -- may just take this out
 			// if background remains static?
