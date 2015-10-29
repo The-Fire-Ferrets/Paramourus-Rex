@@ -8,35 +8,35 @@
 
 class CollectorComponent : public ActorComponent {
 
-    public:
-        CollectorComponent();
+	public:
+		CollectorComponent();
 		~CollectorComponent();
 
-        bool Init(pugi::xml_node* elem) override;
-        bool PostInit(pugi::xml_node* elem) override;
+		bool Init(pugi::xml_node* elem) override;
+		bool PostInit(pugi::xml_node* elem) override;
 
-        void update(float time) override;
-        void update(EventInterfacePtr e) override;
+		void update(float time) override;
+		void update(EventInterfacePtr e) override;
 		void render(sf::RenderWindow *window, bool minimap) override;
-        void reset(void) override;
-        void restart(void) override;
-        void quit(void) override;
+		void reset(void) override;
+		void restart(void) override;
+		void quit(void) override;
 
-        void setVases(int v);
-        int getVases(void);
-        std::vector<StrongActorPtr> getFlowers(void);		
-        static ComponentId id;
-        ComponentId getId(void) const override;
+		void setVases(int v);
+		int getVases(void);
+		std::vector<StrongActorPtr> getFlowers(void);		
+		static ComponentId id;
+		ComponentId getId(void) const override;
 
-    private:
-        static ActorComponent* create();
-        int vases;
+	private:
+		static ActorComponent* create();
+		int vases;
 		int vases_num;
-	int vase_size;
-        int flowers;
-        static int instances;
-        static const bool registered;
-        std::vector<StrongActorPtr> flowerList;
+		int vase_size;
+		int flowers;
+		static int instances;
+		static const bool registered;
+		std::vector<StrongActorPtr> flowerList;
 
 		std::vector<sf::Sprite> vase_sprites;
 		sf::Texture vase_empty;

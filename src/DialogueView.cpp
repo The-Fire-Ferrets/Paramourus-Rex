@@ -136,8 +136,8 @@ void DialogueView::Create(const char* resource, int* state){
 	for (pugi::xml_node tool = tools.first_child(); tool; tool =tool.next_sibling()){
 		std::string str = "";
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
-			if (!strcmp(attr.name(), "Speaker" && strcmp(attr.value(), "Narrator")) {
-				str += attr.value() + ": ";
+			if (!strcmp(attr.name(), "Speaker") && strcmp(attr.value(), "Narrator")) {
+				str += (std::string) attr.value() + ": ";
 			}
 			if (!strcmp(attr.name(), "Text")){
 				str += attr.value();
