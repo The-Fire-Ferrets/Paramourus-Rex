@@ -18,31 +18,31 @@ const sf::Vector2f cardinals[4] = { NORTH, SOUTH, EAST, WEST };
 
 class InputComponent : public ActorComponent {
 
-    public:
-        InputComponent();
+	public:
+		InputComponent();
 		~InputComponent();
 
-        bool Init(pugi::xml_node* elem) override;
-        void PostInit(void) override;
+		bool Init(pugi::xml_node* elem) override;
+		bool PostInit(pugi::xml_node* elem) override;
 
-        void update(float time) override;
+		void update(float time) override;
 		void update(EventInterfacePtr e) override;
 		void render(sf::RenderWindow *window, bool minimap) override;
-        void reset(void) override;
-        void restart(void) override;
-        void quit(void) override;
+		void reset(void) override;
+		void restart(void) override;
+		void quit(void) override;
 
-        static ComponentId id;
-        ComponentId getId(void) const override;
+		static ComponentId id;
+		ComponentId getId(void) const override;
 
-        sf::Vector2f getDirection() const;
-        void setDirection(const sf::Vector2f& dir);
+		sf::Vector2f getDirection() const;
+		void setDirection(const sf::Vector2f& dir);
 
-    private:
-        float speed;
-        static ActorComponent* create();
-        static int instances;
-        static const bool registered;
+	private:
+		float speed;
+		static ActorComponent* create();
+		static int instances;
+		static const bool registered;
 		AI ai;
 		sf::Vector2f direction;
 };

@@ -28,7 +28,7 @@ ActorComponent* PhysicsComponent::create() {
  **/
 PhysicsComponent::PhysicsComponent(void) {
     instance = instances;
-    last_dir = sf::Vector2f(0,0);
+	direction_bit = 0;
 }
 
 /** Destructor
@@ -47,10 +47,6 @@ bool PhysicsComponent::Init(pugi::xml_node* elem) {;
         for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
             if (!strcmp(attr.name(),"Type"))
                 type = attr.value();
-            else {
-                std::cout << "PhysicsComponent::Init: Failed to initialize" << std::endl;
-                return false;
-            }
         }
     }	
     return true;	
@@ -59,8 +55,10 @@ bool PhysicsComponent::Init(pugi::xml_node* elem) {;
 /** Final Initilizer
  ** Setups up additional attributes based on game configuration
  **/
-void PhysicsComponent::PostInit(void) {
-
+bool PhysicsComponent::PostInit(pugi::xml_node* elem) {
+	if (elem != NULL)
+	Init(elem);
+	return true;
 }
 
 /** Checks to see if the bound of two actor intersect and sends ContactEvent to the event manager, keeps track of last actor made contact with
@@ -70,30 +68,48 @@ void PhysicsComponent::update(float time) {
     bool madeContact = false;
     std::vector<StrongActorPtr>::iterator it_all;
     for (it_all = LevelView::actorList.begin(); it_all != LevelView::actorList.end(); it_all++) {
+	bool madeContactPrev = false;
         StrongActorPtr other_actor = *it_all;
         if (owner->getInstance() != other_actor->getInstance()) {
             //Checks to see if actor was in the last contact episode
             std::vector<StrongActorPtr>::iterator it;
+		std::vector<sf::FloatRect*>::iterator it_b = last_boundaries.end();
             for (it = last_actors.begin(); it != last_actors.end(); it++) {
                 if (*it == other_actor) {
+			  for (it_b = last_boundaries.begin(); it_b != last_boundaries.end(); it_b++) {
+				if (other_actor->intersects(**it_b) != NULL)
+					break;
+				}
+			madeContactPrev = true;	
+			it == last_actors.end();				
                     break;
                 }
             }
-            if ((owner->getBoundary())->intersects(*(other_actor->getBoundary()))) {
+	    sf::FloatRect* bound;
+            if ((bound = owner->intersects(other_actor)) != NULL) {
                 madeContact = true;
                 if (it == last_actors.end()) {
+			if (!madeContactPrev) {
                     if (!EventManagerInterface::get()->queueEvent(new ContactEvent(time, owner->getInstance(), other_actor->getInstance())) )
                         std::cout << "PhysicsComponent::update: Unable to queue event" << std::endl;
                     last_actors.push_back(other_actor);
+			madeContactPrev = false;
+			}
+			last_boundaries.push_back(bound);
                 }
             }
-            else if(it != last_actors.end()) {
+            else {
+		if(it != last_actors.end())
                 last_actors.erase(it);
+		if(it_b != last_boundaries.end())
+                last_boundaries.erase(it_b);
             }
         }
     }
-    if (!madeContact)
+    if (!madeContact) {
         last_actors.clear();
+	last_boundaries.clear();
+	}
 
 }
 
@@ -130,49 +146,46 @@ void PhysicsComponent::restart(void) {
 bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
     // is the owner currently in another actor's bounding box?
     for (auto it = last_actors.begin(); it != last_actors.end(); it++) {
-        if ( (*it)->hasAttribute("Opaque") && (*it)->getBoundary()->intersects(bound)) {
-            //If not moving in the direction in the direction that caused contact previously, OK to move
-            if (last_dir != sf::Vector2f(0,0) && last_dir != dir)
-                return true;
-            last_dir = dir;	
+        if ( (*it)->hasAttribute("Opaque") && (*it)->intersects(bound) != NULL) {
+            setDirectionBit(dir);
 
             //If caused contact but on an edge, ignore it and only return false if a majoriry of the player is making contact
             //Allows for smoother movement and continued movement
             if (dir.x == 1) {
-                if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width, bound.top  + bound.height / 4)))
+                if ((*it)->contains(sf::Vector2f(bound.left + bound.width, bound.top  + bound.height / 4)) != NULL)
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width, bound.top + bound.height / 2)))      
+                else if ((*it)->contains(sf::Vector2f(bound.left + bound.width, bound.top + bound.height / 2)) != NULL)      
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width, bound.top + 3* bound.height / 4)))
+                else if ((*it)->contains(sf::Vector2f(bound.left + bound.width, bound.top + 3* bound.height / 4)) != NULL)
                     return false;
             }	
             else if (dir.x == -1) {
-                if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left, bound.top  + bound.height / 4)))    
+                if ((*it)->contains(sf::Vector2f(bound.left, bound.top  + bound.height / 4)) != NULL)    
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left, bound.top + bound.height / 2)))    
+                else if ((*it)->contains(sf::Vector2f(bound.left, bound.top + bound.height / 2)) != NULL)    
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left, bound.top + 3*bound.height / 4)))    
+                else if ((*it)->contains(sf::Vector2f(bound.left, bound.top + 3*bound.height / 4)) != NULL)    
                     return false;
             }	
             else if (dir.y == 1) {
-                if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left  + bound.width / 4, bound.top + bound.height)))     
+                if ((*it)->contains(sf::Vector2f(bound.left  + bound.width / 4, bound.top + bound.height)) != NULL)     
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width/2, bound.top + bound.height)))     
+                else if ((*it)->contains(sf::Vector2f(bound.left + bound.width/2, bound.top + bound.height)) != NULL)     
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + 3 * bound.width / 4, bound.top + bound.height)))     
+                else if ((*it)->contains(sf::Vector2f(bound.left + 3 * bound.width / 4, bound.top + bound.height)) != NULL)     
                     return false;
             }	
             else if (dir.y == -1) {
-                if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left  + bound.width / 4, bound.top)))     
+                if ((*it)->contains(sf::Vector2f(bound.left  + bound.width / 4, bound.top)) != NULL)     
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + bound.width/2, bound.top)))     
+                else if ((*it)->contains(sf::Vector2f(bound.left + bound.width/2, bound.top)) != NULL)     
                     return false;
-                else if ((*it)->getBoundary()->contains(sf::Vector2f(bound.left + 3* bound.width / 4, bound.top)))     
+                else if ((*it)->contains(sf::Vector2f(bound.left + 3* bound.width / 4, bound.top)) != NULL)     
                     return false;		
             }
         }
     }
-    last_dir = sf::Vector2f(0,0);
+   flipDirectionBit(dir);
     // if not, it is okay to move in the direction we want
     return true;
 }
@@ -182,4 +195,85 @@ bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
  **/
 void PhysicsComponent::render(sf::RenderWindow *window, bool minimap) {
 	
+}
+
+/** Sets the value of the given bit
+ **
+**/
+void PhysicsComponent::setDirectionBit(int bit_num) {
+	direction_bit = direction_bit | 1<<(bit_num - 1);
+}
+
+/** Sets the value of the given bit
+ **
+**/
+void PhysicsComponent::setDirectionBit(sf::Vector2f dir) {
+	if (dir.x == 1) {
+		setDirectionBit(1);
+	}
+	else if (dir.x == -1) {
+		setDirectionBit(2);
+	}
+	else if (dir.y == -1) {
+		setDirectionBit(3);
+	}
+	else if (dir.y == 1) {
+		setDirectionBit(4);
+	}
+}
+
+/** Returns the value of the given bit
+ **
+**/
+bool PhysicsComponent::getDirectionBit(int bit_num) {
+	return direction_bit & 1<<(bit_num - 1);
+}
+
+/** Returns the value of the given bit
+ **
+**/
+bool PhysicsComponent::getDirectionBit(sf::Vector2f dir) {
+	if (dir.x == 1) {
+		return getDirectionBit(1);
+	}
+	else if (dir.x == -1) {
+		return getDirectionBit(2);
+	}
+	else if (dir.y == -1) {
+		return getDirectionBit(3);
+	}
+	else if (dir.y == 1) {
+		return getDirectionBit(4);
+	}
+	return false;
+}
+/** Flips the given bit
+ **
+**/
+void PhysicsComponent::flipDirectionBit(int bit_num) {
+	direction_bit = direction_bit ^ 1<<(bit_num - 1);
+}
+
+/** flips the value of the given bit
+ **
+**/
+void PhysicsComponent::flipDirectionBit(sf::Vector2f dir) {
+	if (dir.x == 1) {
+		flipDirectionBit(1);
+	}
+	else if (dir.x == -1) {
+		flipDirectionBit(2);
+	}
+	else if (dir.y == -1) {
+		flipDirectionBit(3);
+	}
+	else if (dir.y == 1) {
+		flipDirectionBit(4);
+	}
+}
+/** Resets all directions to 0
+ **
+**/
+void PhysicsComponent::resetDirectionBit() {
+	direction_bit = 0;
 }

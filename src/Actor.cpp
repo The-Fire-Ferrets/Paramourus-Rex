@@ -35,7 +35,7 @@ Actor::Actor(void) {
  **/
 Actor::~Actor(void) {
 	delete obstacle;
-	delete boundary;
+	boundary.clear();
 	for (auto& kv : components) {
 		// decrease the reference count of the pointer
 		kv.second.reset();
@@ -49,6 +49,7 @@ Actor::~Actor(void) {
  ** Sets up additional attribute defaults
  **/
 bool Actor::Init(pugi::xml_node* elem) {
+	char* temp;
     for (pugi::xml_attribute attr = elem->first_attribute(); attr; attr = attr.next_attribute()) {
         if (!strcmp(attr.name(),"Type"))
             id = attr.value();
@@ -68,13 +69,57 @@ bool Actor::Init(pugi::xml_node* elem) {
 			renderToMinimap = true;
 			spriteMinimap_filename = attr.value();
 		}
-        else {
-            std::cout << "Actor::Init: Failed to initialize" << std::endl;
-            return false;
-        }
+	else if (!strcmp(attr.name(),"Damage")) {
+			if(!strcmp(attr.value(),"True"))
+               			damage = true;
+			else if(!strcmp(attr.value(),"False"))
+				damage = false;
+	}
+	else if (!strcmp(attr.name(),"VertexArray")) {
+		if (!strcmp(attr.value(), "")) {
+		}
+		else {
+			use_vertexarray = true;
+			int vertices = 0;
+			std::string string_temp;
+			int v_count = 0;
+			int v_idx = 0;
+			std::istringstream input;
+   			input.str(attr.value());
+			while (std::getline(input, string_temp, ' ')) {
+				if (v_count == 0) {
+					vertices = std::strtol(string_temp.c_str(), &temp, 10);
+					if (*temp != '\0') {
+					    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+					}
+					sprite_vertexarray = sf::VertexArray(sf::TrianglesStrip, vertices);
+				}
+				else if (v_count % 2) {
+					sprite_vertexarray[v_idx].texCoords.x = std::strtol(string_temp.c_str(), &temp, 10);
+					sprite_vertexarray[v_idx].position.x = std::strtol(string_temp.c_str(), &temp, 10);
+					if (*temp != '\0') {
+					    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+					}
+				}
+				else {
+					sprite_vertexarray[v_idx].texCoords.y = std::strtol(string_temp.c_str(), &temp, 10);
+					sprite_vertexarray[v_idx++].position.y = std::strtol(string_temp.c_str(), &temp, 10);
+					if (*temp != '\0') {
+					    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+					}
+				}
+				v_count++;
+			}
+			updateBoundary();
+		}
+	}
+			
     }
-    boundary = new sf::FloatRect();
-    addDelegate(ContactEvent::event_type);
+	if (initial_init) {
+	    boundary.push_back(new sf::FloatRect());
+	    addDelegate(ContactEvent::event_type);
+		initial_init = false;
+	}
     return true;
 }
 
@@ -83,75 +128,99 @@ bool Actor::Init(pugi::xml_node* elem) {
  **/
 void Actor::PostInit(pugi::xml_node* elem) {
     char* temp;
+	Init(elem);
     for (pugi::xml_node tool = elem->first_child(); tool; tool = tool.next_sibling()) {
-        for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
-            if (!strcmp(attr.name(),"X")) {
-                position.x = std::strtol(attr.value(), &temp, 10);
-                if (*temp != '\0') {
-                    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
-                }
-            }
-            else if (!strcmp(attr.name(),"Y")) {
-                position.y = std::strtol(attr.value(), &temp, 10);
-                if (*temp != '\0') {
-                    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
-                }
-            }
-            else if (!strcmp(attr.name(),"Width")) {
-                size.x = std::strtol(attr.value(), &temp, 10);
-                if (*temp != '\0') {
-                    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
-                }
-            }
-            else if (!strcmp(attr.name(),"Height")) {
-                size.y = std::strtol(attr.value(), &temp, 10);
-                if (*temp != '\0') {
-                    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
-                }
-            }
-        }
-    }
-
-    sf::Vector2f pos = position;
-    sf::FloatRect bound = sf::FloatRect(pos.x, pos.y, size.x, size.y);
-    if (pos.x < 0 || pos.y < 0) {
-        bool new_position = false;
-        bool conflict = false;
-        while (!new_position) {
-            pos.x = rand() % (int)(Configuration::getWindowWidth() - size.x);
-            pos.y = rand() % (int)(Configuration::getWindowHeight() - size.y);
-	    bound = sf::FloatRect(pos.x, pos.y, size.x, size.y);
-            std::vector<StrongActorPtr>::iterator it_all;
-            for (it_all = LevelView::actorList.begin(); it_all != LevelView::actorList.end(); it_all++) {
-                if ((*it_all)->getBoundary()->intersects(bound)) {
-                    conflict = true;
-                    break;
-                }
-            }
-            if (!conflict)
-                new_position = true;
-            conflict = false;
-        }
-    }
-    position = pos;
-    boundary = new sf::FloatRect(position.x, position.y, size.x, size.y);
-	for (int i = 0; i < num_directions; i++) {
-		if (!sprite_filename[i].empty())
-    			sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[i]).c_str());
-		else
-			sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[0]).c_str());
-    		sprite[i] = sf::Sprite(sprite_texture[i], sf::IntRect(0, 0, (sprite_texture[i].getSize()).x, (sprite_texture[i].getSize()).y));
-   		sprite[i].setScale(size.x/(sprite_texture[i].getSize()).x, size.y/(sprite_texture[i].getSize()).y);
-    		sprite[i].setPosition(position);
+	if (hasComponent((ComponentId)tool.name())) {
+		components[tool.name()]->PostInit(&tool);
 	}
-	if (renderToMinimap) {
-		spriteMinimap_texture.loadFromFile(("./assets/sprites/" + spriteMinimap_filename).c_str());
-		sprite_minimap = sf::Sprite(spriteMinimap_texture, sf::IntRect(0, 0, (spriteMinimap_texture.getSize()).x, (spriteMinimap_texture.getSize()).y));
-		sprite_minimap.setScale(10.0 * size.x/(spriteMinimap_texture.getSize()).x, 10.0 * size.y/(spriteMinimap_texture.getSize()).y);
-		sprite_minimap.setPosition(position);
+	else {
+		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
+			if (!use_vertexarray) {
+			    if (!strcmp(attr.name(),"X")) {
+				position.x = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+				    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+				}
+			    }
+			    else if (!strcmp(attr.name(),"Y")) {
+				position.y = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+				    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+				}
+			    }
+			    else if (!strcmp(attr.name(),"Width")) {
+				size.x = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+				    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+				}
+			    }
+			    else if (!strcmp(attr.name(),"Height")) {
+				size.y = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+				    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+				}
+			    }
+			else if (!strcmp(attr.name(),"Damage")) {
+				if(!strcmp(attr.value(),"True"))
+					damage = true;
+				else if(!strcmp(attr.value(),"False"))
+					damage = false;
+			}
+			}
+		}
 	}
+    }
+	if (!use_vertexarray) {
+	    sf::Vector2f pos = position;
+	    sf::FloatRect bound = sf::FloatRect(pos.x, pos.y, size.x, size.y);
+	    if (pos.x < 0 || pos.y < 0) {
+		bool new_position = false;
+		bool conflict = false;
+		while (!new_position) {
+		    pos.x = rand() % (int)(Configuration::getWindowWidth() - size.x);
+		    pos.y = rand() % (int)(Configuration::getWindowHeight() - size.y);
+		    bound = sf::FloatRect(pos.x, pos.y, size.x, size.y);
+		    std::vector<StrongActorPtr>::iterator it_all;
+		    for (it_all = LevelView::actorList.begin(); it_all != LevelView::actorList.end(); it_all++) {
+		        if ((*it_all)->intersects(bound) != NULL) {
+		            conflict = true;
+		            break;
+		        }
+		    }
+		    if (!conflict)
+		        new_position = true;
+		    conflict = false;
+		}
+	    }
+	    position = pos;
+		boundary.clear();
+	    boundary.push_back(new sf::FloatRect(position.x, position.y, size.x, size.y));
+		for (int i = 0; i < num_directions; i++) {
+			if (!sprite_filename[i].empty())
+	    			sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[i]).c_str());
+			else
+				sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[0]).c_str());
+	    		sprite[i] = sf::Sprite(sprite_texture[i], sf::IntRect(0, 0, (sprite_texture[i].getSize()).x, (sprite_texture[i].getSize()).y));
+	   		sprite[i].setScale(size.x/(sprite_texture[i].getSize()).x, size.y/(sprite_texture[i].getSize()).y);
+	    		sprite[i].setPosition(position);
+		}
+		if (renderToMinimap) {
+			spriteMinimap_texture.loadFromFile(("./assets/sprites/" + spriteMinimap_filename).c_str());
+			sprite_minimap = sf::Sprite(spriteMinimap_texture, sf::IntRect(0, 0, (spriteMinimap_texture.getSize()).x, (spriteMinimap_texture.getSize()).y));
+			sprite_minimap.setScale(10.0 * size.x/(spriteMinimap_texture.getSize()).x, 10.0 * size.y/(spriteMinimap_texture.getSize()).y);
+			sprite_minimap.setPosition(position);
+		}
 
-	sprite_idx = 0;
+		sprite_idx = 0;
+	}
+	else {
+		for (int i = 0; i < num_directions; i++)
+			if (!sprite_filename[i].empty())
+				sprite_texture[i].loadFromFile(("./assets/backgrounds/" + sprite_filename[i]).c_str());
+			else
+				sprite_texture[i].loadFromFile(("./assets/backgrounds/" + sprite_filename[0]).c_str());
+			
+	}
 }
 
 
@@ -211,7 +280,10 @@ void Actor::update(float time) {
  **/
 void Actor::render(sf::RenderWindow *window, bool minimap) {
     	if (visible) {
-		if (minimap && renderToMinimap) {
+		if (use_vertexarray) {
+			window->draw(sprite_vertexarray, &(sprite_texture[0]));
+		}
+		else if (minimap && renderToMinimap) {
 			window->draw(sprite_minimap);
 		}
 		else if (!minimap) {
@@ -262,9 +334,23 @@ void Actor::quit(void) {
 /** Updates the actors boundaries to be used by a PhysicsComponent
  **
  **/
-    void Actor::updateBoundary(void) {
-        *boundary = sf::FloatRect(position.x, position.y, size.x, size.y);
-    }
+void Actor::updateBoundary(void) {
+	if (use_vertexarray) {
+		boundary.clear();
+		sf::Vector2f pos;
+		int width;
+		int height;
+		for (int i = 3; i < sprite_vertexarray.getVertexCount(); i += 4) {
+			pos = sprite_vertexarray[i-3].position;
+			width = sprite_vertexarray[i].position.x - pos.x;
+			height = sprite_vertexarray[i].position.y - pos.y;
+			boundary.push_back(new  sf::FloatRect(pos.x, pos.y, width, height));
+		}
+	}	
+	else {
+		*boundary.back() = sf::FloatRect(position.x, position.y, size.x, size.y);
+	}
+}
 
 
 // Mutators and accesors
@@ -272,9 +358,9 @@ void Actor::quit(void) {
 /** returns the actors boundary
  **
  **/
-        sf::FloatRect* Actor::getBoundary(void) {
-            return boundary;
-        }
+std::vector<sf::FloatRect*> Actor::getBoundary(void) {
+	return boundary;
+}
 
 /** returns the actors state
  **
@@ -369,12 +455,16 @@ const Actor* Actor::getCopy(void) const {
  ** Sends each of its components to process the event according to their implementations
  **/
 void Actor::getEvent(EventInterfacePtr e) {
-    EventType event_type = e->getEventType();
-    if (event_type == ContactEvent::event_type)
-        std::cout << LevelView::getActor(e->getSender())->getId() << " made contact with " << id << std::endl;
+	EventType event_type = e->getEventType();
+	StrongActorPtr other_actor = LevelView::getActor(e->getSender());
+	if (other_actor == NULL)
+		return;
 
-    for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
-        (it->second)->update(e);
+	if (event_type == ContactEvent::event_type)
+		std::cout << other_actor->getId() << " made contact with " << id << std::endl;
+	
+	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
+		(it->second)->update(e);
 }
 
 /** Used to check of the actor contains a given compoment
@@ -420,3 +510,42 @@ void Actor::addDelegate(EventType type) {
                 return true;
         return false;
     }
+
+/** Checks to see if the Actors intersect
+ **
+ **/
+sf::FloatRect* Actor::intersects(StrongActorPtr other_actor) {
+	std::vector<sf::FloatRect*> other_boundary = other_actor->getBoundary();
+	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
+		for (std::vector<sf::FloatRect*>::iterator other_it = other_boundary.begin(); other_it != other_boundary.end(); ++other_it)
+			if ((*it)->intersects(**other_it))
+				return *it;
+	return NULL;
+}
+
+/** Checks to see if the Actor and boundary intersect
+ **
+ **/
+sf::FloatRect* Actor::intersects(sf::FloatRect bound) {
+	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
+		if ((*it)->intersects(bound))
+			return *it;
+	return NULL;
+}
+
+/** Checks to see if the Actor contains point
+ **
+ **/
+sf::FloatRect* Actor::contains(sf::Vector2f pnt) {
+	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
+		if ((*it)->contains(pnt))
+			return *it;
+	return NULL;
+}
+
+/** returns whether causes damage
+ **
+ **/
+bool Actor::causesDamage(void) {
+    return damage;
+}

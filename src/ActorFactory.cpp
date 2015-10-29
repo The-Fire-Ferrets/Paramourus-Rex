@@ -48,7 +48,7 @@ StrongActorPtr ActorFactory::CreateActor(const char* resource, int* state) {
             //Gives the component a reference to its owner
             component->SetOwner(actor);
             //Completes any post-initialization of the components
-            component->PostInit();
+            component->PostInit(NULL);
         }
         else {
             std::cout << "ActorFactory::CreateActor(...): Failed to create component" << std::endl;

@@ -73,10 +73,6 @@ bool InputComponent::Init(pugi::xml_node* elem) {
             else if (!strcmp(attr.name(), "Speed")) {
                 speed = std::strtof(attr.value(), &temp);
             }
-            else {
-                std::cout << "InputComponent::Init: Failed to initialize" << std::endl;
-                return false;
-            }
         }
     }
     return true;
@@ -85,9 +81,12 @@ bool InputComponent::Init(pugi::xml_node* elem) {
 /** Final Initilizer
  ** Setups up additional attributes based on game configuration
  **/
-void InputComponent::PostInit(void) {
+bool InputComponent::PostInit(pugi::xml_node* elem) {
+	if (elem != NULL)
+	Init(elem);
 	ai.setNPCPosition(owner->getPosition());
 	ai.owner = owner;
+	return true;
 }
 
 /** Updates the component's attributes

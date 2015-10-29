@@ -50,20 +50,19 @@ class CraftView  {
 	// Misc
 	static void cleanUp(void);
 	static const int size;
-	
 
-    public:
-        static int getNumFlowers(void);
-	static bool pressed;
-	static void start();
-        static void Create(const char *resource, int *state);
-        static void update(EventInterfacePtr e);
-        static void update(sf::RenderWindow *window, int *state);
-        static void quit(void);
-        static void render(sf::RenderWindow *window);
-	static std::vector<StrongActorPtr> actorList;
-	static StrongActorPtr getFlower(int instance);
-	static bool removeFlower(StrongActorPtr flower);
+	public:
+		static int getNumFlowers(void);
+		static bool pressed;
+		static void start();
+		static void Create(const char *resource, int *state);
+		static void update(EventInterfacePtr e);
+		static void update(sf::RenderWindow *window, int *state);
+		static void quit(void);
+		static void render(sf::RenderWindow *window);
+		static std::vector<StrongActorPtr> actorList;
+		static StrongActorPtr getFlower(int instance);
+		static bool removeFlower(StrongActorPtr flower);
 };
 
 #endif

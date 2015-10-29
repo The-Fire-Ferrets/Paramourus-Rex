@@ -12,6 +12,9 @@ unsigned int Configuration::gameview_height = 0;
 unsigned int Configuration::gameview_width = 0;
 sf::Vector2f Configuration::gameview_center;
 
+sf::Texture Configuration::loading_texture;
+sf::Sprite Configuration::loading_sprite;
+
 /** Sets the dimensions of the game window
  **
  **/
@@ -104,4 +107,27 @@ sf::Texture Configuration::getMinimapBorder(void) {
  **/
 void Configuration::setMinimapBorder(sf::Texture mb) {
 	minimap_border = minimap_border;
+}
+
+/** Get loading texture
+ **
+ **/
+sf::Texture Configuration::getLoadingTexture(void) {
+	return loading_texture;
+}
+
+/** Set loading texture
+ **
+ **/
+void Configuration::setLoadingTexture(sf::Texture t) {
+	loading_texture = t;
+	loading_sprite = sf::Sprite(loading_texture, sf::IntRect(0, 0, loading_texture.getSize().x, loading_texture.getSize().y));
+	loading_sprite.setPosition(sf::Vector2f(window_width/2 - loading_texture.getSize().x/2, window_height/2 - loading_texture.getSize().y/2));
+}
+
+/** Get loading sprite
+ **
+ **/
+sf::Sprite Configuration::getLoadingSprite(void) {
+	return loading_sprite;
 }
