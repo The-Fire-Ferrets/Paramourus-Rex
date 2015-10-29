@@ -105,13 +105,13 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	timer.setPosition(timer_position);
 	//Iterates over XML to get components to add
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
-		if (num_actors == 0 && player == NULL) {		
+		if (!strcmp(tool.name(), "Player") && player == NULL) {		
 			actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
 			(actorList.back())->PostInit(&tool);
 			player = (actorList.back());
 			num_actors++;
 		}
-		else if (num_actors == 0) {
+		else if (!strcmp(tool.name(), "Player")) {
 			actorList.push_back(player);
 			(actorList.back())->PostInit(&tool);
 			num_actors++;
