@@ -41,7 +41,7 @@ std::vector<std::string> split(std::string str, char delim) {
 /** Checks for component equivalence in two string vectors.
  **
  **/
-bool have_equivalent_strings(std::vector<std::string>& lhs, std::vector<std::string>& rhs) {
+bool have_equivalent_strings(std::vector<std::string> lhs, std::vector<std::string> rhs) {
 	// sort the input vectors
 	std::sort(lhs.begin(), lhs.end());
 	std::sort(rhs.begin(), rhs.end());
