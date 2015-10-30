@@ -1,0 +1,14 @@
+<?xml version="1.0">
+<Recipies>
+	<WaterFlower Type = "WaterFlower" Sprite = "WaterFlower.png" Components = "Water"/>
+	<EarthFlower Type = "EarthFlower" Sprite = "EarthFlower.png" Components = "Earth"/>
+	<FireFlower  Type = "FireFlower"  Sprite = "FireFlower.png"  Components = "Fire"/>
+	<AirFlower   Type = "AirFlower"	  Sprite = "AirFlower.png"   Components = "Air"/>
+	<Sunflower   Type = "Sunflower"   Sprite = "Sunflower.png"   Components = "Fire Fire"/>
+	<Tulip       Type = "Tulip"		  Sprite = "Tulip.png"	     Components = "Water Air"/>
+	<Rose        Type = "Rose"        Sprite = "Rose.png"        Components = "Fire Air"/>
+	<Violet      Type = "Violet"      Sprite = "Violet.png"      Components = "Fire Water"/>
+	<Lily        Type = "Lily"        Sprite = "Lily.png"        Components = "Fire Fire Water"/>
+	<Orchid      Type = "Orchid"      Sprite = "Orchid.png"      Components = "Water Water Air"/>
+	<Magnolia    Type = "Magnolia"    Sprite = "Magnolia.png"    Components = "Fire Air Air"/>
+</Recipes>

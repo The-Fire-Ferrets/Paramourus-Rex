@@ -330,7 +330,7 @@ void CraftView::update(EventInterfacePtr e) {
 	// item crafting completed
 	if (event_type == CraftEvent::event_type) {
 		StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
-		text.setString("Diana's sure to love this new " + ac->getType() + " flower, Phil!");
+		text.setString("Diana's sure to love this new " + ac->getType() + ", Phil!");
 	}
 }
 

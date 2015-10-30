@@ -27,11 +27,16 @@ class CraftableComponent : public ActorComponent {
 		static ComponentId id;
 		ComponentId getId(void) const override;
 
+		bool doesCombineWith(const CraftableComponent& other) const;
+		void combineWith(const CraftableComponent& other);
+
 	private:
 		static ActorComponent* create();
 		static int instances;
 		static const bool registered;
 		std::vector<std::string> elements; // Long ago, the four nations lived together in harmony
+
+		std::string getCraftResultValue(pugi::xml_node node, std::string name);
 };
 
 #endif
