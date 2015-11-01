@@ -35,6 +35,10 @@ sf::Sprite DialogueView::Diana;
 sf::Sprite DialogueView::Phil;
 bool DialogueView::pressed = false;
 
+// dialogue music
+sf::SoundBuffer DialogueView::buffer;
+sf::Sound DialogueView::sound;
+
 /** Searches for the correct dialogue box the player is on and populates the text with what you want Diana to be saying 
  ** resource: filename for XML  file we are getting the dialogue from. Currently just level0, only level we have.
  ** state: current game state (state should be 2 if in dialogue view)
@@ -170,6 +174,13 @@ void DialogueView::Create(const char* resource, int* state){
 		std::vector<std::string> fitted = fitStringToDialogueBox(dialogue);
 		boxes.insert(boxes.end(), fitted.begin(), fitted.end());
 	}
+
+	if (!buffer.loadFromFile("./assets/music/romantic-arpeggio-loop.ogg")) {
+		std::cout << "DialogueView::Create: failed to load music" << std::endl;
+	}
+	sound.setBuffer(buffer);
+	sound.setLoop(true);
+	sound.play();
 }
 
 
@@ -186,6 +197,7 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 			std::cout << index << " " << boxes.size() << std::endl;
 			if (index >= boxes.size()){
 				*state = 0;
+				cleanUp();
 			}
 			else{
 				text.setString(boxes[index]);
@@ -213,6 +225,13 @@ void DialogueView::render(sf::RenderWindow *window){
 	window->draw(backlay);
 	window->draw(text);
 	// once Diana and Phil sprites are finished, will be rendered here as well
+}
+
+/** Play nice with the resources...
+ **
+ **/
+void DialogueView::cleanUp() {
+	sound.stop();
 }
 
 std::vector<std::string> DialogueView::fitStringToDialogueBox(std::string str) {

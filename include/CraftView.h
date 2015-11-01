@@ -55,6 +55,9 @@ class CraftView  {
 		static std::vector<EventDelegate> delegateFuncList;
 		static bool has_delegates;
 
+	static sf::SoundBuffer buffer;
+	static sf::Sound sound;
+
 	public:
 		static int getNumFlowers(void);
 		static bool pressed;

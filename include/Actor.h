@@ -11,6 +11,7 @@
 class Actor {
 	friend class ActorFactory;
 	friend class ActorComponent;
+	friend class CraftableComponent;  // to update sprite after a craftevent
 	public:
 		static int instances;
 		int getInstance(void);

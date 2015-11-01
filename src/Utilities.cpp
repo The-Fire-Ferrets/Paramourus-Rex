@@ -1,7 +1,9 @@
 #include "Utilities.h"
 #include <cmath> // std::pow(), std::sqrt(), std::abs()
 #include <cfloat> // FLT_EPSILON
-#include <sstream> 
+#include <sstream>
+#include <string>
+#include <algorithm> // std::equal(), std::sort()
 
 /** Returns the distance between the points p and q
  **/
@@ -34,4 +36,16 @@ std::vector<std::string> split(std::string str, char delim) {
 	}
 
 	return words;
+}
+
+/** Checks for component equivalence in two string vectors.
+ **
+ **/
+bool have_equivalent_strings(std::vector<std::string> lhs, std::vector<std::string> rhs) {
+	// sort the input vectors
+	std::sort(lhs.begin(), lhs.end());
+	std::sort(rhs.begin(), rhs.end());
+
+	// return equality of sorted vectors
+	return std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
