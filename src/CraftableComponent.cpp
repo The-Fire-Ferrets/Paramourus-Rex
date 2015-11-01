@@ -91,24 +91,28 @@ void CraftableComponent::update(EventInterfacePtr e) {
 	// item crafted
     if (event_type == CraftEvent::event_type && this->owner == receiver) {
 		// get a pointer to the sender's colletable component
-		std::shared_ptr<ActorComponent> ac;
-		std::shared_ptr<CraftableComponent> cc;
+		std::shared_ptr<ActorComponent> sender_ac, receiver_ac;
+		std::shared_ptr<CraftableComponent> sender_cc, receiver_cc;
 
-		ac = sender->components[CraftableComponent::id];
-		cc = std::dynamic_pointer_cast<CraftableComponent>(ac);
+		sender_ac   = sender->components[CraftableComponent::id];
+		receiver_ac = receiver->components[CraftableComponent::id];
+		sender_cc = std::dynamic_pointer_cast<CraftableComponent>(sender_ac);
+		receiver_cc = std::dynamic_pointer_cast<CraftableComponent>(receiver_ac);
 
-		// deep copy all elements
-		this->elements.insert(this->elements.end(), cc->elements.begin(), cc->elements.end());
+		if (receiver_cc->doesCombineWith(*sender_cc)) {
+			// do craft
+			receiver_cc->combineWith(*sender_cc);
 
-		CraftView::removeFlower(sender);
+			// sender no longer exists
+			CraftView::removeFlower(sender);
+			sender.reset();
 
-		// update the reference counter, delete if counter goes to 0
-		sender.reset();
-
-		// let the CraftView the event is finished
-		if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0.f, sender->getInstance(), -1))) {
-			std::cout << "CraftableComponent::update: unable to send response to CraftView" << std::endl;
+			// let the CraftView the event is finished
+			if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0.f, sender->getInstance(), -1))) {
+				std::cout << "CraftableComponent::update: unable to send response to CraftView" << std::endl;
+			}
 		}
+
 	}
 }
 
@@ -131,4 +135,86 @@ void CraftableComponent::restart(void) {
  **/
 void CraftableComponent::quit(void) {
 
+}
+
+/** Checks whether a combination with the given CraftableComponent
+ ** is possible.
+ **/
+bool CraftableComponent::doesCombineWith(const CraftableComponent& other) const {
+	// get resulting component list
+	std::vector<std::string> combo;
+	combo.insert(combo.end(), elements.begin(), elements.end());
+	combo.insert(combo.end(), other.elements.begin(), other.elements.end());
+
+	// open the recipe book
+	pugi::xml_document doc;
+	pugi::xml_parse_result result = doc.load_file("./assets/Recipes.xml");
+	if (!result) {
+		std::cout << "CraftableComponent: unable to load recipe book" << std::endl;
+		return false;
+	}
+
+	// look at each result
+    pugi::xml_node recipes = doc.child("Recipes");
+    for (pugi::xml_node recipe = recipes.first_child(); recipe; recipe = recipe.next_sibling()) {
+		for (pugi::xml_attribute attr = recipe.first_attribute(); attr; attr = attr.next_attribute()) {
+			if (!strcmp(attr.name(), "Components")) {
+				// are the component lists equivalent?
+				std::vector<std::string> components = split(std::string(attr.value()), ' ');
+				if (have_equivalent_strings(combo, components)) return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+/** Incorporate the components of another CraftableComponent into
+ ** this one.
+ **/
+void CraftableComponent::combineWith(const CraftableComponent& other) {
+	// sanity check
+	if (!this->doesCombineWith(other)) {
+		return;
+	}
+
+	// get resulting component list
+	elements.insert(elements.end(), other.elements.begin(), other.elements.end());
+
+	// open the recipe book
+	pugi::xml_document doc;
+	pugi::xml_parse_result result = doc.load_file("./assets/Recipes.xml");
+	if (!result) {
+		std::cout << "CraftableComponent: unable to load recipe book" << std::endl;
+		return;
+	}
+
+	// look at each result
+    pugi::xml_node recipes = doc.child("Recipes");
+    for (pugi::xml_node recipe = recipes.first_child(); recipe; recipe = recipe.next_sibling()) {
+		for (pugi::xml_attribute attr = recipe.first_attribute(); attr; attr = attr.next_attribute()) {
+			// find matching components
+			if (!strcmp(attr.name(), "Components")) {
+				std::vector<std::string> components = split(std::string(attr.value()), ' ');
+				if (have_equivalent_strings(elements, components)) {
+					std::string type = this->getCraftResultValue(recipe, "Type");
+					std::string sprite = this->getCraftResultValue(recipe, "Value");
+
+					// change the owner actor to the appropirate type
+					this->type = type;
+					owner->sprite_texture[0].loadFromFile(sprite);
+					owner->sprite[0].setTexture(owner->sprite_texture[0]);
+				}
+			}
+		}
+	}
+}
+
+std::string CraftableComponent::getCraftResultValue(pugi::xml_node node, std::string name) {
+	for (pugi::xml_attribute attr = node.first_attribute(); attr; attr = attr.next_attribute()) {
+		// find matching components
+		if (!strcmp(attr.name(), name.c_str())) {
+			return std::string(attr.value());
+		}
+	}
 }
