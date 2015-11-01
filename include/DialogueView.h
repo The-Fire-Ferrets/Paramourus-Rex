@@ -33,6 +33,9 @@ class DialogueView {
 
 		static std::vector<std::string> fitStringToDialogueBox(std::string str);
 
+		static sf::SoundBuffer buffer;
+		static sf::Sound sound;
+
 	public:
 		static std::vector<std::string> boxes;     // what gets displayed on screen
 		static std::vector<std::string> dialogues; // what gets read in from the XML
@@ -40,6 +43,7 @@ class DialogueView {
 		static void update(sf::RenderWindow *window, int* state);
 		static void update(EventInterfacePtr e);
 		static void render(sf::RenderWindow *window);
+		static void cleanUp();
 };
 
 #endif

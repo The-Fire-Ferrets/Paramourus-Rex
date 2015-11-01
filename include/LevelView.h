@@ -5,8 +5,7 @@
 #include "ActorFactory.h"
 #include "AI.h"
 
-class LevelView  {
-	friend class AI;
+class LevelView  { friend class AI;
 	friend class CraftView;
 	private:
 		static const int size;
@@ -25,6 +24,8 @@ class LevelView  {
 		static sf::View minimapView;
 		static sf::Sprite minimap_border;
 		static int duration;
+		static sf::SoundBuffer buffer;
+		static sf::Sound sound;
 
 	public:
 		static std::vector<StrongActorPtr> actorList;	

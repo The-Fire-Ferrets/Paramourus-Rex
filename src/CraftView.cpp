@@ -55,6 +55,10 @@ bool CraftView::box2;
 bool CraftView::has_delegates = false;
 std::vector<EventDelegate> CraftView::delegateFuncList;
 
+// craft music
+sf::SoundBuffer CraftView::buffer;
+sf::Sound CraftView::sound;
+
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -239,6 +243,12 @@ void CraftView::Create(const char* resource, int* state) {
     std::string str = "Welcome back, Phil! You have " + std::to_string(totalFlowers) + " flowers!\nTo craft them, click on their icons."; 
     text.setString(str);
 
+	if (!buffer.loadFromFile("./assets/music/marina-s-rhythm.ogg")) {
+		std::cout << "CraftView::Create: failed to load music" << std::endl;
+	}
+	sound.setBuffer(buffer);
+	sound.setLoop(true);
+	sound.play();
 }
 
 int CraftView::getNumFlowers(void) {
@@ -379,7 +389,7 @@ void CraftView::render(sf::RenderWindow *window) {
  **
  **/
 void CraftView::cleanUp(void) {
-
+	sound.stop();
 }
 
 /** Quit level

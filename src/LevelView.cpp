@@ -37,6 +37,10 @@ int LevelView::duration;
 //Minimap border
 sf::Sprite LevelView::minimap_border;
 
+// level music
+sf::SoundBuffer LevelView::buffer;
+sf::Sound LevelView::sound;
+
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -180,7 +184,12 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	//Set minimap to see entire map
 	minimapView = sf::View(sf::FloatRect(0, 0, Configuration::getMiniMapViewWidth() + 100, Configuration::getMiniMapViewHeight() + 100));
 
-
+	if (!buffer.loadFromFile("./assets/music/thunderdrum-game-loop.ogg")) {
+		std::cout << "LevelView::Create: error loading music" << std::endl;
+	}
+	sound.setBuffer(buffer);
+	sound.setLoop(true);
+	sound.play();
 }
 
 std::string LevelView::getName(void) {
@@ -308,6 +317,7 @@ void LevelView::cleanUp(void) {
 	EventManagerInterface::get()->reset();
 	ActorFactory::reset();
 	actorList.clear();
+	sound.stop();
 }
 
 /** Quit level
