@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Craft Background = "Forest.png" Map = "Cactus.png" Book = "NPCUp.png" Font = "arial.ttf" Text_Size = "30" Text_X="150" Text_Y = "450">
-  <FireFlower Sprite = "FireFlower.png" Height = "50" Width = "50" X = "10" Y = "10"/>
-  <WaterFlower Sprite = "WaterFlower.png" Height = "50" Width = "50" X = "10" Y = "70" />
-  <EarthFlower Sprite = "EarthFlower.png" Height = "50" Width = "50" X = "10" Y = "130" />
-  <AirFlower Sprite = "AirFlower.png" Height = "50" Width = "50" X = "10" Y = "190" />
+  <FireFlower Sprite = "FireFlower" Height = "50" Width = "50" X = "10" Y = "10"/>
+  <WaterFlower Sprite = "WaterFlower" Height = "50" Width = "50" X = "10" Y = "70" />
+  <EarthFlower Sprite = "EarthFlower" Height = "50" Width = "50" X = "10" Y = "130" />
+  <AirFlower Sprite = "AirFlower" Height = "50" Width = "50" X = "10" Y = "190" />
 </Craft> 

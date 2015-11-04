@@ -22,13 +22,14 @@ class CraftView  {
 	static sf::Sprite sprites[];
 	static sf::Sprite background;
 	static sf::Sprite map;
-	static sf::Sprite book;
+	static sf::Sprite recipeBook;
+	static sf::Sprite bookSprite;
 	static sf::Sprite box1Sprite;
 	static sf::Sprite box2Sprite;
 	
 	// Text
 	static sf::Text text;
-        static sf::Font font;
+	static sf::Font font;
 	static std::string flower_str;
 	static sf::Text flower_text;
 	static sf::Text button_text;
@@ -47,6 +48,9 @@ class CraftView  {
 	// Determining occupation of craftTable
 	static bool box1;
 	static bool box2;
+	
+	// Determining if recipe book is open or not
+	static bool drawBook;
 	
 	// Misc
 	static void cleanUp(void);
@@ -68,9 +72,14 @@ class CraftView  {
 		static void quit(void);
 		static void render(sf::RenderWindow *window);
 		static std::vector<StrongActorPtr> actorList;
+		static StrongActorPtr selectedActor1;
+		static StrongActorPtr selectedActor2;
 		static StrongActorPtr getFlower(int instance);
 		static bool removeFlower(StrongActorPtr flower);
 		static void addDelegate(EventType type);
+
+		static std::vector<std::tuple<sf::Sprite, std::string>> testList;
+
 
 
 };
