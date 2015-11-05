@@ -1,5 +1,5 @@
-<?xml version="1.0">
-<Recipies>
+<?xml version="1.0"?>
+<Recipes>
 	<WaterFlower Type = "WaterFlower" Sprite = "WaterFlower.png" Components = "Water"/>
 	<EarthFlower Type = "EarthFlower" Sprite = "EarthFlower.png" Components = "Earth"/>
 	<FireFlower  Type = "FireFlower"  Sprite = "FireFlower.png"  Components = "Fire"/>

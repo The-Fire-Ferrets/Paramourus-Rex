@@ -19,15 +19,20 @@ int main(int argc, char* argv[])
 	//Create window
 	sf::RenderWindow App(sf::VideoMode(Configuration::getWindowWidth(), Configuration::getWindowHeight(),64), "Paramourus Rex by Will Hollingsworth, Bina Kakusa, Belol Nessar, and Meghan Tinkler", sf::Style::Titlebar|sf::Style::Close);
 	sf::View defaultView = App.getDefaultView();
+	App.setView(defaultView);			
+	Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));
 	//Loads the map
 	const char* map = {"Map"};	
 	MapView::Create(map);
+	//Loads the title
+	const char* title = {"Title"};
+	TitleView::Create(title);
 
 
 	//Holds the current game state
-	// 0 = At the map; 1 = In a level; 2 = Talking to Diana; 3 = At craftable; 4 = quit game
-	int state = 0;
-	
+	// 0 = At the map; 1 = In a level; 2 = Talking to Diana; 3 = At craftable; 4 = quit game; 5 = Title screen
+	int state = 5;
+	int last_state;
 
 	/**
 	 ** Main Game Loop
@@ -35,6 +40,7 @@ int main(int argc, char* argv[])
 	 ** Reads input and updates actors and components
 	**/
 	while(App.isOpen()) {
+		last_state = state;
 		sf::Event Event;
 
 		//Start structure to control frame rate
@@ -44,7 +50,7 @@ int main(int argc, char* argv[])
 				state = 4;
 			}
 		}
-		switch(state) {
+		switch(last_state) {
 			case 0: 
 				App.setView(defaultView);
 				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));
@@ -66,6 +72,11 @@ int main(int argc, char* argv[])
 				//eventmanagerptr->quit();
 				App.close();
 				break;
+			case 5:
+				App.setView(defaultView);
+				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));
+				TitleView::update(&App, &state, elapsed_ms);
+				break;
 			default:
 				break;
 		}
@@ -74,7 +85,7 @@ int main(int argc, char* argv[])
 		//Controls rendering actors and components
 		App.clear(sf::Color::Black);
 
-		switch(state) {
+		switch(last_state) {
 			case 0: 
 				App.setView(defaultView);
 				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));		
@@ -98,6 +109,11 @@ int main(int argc, char* argv[])
 				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));	
 				//ExitView::render(&App);
 				break;
+			case 5:
+				App.setView(defaultView);
+				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));	
+				TitleView::render(&App);
+				break;
 			default: 
 				break;
 		}
@@ -111,6 +127,7 @@ int main(int argc, char* argv[])
 				break;
 		}
 	}
+	
 	return 0;
 }
 
