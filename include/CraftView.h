@@ -16,6 +16,13 @@ class CraftView  {
         static int waterFlowers;
         static int earthFlowers;
         static int airFlowers;
+        static int sunFlowers;
+        static int tulips;
+        static int roses;
+        static int violets;
+        static int lilies;
+        static int orchids;
+        static int magnolias;
 	static std::string flower_list[];
 	
 	// Sprites
