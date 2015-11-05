@@ -26,6 +26,7 @@ sf::Font DialogueView::font;
 // BACKGROUND VARIABLES
 sf::Texture DialogueView::background_texture;
 sf::Sprite DialogueView::background;
+sf::RectangleShape DialogueView::backlay;
 
 // Images of Diana and Phil to be rendered
 sf::Vector2f DialogueView::dianaPos;
@@ -135,6 +136,19 @@ void DialogueView::Create(const char* resource, int* state){
 	text.setColor(sf::Color::Black);
 	Diana.setPosition(dianaPos);
 	Phil.setPosition(philPos);
+	
+	unsigned int width = Configuration::getWindowWidth()/1.05;
+	unsigned int height = Configuration::getWindowHeight()/4;
+	unsigned int posX = Configuration::getWindowWidth()/40;
+	unsigned int posY = Configuration::getWindowHeight()/1.4;
+
+	backlay.setPosition(posX, posY);
+	backlay.setOutlineColor(sf::Color::Black);
+	backlay.setFillColor(sf::Color::White);
+	backlay.setSize(sf::Vector2f(width, height));
+	backlay.setOutlineThickness(5);
+	text.setColor(sf::Color::Black);
+	text.setPosition(posX, posY);
 
 	// navigating through xml files and storing the actual dialogue into array
 	for (pugi::xml_node tool = tools.first_child(); tool; tool =tool.next_sibling()){
@@ -207,21 +221,6 @@ void DialogueView::update(EventInterfacePtr e){
 
 // Draws the dialogue, Diana and Phil
 void DialogueView::render(sf::RenderWindow *window){
-	sf::RectangleShape backlay;
-
-	unsigned int width = Configuration::getWindowWidth()/1.05;
-	unsigned int height = Configuration::getWindowHeight()/4;
-	unsigned int posX = Configuration::getWindowWidth()/40;
-	unsigned int posY = Configuration::getWindowHeight()/1.4;
-
-	backlay.setPosition(posX, posY);
-	backlay.setOutlineColor(sf::Color::Black);
-	backlay.setFillColor(sf::Color::White);
-	backlay.setSize(sf::Vector2f(width, height));
-	backlay.setOutlineThickness(5);
-	text.setColor(sf::Color::Black);
-	text.setPosition(posX, posY);
-
 	window->draw(background);
 	window->draw(backlay);
 	window->draw(text);

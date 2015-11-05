@@ -1,7 +1,14 @@
 <?xml version="1.0"?>
-<Craft Background = "Forest.png" Map = "Cactus.png" Book = "NPCUp.png" Font = "arial.ttf" Text_Size = "30" Text_X="150" Text_Y = "450">
-  <FireFlower Sprite = "FireFlower.png" Height = "50" Width = "50" X = "10" Y = "10"/>
-  <WaterFlower Sprite = "WaterFlower.png" Height = "50" Width = "50" X = "10" Y = "70" />
-  <EarthFlower Sprite = "EarthFlower.png" Height = "50" Width = "50" X = "10" Y = "130" />
-  <AirFlower Sprite = "AirFlower.png" Height = "50" Width = "50" X = "10" Y = "190" />
+<Craft Background = "Forest.png" Map = "Cactus.png" Book = "NPCUp.png" Recipes = "Recipes.png" Font = "arial.ttf" Text_Size = "30" Text_X="150" Text_Y = "450">
+  <FireFlower Sprite = "FireFlower" Height = "30" Width = "30" X = "10" Y = "10"/>
+  <WaterFlower Sprite = "WaterFlower" Height = "30" Width = "30" X = "10" Y = "50" />
+  <EarthFlower Sprite = "EarthFlower" Height = "30" Width = "30" X = "10" Y = "90" />
+  <AirFlower Sprite = "AirFlower" Height = "30" Width = "30" X = "10" Y = "130" />
+  <SunFlower Sprite = "SunFlower" Height = "30" Width = "30" X = "10" Y = "170" />
+  <Tulip Sprite = "Tulip" Height = "30" Width = "30" X = "10" Y= "210" />
+  <Rose Sprite = "Rose" Height = "30" Width = "30" X = "10" Y="250" />
+  <Violet Sprite = "Violet" Height = "30" Width = "30" X = "10" Y = "290" />
+  <Lily Sprite = "Lily" Height = "30" Width = "30" X = "10" Y = "330" />
+  <Orchid Sprite = "Orchid" Height = "30" Width = "30" X = "10" Y = "370" />
+  <Magnolia Sprite = "Magnolia" Height = "30" Width = "30" X = "10" Y = "410" /> 
 </Craft> 
