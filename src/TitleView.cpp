@@ -41,6 +41,7 @@ void TitleView::Create(const char* resource) {
 	    }
     }
 
+<<<<<<< HEAD
 	//Iterates over XML to get components to add
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
 		char* temp;	
@@ -81,6 +82,23 @@ void TitleView::Create(const char* resource) {
 					std::cout << "TitleView::Create: Error reading attribute for " << tool.name() << " " << attr.name() << std::endl;
 				}
 			}
+=======
+    //Iterates over XML to get components to add
+    for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
+        char* temp;	
+        for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
+            if (!strcmp(tool.name(), "PlayButton") && !strcmp(attr.name(), "Text")) {
+              	playbutton_string = attr.value();
+		playbutton = sf::Text(playbutton_string, font);
+            }
+		else  if (!strcmp(tool.name(), "PlayButton") && !strcmp(attr.name(), "Size")) {	
+		playbutton_size =std::strtol(attr.value(), &temp, 10);
+		playbutton.setCharacterSize(playbutton_size);
+		playbutton.setPosition(Configuration::getWindowWidth()/2 - playbutton.getGlobalBounds().width/2, Configuration::getWindowHeight()/2  - playbutton.getGlobalBounds().height/2 -20);
+                if (*temp != '\0') {
+                    std::cout << "TitleView::Create: Error reading attribute for " << tool.name() << " " << attr.name() << std::endl;
+                }
+>>>>>>> 01eb160659bf8f9dc466198c993be4749165cf22
 		}
 	}
 	
@@ -95,25 +113,6 @@ void TitleView::update(sf::RenderWindow *window, int* state, float time) {
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
 	    if (playbutton.getGlobalBounds().contains(pos.x, pos.y)) {
 		*state = 0;
-		/*if (i > 1) {
-			view_state = 0;
-			render(window);
-			int flowers[] = {fireflowers_count[i], earthflowers_count[i], airflowers_count[i], waterflowers_count[i]};
-			LevelView::Create(levels[i].c_str(), state, flowers);
-			DialogueView::Create(levels[i].c_str(), state);
-			LevelView::start();
-			reset = true;
-			view_state = 1;
-			*state = 1;
-		}
-		else {
-			view_state = 0;
-			render(window);
-			reset = true;
-			CraftView::Create("Craft",state);
-			view_state = 1;
-			*state = 3;
-		}*/
 	    }
     }
     else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {

@@ -9,7 +9,14 @@ int CraftView::fireFlowers = 0;
 int CraftView::waterFlowers = 0;
 int CraftView::earthFlowers = 0;
 int CraftView::airFlowers = 0;
-int CraftView::totalFlowers;
+int CraftView::sunFlowers = 0;
+int CraftView::tulips = 0;
+int CraftView::roses = 0;
+int CraftView::violets = 0;
+int CraftView::orchids = 0;
+int CraftView::lilies = 0;
+int CraftView::magnolias = 0;
+int CraftView::totalFlowers = 0;
 std::string CraftView::flower_str;
 sf::Text CraftView::flower_text;
 
@@ -111,7 +118,7 @@ void CraftView::Create(const char* resource, int* state) {
         // Size of dialogue text
         else if (!strcmp(attr.name(), "Text_Size")) {
             text.setCharacterSize(std::strtol(attr.value(), &temp, 10));
-	    flower_text.setCharacterSize(std::strtol(attr.value(), &temp, 10));
+	    flower_text.setCharacterSize(25);
 	    button_text.setCharacterSize(std::strtol(attr.value(), &temp, 10));
 
             if (*temp != '\0') {
@@ -148,6 +155,14 @@ void CraftView::Create(const char* resource, int* state) {
     	    }
     	    bookSprite = sf::Sprite(texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/26.6, Configuration::getWindowHeight()/26.6));
 	    bookSprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.06);
+	}
+		else if(!strcmp(attr.name(), "Recipes")) {
+	    sf::Texture texture;
+	    if (!texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+    		  std::cout << "CraftView::Create: Failed to load " << attr.value();
+    	    }
+    	    recipeBook= sf::Sprite(texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/1.33, Configuration::getWindowHeight()/1.33));
+	    	recipeBook.setPosition(Configuration::getWindowWidth()/7,Configuration::getWindowHeight()/15);
 	}
     }
     
@@ -193,7 +208,6 @@ void CraftView::Create(const char* resource, int* state) {
     // Setting dialogue text position
     text.setPosition(text_pos);
     text.setColor(sf::Color::Blue);
-    flower_text.setPosition(200,180);
     flower_text.setColor(sf::Color::Black);
     
     // Backlay set off to the side to allow space for item select screens to the left
@@ -299,12 +313,10 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 			      for (int j = 0; j < actorList.size(); j++){
 					    if (actorList[j]->getId() == std::get<1>(testList[i])){		
 							if (box1 == false){
-								std::cout << "A flower of type " + std::get<1>(testList[i]) + " exists and has been added to the craft table.\n";
 				    			selectedActor1 = actorList[j];
 							break;
 				    		}
 				    		else if (box2 == false){
-						  		std::cout << "A flower of type " + std::get<1>(testList[i]) + " exists and has been added to the craft table.\n";
 				    			selectedActor2 = actorList[j];
 							break;
 				    		}
@@ -353,16 +365,40 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	if (craftButton.getGlobalBounds().contains(pos.x, pos.y) && box1 == true && box2 == true){
 	   if (!EventManagerInterface::get()->queueEvent(new ContactEvent(0, selectedActor1->getInstance(), selectedActor2->getInstance())) )
 		std::cout << "CraftView::update: Unable to queue event" << std::endl;	   
-	   //StrongActorComponentPtr actor1AC = selectedActor1->components[CraftableComponent::id];
-	   //std::shared_ptr<CraftableComponent> actor1CC = std::dynamic_pointer_cast<CraftableComponent>(actor1AC);
-	   //StrongActorComponentPtr actor2AC = selectedActor2->components[CraftableComponent::id];
-	   //std::shared_ptr<CraftableComponent> actor2CC = std::dynamic_pointer_cast<CraftableComponent>(actor2AC);
+	   StrongActorComponentPtr actor1AC = selectedActor1->components[CraftableComponent::id];
+	   std::shared_ptr<CraftableComponent> actor1CC = std::dynamic_pointer_cast<CraftableComponent>(actor1AC);
+	   StrongActorComponentPtr actor2AC = selectedActor2->components[CraftableComponent::id];
+	   std::shared_ptr<CraftableComponent> actor2CC = std::dynamic_pointer_cast<CraftableComponent>(actor2AC);
 	   
 	   box1 = false;
 	   box2 = false;
 	   // Clear sprite image, add newly combined sprite to inventory?
-	   //actor1CC->combineWith(actor2CC);
+	   actor1CC->combineWith(*actor2CC);
 	   std::cout << "CraftView::Update: attempting to craft flower " + selectedActor1->getId();
+
+	   if (selectedActor1->getId() == "Sunflower"){
+			  sunFlowers++;
+	    }
+	    else if (selectedActor1->getId() == "Tulip"){
+			  tulips++;
+	    }
+	    else if (selectedActor1->getId() == "Rose"){
+			  roses++;
+	    }
+	    else if (selectedActor1->getId() == "Violet"){
+			  violets++;
+	    }
+	    else if (selectedActor1->getId() == "Lily"){
+			  lilies++;
+	    }
+	    else if (selectedActor1->getId() == "Orchid"){
+			  orchids++;
+	    }
+	    else if (selectedActor1->getId() == "Magnolia"){
+			  magnolias++;
+	    }
+
+
 
 	}
 
@@ -372,19 +408,15 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	    box1 = false;
 	    totalFlowers++;
 	    if (selectedActor1->getId() == "FireFlower"){
-			  std::cout << "box1 is filled with a fireflower!\n";
 			  fireFlowers++;
 	    }
 	    else if (selectedActor1->getId() == "WaterFlower"){
-			  std::cout << "box1 is filled with a waterflower!\n";
 			  waterFlowers++;
 	    }
 	    else if (selectedActor1->getId() == "EarthFlower"){
-			  std::cout << "box1 is filled with a earthflower!\n";
 			  earthFlowers++;
 	    }
 	    else if (selectedActor1->getId() == "AirFlower"){
-			  std::cout << "box1 is filled with a airflower!\n";
 			  airFlowers++;
 	    }
 	}
@@ -410,11 +442,11 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	
 	// Draw recipe book
 	if (bookSprite.getGlobalBounds().contains(pos.x, pos.y)){
-	    if (drawBook = true){
+	    if (drawBook == true){
 	      drawBook = false;
 	    }
 	    else{
-	      drawBook = false;
+	      drawBook = true;
 	    }
 	}
 	
@@ -470,23 +502,47 @@ void CraftView::render(sf::RenderWindow *window) {
     window->draw(button_text);
     
     // draw flower sprites on left
-    for (int i = 0; i <= 3; i++){
+    for (int i = 0; i <= 9; i++){
 	window->draw(sprites[i]);
 	if (i == 0){
 	  flower_str = "x " + std::to_string(fireFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+20);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+10);
 	}
 	else if (i ==1){
 	  flower_str = "x " + std::to_string(waterFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+80);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+50);
 	}
 	else if (i == 2){
 	  flower_str = "x " + std::to_string(earthFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+140);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+90);
 	}
 	else if (i == 3){
 	  flower_str = "x " + std::to_string(airFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+200);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+130);
+	}
+	else if (i == 4){
+	  flower_str = "x " + std::to_string(sunFlowers);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+170);
+	}
+	else if (i == 5){
+	  flower_str = "x " + std::to_string(tulips);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+210);
+	}
+	else if (i == 6){
+	  flower_str = "x " + std::to_string(roses);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+250);
+	}
+	else if (i == 7){
+	  flower_str = "x " + std::to_string(violets);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+290); 
+	}
+	else if (i == 8){
+	 flower_str = "x " + std::to_string(lilies);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+330); 
+	}
+	else if (i == 9){
+	 flower_str = "x " + std::to_string(orchids);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+370); 
 	}
 	flower_text.setString(flower_str);
 	window->draw(flower_text);
