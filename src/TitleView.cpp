@@ -5,6 +5,12 @@ sf::Texture TitleView::background_texture;
 std::string TitleView::playbutton_string;
 int TitleView::playbutton_size;
 sf::Text TitleView::playbutton;
+std::string TitleView::tutorialbutton_string;
+int TitleView::tutorialbutton_size;
+sf::Text TitleView::tutorialbutton;
+std::string TitleView::introbutton_string;
+int TitleView::introbutton_size;
+sf::Text TitleView::introbutton;
 sf::Font TitleView::font;
 bool TitleView::playbutton_pressed = false;
 /** Creates the title from the give configuration file
@@ -35,26 +41,48 @@ void TitleView::Create(const char* resource) {
 	    }
     }
 
-    //Iterates over XML to get components to add
-    for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
-        char* temp;	
-        for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
-            if (!strcmp(tool.name(), "PlayButton") && !strcmp(attr.name(), "Text")) {
-              	playbutton_string = attr.value();
-		playbutton = sf::Text(playbutton_string, font);
-            }
-		else  if (!strcmp(tool.name(), "PlayButton") && !strcmp(attr.name(), "Size")) {	
-		playbutton_size =std::strtol(attr.value(), &temp, 10);
-		playbutton.setCharacterSize(playbutton_size);
-		playbutton.setPosition(Configuration::getWindowWidth()/2 - playbutton.getGlobalBounds().width/2, Configuration::getWindowHeight()/2  - playbutton.getGlobalBounds().height/2 - 50);
-                if (*temp != '\0') {
-                    std::cout << "TitleView::Create: Error reading attribute for " << tool.name() << " " << attr.name() << std::endl;
-                }
+	//Iterates over XML to get components to add
+	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
+		char* temp;	
+		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
+			if (!strcmp(tool.name(), "PlayButton") && !strcmp(attr.name(), "Text")) {
+				playbutton_string = attr.value();
+				playbutton = sf::Text(playbutton_string, font);
+			}
+			else  if (!strcmp(tool.name(), "PlayButton") && !strcmp(attr.name(), "Size")) {	
+				playbutton_size =std::strtol(attr.value(), &temp, 10);
+				playbutton.setCharacterSize(playbutton_size);
+				playbutton.setPosition(Configuration::getWindowWidth()/2 - playbutton.getGlobalBounds().width/2, Configuration::getWindowHeight()/2  - playbutton.getGlobalBounds().height/2 - 50);
+				if (*temp != '\0') {
+					std::cout << "TitleView::Create: Error reading attribute for " << tool.name() << " " << attr.name() << std::endl;
+				}
+			}
+			else if (!strcmp(tool.name(), "TutorialButton") && !strcmp(attr.name(), "Text")) {
+				tutorialbutton_string = attr.value();
+				tutorialbutton = sf::Text(Tutorialbutton_string, font);
+			}
+			else  if (!strcmp(tool.name(), "TutorialButton") && !strcmp(attr.name(), "Size")) {	
+				tutorialbutton_size =std::strtol(attr.value(), &temp, 10);
+				tutorialbutton.setCharacterSize(tutorialbutton_size);
+				tutorialbutton.setPosition(Configuration::getWindowWidth()/2 - tutorialbutton.getGlobalBounds().width/2, Configuration::getWindowHeight()/2  - tutorialbutton.getGlobalBounds().height/2 - 50);
+				if (*temp != '\0') {
+					std::cout << "TitleView::Create: Error reading attribute for " << tool.name() << " " << attr.name() << std::endl;
+				}
+			}
+			else if (!strcmp(tool.name(), "IntroButton") && !strcmp(attr.name(), "Text")) {
+				introbutton_string = attr.value();
+				introbutton = sf::Text(Tutorialbutton_string, font);
+			}
+			else  if (!strcmp(tool.name(), "IntroButton") && !strcmp(attr.name(), "Size")) {	
+				introbutton_size =std::strtol(attr.value(), &temp, 10);
+				introbutton.setCharacterSize(tutorialbutton_size);
+				introbutton.setPosition(Configuration::getWindowWidth()/2 - introbutton.getGlobalBounds().width/2 - 50, Configuration::getWindowHeight()/2  - introbutton.getGlobalBounds().height/2 - 50);
+				if (*temp != '\0') {
+					std::cout << "TitleView::Create: Error reading attribute for " << tool.name() << " " << attr.name() << std::endl;
+				}
+			}
 		}
 	}
-  
-
-    }
 	
 }
 
