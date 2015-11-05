@@ -108,7 +108,7 @@ void CraftableComponent::update(EventInterfacePtr e) {
 			sender.reset();
 
 			// let the CraftView the event is finished
-			if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0.f, reciever->getInstance(), -1))) {
+			if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0.f, receiver->getInstance(), -1))) {
 				std::cout << "CraftableComponent::update: unable to send response to CraftView" << std::endl;
 			}
 		}
