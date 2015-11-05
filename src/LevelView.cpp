@@ -212,7 +212,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	}
 	else {
 		std::ostringstream out;
-		out << std::setprecision(4) << timer_time/1000;
+		out << std::setprecision(2) << std::fixed << timer_time/1000;
 		timer_string = out.str();
 		timer.setString(timer_string);
 		std::vector<StrongActorPtr>::iterator it;
@@ -222,7 +222,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		//Set timer to bottom right corner
 		sf::Vector2f gameView_bottom_corner = Configuration::getGameViewCenter();
 		gameView_bottom_corner.x += Configuration::getGameViewWidth()/2 - timer.getGlobalBounds().width;
-		gameView_bottom_corner.y += Configuration::getGameViewHeight()/2 - timer.getGlobalBounds().height*1.5;
+		gameView_bottom_corner.y += Configuration::getGameViewHeight()/2 - timer.getGlobalBounds().height * 1.25;
 		timer.setPosition(gameView_bottom_corner);
 	}
 
