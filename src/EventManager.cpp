@@ -3,7 +3,7 @@
 /** Constructor
  **
  **/
-EventManager::EventManager(void)  : EventManagerInterface(){
+EventManager::EventManager(void)  : EventManagerInterface() {
 
 }
 
@@ -65,6 +65,8 @@ bool EventManager::triggerEvent(const EventInterfacePtr& event) {
         EventDelegateList& delegateList = eventDelegatePair->second;
         for (auto itr = delegateList.begin(); itr != delegateList.end(); ++itr) {			
             (*itr)(event);
+		if (currentViewDelegate != NULL)
+			(currentViewDelegate)(event);
         }
         return true;
     }
@@ -101,9 +103,6 @@ void EventManager::quit(void) {
  **
  **/
     void EventManager::reset(void) {
-        while(!process_queue->empty())
-            process_queue->pop_front();
-
-        while(!register_queue->empty())
-            register_queue->pop_front();
+        process_queue->clear();
+        register_queue->clear();
     }

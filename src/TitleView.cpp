@@ -1,5 +1,6 @@
 #include "TitleView.h"
 
+EventDelegate TitleView::delegate = NULL;
 sf::Sprite TitleView::background;
 sf::Texture TitleView::background_texture;
 std::string TitleView::playbutton_string;
@@ -23,6 +24,8 @@ void TitleView::Create(const char* resource) {
     //Holds referenced to loaded XML file		
     pugi::xml_document doc;
 
+	if (delegate == NULL)
+		delegate.bind(&TitleView::update);
     //Error check to see if file was loaded correctly
     pugi::xml_parse_result result;
     std::string resource_str(resource);
@@ -97,6 +100,7 @@ void TitleView::Create(const char* resource) {
  **
  **/
 void TitleView::update(sf::RenderWindow *window, int* state, float time) {
+	EventManagerInterface::setViewDelegate(delegate);
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);

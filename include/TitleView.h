@@ -23,6 +23,7 @@ class TitleView {
 		static sf::Font font;
 		static bool pressed;
 		static int view_state;
+		static EventDelegate delegate;
 	public:
 		static void Create(const char* resource);
 		static void update(sf::RenderWindow *window, int* state, float time);

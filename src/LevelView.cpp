@@ -1,5 +1,6 @@
 #include "LevelView.h"
 
+EventDelegate LevelView::delegate = NULL;
 //Total size of pointer arrays
 const int LevelView::size = 20;
 //Number of actors populating the level
@@ -53,6 +54,9 @@ std::vector<std::string> LevelView::commentary_strings;
 void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	//Reference to current location in Actor population array
 	//Holds referenced to loaded XML file	
+	if (delegate == NULL) {
+		delegate.bind(&LevelView::update);
+	}
 	num_actors = 0;
 	pugi::xml_document doc;
 
@@ -132,7 +136,9 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			player = (actorList.back());
 		}
 		else if (!strcmp(tool.name(), "Player")) {
-			generateActor(&tool, state);
+			actorList.push_back(player);
+			(actorList.back())->PostInit(&tool);
+			num_actors++;
 		}
 		else {
 			if (!strcmp(tool.name(), "WaterFlower")) {
@@ -214,6 +220,7 @@ int LevelView::getNumActors(void) {
  **
  **/
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
+	EventManagerInterface::setViewDelegate(delegate);
 	float timer_time = duration - level_clock.getElapsedTime().asMilliseconds();
 
 	if (timer_time <= 0) {
@@ -250,11 +257,10 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 
 /** Checks for events and update accordingly
  **
- *
- void LevelView::update(EventInterfacePtr e) {
-
- }
  */
+void LevelView::update(EventInterfacePtr e) {
+	std::cout << "HERE" << std::endl;
+}
 
 /** Renders the map onto the window
 **

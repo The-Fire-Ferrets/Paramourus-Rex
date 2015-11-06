@@ -1,5 +1,6 @@
 #include "MapView.h"
 
+EventDelegate MapView::delegate = NULL;
 //Maxmium number of levels
 const int MapView::size = 20;
 //Total number of levels
@@ -48,7 +49,8 @@ sf::Vector2f MapView::title_size;
 void MapView::Create(const char* resource) {
     //Holds referenced to loaded XML file		
     pugi::xml_document doc;
-
+	if (delegate == NULL)
+		delegate.bind(&MapView::update);
     //Error check to see if file was loaded correctly
     pugi::xml_parse_result result;
     std::string resource_str(resource);
@@ -160,6 +162,7 @@ void MapView::Create(const char* resource) {
  **
  **/
 void MapView::update(sf::RenderWindow *window, int* state, float time) {
+	EventManagerInterface::setViewDelegate(delegate);
     if (reset) {
 	view_state = 0;
 	render(window);

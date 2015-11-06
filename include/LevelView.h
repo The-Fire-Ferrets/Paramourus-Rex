@@ -31,6 +31,7 @@ class LevelView  { friend class AI;
 		static std::vector<sf::Vector2f> commentary_positions;
 		static std::vector<std::string> commentary_strings;
 		static std::string fitStringToCommentaryBox(std::string str);
+		static EventDelegate delegate;
 
 	public:
 		static void generateActor(pugi::xml_node* elem, int* state);

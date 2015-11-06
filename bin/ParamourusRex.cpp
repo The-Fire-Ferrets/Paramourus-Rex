@@ -6,6 +6,11 @@ bool loadConfiguration(void);
 
 int main(int argc, char* argv[])
 {
+	//Holds the current game state
+	// 0 = At the map; 1 = In a level; 2 = Talking to Diana; 3 = At craftable; 4 = quit game; 5 = Title screen
+	int state = 5;
+	int last_state;
+
 	//Instantiate a global EventManager
 	EventManager* eventmanager = new EventManager();
 	EventManagerInterfacePtr eventmanagerptr;
@@ -27,12 +32,6 @@ int main(int argc, char* argv[])
 	//Loads the title
 	const char* title = {"Title"};
 	TitleView::Create(title);
-
-
-	//Holds the current game state
-	// 0 = At the map; 1 = In a level; 2 = Talking to Diana; 3 = At craftable; 4 = quit game; 5 = Title screen
-	int state = 5;
-	int last_state;
 
 	/**
 	 ** Main Game Loop

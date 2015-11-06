@@ -37,6 +37,7 @@ class MapView {
 		static bool reset;
 		static void resetPopulationValues(void);
 		static int view_state;
+		static EventDelegate delegate;
 	public:
 		static void Create(const char* resource);
 
