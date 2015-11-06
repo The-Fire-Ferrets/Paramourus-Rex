@@ -228,8 +228,8 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		if (view_state == 1)
 			*state = 2;
 		else if (view_state == 2) {
-			LevelView::player->reset();
 			view_state = 1;
+			LevelView::player->reset();
 			*state = 5;
 		}
 		cleanUp();
@@ -237,7 +237,6 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	else {
 		if (view_state == 2) {
 			commentary.setString(commentary_strings.front());
-			//commentary.setPosition(Configuration::getGameViewPosition().x + commentary_positions.front().x, Configuration::getGameViewPosition().y + commentary_positions.front().y);
 			commentary.setPosition(Configuration::getGameViewCenter());
 		}
 		std::ostringstream out;
@@ -286,8 +285,9 @@ void LevelView::render(sf::RenderWindow *window) {
 		(*it)->render(window, false);
 	player->render(window, false);
 	window->draw(timer);
-	if (view_state == 2)
+	if (view_state == 2) {
 		window->draw(commentary);
+	}
 
 	//Set minimap view
 	minimapView.setViewport(sf::FloatRect(.9, 0, .1, .1));
