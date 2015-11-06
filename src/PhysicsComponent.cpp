@@ -67,7 +67,7 @@ bool PhysicsComponent::PostInit(pugi::xml_node* elem) {
 void PhysicsComponent::update(float time) {
     bool madeContact = false;
     std::vector<StrongActorPtr>::iterator it_all;
-    for (it_all = LevelView::actorList.begin(); it_all != LevelView::actorList.end(); it_all++) {
+    for (it_all =  LevelView::actorList.begin(); it_all !=  LevelView::actorList.end(); it_all++) {
 	bool madeContactPrev = false;
         StrongActorPtr other_actor = *it_all;
         if (owner->getInstance() != other_actor->getInstance()) {

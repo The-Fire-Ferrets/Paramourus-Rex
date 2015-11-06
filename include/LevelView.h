@@ -34,9 +34,14 @@ class LevelView  { friend class AI;
 		static EventDelegate delegate;
 		static bool commentary_change;
 		static std::vector<pugi::xml_node> spawn;
+		static pugi::xml_document doc;
+		static sf::Sprite title_sprite;
+		static sf::Texture title_texture;
+		static sf::Vector2f title_size;	
+		static bool pressed;
 
 	public:
-		static void generateActor(pugi::xml_node* elem, int* state);
+		static void generateActor(pugi::xml_node* elem, int* state, int generate = 1);
 		static std::vector<StrongActorPtr> actorList;	
 		static StrongActorPtr player;
 		static std::string getName(void);

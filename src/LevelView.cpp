@@ -48,6 +48,12 @@ std::vector<sf::Vector2f> LevelView::commentary_positions;
 std::vector<std::string> LevelView::commentary_strings;
 bool LevelView::commentary_change = true;
 std::vector<pugi::xml_node> LevelView::spawn;
+pugi::xml_document LevelView::doc;
+//Back Button
+sf::Sprite LevelView::title_sprite;
+sf::Texture LevelView::title_texture;
+sf::Vector2f LevelView::title_size;	
+bool LevelView::pressed = false;
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -55,11 +61,9 @@ std::vector<pugi::xml_node> LevelView::spawn;
 void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	//Reference to current location in Actor population array
 	//Holds referenced to loaded XML file	
-	if (delegate == NULL) {
-		delegate.bind(&LevelView::update);
-	}
+	delegate.bind(&LevelView::update);
+
 	num_actors = 0;
-	pugi::xml_document doc;
 
 	//Error check to see if file was loaded correctly
 	pugi::xml_parse_result result;
@@ -84,6 +88,21 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			background = sf::Sprite(background_texture, sf::IntRect(0, 0, background_texture.getSize().x, background_texture.getSize().y));
 			background.scale((1.0*Configuration::getWindowWidth())/(background_texture.getSize().x), (1.0*Configuration::getWindowHeight())/(background_texture.getSize().y));
 			background.setPosition(sf::Vector2f(0,0));
+		}
+		else if (!strcmp(attr.name(), "TitleSprite")) {
+		    title_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
+		}
+		else if (!strcmp(attr.name(), "TitleHeight")) {
+		    title_size.y = std::strtol(attr.value(), &temp, 10);
+		        if (*temp != '\0') {
+		            std::cout << "MapView::CreateMap: Error reading attribute for " << attr.name() << std::endl;
+		        }
+		}
+		else if (!strcmp(attr.name(), "TitleWidth")) {
+		    title_size.x = std::strtol(attr.value(), &temp, 10);
+		        if (*temp != '\0') {
+		            std::cout << "MapView::CreateMap: Error reading attribute for " << attr.name() << std::endl;
+		        }
 		}
 		else if (!strcmp(attr.name(), "Edge")) {
 			edge_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
@@ -120,6 +139,10 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			}
 		}
 	}
+	title_sprite = sf::Sprite(title_texture, sf::IntRect(0, 0, title_texture.getSize().x, title_texture.getSize().y));
+	title_sprite.setScale(title_size.x/(title_texture.getSize()).x, title_size.y/(title_texture.getSize()).y);
+	title_sprite.setPosition(sf::Vector2f(-1000,-1000));
+
 	timer.setPosition(timer_position);
 	//Iterates over XML to get components to add
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
@@ -133,7 +156,8 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 						}
 					}
 					else {
-						spawn.push_back(tool2);
+						pugi::xml_node temp = tool2;
+						spawn.push_back(temp);
 					}
 				}
 			}
@@ -152,45 +176,25 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			if (!strcmp(tool.name(), "WaterFlower")) {
 				int count = flowers[3];
 				//int count = 1;
-				while(count-- > 0) {
-					generateActor(&tool, state);
-				}
+				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "FireFlower")) {
 				int count = flowers[0];
 				//int count  = 0;
-				while(count-- > 0) {
-					generateActor(&tool, state);
-				}
+				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "EarthFlower")) {
 				int count = flowers[1];
 				//int count = 0;
-				while(count-- > 0) {
-					generateActor(&tool, state);
-				}
+				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "AirFlower")) {
 				int count = flowers[2];
-				//int count = 0;
-				while(count-- > 0) {
-					generateActor(&tool, state);
-				}
+				generateActor(&tool, state, count);
 			}
 			else {
-				int generate = 1;
-				for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
-					if (!strcmp(attr.name(), "Generate")) {
-						generate = (std::strtol(attr.value(), &temp, 10));
-						if (*temp != '\0') {
-							std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
-						}
-					}
+				generateActor(&tool, state);
 				}
-				while (generate-- > 0) {
-					generateActor(&tool, state);
-				}
-			}
 		}
 	}
 	
@@ -205,15 +209,28 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	if (!buffer.loadFromFile("./assets/music/thunderdrum-game-loop.ogg")) {
 		std::cout << "LevelView::Create: error loading music" << std::endl;
 	}
+	EventManagerInterface::setViewDelegate(delegate);
 	sound.setBuffer(buffer);
 	sound.setLoop(true);
 	sound.play();
 }
 
-void LevelView::generateActor(pugi::xml_node* elem, int* state) {
-	actorList.push_back(ActorFactory::CreateActor(elem->name(), state));
-	(actorList.back())->PostInit(elem);
-	num_actors++;
+void LevelView::generateActor(pugi::xml_node* elem, int* state, int generate) {
+	char* temp;
+	for (pugi::xml_attribute attr = elem->first_attribute(); attr; attr = attr.next_attribute()) {
+		if (!strcmp(attr.name(), "Generate")) {
+			generate = (std::strtol(attr.value(), &temp, 10));
+			if (*temp != '\0') {
+				std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
+		}
+	}
+	while (generate-- > 0) {
+		StrongActorPtr new_actor = ActorFactory::CreateActor(elem->name(), state);
+		new_actor->PostInit(elem);
+		actorList.push_back(new_actor);
+		num_actors++;
+	}
 }
 
 std::string LevelView::getName(void) {
@@ -228,7 +245,22 @@ int LevelView::getNumActors(void) {
  **
  **/
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
-	EventManagerInterface::setViewDelegate(delegate);
+	EventManagerInterface::setCurrentActorList(&actorList);
+	if (view_state == 2 && sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
+        pressed = true;
+        const sf::Vector2i pos = sf::Mouse::getPosition(*window);
+	std::cout << title_sprite.getPosition().x  << " " << Configuration::getGameViewHeight() * Configuration::getGameViewHeight() / pos.y +  Configuration::getGameViewPosition().y << std::endl;
+	std::cout << pos.x * Configuration::getGameViewWidth() / Configuration::getWindowWidth() +  Configuration::getGameViewPosition().x << " " << pos.y * Configuration::getGameViewHeight() / Configuration::getWindowHeight() +  Configuration::getGameViewPosition().y  << std::endl;
+            if (title_sprite.getGlobalBounds().contains(pos.x * Configuration::getGameViewWidth() / Configuration::getWindowWidth() +  Configuration::getGameViewPosition().x, pos.y * Configuration::getGameViewHeight() / Configuration::getWindowHeight() +  Configuration::getGameViewPosition().y)) {
+		view_state = 1;
+		LevelView::player->reset();
+		*state = 5;
+		cleanUp();
+            }
+    }
+    else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
+        pressed = false;
+    } 
 	float timer_time = duration - level_clock.getElapsedTime().asMilliseconds();
 
 	if (timer_time <= 0) {
@@ -242,14 +274,18 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		cleanUp();
 	}
 	else {
-		if (view_state == 2) {
-			if (commentary_change) {
-				pugi::xml_node n = spawn.front();
-				generateActor(&n, state);
+		if (view_state == 2 && !commentary_strings.empty()) {
+			if (commentary_change && !spawn.empty()) {
+				pugi::xml_node temp = spawn.front();
+				generateActor(&(temp), state);
+				spawn.erase(spawn.begin());
 				commentary_change = false;
 			}
 			commentary.setString(commentary_strings.front());
 			commentary.setPosition(Configuration::getGameViewCenter());
+		}
+		else {
+			title_sprite.setPosition(sf::Vector2f(Configuration::getGameViewPosition().x,Configuration::getGameViewPosition().y + Configuration::getGameViewHeight() - title_sprite.getGlobalBounds().height));
 		}
 		std::ostringstream out;
 		out << std::setprecision(2) << std::fixed << timer_time/1000;
@@ -274,8 +310,10 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 void LevelView::update(EventInterfacePtr e) {
 	if (view_state == 2) {
 		EventType event_type = e->getEventType();
-		if (e->getReceiver() == LevelView::player->getInstance() && event_type == ContactEvent::event_type) {
-			commentary_strings.erase(commentary_strings.begin());		
+		if (e->getSender() == LevelView::player->getInstance() && event_type == ContactEvent::event_type) {
+			if (!commentary_strings.empty())
+				commentary_strings.erase(commentary_strings.begin());	
+			commentary_change = true;	
 		}
 	}
 }
@@ -304,6 +342,7 @@ void LevelView::render(sf::RenderWindow *window) {
 	if (view_state == 2) {
 		window->draw(commentary);
 	}
+	window->draw(title_sprite);
 
 	//Set minimap view
 	minimapView.setViewport(sf::FloatRect(.9, 0, .1, .1));

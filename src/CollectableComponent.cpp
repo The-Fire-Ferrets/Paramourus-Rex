@@ -76,13 +76,13 @@ void CollectableComponent::update(float time) {
  **/
 void CollectableComponent::update(EventInterfacePtr e) {
     EventType event_type = e->getEventType();
-    StrongActorPtr other_actor = LevelView::getActor(e->getSender());
+    StrongActorPtr other_actor =  EventManagerInterface::getActor(e->getSender());
 	if (other_actor == NULL)
 		return;
 
 	// item collection
-    if (event_type == CollectEvent::event_type && owner->getVisible()) {
-        owner->setVisible(false);
+    if (event_type == CollectEvent::event_type && owner->getVisible()) {     
+	owner->setVisible(false);
         collector = other_actor;
         owner->setPosition(sf::Vector2f(-1000, 0));
 	if (!EventManagerInterface::get()->queueEvent(new CollectEvent(e->getTimeStamp(), owner->getInstance(), other_actor->getInstance())))

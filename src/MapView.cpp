@@ -163,6 +163,7 @@ void MapView::Create(const char* resource) {
  **/
 void MapView::update(sf::RenderWindow *window, int* state, float time) {
 	EventManagerInterface::setViewDelegate(delegate);
+	EventManagerInterface::setCurrentActorList(NULL);
     if (reset) {
 	view_state = 0;
 	render(window);
@@ -208,6 +209,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
             }
 		else if (title_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
 		*state = 5;
+		LevelView::player->reset();
             }
         }
     }

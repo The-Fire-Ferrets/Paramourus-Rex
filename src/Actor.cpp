@@ -155,7 +155,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 				}
 			    }
 			    else if (!strcmp(attr.name(),"Height")) {
-				size.y = std::strtol(attr.value(), &temp, 10);
+				size.y  = std::strtol(attr.value(), &temp, 10);
 				if (*temp != '\0') {
 				    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
 				}
@@ -456,7 +456,7 @@ const Actor* Actor::getCopy(void) const {
  **/
 void Actor::getEvent(EventInterfacePtr e) {
 	EventType event_type = e->getEventType();
-	StrongActorPtr other_actor = LevelView::getActor(e->getSender());
+	StrongActorPtr other_actor = EventManagerInterface::getActor(e->getSender());
 	if (other_actor == NULL)
 		return;
 
