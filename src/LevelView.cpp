@@ -233,7 +233,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 
 	if (timer_time <= 0) {
 		if (view_state == 1)
-			*state = 2;
+			*state = 0;
 		else if (view_state == 2) {
 			view_state = 1;
 			LevelView::player->reset();

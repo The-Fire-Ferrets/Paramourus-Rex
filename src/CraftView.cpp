@@ -1,5 +1,6 @@
 #include "CraftView.h"
 #include "CraftEvent.h"
+#include "DialogueView.h"
 
 //Create delegate
 EventDelegate CraftView::delegate = NULL;
@@ -21,6 +22,10 @@ int CraftView::magnolias = 0;
 int CraftView::totalFlowers = 0;
 std::string CraftView::flower_str;
 sf::Text CraftView::flower_text;
+
+// Number of visits to CraftView. Used to determine which dialogue.xml
+// file to use after the crafting and level.
+int CraftView::total_craft_visits = 1;
 
 // holds list of flowers actor has collected
 std::string CraftView::flower_list[size];
@@ -302,7 +307,10 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
         if (map.getGlobalBounds().contains(pos.x, pos.y)) {
 		LevelView::player->reset();
-		  *state = 0;
+		  *state = 2;
+		   DialogueView::Create(("Level" + std::to_string(total_craft_visits)).c_str(), state);
+
+		  ++total_craft_visits;
         }
         
         bool inList;
@@ -571,6 +579,7 @@ void CraftView::render(sf::RenderWindow *window) {
  **/
 void CraftView::cleanUp(void) {
 	sound.stop();
+	// ++total_craft_visits;
 }
 
 /** Quit level

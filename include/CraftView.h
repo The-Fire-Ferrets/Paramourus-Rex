@@ -23,6 +23,8 @@ class CraftView  {
         static int lilies;
         static int orchids;
         static int magnolias;
+
+        static int total_craft_visits;
 	static std::string flower_list[];
 	
 	// Sprites
