@@ -363,41 +363,27 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	
 	// Check here for the 'Craft' button to have been clicked and two flowers have been selected to be filled
 	if (craftButton.getGlobalBounds().contains(pos.x, pos.y) && box1 == true && box2 == true){
-	   if (!EventManagerInterface::get()->queueEvent(new ContactEvent(0, selectedActor1->getInstance(), selectedActor2->getInstance())) )
-		std::cout << "CraftView::update: Unable to queue event" << std::endl;	   
+	    
+	   
 	   StrongActorComponentPtr actor1AC = selectedActor1->components[CraftableComponent::id];
 	   std::shared_ptr<CraftableComponent> actor1CC = std::dynamic_pointer_cast<CraftableComponent>(actor1AC);
 	   StrongActorComponentPtr actor2AC = selectedActor2->components[CraftableComponent::id];
 	   std::shared_ptr<CraftableComponent> actor2CC = std::dynamic_pointer_cast<CraftableComponent>(actor2AC);
+	  
 	   
-	   box1 = false;
-	   box2 = false;
 	   // Clear sprite image, add newly combined sprite to inventory?
-	   actor1CC->combineWith(*actor2CC);
-	   std::cout << "CraftView::Update: attempting to craft flower " + selectedActor1->getId();
-
-	   if (selectedActor1->getId() == "Sunflower"){
-			  sunFlowers++;
-	    }
-	    else if (selectedActor1->getId() == "Tulip"){
-			  tulips++;
-	    }
-	    else if (selectedActor1->getId() == "Rose"){
-			  roses++;
-	    }
-	    else if (selectedActor1->getId() == "Violet"){
-			  violets++;
-	    }
-	    else if (selectedActor1->getId() == "Lily"){
-			  lilies++;
-	    }
-	    else if (selectedActor1->getId() == "Orchid"){
-			  orchids++;
-	    }
-	    else if (selectedActor1->getId() == "Magnolia"){
-			  magnolias++;
-	    }
-
+	   if (actor1CC->doesCombineWith(*actor2CC)){
+	      box1 = false;
+	      box2 = false;
+	      actor1CC->combineWith(*actor2CC); 
+	      if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0, selectedActor1->getInstance(), selectedActor2->getInstance())))
+		std::cout << "CraftView::update: Unable to queue event" << std::endl;	
+	   }
+	   
+	   // update text box to indicate that you cannot combine flowers
+	   else {
+	     
+	   }
 
 
 	}
@@ -473,6 +459,31 @@ void CraftView::update(EventInterfacePtr e) {
 		StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
 		text.setString("Diana's sure to love this new " + ac->getType() + ", Phil!");
 	}
+	
+		   
+	std::cout << "CraftView::Update: attempting to craft flower " + selectedActor1->getId();
+
+	if (selectedActor1->getId() == "Sunflower"){
+	    sunFlowers++;
+	}
+	else if (selectedActor1->getId() == "Tulip"){
+		  tulips++;
+	    }
+	    else if (selectedActor1->getId() == "Rose"){
+			  roses++;
+	    }
+	    else if (selectedActor1->getId() == "Violet"){
+			  violets++;
+	    }
+	    else if (selectedActor1->getId() == "Lily"){
+			  lilies++;
+	    }
+	    else if (selectedActor1->getId() == "Orchid"){
+			  orchids++;
+	    }
+	    else if (selectedActor1->getId() == "Magnolia"){
+			  magnolias++;
+	    }
 }
 
 /** Renders the backdrop and menu selects onto the window, as well as option to
