@@ -76,7 +76,7 @@ void CollectableComponent::update(float time) {
  **/
 void CollectableComponent::update(EventInterfacePtr e) {
     EventType event_type = e->getEventType();
-    StrongActorPtr other_actor = LevelView::getActor(e->getSender());
+    StrongActorPtr other_actor =  EventManagerInterface::getActor(e->getSender());
 	if (other_actor == NULL)
 		return;
 

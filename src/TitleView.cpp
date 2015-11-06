@@ -101,6 +101,7 @@ void TitleView::Create(const char* resource) {
  **/
 void TitleView::update(sf::RenderWindow *window, int* state, float time) {
 	EventManagerInterface::setViewDelegate(delegate);
+	EventManagerInterface::setCurrentActorList(NULL);
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);

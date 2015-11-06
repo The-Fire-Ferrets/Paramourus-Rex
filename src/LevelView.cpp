@@ -245,6 +245,7 @@ int LevelView::getNumActors(void) {
  **
  **/
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
+	EventManagerInterface::setCurrentActorList(&actorList);
 	if (view_state == 2 && sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);

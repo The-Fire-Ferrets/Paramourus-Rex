@@ -28,9 +28,13 @@ class EventManagerInterface {
 		static void set(EventManagerInterfacePtr manager);
 
 		static void setViewDelegate(const EventDelegate& d);
+		static void setCurrentActorList(std::vector<StrongActorPtr>* aList);
+		static std::vector<StrongActorPtr> getCurrentActorList(void);
+		static StrongActorPtr getActor(int instance);
 
 	protected:
 		static EventDelegate currentViewDelegate;
+		static std::vector<StrongActorPtr>* currentActorList;
 };
 #endif
 

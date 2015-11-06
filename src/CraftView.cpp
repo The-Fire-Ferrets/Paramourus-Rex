@@ -296,6 +296,7 @@ int CraftView::getNumFlowers(void) {
  **/
 void CraftView::update(sf::RenderWindow *window, int* state) {
   	EventManagerInterface::setViewDelegate(delegate);
+	EventManagerInterface::setCurrentActorList(&actorList);
       // Anticipates clicking in different areas of the screen 
       if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;

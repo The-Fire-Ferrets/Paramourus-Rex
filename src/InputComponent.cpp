@@ -167,7 +167,7 @@ void InputComponent::update(EventInterfacePtr e) {
 		EventType event_type = e->getEventType();
     		if (event_type == ContactEvent::event_type) {
 			sf::Vector2f last_direction = getDirection();
-			StrongActorPtr other_actor = LevelView::getActor(e->getSender());
+			StrongActorPtr other_actor =  EventManagerInterface::getActor(e->getSender());
 			std::cout << last_direction.x << " " << last_direction.y << std::endl;
 			if (other_actor->hasAttribute("Opaque")) {
 				if (last_direction.x == 1) {
