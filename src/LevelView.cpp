@@ -70,7 +70,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	for (pugi::xml_attribute attr = tools.first_attribute(); attr; attr = attr.next_attribute()) {
 		if (!strcmp(attr.name(), "Name")) {
 			name = attr.value();
-			if (!strcmp(attr.value(), "Introduction")) {
+			if (!strcmp(attr.value(), "Introduction") && *state == 5) {
 				view_state = 2;
 			}
 		}
