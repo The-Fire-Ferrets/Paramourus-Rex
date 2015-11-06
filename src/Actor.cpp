@@ -155,7 +155,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 				}
 			    }
 			    else if (!strcmp(attr.name(),"Height")) {
-				size.y = std::strtol(attr.value(), &temp, 10);
+				size.y  = std::strtol(attr.value(), &temp, 10);
 				if (*temp != '\0') {
 				    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
 				}

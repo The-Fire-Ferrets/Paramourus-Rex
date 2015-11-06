@@ -111,6 +111,7 @@ void CraftableComponent::update(EventInterfacePtr e) {
 			if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0.f, receiver->getInstance(), -1))) {
 				std::cout << "CraftableComponent::update: unable to send response to CraftView" << std::endl;
 			}
+			std::cout << "Flower: " << owner->getInstance() << " processing craft event from: " << sender->getInstance() << std::endl;
 		}
 
 	}

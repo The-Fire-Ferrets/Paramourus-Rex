@@ -18,6 +18,7 @@ class ActorFactory {
 		static ComponentId* actorComponentIds[];
 		static ActorComponentCreator actorComponentCreators[];
 		static StrongActorComponentPtr CreateComponent(pugi::xml_node* elem);
+		static StrongActorComponentPtr CreateComponent(const pugi::xml_node* elem);
 };
 
 #endif

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level0 Name = "Introduction" Background = "Level0.png" Edge = "Lava.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "10" Duration = "10000">
+<Level0 Name = "Introduction" Background = "Level0.png" Edge = "Lava.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "10" Duration = "100000" TitleSprite = "BackButton.png" TitleHeight = "10" TitleWidth = "10">
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Player>
@@ -16,5 +16,20 @@
 		    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 			</EarthFlower>
 		</Commentary2>
+		<Commentary3>
+			<Dialogue Text = "Now, you should watch out for these obstacles. They'll cause you to drop a vase and/or flower. Touch one to see." />
+			<Obstacle Generate = "100">
+		    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+			</Obstacle>
+		</Commentary3>
+		<Commentary4>
+			<Dialogue Text = "Oh, looks like you have some competition. Dont let them touch you or they may steal your vases and/or flowers. Touch one to see." />
+			<NPC Generate = "5">
+		    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+			</NPC>
+		</Commentary4>
+		<Commentary5>
+			<Dialogue Text = "That's all for now. But I'll be around to help more. Back button on bottom left what you're done. May have to touch something else." />
+		</Commentary5>
 	</Commentary>
 </Level0>

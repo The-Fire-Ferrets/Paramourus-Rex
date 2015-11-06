@@ -381,6 +381,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	      actor1CC->combineWith(*actor2CC); 
 	      if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0, selectedActor1->getInstance(), selectedActor2->getInstance())))
 		std::cout << "CraftView::update: Unable to queue event" << std::endl;	
+		std::cout << "Sent craft event to Flower: " << selectedActor1->getInstance() << " and Flower: " << selectedActor2->getInstance() << std::endl;
 	   }
 	   
 	   // update text box to indicate that you cannot combine flowers
