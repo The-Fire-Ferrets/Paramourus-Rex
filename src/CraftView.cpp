@@ -457,37 +457,37 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
  **/
 void CraftView::update(EventInterfacePtr e) {
 	// fiugre out who just got crafted so we can display their new state
+	std::cout << "got event" << std::endl;
 	EventType event_type = e->getEventType();
-	if (e->getReceiver() == -1) {
+	if (e->getReceiver() == -1 && event_type == CraftEvent::event_type) {
+		std::cout << "get sender" << std::endl;
 		StrongActorPtr sender = CraftView::getFlower(e->getSender());
+		std::cout << "got sender" << std::endl;
 		// item crafting completed
-		if (event_type == CraftEvent::event_type) {
-			StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
-			text.setString("Diana's sure to love this new " + ac->getType() + ", Phil!");
+		StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
+		std::cout << "got component" << std::endl;
+		text.setString("Diana's sure to love this new " + ac->getType() + ", Phil!");
+		if (sender->getId() == "SunFlower"){
+			sunFlowers++;
 		}
-	std::cout << "CraftView::Update: attempting to craft flower " + sender->getId();
-
-	if (sender->getId() == "SunFlower"){
-	    sunFlowers++;
-	}
-	else if (sender->getId() == "Tulip"){
-		  tulips++;
-	    }
-	    else if (sender->getId() == "Rose"){
-			  roses++;
-	    }
-	    else if (sender->getId() == "Violet"){
-			  violets++;
-	    }
-	    else if (sender->getId() == "Lily"){
-			  lilies++;
-	    }
-	    else if (sender->getId() == "Orchid"){
-			  orchids++;
-	    }
-	    else if (sender->getId() == "Magnolia"){
-			  magnolias++;
-	    }
+		else if (sender->getId() == "Tulip"){
+			tulips++;
+		}
+		else if (sender->getId() == "Rose"){
+			roses++;
+		}
+		else if (sender->getId() == "Violet"){
+			violets++;
+		}
+		else if (sender->getId() == "Lily"){
+			lilies++;
+		}
+		else if (sender->getId() == "Orchid"){
+			orchids++;
+		}
+		else if (sender->getId() == "Magnolia"){
+			magnolias++;
+		}
 	}
 }
 
