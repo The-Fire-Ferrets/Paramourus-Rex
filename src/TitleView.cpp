@@ -12,7 +12,10 @@ std::string TitleView::introbutton_string;
 int TitleView::introbutton_size;
 sf::Text TitleView::introbutton;
 sf::Font TitleView::font;
-bool TitleView::playbutton_pressed = false;
+bool TitleView::pressed = false;
+int TitleView::view_state = 1;
+std::string TitleView::introdialogue;
+std::string TitleView::tutoriallevel;
 /** Creates the title from the give configuration file
  **
  **/
@@ -40,8 +43,6 @@ void TitleView::Create(const char* resource) {
 			font.loadFromFile(("./assets/" + (std::string)attr.value()).c_str());
 	    }
     }
-
-<<<<<<< HEAD
 	//Iterates over XML to get components to add
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
 		char* temp;	
@@ -53,70 +54,81 @@ void TitleView::Create(const char* resource) {
 			else  if (!strcmp(tool.name(), "PlayButton") && !strcmp(attr.name(), "Size")) {	
 				playbutton_size =std::strtol(attr.value(), &temp, 10);
 				playbutton.setCharacterSize(playbutton_size);
-				playbutton.setPosition(Configuration::getWindowWidth()/2 - playbutton.getGlobalBounds().width/2, Configuration::getWindowHeight()/2  - playbutton.getGlobalBounds().height/2 - 50);
+				playbutton.setPosition(Configuration::getWindowWidth()/2 - playbutton.getGlobalBounds().width/2, Configuration::getWindowHeight()/2  - playbutton.getGlobalBounds().height/2 - 20);
 				if (*temp != '\0') {
 					std::cout << "TitleView::Create: Error reading attribute for " << tool.name() << " " << attr.name() << std::endl;
 				}
 			}
 			else if (!strcmp(tool.name(), "TutorialButton") && !strcmp(attr.name(), "Text")) {
 				tutorialbutton_string = attr.value();
-				tutorialbutton = sf::Text(Tutorialbutton_string, font);
+				tutorialbutton = sf::Text(tutorialbutton_string, font);
 			}
 			else  if (!strcmp(tool.name(), "TutorialButton") && !strcmp(attr.name(), "Size")) {	
 				tutorialbutton_size =std::strtol(attr.value(), &temp, 10);
 				tutorialbutton.setCharacterSize(tutorialbutton_size);
-				tutorialbutton.setPosition(Configuration::getWindowWidth()/2 - tutorialbutton.getGlobalBounds().width/2, Configuration::getWindowHeight()/2  - tutorialbutton.getGlobalBounds().height/2 - 50);
+				tutorialbutton.setPosition(Configuration::getWindowWidth()/2 - tutorialbutton.getGlobalBounds().width/2 + 300, Configuration::getWindowHeight()/2  - tutorialbutton.getGlobalBounds().height/2);
 				if (*temp != '\0') {
 					std::cout << "TitleView::Create: Error reading attribute for " << tool.name() << " " << attr.name() << std::endl;
 				}
 			}
+			else if (!strcmp(tool.name(), "TutorialButton") && !strcmp(attr.name(), "Level")) {
+				tutoriallevel = attr.value();
+			}
 			else if (!strcmp(tool.name(), "IntroButton") && !strcmp(attr.name(), "Text")) {
 				introbutton_string = attr.value();
-				introbutton = sf::Text(Tutorialbutton_string, font);
+				introbutton = sf::Text(introbutton_string, font);
+			}
+			else if (!strcmp(tool.name(), "IntroButton") && !strcmp(attr.name(), "Dialogue")) {
+				introdialogue = attr.value();
 			}
 			else  if (!strcmp(tool.name(), "IntroButton") && !strcmp(attr.name(), "Size")) {	
 				introbutton_size =std::strtol(attr.value(), &temp, 10);
 				introbutton.setCharacterSize(tutorialbutton_size);
-				introbutton.setPosition(Configuration::getWindowWidth()/2 - introbutton.getGlobalBounds().width/2 - 50, Configuration::getWindowHeight()/2  - introbutton.getGlobalBounds().height/2 - 50);
+				introbutton.setPosition(Configuration::getWindowWidth()/2 - introbutton.getGlobalBounds().width/2 - 300, Configuration::getWindowHeight()/2  - introbutton.getGlobalBounds().height/2);
 				if (*temp != '\0') {
 					std::cout << "TitleView::Create: Error reading attribute for " << tool.name() << " " << attr.name() << std::endl;
 				}
 			}
-=======
-    //Iterates over XML to get components to add
-    for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
-        char* temp;	
-        for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
-            if (!strcmp(tool.name(), "PlayButton") && !strcmp(attr.name(), "Text")) {
-              	playbutton_string = attr.value();
-		playbutton = sf::Text(playbutton_string, font);
-            }
-		else  if (!strcmp(tool.name(), "PlayButton") && !strcmp(attr.name(), "Size")) {	
-		playbutton_size =std::strtol(attr.value(), &temp, 10);
-		playbutton.setCharacterSize(playbutton_size);
-		playbutton.setPosition(Configuration::getWindowWidth()/2 - playbutton.getGlobalBounds().width/2, Configuration::getWindowHeight()/2  - playbutton.getGlobalBounds().height/2 -20);
-                if (*temp != '\0') {
-                    std::cout << "TitleView::Create: Error reading attribute for " << tool.name() << " " << attr.name() << std::endl;
-                }
->>>>>>> 01eb160659bf8f9dc466198c993be4749165cf22
 		}
-	}
-	
+	}	
 }
 
 /** Checks to see if level was clicked on and switches to it
  **
  **/
 void TitleView::update(sf::RenderWindow *window, int* state, float time) {
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !playbutton_pressed) {
-        playbutton_pressed = true;
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
+        pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
 	    if (playbutton.getGlobalBounds().contains(pos.x, pos.y)) {
+		view_state = 0;
 		*state = 0;
+		view_state = 1;
 	    }
+		else if (introbutton.getGlobalBounds().contains(pos.x, pos.y)) {
+			view_state = 0;
+			render(window);
+			DialogueView::Create(introdialogue.c_str(), state);
+			*state = 2;
+			view_state = 1;
+		}
+		else if (tutorialbutton.getGlobalBounds().contains(pos.x, pos.y)) {
+			view_state = 0;
+			render(window);
+			int fireflowers_count = 1;
+			int earthflowers_count = 1;
+			int airflowers_count = 1;
+			int waterflowers_count = 1;
+			int flowers[] = {fireflowers_count, earthflowers_count, airflowers_count, waterflowers_count};
+			LevelView::Create(tutoriallevel.c_str(), state, flowers);
+			LevelView::start();
+			*state = 1;
+			view_state = 1;
+		}
+		
     }
     else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
-        playbutton_pressed = false;
+        pressed = false;
     }
 }
 
@@ -130,7 +142,16 @@ void TitleView::update(EventInterfacePtr e) {
 /** Renders the title onto the window
  **
  **/
-void TitleView::render(sf::RenderWindow *window) {	
-	window->draw(background);
-	window->draw(playbutton);
+void TitleView::render(sf::RenderWindow *window) {
+	if (view_state == 0) {
+		window->clear(sf::Color::White);
+		window->draw(Configuration::getLoadingSprite());
+		window->display();
+	}
+	else if (view_state == 1) {	
+		window->draw(background);
+		window->draw(playbutton);
+		window->draw(introbutton);
+		window->draw(tutorialbutton);
+	}
 }

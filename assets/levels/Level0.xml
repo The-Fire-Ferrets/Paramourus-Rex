@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
-<Level0 Name = "InitPlayer" Background = "Level0.png" Edge = "Lava.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "10" Duration = "10000">
+<Level0 Name = "Introduction" Background = "Level0.png" Edge = "Lava.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "10" Duration = "10000">
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Player>
 	<FireFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</FireFlower>
+	<Commentary>
+		<Dialogue Text = "Hey Phil! I'm going to try to help you win Dianna's heart. First, you'll need to collect some elemental flowers. Try to find one.. ps. top right corner may help!" />
+	</Commentary>
 </Level0>

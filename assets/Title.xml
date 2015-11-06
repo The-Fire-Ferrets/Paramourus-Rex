@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Title Background = "Title.png" Font = "arial.ttf">
 	<PlayButton Text = "Play Game!" Size = "50"/>
-	<TutorialButton Text="Tutorial" Size="50"/>
-	<IntroButton Text= "Introduction" Size="50"/>
+	<TutorialButton Level = "Level0" Text="Tutorial" Size="30"/>
+	<IntroButton Dialogue = "Level0" Text= "Introduction" Size="30"/>
 </Title>

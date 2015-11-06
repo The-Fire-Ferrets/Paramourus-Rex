@@ -7,6 +7,10 @@
 // Total size of pointer arrays
 const int DialogueView::size = 20;
 
+// Dialogue name
+std::string DialogueView::name;
+//State of view 0 = intro; 1 = normal
+int DialogueView::view_state = 1;
 // DIALOGUE VARIABLES
 // Total number of dialogue boxes
 int DialogueView::numDialogues = 0;
@@ -54,7 +58,10 @@ void DialogueView::Create(const char* resource, int* state){
 
 	pugi::xml_parse_result result;
 	std::string fileString(resource);
-
+	name = fileString;
+	if (name == "Level0") {
+		view_state = 2;
+	}
 	// Checks to make sure XML file exists and was correctly loaded
 	if (!(result = doc.load_file(("./assets/dialogue/" + fileString + ".xml").c_str()))){
 		std::cout << "DialogueView::Create(...): Failed to load" << std::endl;
@@ -196,7 +203,10 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 			pressed = true;
 			std::cout << index << " " << boxes.size() << std::endl;
 			if (index >= boxes.size()){
-				*state = 0;
+				if (view_state == 1)
+					*state = 0;
+				else if (view_state == 2)
+					*state = 5;
 				cleanUp();
 			}
 			else{

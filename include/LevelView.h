@@ -26,6 +26,11 @@ class LevelView  { friend class AI;
 		static int duration;
 		static sf::SoundBuffer buffer;
 		static sf::Sound sound;
+		static int view_state;
+		static sf::Text commentary;
+		static std::vector<sf::Vector2f> commentary_positions;
+		static std::vector<std::string> commentary_strings;
+		static std::string fitStringToCommentaryBox(std::string str);
 
 	public:
 		static std::vector<StrongActorPtr> actorList;	
