@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include <algorithm> // std::equal(), std::sort()
+#include <iostream>
 
 /** Returns the distance between the points p and q
  **/
@@ -42,6 +43,11 @@ std::vector<std::string> split(std::string str, char delim) {
  **
  **/
 bool have_equivalent_strings(std::vector<std::string> lhs, std::vector<std::string> rhs) {
+	// trivial check
+	if (lhs.size() != rhs.size()) {
+		return false;
+	}
+
 	// sort the input vectors
 	std::sort(lhs.begin(), lhs.end());
 	std::sort(rhs.begin(), rhs.end());
