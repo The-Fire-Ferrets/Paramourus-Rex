@@ -1,6 +1,8 @@
 #include "CraftView.h"
 #include "CraftEvent.h"
 
+//Create delegate
+EventDelegate CraftView::delegate = NULL;
 //Total size of pointer arrays
 const int CraftView::size = 20;
 
@@ -83,7 +85,8 @@ void CraftView::Create(const char* resource, int* state) {
     //Holds referenced to loaded XML file	
     totalFlowers = 0;
     pugi::xml_document doc;
-
+	if (delegate == NULL)
+		delegate.bind(&CraftView::update);
 	if (!has_delegates) {
 		CraftView::addDelegate(CraftEvent::event_type);
 		has_delegates = true;
@@ -292,7 +295,7 @@ int CraftView::getNumFlowers(void) {
  **
  **/
 void CraftView::update(sf::RenderWindow *window, int* state) {
-  
+  	EventManagerInterface::setViewDelegate(delegate);
       // Anticipates clicking in different areas of the screen 
       if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
@@ -453,14 +456,15 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 void CraftView::update(EventInterfacePtr e) {
 	// fiugre out who just got crafted so we can display their new state
 	EventType event_type = e->getEventType();
-	StrongActorPtr sender = CraftView::getFlower(e->getSender());
-
-	// item crafting completed
-	if (event_type == CraftEvent::event_type) {
-		StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
-		text.setString("Diana's sure to love this new " + ac->getType() + ", Phil!");
-	}
+	if (e->getReceiver() == -1) {
+		StrongActorPtr sender = CraftView::getFlower(e->getSender());
+		// item crafting completed
+		if (event_type == CraftEvent::event_type) {
+			StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
+			text.setString("Diana's sure to love this new " + ac->getType() + ", Phil!");
+		}
 	
+<<<<<<< HEAD
 		   
 	std::cout << "CraftView::Update: attempting to craft flower " + sender->getId();
 
@@ -485,6 +489,33 @@ void CraftView::update(EventInterfacePtr e) {
 	    else if (sender->getId() == "Magnolia"){
 			  magnolias++;
 	    }
+=======
+			   
+		std::cout << "CraftView::Update: attempting to craft flower " + selectedActor1->getId();
+
+		if (selectedActor1->getId() == "Sunflower"){
+		    sunFlowers++;
+		}
+		else if (selectedActor1->getId() == "Tulip"){
+			  tulips++;
+		    }
+		    else if (selectedActor1->getId() == "Rose"){
+				  roses++;
+		    }
+		    else if (selectedActor1->getId() == "Violet"){
+				  violets++;
+		    }
+		    else if (selectedActor1->getId() == "Lily"){
+				  lilies++;
+		    }
+		    else if (selectedActor1->getId() == "Orchid"){
+				  orchids++;
+		    }
+		    else if (selectedActor1->getId() == "Magnolia"){
+				  magnolias++;
+		    }
+	}
+>>>>>>> f3a7c012be110d90e9ceccb6fff8158382a949fd
 }
 
 /** Renders the backdrop and menu selects onto the window, as well as option to
@@ -607,7 +638,6 @@ bool CraftView::removeFlower(StrongActorPtr flower) {
  **
  **/
 void CraftView::addDelegate(EventType type) {
-	EventDelegate delegate;  delegate.bind(&CraftView::update);
 	CraftView::delegateFuncList.push_back(delegate);
 	if (!EventManagerInterface::get()->addDelegate(delegateFuncList.back(), EventInstance(type, -1))) {
 		std::cout << "CraftView::Create: Unable to register delegate function" << std::endl;

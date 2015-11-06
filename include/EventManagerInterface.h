@@ -26,6 +26,11 @@ class EventManagerInterface {
 
 		static EventManagerInterfacePtr get(void);
 		static void set(EventManagerInterfacePtr manager);
+
+		static void setViewDelegate(const EventDelegate& d);
+
+	protected:
+		static EventDelegate currentViewDelegate;
 };
 #endif
 

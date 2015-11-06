@@ -134,7 +134,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		components[tool.name()]->PostInit(&tool);
 	}
 	else {
-		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
+		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {;
 			if (!use_vertexarray) {
 			    if (!strcmp(attr.name(),"X")) {
 				position.x = std::strtol(attr.value(), &temp, 10);
@@ -157,7 +157,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 			    else if (!strcmp(attr.name(),"Height")) {
 				size.y = std::strtol(attr.value(), &temp, 10);
 				if (*temp != '\0') {
-				    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+				    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
 				}
 			    }
 			else if (!strcmp(attr.name(),"Damage")) {

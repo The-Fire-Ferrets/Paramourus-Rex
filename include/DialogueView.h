@@ -8,6 +8,7 @@
 class DialogueView {
 
 	private:
+		static std::string name;
 		static int numDialogues;
 		static const int size;
 		static int index;
@@ -35,6 +36,7 @@ class DialogueView {
 
 		static sf::SoundBuffer buffer;
 		static sf::Sound sound;
+		static int view_state;
 
 	public:
 		static std::vector<std::string> boxes;     // what gets displayed on screen

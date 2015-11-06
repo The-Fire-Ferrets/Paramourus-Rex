@@ -1,5 +1,6 @@
 #include "LevelView.h"
 
+EventDelegate LevelView::delegate = NULL;
 //Total size of pointer arrays
 const int LevelView::size = 20;
 //Number of actors populating the level
@@ -36,11 +37,17 @@ StrongActorPtr LevelView::player = NULL;
 int LevelView::duration;
 //Minimap border
 sf::Sprite LevelView::minimap_border;
-
+//State
+int LevelView::view_state = 1;
 // level music
 sf::SoundBuffer LevelView::buffer;
 sf::Sound LevelView::sound;
-
+// Level text
+sf::Text LevelView::commentary;
+std::vector<sf::Vector2f> LevelView::commentary_positions;
+std::vector<std::string> LevelView::commentary_strings;
+bool LevelView::commentary_change = true;
+std::vector<pugi::xml_node> LevelView::spawn;
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -48,6 +55,9 @@ sf::Sound LevelView::sound;
 void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	//Reference to current location in Actor population array
 	//Holds referenced to loaded XML file	
+	if (delegate == NULL) {
+		delegate.bind(&LevelView::update);
+	}
 	num_actors = 0;
 	pugi::xml_document doc;
 
@@ -63,8 +73,12 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	pugi::xml_node tools = doc.child(resource);
 	char* temp;
 	for (pugi::xml_attribute attr = tools.first_attribute(); attr; attr = attr.next_attribute()) {
-		if (!strcmp(attr.name(), "Name"))
+		if (!strcmp(attr.name(), "Name")) {
 			name = attr.value();
+			if (!strcmp(attr.value(), "Introduction") && *state == 5) {
+				view_state = 2;
+			}
+		}
 		else if (!strcmp(attr.name(), "Background")) {
 			background_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
 			background = sf::Sprite(background_texture, sf::IntRect(0, 0, background_texture.getSize().x, background_texture.getSize().y));
@@ -109,11 +123,25 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	timer.setPosition(timer_position);
 	//Iterates over XML to get components to add
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
-		if (!strcmp(tool.name(), "Player") && player == NULL) {		
-			actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-			(actorList.back())->PostInit(&tool);
+		if (!strcmp(tool.name(), "Commentary")) {
+			commentary.setCharacterSize(5);			
+			for (pugi::xml_node tool1 = tool.first_child(); tool1; tool1 = tool1.next_sibling()) {
+				for (pugi::xml_node tool2 = tool1.first_child(); tool2; tool2 = tool2.next_sibling()) {
+					if (!strcmp(tool2.name(), "Dialogue")) {
+						for (pugi::xml_attribute attr = tool2.first_attribute(); attr; attr = attr.next_attribute()) {
+							commentary_strings.push_back(fitStringToCommentaryBox(attr.value()));
+						}
+					}
+					else {
+						spawn.push_back(tool2);
+					}
+				}
+			}
+			commentary = sf::Text(commentary_strings.front(), font, 5);
+		}
+		else if (!strcmp(tool.name(), "Player") && player == NULL) {		
+			generateActor(&tool, state);
 			player = (actorList.back());
-			num_actors++;
 		}
 		else if (!strcmp(tool.name(), "Player")) {
 			actorList.push_back(player);
@@ -125,36 +153,28 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 				int count = flowers[3];
 				//int count = 1;
 				while(count-- > 0) {
-					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-					(actorList.back())->PostInit(&tool);
-					num_actors++;
+					generateActor(&tool, state);
 				}
 			}
 			else if (!strcmp(tool.name(), "FireFlower")) {
 				int count = flowers[0];
 				//int count  = 0;
 				while(count-- > 0) {
-					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-					(actorList.back())->PostInit(&tool);
-					num_actors++;
+					generateActor(&tool, state);
 				}
 			}
 			else if (!strcmp(tool.name(), "EarthFlower")) {
 				int count = flowers[1];
 				//int count = 0;
 				while(count-- > 0) {
-					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-					(actorList.back())->PostInit(&tool);
-					num_actors++;
+					generateActor(&tool, state);
 				}
 			}
 			else if (!strcmp(tool.name(), "AirFlower")) {
 				int count = flowers[2];
 				//int count = 0;
 				while(count-- > 0) {
-					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-					(actorList.back())->PostInit(&tool);
-					num_actors++;
+					generateActor(&tool, state);
 				}
 			}
 			else {
@@ -168,9 +188,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 					}
 				}
 				while (generate-- > 0) {
-					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-					(actorList.back())->PostInit(&tool);
-					num_actors++;
+					generateActor(&tool, state);
 				}
 			}
 		}
@@ -192,6 +210,12 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	sound.play();
 }
 
+void LevelView::generateActor(pugi::xml_node* elem, int* state) {
+	actorList.push_back(ActorFactory::CreateActor(elem->name(), state));
+	(actorList.back())->PostInit(elem);
+	num_actors++;
+}
+
 std::string LevelView::getName(void) {
 	return name;
 }
@@ -204,13 +228,29 @@ int LevelView::getNumActors(void) {
  **
  **/
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
+	EventManagerInterface::setViewDelegate(delegate);
 	float timer_time = duration - level_clock.getElapsedTime().asMilliseconds();
 
 	if (timer_time <= 0) {
-		*state = 2;
+		if (view_state == 1)
+			*state = 2;
+		else if (view_state == 2) {
+			view_state = 1;
+			LevelView::player->reset();
+			*state = 5;
+		}
 		cleanUp();
 	}
 	else {
+		if (view_state == 2) {
+			if (commentary_change) {
+				pugi::xml_node n = spawn.front();
+				generateActor(&n, state);
+				commentary_change = false;
+			}
+			commentary.setString(commentary_strings.front());
+			commentary.setPosition(Configuration::getGameViewCenter());
+		}
 		std::ostringstream out;
 		out << std::setprecision(2) << std::fixed << timer_time/1000;
 		timer_string = out.str();
@@ -230,11 +270,15 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 
 /** Checks for events and update accordingly
  **
- *
- void LevelView::update(EventInterfacePtr e) {
-
- }
  */
+void LevelView::update(EventInterfacePtr e) {
+	if (view_state == 2) {
+		EventType event_type = e->getEventType();
+		if (e->getReceiver() == LevelView::player->getInstance() && event_type == ContactEvent::event_type) {
+			commentary_strings.erase(commentary_strings.begin());		
+		}
+	}
+}
 
 /** Renders the map onto the window
 **
@@ -257,6 +301,9 @@ void LevelView::render(sf::RenderWindow *window) {
 		(*it)->render(window, false);
 	player->render(window, false);
 	window->draw(timer);
+	if (view_state == 2) {
+		window->draw(commentary);
+	}
 
 	//Set minimap view
 	minimapView.setViewport(sf::FloatRect(.9, 0, .1, .1));
@@ -325,4 +372,69 @@ void LevelView::cleanUp(void) {
  **/
 void LevelView::quit(void) {
 	cleanUp();
+}
+
+std::string LevelView::fitStringToCommentaryBox(std::string str) {
+	// get dialogue box bound
+	int width = Configuration::getGameViewWidth() / 2;
+	int height = Configuration::getGameViewHeight() / 2;
+	int beginX = 0;
+	int beginY = 0;
+	commentary_positions.push_back(sf::Vector2f(beginX, beginY));
+	int endX = beginX+width;
+	int max_width = endX-beginX;
+
+	int endY = beginY+height;
+	int max_height = (endY-beginY);
+
+	// text object used to see how close each word puts us to the bounds
+	sf::Text temp;
+	temp.setFont(font);
+	temp.setCharacterSize(commentary.getCharacterSize());
+
+	// current string and width
+	std::vector<std::string> boxes;
+	std::string fitted_string = "";
+	float current_width = 0.f;
+	float word_width = 0.f, word_height = 0.f;
+	// split the dialogue into words;
+	std::vector<std::string> words = split(str, ' ');
+
+	// for each word...
+	for (std::string word : words) {
+		// get the bounding box
+		temp.setString(word + " ");
+		word_width = temp.findCharacterPos(temp.getString().getSize()).x;
+
+		// general word height (changes, hence the max)
+		sf::FloatRect bounds = temp.getGlobalBounds();
+		int line_spacing = font.getLineSpacing(temp.getCharacterSize());
+		word_height = std::max(bounds.height-bounds.top+line_spacing, word_height);
+
+		// the height of the full string so far
+		temp.setString(fitted_string);
+		float full_height = temp.getGlobalBounds().height - temp.getGlobalBounds().top;
+
+		// will it go past the horizontal bound?
+		if (current_width + word_width > max_width) {
+			// will it go past the vertical bound?
+			if (max_height - full_height < word_height) {
+				boxes.push_back(fitted_string);
+				fitted_string = word + " ";
+				current_width = word_width;
+			}
+			else {
+				fitted_string += "\n" + word + " ";
+				current_width = word_width;
+			}
+		}
+		else {
+			// just add to string
+			fitted_string += word + " ";
+			current_width += word_width;
+		}
+	}
+	boxes.push_back(fitted_string);
+	// done
+	return boxes.front();
 }

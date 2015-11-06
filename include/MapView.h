@@ -16,6 +16,9 @@ class MapView {
 		static std::string levels[];
 		static sf::Sprite sprites[];
 		static sf::Texture textures[];
+		static sf::Sprite title_sprite;
+		static sf::Texture title_texture;
+		static sf::Vector2f title_size;		
 		static sf::Vector2f positions[];
 		static sf::Vector2f sizes[];
 		static float fireflowers[];
@@ -34,6 +37,7 @@ class MapView {
 		static bool reset;
 		static void resetPopulationValues(void);
 		static int view_state;
+		static EventDelegate delegate;
 	public:
 		static void Create(const char* resource);
 

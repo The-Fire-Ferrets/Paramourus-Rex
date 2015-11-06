@@ -26,8 +26,17 @@ class LevelView  { friend class AI;
 		static int duration;
 		static sf::SoundBuffer buffer;
 		static sf::Sound sound;
+		static int view_state;
+		static sf::Text commentary;
+		static std::vector<sf::Vector2f> commentary_positions;
+		static std::vector<std::string> commentary_strings;
+		static std::string fitStringToCommentaryBox(std::string str);
+		static EventDelegate delegate;
+		static bool commentary_change;
+		static std::vector<pugi::xml_node> spawn;
 
 	public:
+		static void generateActor(pugi::xml_node* elem, int* state);
 		static std::vector<StrongActorPtr> actorList;	
 		static StrongActorPtr player;
 		static std::string getName(void);

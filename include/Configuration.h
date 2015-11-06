@@ -28,6 +28,7 @@ class Configuration
 
 		static unsigned int getGameViewWidth();
 		static unsigned int getGameViewHeight();
+		static sf::Vector2f getGameViewPosition(void);
 		static sf::Vector2f getGameViewCenter();
 
 		static sf::Texture getMinimapBorder(void);

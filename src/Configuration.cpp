@@ -88,6 +88,9 @@ unsigned int Configuration::getMiniMapViewWidth() {
     return minimapview_width;
 }
 
+sf::Vector2f Configuration::getGameViewPosition(void) {
+	return sf::Vector2f(gameview_center.x - gameview_width/2, gameview_center.y - gameview_height/2);
+}
 /** Returns the height of the game window
  **
  **/
