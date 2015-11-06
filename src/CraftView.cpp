@@ -463,9 +463,6 @@ void CraftView::update(EventInterfacePtr e) {
 			StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
 			text.setString("Diana's sure to love this new " + ac->getType() + ", Phil!");
 		}
-	
-<<<<<<< HEAD
-		   
 	std::cout << "CraftView::Update: attempting to craft flower " + sender->getId();
 
 	if (sender->getId() == "SunFlower"){
@@ -489,33 +486,7 @@ void CraftView::update(EventInterfacePtr e) {
 	    else if (sender->getId() == "Magnolia"){
 			  magnolias++;
 	    }
-=======
-			   
-		std::cout << "CraftView::Update: attempting to craft flower " + selectedActor1->getId();
-
-		if (selectedActor1->getId() == "Sunflower"){
-		    sunFlowers++;
-		}
-		else if (selectedActor1->getId() == "Tulip"){
-			  tulips++;
-		    }
-		    else if (selectedActor1->getId() == "Rose"){
-				  roses++;
-		    }
-		    else if (selectedActor1->getId() == "Violet"){
-				  violets++;
-		    }
-		    else if (selectedActor1->getId() == "Lily"){
-				  lilies++;
-		    }
-		    else if (selectedActor1->getId() == "Orchid"){
-				  orchids++;
-		    }
-		    else if (selectedActor1->getId() == "Magnolia"){
-				  magnolias++;
-		    }
 	}
->>>>>>> f3a7c012be110d90e9ceccb6fff8158382a949fd
 }
 
 /** Renders the backdrop and menu selects onto the window, as well as option to
