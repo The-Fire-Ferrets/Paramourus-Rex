@@ -4,7 +4,7 @@
 	<EarthFlower Type = "EarthFlower" Sprite = "EarthFlower.png" Components = "Earth"/>
 	<FireFlower  Type = "FireFlower"  Sprite = "FireFlower.png"  Components = "Fire"/>
 	<AirFlower   Type = "AirFlower"	  Sprite = "AirFlower.png"   Components = "Air"/>
-	<Sunflower   Type = "Sunflower"   Sprite = "Sunflower.png"   Components = "Fire Fire"/>
+	<SunFlower   Type = "SunFlower"   Sprite = "SunFlower.png"   Components = "Fire Fire"/>
 	<Tulip       Type = "Tulip"		  Sprite = "Tulip.png"	     Components = "Water Air"/>
 	<Rose        Type = "Rose"        Sprite = "Rose.png"        Components = "Fire Air"/>
 	<Violet      Type = "Violet"      Sprite = "Violet.png"      Components = "Fire Water"/>

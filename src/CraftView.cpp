@@ -376,9 +376,10 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	   
 	   // Clear sprite image, add newly combined sprite to inventory?
 	   if (actor1CC->doesCombineWith(*actor2CC)){
+		   std::cout << "combining" << std::endl;
 	      box1 = false;
 	      box2 = false;
-	      actor1CC->combineWith(*actor2CC); 
+	      //actor1CC->combineWith(*actor2CC); 
 	      if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0, selectedActor1->getInstance(), selectedActor2->getInstance())))
 		std::cout << "CraftView::update: Unable to queue event" << std::endl;	
 		std::cout << "Sent craft event to Flower: " << selectedActor1->getInstance() << " and Flower: " << selectedActor2->getInstance() << std::endl;
@@ -463,31 +464,29 @@ void CraftView::update(EventInterfacePtr e) {
 			StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
 			text.setString("Diana's sure to love this new " + ac->getType() + ", Phil!");
 		}
-	
-			   
-		std::cout << "CraftView::Update: attempting to craft flower " + selectedActor1->getId();
+	std::cout << "CraftView::Update: attempting to craft flower " + sender->getId();
 
-		if (selectedActor1->getId() == "Sunflower"){
-		    sunFlowers++;
-		}
-		else if (selectedActor1->getId() == "Tulip"){
-			  tulips++;
-		    }
-		    else if (selectedActor1->getId() == "Rose"){
-				  roses++;
-		    }
-		    else if (selectedActor1->getId() == "Violet"){
-				  violets++;
-		    }
-		    else if (selectedActor1->getId() == "Lily"){
-				  lilies++;
-		    }
-		    else if (selectedActor1->getId() == "Orchid"){
-				  orchids++;
-		    }
-		    else if (selectedActor1->getId() == "Magnolia"){
-				  magnolias++;
-		    }
+	if (sender->getId() == "SunFlower"){
+	    sunFlowers++;
+	}
+	else if (sender->getId() == "Tulip"){
+		  tulips++;
+	    }
+	    else if (sender->getId() == "Rose"){
+			  roses++;
+	    }
+	    else if (sender->getId() == "Violet"){
+			  violets++;
+	    }
+	    else if (sender->getId() == "Lily"){
+			  lilies++;
+	    }
+	    else if (sender->getId() == "Orchid"){
+			  orchids++;
+	    }
+	    else if (sender->getId() == "Magnolia"){
+			  magnolias++;
+	    }
 	}
 }
 
