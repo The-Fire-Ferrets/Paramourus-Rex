@@ -33,6 +33,7 @@ class LevelView  { friend class AI;
 		static std::string fitStringToCommentaryBox(std::string str);
 
 	public:
+		static void generateActor(pugi::xml_node* elem, int* state);
 		static std::vector<StrongActorPtr> actorList;	
 		static StrongActorPtr player;
 		static std::string getName(void);

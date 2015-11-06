@@ -128,51 +128,39 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			commentary = sf::Text(commentary_strings.front(), font, 5);
 		}
 		else if (!strcmp(tool.name(), "Player") && player == NULL) {		
-			actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-			(actorList.back())->PostInit(&tool);
+			generateActor(&tool, state);
 			player = (actorList.back());
-			num_actors++;
 		}
 		else if (!strcmp(tool.name(), "Player")) {
-			actorList.push_back(player);
-			(actorList.back())->PostInit(&tool);
-			num_actors++;
+			generateActor(&tool, state);
 		}
 		else {
 			if (!strcmp(tool.name(), "WaterFlower")) {
 				int count = flowers[3];
 				//int count = 1;
 				while(count-- > 0) {
-					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-					(actorList.back())->PostInit(&tool);
-					num_actors++;
+					generateActor(&tool, state);
 				}
 			}
 			else if (!strcmp(tool.name(), "FireFlower")) {
 				int count = flowers[0];
 				//int count  = 0;
 				while(count-- > 0) {
-					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-					(actorList.back())->PostInit(&tool);
-					num_actors++;
+					generateActor(&tool, state);
 				}
 			}
 			else if (!strcmp(tool.name(), "EarthFlower")) {
 				int count = flowers[1];
 				//int count = 0;
 				while(count-- > 0) {
-					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-					(actorList.back())->PostInit(&tool);
-					num_actors++;
+					generateActor(&tool, state);
 				}
 			}
 			else if (!strcmp(tool.name(), "AirFlower")) {
 				int count = flowers[2];
 				//int count = 0;
 				while(count-- > 0) {
-					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-					(actorList.back())->PostInit(&tool);
-					num_actors++;
+					generateActor(&tool, state);
 				}
 			}
 			else {
@@ -186,9 +174,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 					}
 				}
 				while (generate-- > 0) {
-					actorList.push_back(ActorFactory::CreateActor(tool.name(), state));
-					(actorList.back())->PostInit(&tool);
-					num_actors++;
+					generateActor(&tool, state);
 				}
 			}
 		}
@@ -208,6 +194,12 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	sound.setBuffer(buffer);
 	sound.setLoop(true);
 	sound.play();
+}
+
+void LevelView::generateActor(pugi::xml_node* elem, int* state) {
+	actorList.push_back(ActorFactory::CreateActor(elem->name(), state));
+	(actorList.back())->PostInit(elem);
+	num_actors++;
 }
 
 std::string LevelView::getName(void) {
