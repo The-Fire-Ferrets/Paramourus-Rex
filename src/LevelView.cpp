@@ -46,7 +46,8 @@ sf::Sound LevelView::sound;
 sf::Text LevelView::commentary;
 std::vector<sf::Vector2f> LevelView::commentary_positions;
 std::vector<std::string> LevelView::commentary_strings;
-
+bool LevelView::commentary_change = true;
+std::vector<pugi::xml_node> LevelView::spawn;
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -125,8 +126,15 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 		if (!strcmp(tool.name(), "Commentary")) {
 			commentary.setCharacterSize(5);			
 			for (pugi::xml_node tool1 = tool.first_child(); tool1; tool1 = tool1.next_sibling()) {
-				for (pugi::xml_attribute attr = tool1.first_attribute(); attr; attr = attr.next_attribute()) {						
-					commentary_strings.push_back(fitStringToCommentaryBox(attr.value()));
+				for (pugi::xml_node tool2 = tool1.first_child(); tool2; tool2 = tool2.next_sibling()) {
+					if (!strcmp(tool2.name(), "Dialogue")) {
+						for (pugi::xml_attribute attr = tool2.first_attribute(); attr; attr = attr.next_attribute()) {
+							commentary_strings.push_back(fitStringToCommentaryBox(attr.value()));
+						}
+					}
+					else {
+						spawn.push_back(tool2);
+					}
 				}
 			}
 			commentary = sf::Text(commentary_strings.front(), font, 5);
@@ -235,6 +243,11 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	}
 	else {
 		if (view_state == 2) {
+			if (commentary_change) {
+				pugi::xml_node n = spawn.front();
+				generateActor(&n, state);
+				commentary_change = false;
+			}
 			commentary.setString(commentary_strings.front());
 			commentary.setPosition(Configuration::getGameViewCenter());
 		}
@@ -259,7 +272,12 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
  **
  */
 void LevelView::update(EventInterfacePtr e) {
-	std::cout << "HERE" << std::endl;
+	if (view_state == 2) {
+		EventType event_type = e->getEventType();
+		if (e->getReceiver() == LevelView::player->getInstance() && event_type == ContactEvent::event_type) {
+			commentary_strings.erase(commentary_strings.begin());		
+		}
+	}
 }
 
 /** Renders the map onto the window
