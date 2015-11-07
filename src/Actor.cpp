@@ -193,6 +193,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		}
 	    }
 	    position = pos;
+		start_pos = position;
 		boundary.clear();
 	    boundary.push_back(new sf::FloatRect(position.x, position.y, size.x, size.y));
 		for (int i = 0; i < num_directions; i++) {
@@ -222,10 +223,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 			
 	}
 	
-	if (!initial_postinit) {
-		
-	}
-	initial_postinit = false;
+	
 }
 
 void Actor::PostInit(void) {
@@ -420,6 +418,9 @@ void Actor::updateBoundary(void) {
 
 // Mutators and accesors
 
+sf::Vector2f Actor::getStartPos(void) {
+	return start_pos;
+}
 /** returns the actors boundary
  **
  **/

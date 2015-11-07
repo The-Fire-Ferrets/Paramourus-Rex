@@ -1,7 +1,6 @@
 #include "InputComponent.h"
 #include "PhysicsComponent.h"
 #include "CollectorComponent.h"
-#include "AI.h"
 #include <algorithm> // std::find()
 
 #include <SFML/Window/Keyboard.hpp> // sf::Keyboard, sf::Key
@@ -85,15 +84,12 @@ bool InputComponent::Init(pugi::xml_node* elem) {
 bool InputComponent::PostInit(pugi::xml_node* elem) {
 	if (elem != NULL)
 	Init(elem);
-	ai.setNPCPosition(owner->getPosition());
-	ai.owner = owner;
 	first_postinit = true;
 	return true;
 }
 
 bool InputComponent::PostInit(void) {
-	ai.setNPCPosition(owner->getPosition());
-	ai.generatePath();
+
 }
 
 /** Updates the component's attributes
@@ -111,11 +107,10 @@ void InputComponent::update(float time) {
     if (type == "Artificial") {
 	if (counter++ > 100) {
 		counter = 0;
-		ai.setNPCPosition(owner->getPosition());
 		std::vector<float> distances;
 		std::vector<sf::Vector2f> directions;
 		sf::Vector2f last_pos = owner->getPosition();
-		sf::Vector2f next_pos = ai.getNextPosition();
+		sf::Vector2f next_pos = Pathfinder::getNextPosition(owner->getStartPos());
 		if (last_pos.x < next_pos.x)
 			next_direction.x = 1;
 		else if (last_pos.x > next_pos.x)
@@ -133,10 +128,6 @@ void InputComponent::update(float time) {
 		
 		owner->move(next_pos, next_direction);
 	}
-	
-	//ai.chooseDirection(distance, &distances, &directions);
-	//direction = ai.chooseDirection(&distance);
-	//owner->move(distance, direction);
     }
 
     else if (type == "Keyboard") {
@@ -190,24 +181,6 @@ void InputComponent::update(EventInterfacePtr e) {
 			sf::Vector2f last_direction = getDirection();
 			StrongActorPtr other_actor =  EventManagerInterface::getActor(e->getSender());
 			std::cout << last_direction.x << " " << last_direction.y << std::endl;
-			if (other_actor->hasAttribute("Opaque")) {
-				if (last_direction.x == 1) {
-					ai.setDirectionBit(1);
-					ai.actor_direction[0] = other_actor;
-				}
-				else if (last_direction.x == -1) {
-					ai.setDirectionBit(2);
-					ai.actor_direction[1] = other_actor;
-				}
-				else if (last_direction.y == -1) {
-					ai.setDirectionBit(3);
-					ai.actor_direction[2] = other_actor;
-				}
-				else if (last_direction.y == 1) {
-					ai.setDirectionBit(4);
-					ai.actor_direction[3] = other_actor;
-				}
-			}
 		}
 	}
 }

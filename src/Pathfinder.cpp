@@ -12,12 +12,15 @@ int Pathfinder::level_width;
 int Pathfinder::player_size;
 //Flower locs
 std::vector<sf::Vector2i> Pathfinder::flowers;
-//Lists
-std::vector<Pathfinder::pathNode*> Pathfinder::open;
-std::vector<Pathfinder::pathNode*> Pathfinder::closed;
-Pathfinder::pathNode* Pathfinder::path = NULL;
+//start Position list
+std::vector<sf::Vector2i> Pathfinder::start_positions;
+//Paths
+std::map<std::pair<int, int>, Pathfinder::pathNode*> Pathfinder::paths;
 
 
+/** Constructs the grid and resets the lists
+ **
+**/
 void Pathfinder::Create(int lw, int lh, int ps) {
 	player_size = 10;
 	level_height = lh;
@@ -32,13 +35,14 @@ void Pathfinder::Create(int lw, int lh, int ps) {
 		for (int j = 0; j < cols; j++)
 			grid[i][j] = 0;
 	}
-
-	path = NULL;
-	open.clear();	
-	closed.clear();
-
+	paths.clear();
+	start_positions.clear();
+	flowers.clear();
 }
 
+/** Mapts the given boundary to the grid
+ **
+**/
 void Pathfinder::addToGrid(std::vector<sf::FloatRect*> bounds, int type) {
 	std::vector<sf::FloatRect*>::iterator itr;
 	for (itr = bounds.begin(); itr != bounds.end(); itr++) {
@@ -49,30 +53,42 @@ void Pathfinder::addToGrid(std::vector<sf::FloatRect*> bounds, int type) {
 
 		for (int i = top_left_row; i < bottom_right_row; i++)
 			for (int j = top_left_col; j < bottom_right_col; j++) {
-				grid[i][j] = type;
 				if (type == -2) {
 					flowers.push_back(sf::Vector2i(i,j));
+					grid[i][j] = type;
 				}
+				else if (type == -3) {
+					start_positions.push_back(sf::Vector2i(i,j));
+				}
+				else
+					grid[i][j] = type;
 			}
 	}
 			
 }
 
-void Pathfinder::generatePath(sf::Vector2f start_pos) {
-	if (path == NULL) {
-		std::cout << start_pos.x << " " << start_pos.y << std::endl;
-		sf::Vector2i pos = getPositionMapping(start_pos);
-		pathNode* root = new pathNode(std::pair<int, int>(pos.x, pos.y), 0 + getCost(start_pos)); 
-	
+/** Generates paths from all start positions to the flower
+ **
+**/
+void Pathfinder::generatePaths() {
+	std::vector<sf::Vector2i>::iterator itr;
+	for (itr = start_positions.begin(); itr != start_positions.end(); ++itr) {
+		sf::Vector2i pos = *itr;
+		std::vector<Pathfinder::pathNode*> open;
+		std::vector<Pathfinder::pathNode*> closed;
+		std::pair<int, int> pos_pair(pos.x, pos.y);
+		pathNode* root = new pathNode(pos_pair, 0 + getCost(pos_pair)); 
+		bool path_found = false;
 		open.push_back(root);
 		while (!open.empty()) {
 			pathNode* s = open.front();
 			open.erase(open.begin());
 			if (Pathfinder::getCost(s->pos) == 0) {
 				s ->next = NULL;
-				path = s->getRoot();
+				path_found = true;
 				std::cout << "Path Found!" << std::endl;
-				return;
+				paths.insert(std::pair<std::pair<int, int>, pathNode*>(pos_pair, s->getRoot()));
+				break;
 			}
 			closed.push_back(s);
 
@@ -84,25 +100,35 @@ void Pathfinder::generatePath(sf::Vector2f start_pos) {
 						(*itr)->cost =  rows*cols*rows*cols;
 						(*itr)->parent = NULL;
 					}
-					updateVertex(s, (*itr)); 
+					updateVertex(&open, &closed, s, (*itr)); 
 				}
 			}
 
 		}
-		std::cout << "No Path Found!" << std::endl;
-		return;
+		if (!path_found)
+			std::cout << "No Path Found!" << std::endl;
 	}
 	
 	
 }
 
-sf::Vector2f Pathfinder::getNextPosition(void) {
-	sf::Vector2f pos(path->pos.second * player_size, path->pos.first * player_size);
+/** Returns the next positions in the path from the given start position
+ **
+**/
+sf::Vector2f Pathfinder::getNextPosition(sf::Vector2f start_pos) {
+	sf::Vector2i pos = getPositionMapping(start_pos);
+	std::pair<int, int> pos_pair(pos.x, pos.y);
+
+	pathNode* path = paths[pos_pair];
+	sf::Vector2f pos_next(path->pos.second * player_size, path->pos.first * player_size);
 	if (path->next != NULL)
-		path = path->next;
-	return pos;
+		paths[pos_pair] = paths[pos_pair]->next;
+	return pos_next;
 }
 
+/** Used for Theta* algorithm to minimize search iterations and allow for travel over continuos grid
+ **
+**/
 bool Pathfinder::lineOfSight(pathNode* p_node, pathNode* c_node) {
 	int p_row = p_node->pos.first;
 	int p_col = p_node->pos.second;
@@ -173,55 +199,62 @@ bool Pathfinder::lineOfSight(pathNode* p_node, pathNode* c_node) {
 	return true;
 }
 
-void Pathfinder::updateVertex(pathNode* p_node, pathNode* c_node) {
+/** Updates the open and closed vertices
+ **
+**/
+void Pathfinder::updateVertex(std::vector<pathNode*>* open, std::vector<pathNode*>* closed, pathNode* p_node, pathNode* c_node) {
 	int old_cost = c_node->cost;
 	getFullCost(p_node, c_node);
 
-	if (c_node->cost < old_cost)
+	if (c_node->cost < old_cost) {
 		if (c_node->containedIn(open))
-			removeFromOpen(c_node);
-		open.push_back(new pathNode(c_node->pos, c_node->cost + getCost(c_node->pos), p_node));
+			removeFrom(open, c_node);
+		open->push_back(new pathNode(c_node->pos, c_node->cost + getCost(c_node->pos), p_node));
+	}
 }
 
-void Pathfinder::removeFromOpen(pathNode* n) {
+/** Removes a node from a node list
+ **
+**/
+void Pathfinder::removeFrom(std::vector<pathNode*>* l, pathNode* n) {
 	std::vector<pathNode*>::iterator itr;
-		for (itr = open.begin(); itr != open.end(); itr++) {
+		for (itr = l->begin(); itr != l->end(); itr++) {
 			if ((*itr)->pos == n->pos) {
-				open.erase(itr);
+				l->erase(itr);
 				return;
 			}
 		}
 }
+
+/** Updates the cost values for the given nodes
+ **
+**/
 void Pathfinder::getFullCost(pathNode* p_node, pathNode* c_node) {
-	//pathNode* pp_node = p_node->parent;
-	pathNode* pp_node = NULL;
+	pathNode* pp_node = p_node->parent;
 	if (pp_node != NULL && lineOfSight(pp_node, c_node)) {
-		//if (pp_node->cost + pp_node->distance(c_node) < c_node->cost) {
-		if (getCost(pp_node->pos) + pp_node->distance(c_node) < c_node->cost) {
+		if (pp_node->cost + pp_node->distance(c_node) < c_node->cost) {
 			c_node->parent = pp_node;
-			//c_node->cost = pp_node->cost + pp_node->distance(c_node);
-			c_node->cost = getCost(pp_node->pos) + pp_node->distance(c_node);
+			c_node->cost = pp_node->cost + pp_node->distance(c_node);
 		}
 	}
 	else {
-		//if (p_node->cost + c_node->distance(p_node) < c_node->cost) {
-		if (getCost(p_node->pos) + c_node->distance(p_node) < c_node->cost) {
+		if (p_node->cost + c_node->distance(p_node) < c_node->cost) {
 			c_node->parent = p_node;
-			//c_node->cost = p_node->cost +  c_node->distance(p_node);
-			c_node->cost = getCost(p_node->pos) + abs(c_node->cost - p_node->cost);
-			//c_node->cost = getCost(p_node->pos) + c_node->distance(p_node);
+			c_node->cost = p_node->cost +  c_node->distance(p_node);
 		}
 	}
 }
 
-void Pathfinder::reset(void) {
-	
-}
-
+/** Returns if the position is valid
+ **
+**/
 bool Pathfinder::isValidMove(std::pair<int, int> loc) {
 	return (loc.first < rows && loc.second < cols && loc.first >= 0 && loc.second >= 0 && grid[loc.first][loc.second] != -1);
 }
 
+/** Generates costs on the grid
+ **
+**/
 void Pathfinder::generateHCost(void) {
 	if (flowers.empty())
 		return;
@@ -231,6 +264,9 @@ void Pathfinder::generateHCost(void) {
 	generateHCost_helper(left);	
 }
 
+/** Gets the cost of the position on the grid
+ **
+**/
 int Pathfinder::getCost(sf::Vector2f pos, sf::Vector2f dir) {
 	sf::Vector2i grid_pos = getPositionMapping(pos);
 	grid_pos.x += dir.y;
@@ -251,7 +287,9 @@ int Pathfinder::getCost(sf::Vector2f pos, sf::Vector2f dir) {
 		
 }
 
-
+/** Gets the cost of the position on the grid
+ **
+**/
 int Pathfinder::getCost(sf::Vector2f pos) {
 	sf::Vector2i grid_pos = getPositionMapping(pos);
 
@@ -270,6 +308,9 @@ int Pathfinder::getCost(sf::Vector2f pos) {
 		
 }
 
+/** Gets the cost of the position on the grid
+ **
+**/
 int Pathfinder::getCost(std::pair<int, int> loc)  {
 
 	if (loc.first < rows && loc.second < cols && loc.first >= 0 && loc.second >= 0) {
@@ -286,29 +327,41 @@ int Pathfinder::getCost(std::pair<int, int> loc)  {
 		
 }
 
+/** Updates the cost on the grid
+ **
+**/
 int Pathfinder::addToCost(sf::Vector2f pos, sf::Vector2f dir, int incr) {
 	sf::Vector2i grid_pos = getPositionMapping(pos);
 	grid_pos.x += dir.y;
 	grid_pos.y += dir.x;
 	grid[grid_pos.x][grid_pos.y] += incr;
 }
+
+/** Gets the grid mapping of the position
+ **
+**/
 sf::Vector2i Pathfinder::getPositionMapping(sf::Vector2f pos) {
 	sf::Vector2i grid_pos;
 	grid_pos.x = (pos.y)  / player_size;
 	grid_pos.y = (pos.x) / player_size;
-	//std::cout << "X " << grid_pos.x << " " << pos.x << " Y " << grid_pos.y << " " << pos.y << std::endl;
 	return grid_pos;
 }
 
+/** Gets the straight line distance between the two points
+ **
+**/
 float Pathfinder::getDistance(sf::Vector2f pos,  sf::Vector2f dir) {
 	sf::Vector2i grid_pos;
 	grid_pos.x = abs(dir.x) * (player_size - (int) pos.x % player_size);
 	grid_pos.y = abs(dir.y) * (player_size - (int) pos.y % player_size);
 	
-	//std::cout << sqrt(pow(grid_pos.y, 2.0) + pow(grid_pos.x, 2.0)) << std::endl;
 	return sqrt(pow(grid_pos.y, 2.0) + pow(grid_pos.x, 2.0));	
 
 }
+
+/** Recursive helper method to generate costs on grid
+ **
+**/
 void Pathfinder::generateHCost_helper(std::vector<sf::Vector2i> left) {
 	if (left.empty())
 		return;
@@ -365,8 +418,10 @@ void Pathfinder::generateHCost_helper(std::vector<sf::Vector2i> left) {
 		
 }
 
+/** Prints the grid
+ **
+**/
 void Pathfinder::print(void) {
-	std::cout << rows << " " << cols << std::endl;
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
 			std::cout << grid[i][j];

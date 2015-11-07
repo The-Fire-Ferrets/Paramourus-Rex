@@ -1,10 +1,8 @@
 #ifndef PATHFINDER_H
 #define PATHFINDER_H
 
-#include "AI.h"
-
+#include "Constants.h"
 class Pathfinder { 
-	friend class AI;
 	friend class CraftView;
 
 	struct pathNode {
@@ -68,6 +66,14 @@ class Pathfinder {
 			}
 			return false;
 		}
+		bool containedIn(std::vector<pathNode*>* l) {
+			std::vector<pathNode*>::iterator itr;
+			for (itr = l->begin(); itr != l->end(); itr++) {
+				if ((*itr)->pos == pos)
+					return true;
+			}
+			return false;
+		}
 		pathNode* getRoot() {
 			while (parent != NULL) {
 				parent->next = this;
@@ -87,12 +93,11 @@ class Pathfinder {
 		static int level_width;
 		static int player_size;
 		static std::vector<sf::Vector2i> flowers;
-		static void updateVertex(pathNode* p_node, pathNode* c_node);
+		static std::vector<sf::Vector2i> start_positions;
+		static void updateVertex(std::vector<pathNode*>* open, std::vector<pathNode*>* closed, pathNode* p_node, pathNode* c_node);
 		static void getFullCost(pathNode* p_node, pathNode* c_node);
-		static std::vector<pathNode*> open;
-		static std::vector<pathNode*> closed;
-		static void removeFromOpen(pathNode* n);
-		static Pathfinder::pathNode* path;
+		static void removeFrom(std::vector<pathNode*>* l, pathNode* n);
+		static std::map<std::pair<int, int>, Pathfinder::pathNode*> paths;
 		static bool lineOfSight(pathNode* p_node, pathNode* c_node);
 
 	public:
@@ -107,10 +112,9 @@ class Pathfinder {
 		static int addToCost(sf::Vector2f pos, sf::Vector2f dir, int incr);
 		static sf::Vector2i getPositionMapping(sf::Vector2f pos); 
 		static float getDistance(sf::Vector2f pos,  sf::Vector2f dir);
-		static void generatePath(sf::Vector2f start_pos);
+		static void generatePaths(void);
 		static bool isValidMove(std::pair<int, int> loc);
-		static sf::Vector2f getNextPosition(void);
-		static void reset();
+		static sf::Vector2f getNextPosition(sf::Vector2f start_pos);
 };
 
 #endif

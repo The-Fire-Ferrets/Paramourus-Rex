@@ -170,6 +170,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 		else if (!strcmp(tool.name(), "Player")) {
 			actorList.push_back(player);
 			(actorList.back())->PostInit(&tool);
+			Pathfinder::addToGrid(player->getBoundary(), -3);
 			num_actors++;
 		}
 		else {
@@ -214,6 +215,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 
 	Pathfinder::generateHCost();
 	Pathfinder::print();
+	Pathfinder::generatePaths();
 
 	std::vector<StrongActorPtr>::iterator it;
 	for (it = actorList.begin(); it != actorList.end(); it++) {
@@ -239,17 +241,20 @@ void LevelView::generateActor(pugi::xml_node* elem, int* state, int generate) {
 		new_actor->PostInit(elem);
 		actorList.push_back(new_actor);
 		num_actors++;
-		if (strcmp(elem->name(), "NPC") && strcmp(elem->name(), "Player")) {
-			int type = 0;
-			if (!strcmp(elem->name(), "Obstacle")) {
-				type = -1;
-			}
-			else {
-				type = -2;
-			}
-			std::cout << type << std::endl;
-			Pathfinder::addToGrid(new_actor->getBoundary(), type);
+		int type = 0;
+		if (!strcmp(elem->name(), "Obstacle")) {
+			type = -1;
 		}
+		else if (!strcmp(elem->name(), "Player")) {
+			type = -3;
+		}
+		else if (!strcmp(elem->name(), "NPC")) {
+			type = -3;
+		}
+		else {
+			type = -2;
+		}
+		Pathfinder::addToGrid(new_actor->getBoundary(), type);
 	}
 }
 
@@ -422,7 +427,6 @@ void LevelView::cleanUp(void) {
 	num_actors = 0;
 	EventManagerInterface::get()->reset();
 	ActorFactory::reset();
-	Pathfinder::reset();
 	actorList.clear();
 	sound.stop();
 }

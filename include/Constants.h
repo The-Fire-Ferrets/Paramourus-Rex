@@ -8,6 +8,8 @@
 #include <memory>
 #include <tr1/memory>
 #include <unordered_set>
+#include <cassert> //  assert()
+#include <algorithm> // std::find()
 
 #include <math.h>
 #include <string.h>
@@ -20,6 +22,7 @@
 #include "FastDelegate.h"
 #include "Configuration.h"
 #include "Pathfinder.h"
+#include "Utilities.h"
 
 #define PI 3.14159265
 

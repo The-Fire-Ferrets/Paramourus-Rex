@@ -60,12 +60,13 @@ class Actor {
 		sf::FloatRect* intersects(sf::FloatRect bound);
 		sf::FloatRect* contains(sf::Vector2f pnt);
 		bool causesDamage(void);
-
+		sf::Vector2f getStartPos(void);
 		Actor* getCopy(void);
 		const Actor* getCopy(void) const;
 
 	private:
 		ActorId id;
+		sf::Vector2f start_pos;
 		const static int num_directions;
 		std::vector<EventDelegate> delegateFuncList;
 		bool damage = false;
