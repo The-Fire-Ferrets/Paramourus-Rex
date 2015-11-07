@@ -61,6 +61,10 @@ bool PhysicsComponent::PostInit(pugi::xml_node* elem) {
 	return true;
 }
 
+bool PhysicsComponent::PostInit(void) {
+
+}
+
 /** Checks to see if the bound of two actor intersect and sends ContactEvent to the event manager, keeps track of last actor made contact with
  ** time: current game time
  **/

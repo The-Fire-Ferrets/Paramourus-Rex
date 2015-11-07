@@ -23,10 +23,12 @@ class Actor {
 		explicit Actor(void);
 		bool Init(pugi::xml_node* elem);
 		void PostInit(pugi::xml_node* elem);
+		void PostInit();
 		~Actor(void);
 
 		void move(float distance, sf::Vector2f direction);
-
+		void move(sf::Vector2f next_pos, sf::Vector2f direction);
+		void move(std::vector<float> distance, std::vector<sf::Vector2f> direction);
 		void update(float time);
 		void render(sf::RenderWindow *window, bool minimap);
 		void reset(void);
@@ -61,6 +63,7 @@ class Actor {
 
 		Actor* getCopy(void);
 		const Actor* getCopy(void) const;
+
 	private:
 		ActorId id;
 		const static int num_directions;
@@ -78,6 +81,7 @@ class Actor {
 		sf::Sprite sprite_minimap;
 		int sprite_idx;
 		bool initial_init = true;
+		bool initial_postinit = true;
 
 		int instance;
 		int* game_state;

@@ -19,15 +19,17 @@ class AI {
 		void flipDirectionBit(int bit_num);
 		void resetDirectionBit();
 
-		sf::Vector2f findClosestFlower(void);
-		sf::Vector2f findPlayer(void) ;
-		sf::Vector2f chooseDirection(const sf::Vector2f dest);
-		void updateCollision();
+		sf::Vector2f chooseDirection(float* dist);
+		sf::Vector2f chooseDirection(float dist, std::vector<float>* dists, std::vector<sf::Vector2f>* dirs);
 		StrongActorPtr actor_direction[4];
 		StrongActorPtr owner;
+		void generatePath(void);
+		sf::Vector2f getNextPosition();	
+			
 	private:
 		sf::Vector2f npc_pos;
 		int direction_bit;
+		int dist_from_start;
 		sf::Vector2f selectNextDirection(const sf::Vector2f& distance);
 };
 

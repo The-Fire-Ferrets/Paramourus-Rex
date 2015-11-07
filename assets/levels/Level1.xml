@@ -73,19 +73,13 @@
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Player>
+	<NPC>
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+	</NPC>
 	<Obstacle Generate = "10">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Obstacle>
 	<WaterFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</WaterFlower>
-	<EarthFlower>
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-	</EarthFlower>
-	<AirFlower>
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-	</AirFlower>
-	<FireFlower>
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-	</FireFlower>
 </Level1>

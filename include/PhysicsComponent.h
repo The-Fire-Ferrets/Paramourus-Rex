@@ -16,6 +16,7 @@ class PhysicsComponent : public ActorComponent {
 		~PhysicsComponent(void);
 		bool Init(pugi::xml_node* elem) override;
 		bool PostInit(pugi::xml_node* elem) override;
+		bool PostInit(void) override;
 
 		void setDirectionBit(int bit_num);
 		void setDirectionBit(sf::Vector2f dir);

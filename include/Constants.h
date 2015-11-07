@@ -19,6 +19,7 @@
 #include <sstream>
 #include "FastDelegate.h"
 #include "Configuration.h"
+#include "Pathfinder.h"
 
 #define PI 3.14159265
 

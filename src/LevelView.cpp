@@ -62,7 +62,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	//Reference to current location in Actor population array
 	//Holds referenced to loaded XML file	
 	delegate.bind(&LevelView::update);
-
+	Pathfinder::Create(Configuration::getWindowWidth(), Configuration::getWindowHeight(), 10);
 	num_actors = 0;
 
 	//Error check to see if file was loaded correctly
@@ -175,21 +175,22 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 		else {
 			if (!strcmp(tool.name(), "WaterFlower")) {
 				int count = flowers[3];
-				//int count = 1;
+				count = 1;
 				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "FireFlower")) {
 				int count = flowers[0];
-				//int count  = 0;
+				count  = 1;
 				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "EarthFlower")) {
 				int count = flowers[1];
-				//int count = 0;
+				count = 1;
 				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "AirFlower")) {
 				int count = flowers[2];
+				count = 1;
 				generateActor(&tool, state, count);
 			}
 			else {
@@ -210,6 +211,14 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 		std::cout << "LevelView::Create: error loading music" << std::endl;
 	}
 	EventManagerInterface::setViewDelegate(delegate);
+
+	Pathfinder::generateHCost();
+	Pathfinder::print();
+
+	std::vector<StrongActorPtr>::iterator it;
+	for (it = actorList.begin(); it != actorList.end(); it++) {
+		(*it) ->PostInit();
+	}
 	sound.setBuffer(buffer);
 	sound.setLoop(true);
 	sound.play();
@@ -230,6 +239,17 @@ void LevelView::generateActor(pugi::xml_node* elem, int* state, int generate) {
 		new_actor->PostInit(elem);
 		actorList.push_back(new_actor);
 		num_actors++;
+		if (strcmp(elem->name(), "NPC") && strcmp(elem->name(), "Player")) {
+			int type = 0;
+			if (!strcmp(elem->name(), "Obstacle")) {
+				type = -1;
+			}
+			else {
+				type = -2;
+			}
+			std::cout << type << std::endl;
+			Pathfinder::addToGrid(new_actor->getBoundary(), type);
+		}
 	}
 }
 
@@ -402,6 +422,7 @@ void LevelView::cleanUp(void) {
 	num_actors = 0;
 	EventManagerInterface::get()->reset();
 	ActorFactory::reset();
+	Pathfinder::reset();
 	actorList.clear();
 	sound.stop();
 }

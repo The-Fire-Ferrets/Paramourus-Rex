@@ -63,6 +63,10 @@ bool CollectableComponent::PostInit(pugi::xml_node* elem) {
 	return true;
 }
 
+bool CollectableComponent::PostInit(void) {
+	
+}
+
 /** Updates the component's attributes
  ** time: current game time
  **/

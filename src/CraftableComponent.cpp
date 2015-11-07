@@ -72,6 +72,9 @@ bool CraftableComponent::PostInit(pugi::xml_node* elem) {
 	return true;
 }
 
+bool CraftableComponent::PostInit(void) {
+	return true;
+}
 /** Updates the component's attributes
  ** time: current game time
  **/

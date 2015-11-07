@@ -16,6 +16,7 @@ class CraftableComponent : public ActorComponent {
 
 		bool Init(pugi::xml_node* elem) override;
 		bool PostInit(pugi::xml_node* elem) override;
+		bool PostInit(void) override;
 
 		void update(float time) override;
 		void update(EventInterfacePtr e) override;
