@@ -128,12 +128,29 @@ void Pathfinder::generatePaths() {
 sf::Vector2f Pathfinder::getNextPosition(sf::Vector2f start_pos) {
 	sf::Vector2i pos = getPositionMapping(start_pos);
 	std::pair<int, int> pos_pair(pos.x, pos.y);
+	sf::Vector2f pos_next;
 
-	pathNode* path = paths[pos_pair];
+	if (!paths.empty()) {
+		pathNode* path = paths[pos_pair];
+		pos_next = sf::Vector2f(path->pos.second * player_size, path->pos.first * player_size);
+		if (path->next != NULL)
+			paths[pos_pair] = paths[pos_pair]->next;
+	}
+	else {
+		pos_next = start_pos;
+	}
+	return pos_next;
+	/*
+	sf::Vector2i pos = getPositionMapping(start_pos);
+	std::pair<int, int> pos_pair(pos.x, pos.y);
+
+	std::pair<std::pair<int, int>, pathNode*>* flower_path = &paths[pos_pair];
+	pathNode* path = flower_path->second;
 	sf::Vector2f pos_next(path->pos.second * player_size, path->pos.first * player_size);
 	if (path->next != NULL)
-		paths[pos_pair] = paths[pos_pair]->next;
+		path = path->next;
 	return pos_next;
+	*/
 }
 
 /** Used for Theta* algorithm to minimize search iterations and allow for travel over continuos grid

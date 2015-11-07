@@ -274,8 +274,6 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
-	std::cout << title_sprite.getPosition().x  << " " << Configuration::getGameViewHeight() * Configuration::getGameViewHeight() / pos.y +  Configuration::getGameViewPosition().y << std::endl;
-	std::cout << pos.x * Configuration::getGameViewWidth() / Configuration::getWindowWidth() +  Configuration::getGameViewPosition().x << " " << pos.y * Configuration::getGameViewHeight() / Configuration::getWindowHeight() +  Configuration::getGameViewPosition().y  << std::endl;
             if (title_sprite.getGlobalBounds().contains(pos.x * Configuration::getGameViewWidth() / Configuration::getWindowWidth() +  Configuration::getGameViewPosition().x, pos.y * Configuration::getGameViewHeight() / Configuration::getWindowHeight() +  Configuration::getGameViewPosition().y)) {
 		if (view_state == 2) {
 			view_state = 1;
