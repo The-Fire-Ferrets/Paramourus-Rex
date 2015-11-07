@@ -271,16 +271,22 @@ int LevelView::getNumActors(void) {
  **/
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	EventManagerInterface::setCurrentActorList(&actorList);
-	if (view_state == 2 && sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
 	std::cout << title_sprite.getPosition().x  << " " << Configuration::getGameViewHeight() * Configuration::getGameViewHeight() / pos.y +  Configuration::getGameViewPosition().y << std::endl;
 	std::cout << pos.x * Configuration::getGameViewWidth() / Configuration::getWindowWidth() +  Configuration::getGameViewPosition().x << " " << pos.y * Configuration::getGameViewHeight() / Configuration::getWindowHeight() +  Configuration::getGameViewPosition().y  << std::endl;
             if (title_sprite.getGlobalBounds().contains(pos.x * Configuration::getGameViewWidth() / Configuration::getWindowWidth() +  Configuration::getGameViewPosition().x, pos.y * Configuration::getGameViewHeight() / Configuration::getWindowHeight() +  Configuration::getGameViewPosition().y)) {
-		view_state = 1;
-		LevelView::player->reset();
-		*state = 5;
-		cleanUp();
+		if (view_state == 2) {
+			view_state = 1;
+			LevelView::player->reset();
+			*state = 5;
+			cleanUp();
+		}
+		else {
+			*state = 0;
+			cleanUp();
+		}
             }
     }
     else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {

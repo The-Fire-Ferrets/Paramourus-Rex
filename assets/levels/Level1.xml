@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level1 Name = "Impact Desert" Background = "Level1.png" Edge = "Lava.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "50000">
+<Level1 Name = "Impact Desert" Background = "Level1.png" Edge = "Lava.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "15000">
 
 	<!-- ObsA1-5-->
 	<Obstacle Type = "Wall"  Sprite = "Lava.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 50 50 100 50 50 350 100 350">		
@@ -73,13 +73,10 @@
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Player>
-	<NPC>
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-	</NPC>
 	<Obstacle Generate = "10">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Obstacle>
-	<WaterFlower>
+	<FireFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-	</WaterFlower>
+	</FireFlower>
 </Level1>
