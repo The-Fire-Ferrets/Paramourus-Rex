@@ -180,6 +180,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 	LevelView::cleanUp();
     }
 
+//================================================================
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && view_state == 1) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
@@ -190,12 +191,13 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 			render(window);
 			int flowers[] = {fireflowers_count[i], earthflowers_count[i], airflowers_count[i], waterflowers_count[i]};
 		        LevelView::Create(levels[i].c_str(), state, flowers);
-		        DialogueView::Create(levels[i].c_str(), state);
+		        // DialogueView::Create(levels[i].c_str(), state);
 		        LevelView::start();
 			reset = true;
 			view_state = 1;
 		        *state = 1;
 		}
+//================================================================
 		else {
 			view_state = 0;
 			render(window);
