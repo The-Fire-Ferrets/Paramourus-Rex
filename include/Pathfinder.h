@@ -22,39 +22,39 @@ class Pathfinder {
 			pos = p;
 			cost = c;
 		}
-		std::vector<pathNode*> neighbors(void) {
+		std::vector<pathNode*> neighbors(int*** flower_grid) {
 			std::vector<pathNode*> n;
 			std::pair<int, int> next_loc;
 			next_loc = std::pair<int, int>(pos.first + 1, pos.second);
-			if (isValidMove(next_loc))
+			if (isValidMove(next_loc, flower_grid))
 				n.push_back(new pathNode(next_loc, cost));
 
 			next_loc = std::pair<int, int>(pos.first - 1, pos.second);
-			if (isValidMove(next_loc))
+			if (isValidMove(next_loc, flower_grid))
 				n.push_back(new pathNode(next_loc, cost));
 
 			next_loc = std::pair<int, int>(pos.first, pos.second + 1);
-			if (isValidMove(next_loc))
+			if (isValidMove(next_loc, flower_grid))
 				n.push_back(new pathNode(next_loc, cost));
 
 			next_loc = std::pair<int, int>(pos.first, pos.second - 1);
-			if (isValidMove(next_loc))
+			if (isValidMove(next_loc, flower_grid))
 				n.push_back(new pathNode(next_loc, cost));
 
 			next_loc = std::pair<int, int>(pos.first + 1, pos.second + 1);
-			if (isValidMove(next_loc))
+			if (isValidMove(next_loc, flower_grid))
 				n.push_back(new pathNode(next_loc, cost));
 
 			next_loc = std::pair<int, int>(pos.first - 1, pos.second + 1);
-			if (isValidMove(next_loc))
+			if (isValidMove(next_loc, flower_grid))
 				n.push_back(new pathNode(next_loc, cost));
 
 			next_loc = std::pair<int, int>(pos.first - 1, pos.second - 1);
-			if (isValidMove(next_loc))
+			if (isValidMove(next_loc, flower_grid))
 				n.push_back(new pathNode(next_loc, cost));
 
 			next_loc = std::pair<int, int>(pos.first + 1, pos.second - 1);
-			if (isValidMove(next_loc))
+			if (isValidMove(next_loc, flower_grid))
 				n.push_back(new pathNode(next_loc, cost));
 			return n;
 		}
@@ -86,6 +86,7 @@ class Pathfinder {
 		}
 	};
 	private:
+		static std::map<std::pair<int, int>, int**> flower_grids;
 		static int** grid;
 		static int rows;
 		static int cols;
@@ -94,27 +95,29 @@ class Pathfinder {
 		static int player_size;
 		static std::vector<sf::Vector2i> flowers;
 		static std::vector<sf::Vector2i> start_positions;
-		static void updateVertex(std::vector<pathNode*>* open, std::vector<pathNode*>* closed, pathNode* p_node, pathNode* c_node);
-		static void getFullCost(pathNode* p_node, pathNode* c_node);
+		static void updateVertex(std::vector<pathNode*>* open, std::vector<pathNode*>* closed, pathNode* p_node, pathNode* c_node, int*** flower_grid);
+		static void getFullCost(pathNode* p_node, pathNode* c_node, int*** flower_grid);
 		static void removeFrom(std::vector<pathNode*>* l, pathNode* n);
 		static std::map<std::pair<int, int>, Pathfinder::pathNode*> paths;
-		static bool lineOfSight(pathNode* p_node, pathNode* c_node);
+		static bool lineOfSight(pathNode* p_node, pathNode* c_node, int*** flower_grid);
+		static void generateHCost_helper(std::vector<sf::Vector2i> left, int*** flower_grid);
+		static std::vector<EventDelegate> delegateFuncList;
 
 	public:
 		static void Create(int lw, int lh, int ps);
 		static void addToGrid(std::vector<sf::FloatRect*> bounds, int type);
+		static void generateHCosts(void);
 		static void print(void);
-		static void generateHCost(void);
-		static void generateHCost_helper(std::vector<sf::Vector2i> left);
-		static int getCost(sf::Vector2f pos, sf::Vector2f dir);
-		static int getCost(sf::Vector2f pos);
-		static int getCost(std::pair<int, int> loc);
-		static int addToCost(sf::Vector2f pos, sf::Vector2f dir, int incr);
+		static int getCost(sf::Vector2f pos, sf::Vector2f dir, int*** flower_grid);
+		static int getCost(sf::Vector2f pos, int*** flower_grid);
+		static int getCost(std::pair<int, int> loc, int*** flower_grid);
+		static int addToCost(sf::Vector2f pos, sf::Vector2f dir, int incr, int*** flower_grid);
 		static sf::Vector2i getPositionMapping(sf::Vector2f pos); 
 		static float getDistance(sf::Vector2f pos,  sf::Vector2f dir);
 		static void generatePaths(void);
-		static bool isValidMove(std::pair<int, int> loc);
+		static bool isValidMove(std::pair<int, int> loc, int*** flower_grid);
 		static sf::Vector2f getNextPosition(sf::Vector2f start_pos);
+		static void removeFromPaths(sf::Vector2f pos);
 };
 
 #endif

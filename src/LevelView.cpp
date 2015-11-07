@@ -213,8 +213,8 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	}
 	EventManagerInterface::setViewDelegate(delegate);
 
-	Pathfinder::generateHCost();
-	Pathfinder::print();
+	Pathfinder::generateHCosts();
+	//Pathfinder::print();
 	Pathfinder::generatePaths();
 
 	std::vector<StrongActorPtr>::iterator it;

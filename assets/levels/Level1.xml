@@ -73,6 +73,9 @@
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Player>
+	<FireFlower>
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+	</FireFlower>
 	<Obstacle Generate = "10">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Obstacle>
