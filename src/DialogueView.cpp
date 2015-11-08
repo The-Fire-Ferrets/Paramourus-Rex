@@ -203,6 +203,9 @@ void DialogueView::Create(const char* resource, int* state){
 	text.setPosition(posX, posY);
 
 	// navigating through xml files and storing the actual dialogue into array
+	if (fileString != "Level0") {
+		tools = (solved == true) ? (tools.child("Correct")) : (tools.child("Incorrect"));
+	}
 	for (pugi::xml_node tool = tools.first_child(); tool; tool =tool.next_sibling()){
 		std::string str = "";
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
