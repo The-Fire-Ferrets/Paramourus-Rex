@@ -17,8 +17,8 @@ int DialogueView::view_state = 1;
 int DialogueView::numDialogues = 0;
 int DialogueView::index = 0;
 // Array holding pointers to the dialogue that's to fill the boxes at cutscenes
-std::vector<std::string> DialogueView::boxes;
-std::vector<std::string> DialogueView::dialogues;
+std::vector<std::pair<std::string, std::string>> DialogueView::boxes;
+std::vector<std::pair<std::string, std::string>> DialogueView::dialogues;
 // Text in the specific node we are looking at that will show up in Dialogue box
 std::string DialogueView::dialogue_str;
 //Dialogue setPosition
@@ -33,15 +33,12 @@ sf::Texture DialogueView::background_texture;
 sf::Sprite DialogueView::background;
 sf::RectangleShape DialogueView::backlay;
 
-// Images of Diana and Phil to be rendered
-sf::Vector2f DialogueView::dianaPos;
-sf::Vector2f DialogueView::philPos;
-sf::Vector2f DialogueView::dianaSize;
-sf::Vector2f DialogueView::philSize;
-sf::Sprite DialogueView::diana_sprite;
-sf::Sprite DialogueView::phil_sprite;
-sf::Texture DialogueView::phil_texture;
-sf::Texture DialogueView::diana_texture;
+// character art to be rendered
+sf::Texture  DialogueView::lhs_character_tex;
+sf::Sprite   DialogueView::lhs_character_sprite;
+
+sf::Texture  DialogueView::rhs_character_tex;
+sf::Sprite   DialogueView::rhs_character_sprite;
 
 bool DialogueView::pressed = false;
 
@@ -113,62 +110,6 @@ void DialogueView::Create(const char* resource, int* state){
 				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
 			}
 		}
-		// loading texture for Phil's image here
-		else if (!strcmp(attr.name(), "Phil")){
-            phil_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
-		}
-		// loading texture for Diana's image here
-		else if (!strcmp(attr.name(), "Diana")){
-            diana_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
-		}
-		else if (!strcmp(attr.name(), "PhilSizeX")){
-			philSize.x = (std::strtol(attr.value(), &temp, 10));
-			if (*temp != '\0') {
-				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
-			}
-		}
-		else if (!strcmp(attr.name(), "PhilSizeY")){
-			philSize.y = (std::strtol(attr.value(), &temp, 10));
-			if (*temp != '\0') {
-				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
-			}
-		}
-		else if (!strcmp(attr.name(), "PhilPosX")){
-			philPos.x = (std::strtol(attr.value(), &temp, 10));
-			if (*temp != '\0') {
-				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
-			}
-		}
-		else if (!strcmp(attr.name(), "PhilPosY")){
-			philPos.y = (std::strtol(attr.value(), &temp, 10));
-			if (*temp != '\0') {
-				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
-			}
-		}
-		else if (!strcmp(attr.name(), "DianaSizeX")){
-			dianaSize.x = (std::strtol(attr.value(), &temp, 10));
-			if (*temp != '\0') {
-				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
-			}
-		}
-		else if (!strcmp(attr.name(), "DianaSizeY")){
-			dianaSize.y = (std::strtol(attr.value(), &temp, 10));
-			if (*temp != '\0') {
-				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
-			}
-		}
-		else if (!strcmp(attr.name(), "DianaPosX")){
-			dianaPos.x = (std::strtol(attr.value(), &temp, 10));
-			if (*temp != '\0') {
-				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
-			}
-		}
-		else if (!strcmp(attr.name(), "DianaPosY")){
-			dianaPos.y = (std::strtol(attr.value(), &temp, 10));
-			if (*temp != '\0') {
-				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
-			}
-		}
 		else if (!strcmp(attr.name(), "Flower")) {
 			StrongActorPtr flower = CraftView::getFlower(attr.value());
 			if (flower) {
@@ -181,14 +122,6 @@ void DialogueView::Create(const char* resource, int* state){
 	text.setPosition(dialogue_pos);
 	text.setColor(sf::Color::Black);
 
-	// Create phil_ and diana_sprite here I think?
-	std::cout << "dianaPos.x = " << dianaPos.x << "and y=" << dianaPos.y << std::endl;
-	diana_sprite.setPosition(dianaPos);
-		diana_sprite = sf::Sprite(diana_texture);
-		diana_sprite.setScale(dianaSize.x/(diana_texture.getSize()).x, dianaSize.y/(diana_texture.getSize()).y);
-	    // diana_sprite.setPosition(sf::Vector2f(0,Configuration::getWindowHeight() - diana_sprite.getGlobalBounds().height));
-	phil_sprite.setPosition(philPos);
-	
 	unsigned int width = Configuration::getWindowWidth()/1.05;
 	unsigned int height = Configuration::getWindowHeight()/4;
 	unsigned int posX = Configuration::getWindowWidth()/40;
@@ -202,19 +135,26 @@ void DialogueView::Create(const char* resource, int* state){
 	text.setColor(sf::Color::Black);
 	text.setPosition(posX, posY);
 
+	// Create phil_ and diana_sprite here I think?
+	lhs_character_tex.loadFromFile("./assets/sprites/Phil.png");
+	lhs_character_sprite = sf::Sprite(lhs_character_tex);
+	lhs_character_sprite.setPosition(posX, posY-lhs_character_tex.getSize().y-5);
+
 	// navigating through xml files and storing the actual dialogue into array
 	if (fileString != "Level0") {
 		tools = (solved == true) ? (tools.child("Correct")) : (tools.child("Incorrect"));
 	}
 	for (pugi::xml_node tool = tools.first_child(); tool; tool =tool.next_sibling()){
-		std::string str = "";
+		std::string speaker = "";
+		std::string dialogue = "";
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
 			if (!strcmp(attr.name(), "Speaker") && strcmp(attr.value(), "Narrator")) {
-				str += (std::string) attr.value() + ": ";
+				speaker = std::string(attr.value());
+				dialogue += speaker + ": ";
 			}
 			if (!strcmp(attr.name(), "Text")){
-				str += attr.value();
-				dialogues.push_back(str);
+				dialogue += attr.value();
+				dialogues.push_back(std::pair<std::string, std::string>(speaker, dialogue));
 			}
 			// store values in seperate array, if it's even necessary to change background -- may just take this out
 			// if background remains static?
@@ -225,9 +165,12 @@ void DialogueView::Create(const char* resource, int* state){
 	}
 
 	// generatre dialogue boxes
-	for (std::string dialogue : dialogues) {
-		std::vector<std::string> fitted = fitStringToDialogueBox(dialogue);
-		boxes.insert(boxes.end(), fitted.begin(), fitted.end());
+	for (std::pair<std::string, std::string> dialogue : dialogues) {
+		std::vector<std::string> fitted = fitStringToDialogueBox(dialogue.second);
+		for (std::string line: fitted) {
+			dialogue.first = (dialogue.first == "") ? ("Narrator") : (dialogue.first);
+			boxes.push_back(std::pair<std::string, std::string>(dialogue.first, line));
+		}
 	}
 
 	if (!buffer.loadFromFile("./assets/music/romantic-arpeggio-loop.ogg")) {
@@ -258,8 +201,21 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 				cleanUp();
 			}
 			else{
-				text.setString(boxes[index]);
-				//text.setString(fitStringToDialogueBox(boxes[index]));
+				if (boxes[index].first == "Narrator") {
+					rhs_character_tex = sf::Texture();
+				}
+				else {
+					std::cout << "Load ./assets/sprites/" + boxes[index].first + ".png" << std::endl;
+					rhs_character_tex.loadFromFile("./assets/sprites/" + boxes[index].first + ".png");
+				}
+				unsigned int width = Configuration::getWindowWidth()/1.05;
+				unsigned int posX = Configuration::getWindowWidth()/40;
+				unsigned int posY = Configuration::getWindowHeight()/1.4;
+
+				rhs_character_sprite = sf::Sprite(rhs_character_tex);
+				rhs_character_sprite.setPosition(posX+465, posY-rhs_character_tex.getSize().y-5);
+			
+				text.setString(boxes[index].second);
 			}
 			index++;
 		}
@@ -283,8 +239,8 @@ void DialogueView::render(sf::RenderWindow *window){
 	window->draw(backlay);
 	window->draw(text);
 	// once Diana and Phil sprites are finished, will be rendered here as well
-	window->draw(phil_sprite);
-	window->draw(diana_sprite);
+	window->draw(lhs_character_sprite);
+	window->draw(rhs_character_sprite);
 }
 
 /** Play nice with the resources...
