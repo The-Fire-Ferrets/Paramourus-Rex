@@ -1,7 +1,6 @@
 #include "InputComponent.h"
 #include "PhysicsComponent.h"
 #include "CollectorComponent.h"
-#include "AI.h"
 #include <algorithm> // std::find()
 
 #include <SFML/Window/Keyboard.hpp> // sf::Keyboard, sf::Key
@@ -31,7 +30,7 @@ sf::Vector2f InputComponent::getDirection() const {
  **/
 void InputComponent::setDirection(const sf::Vector2f& dir) {
     // reset direction only if it is a cardinal direction
-	if (std::find(cardinals, cardinals+4, dir) != cardinals+4)    
+	//if (std::find(cardinals, cardinals+4, dir) != cardinals+4)    
 	direction = dir;
 }
 
@@ -50,6 +49,7 @@ ActorComponent* InputComponent::create() {
 InputComponent::InputComponent(void)
 {
     instance = instances;
+	first_postinit = false;
 }
 
 /** Destructor
@@ -84,9 +84,12 @@ bool InputComponent::Init(pugi::xml_node* elem) {
 bool InputComponent::PostInit(pugi::xml_node* elem) {
 	if (elem != NULL)
 	Init(elem);
-	ai.setNPCPosition(owner->getPosition());
-	ai.owner = owner;
+	first_postinit = true;
 	return true;
+}
+
+bool InputComponent::PostInit(void) {
+
 }
 
 /** Updates the component's attributes
@@ -102,21 +105,29 @@ void InputComponent::update(float time) {
     sf::Vector2f next_direction;
 
     if (type == "Artificial") {
-		static unsigned i = 0;
-		if (++i) {
-			ai.setNPCPosition(owner->getPosition());
-			sf::Vector2f flower_pos = ai.findClosestFlower();
-			sf::Vector2f player_pos = ai.findPlayer();
+	if (counter++ > 100) {
+		counter = 0;
+		std::vector<float> distances;
+		std::vector<sf::Vector2f> directions;
+		sf::Vector2f last_pos = owner->getPosition();
+		sf::Vector2f next_pos = Pathfinder::getNextPosition(owner->getStartPos());
+		if (last_pos.x < next_pos.x)
+			next_direction.x = 1;
+		else if (last_pos.x > next_pos.x)
+			next_direction.x = -1;
+		else
+			next_direction.x = 0;
 
-			if (flower_pos == sf::Vector2f(-1.f, -1.f)) {
-				next_direction = ai.chooseDirection(player_pos);
-			}
-			else {
-				next_direction = ai.chooseDirection(flower_pos);
-			}
-			i = 0;
-		}
-		else next_direction = last_direction;
+		if (last_pos.y < next_pos.y)
+			next_direction.y = 1;
+		else if (last_pos.y > next_pos.y)
+			next_direction.y = -1;
+		else
+			next_direction.y = 0;
+	
+		
+		owner->move(next_pos, next_direction);
+	}
     }
 
     else if (type == "Keyboard") {
@@ -152,10 +163,11 @@ void InputComponent::update(float time) {
             next_direction = EAST;
         }
         else return; // No input provided.
+	
+	 this ->setDirection(next_direction);
+    	owner->move(distance, direction);
     }
 
-    this ->setDirection(next_direction);
-    owner->move(distance, direction);
 }
 
 /** Receives event when the actor is being contacted by another actor and responds by accordingly
@@ -169,24 +181,6 @@ void InputComponent::update(EventInterfacePtr e) {
 			sf::Vector2f last_direction = getDirection();
 			StrongActorPtr other_actor =  EventManagerInterface::getActor(e->getSender());
 			std::cout << last_direction.x << " " << last_direction.y << std::endl;
-			if (other_actor->hasAttribute("Opaque")) {
-				if (last_direction.x == 1) {
-					ai.setDirectionBit(1);
-					ai.actor_direction[0] = other_actor;
-				}
-				else if (last_direction.x == -1) {
-					ai.setDirectionBit(2);
-					ai.actor_direction[1] = other_actor;
-				}
-				else if (last_direction.y == -1) {
-					ai.setDirectionBit(3);
-					ai.actor_direction[2] = other_actor;
-				}
-				else if (last_direction.y == 1) {
-					ai.setDirectionBit(4);
-					ai.actor_direction[3] = other_actor;
-				}
-			}
 		}
 	}
 }

@@ -193,6 +193,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		}
 	    }
 	    position = pos;
+		start_pos = position;
 		boundary.clear();
 	    boundary.push_back(new sf::FloatRect(position.x, position.y, size.x, size.y));
 		for (int i = 0; i < num_directions; i++) {
@@ -221,8 +222,70 @@ void Actor::PostInit(pugi::xml_node* elem) {
 				sprite_texture[i].loadFromFile(("./assets/backgrounds/" + sprite_filename[0]).c_str());
 			
 	}
+	
+	
 }
 
+void Actor::PostInit(void) {
+	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
+		(it->second)->PostInit();
+}
+/** Moves the actor a certain distance based on the current game time
+ ** time: current game time
+ ** Prevents actors from moving past the top and bottom boundaries
+ ** if the obstacle pointer is set (by a physics component o fthe actor or another actor after contact) it prevents the actors from moving into each other
+ **/
+    void Actor::move(sf::Vector2f next_pos, sf::Vector2f direction) {
+       //Move Actor
+	if (direction.x < 0)
+		sprite_idx = 2;
+	else if (direction.x > 0)
+		sprite_idx = 3;
+	else if (direction.y < 0)
+		sprite_idx = 0;
+	else if (direction.y > 0)
+		sprite_idx = 1;
+        sf::Vector2f p = next_pos;
+
+        this->setPosition(p);
+        
+    }
+
+
+/** Moves the actor a certain distance based on the current game time
+ ** time: current game time
+ ** Prevents actors from moving past the top and bottom boundaries
+ ** if the obstacle pointer is set (by a physics component o fthe actor or another actor after contact) it prevents the actors from moving into each other
+ **/
+    void Actor::move(std::vector<float> distance, std::vector<sf::Vector2f> direction) {
+        for (int i = 0; i < distance.size(); i++) {
+		sf::Vector2f p = this->getPosition() + direction[i] * distance[i];
+
+		// disallow movement off the screen
+		unsigned width = Configuration::getWindowWidth();
+		unsigned height = Configuration::getWindowHeight();
+
+		if (direction[i].x < 0)
+			sprite_idx = 2;
+		else if (direction[i].x > 0)
+			sprite_idx = 3;
+		else if (direction[i].y < 0)
+			sprite_idx = 0;
+		else if (direction[i].y > 0)
+			sprite_idx = 1;
+
+		if (p.x < FLT_EPSILON)
+		    p.x = FLT_EPSILON;
+		if (p.y < FLT_EPSILON)
+		    p.y = FLT_EPSILON;
+		if (p.x > width-size.x)
+		    p.x = width - size.x;
+		if (p.y > height-size.y)
+		    p.y = height - size.y;
+
+		this->setPosition(p + direction[i] * distance[i]);
+	}
+    }
 
 /** Moves the actor a certain distance based on the current game time
  ** time: current game time
@@ -355,6 +418,9 @@ void Actor::updateBoundary(void) {
 
 // Mutators and accesors
 
+sf::Vector2f Actor::getStartPos(void) {
+	return start_pos;
+}
 /** returns the actors boundary
  **
  **/

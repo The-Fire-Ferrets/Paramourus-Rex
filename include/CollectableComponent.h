@@ -3,19 +3,18 @@
 
 #include "Constants.h"
 #include "ActorComponent.h"
-#include "AI.h"
 #include "ActorFactory.h"
 #include "CollectorComponent.h"
 #include "ContactEvent.h"
 
 class CollectableComponent : public ActorComponent {
-	friend class AI;
 	public:
 		CollectableComponent();
 		~CollectableComponent();
 
 		bool Init(pugi::xml_node* elem) override;
 		bool PostInit(pugi::xml_node* elem) override;
+		bool PostInit(void) override;
 
 		void update(float time) override;
 		void update(EventInterfacePtr e) override;

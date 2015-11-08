@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level6 Dialogues = "2" Background = "Level6.png" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30">
+<Level6 Dialogues = "2" Background = "Level6.png" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30">
 	<Win>
 		<Dialogue ID="1" Text="You know, Phil... I actually have something I've been wanting to talk to you about. I'm... really glad you ended up moving back to the valley. And I'm really glad that you ended up staying. It's a good to have someone to talk to nowadays. I'd actually like to talk to you more... I've kind of had a huge crush on you for a while. I was hoping that you would go out with me some time?" Background="">
 		<Dialogue ID="2" Text="You've truly shown Diana you care! She seems quite smitten." Background="">

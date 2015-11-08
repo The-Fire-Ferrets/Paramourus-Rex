@@ -24,6 +24,7 @@ class InputComponent : public ActorComponent {
 
 		bool Init(pugi::xml_node* elem) override;
 		bool PostInit(pugi::xml_node* elem) override;
+		bool PostInit(void) override;
 
 		void update(float time) override;
 		void update(EventInterfacePtr e) override;
@@ -43,7 +44,8 @@ class InputComponent : public ActorComponent {
 		static ActorComponent* create();
 		static int instances;
 		static const bool registered;
-		AI ai;
 		sf::Vector2f direction;
+		bool first_postinit;
+		int counter = 0;
 };
 #endif

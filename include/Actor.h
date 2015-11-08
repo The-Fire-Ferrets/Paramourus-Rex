@@ -23,10 +23,12 @@ class Actor {
 		explicit Actor(void);
 		bool Init(pugi::xml_node* elem);
 		void PostInit(pugi::xml_node* elem);
+		void PostInit();
 		~Actor(void);
 
 		void move(float distance, sf::Vector2f direction);
-
+		void move(sf::Vector2f next_pos, sf::Vector2f direction);
+		void move(std::vector<float> distance, std::vector<sf::Vector2f> direction);
 		void update(float time);
 		void render(sf::RenderWindow *window, bool minimap);
 		void reset(void);
@@ -58,11 +60,13 @@ class Actor {
 		sf::FloatRect* intersects(sf::FloatRect bound);
 		sf::FloatRect* contains(sf::Vector2f pnt);
 		bool causesDamage(void);
-
+		sf::Vector2f getStartPos(void);
 		Actor* getCopy(void);
 		const Actor* getCopy(void) const;
+
 	private:
 		ActorId id;
+		sf::Vector2f start_pos;
 		const static int num_directions;
 		std::vector<EventDelegate> delegateFuncList;
 		bool damage = false;
@@ -78,6 +82,7 @@ class Actor {
 		sf::Sprite sprite_minimap;
 		int sprite_idx;
 		bool initial_init = true;
+		bool initial_postinit = true;
 
 		int instance;
 		int* game_state;

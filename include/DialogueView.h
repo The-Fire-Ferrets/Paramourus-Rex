@@ -16,8 +16,10 @@ class DialogueView {
 		
 		//images
 		static sf::Texture background_texture;
-		static sf::Sprite Diana;
-		static sf::Sprite Phil;
+		static sf::Sprite diana_sprite;
+		static sf::Sprite phil_sprite;
+		static sf::Texture phil_texture;
+		static sf::Texture diana_texture;
 		static sf::Sprite background;
 		static sf::RectangleShape backlay;
 
@@ -28,6 +30,8 @@ class DialogueView {
 		// positions
 		static sf::Vector2f dianaPos;
 		static sf::Vector2f philPos;
+		static sf::Vector2f philSize;
+		static sf::Vector2f dianaSize;
 		static sf::Vector2f dialogue_pos;
 
 		static bool pressed;

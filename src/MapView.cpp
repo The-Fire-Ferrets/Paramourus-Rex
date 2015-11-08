@@ -175,7 +175,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 	view_state = 0;
 	render(window);
 	int flowers_temp[] = {fireflowers_count[1], earthflowers_count[1], airflowers_count[1], waterflowers_count[1]};
-	LevelView::Create(levels[1].c_str(), state, flowers_temp);
+	LevelView::Create("LevelPlayer", state, flowers_temp);
 	view_state = 1;
 	LevelView::cleanUp();
     }

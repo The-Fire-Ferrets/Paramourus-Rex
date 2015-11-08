@@ -35,8 +35,13 @@ sf::RectangleShape DialogueView::backlay;
 // Images of Diana and Phil to be rendered
 sf::Vector2f DialogueView::dianaPos;
 sf::Vector2f DialogueView::philPos;
-sf::Sprite DialogueView::Diana;
-sf::Sprite DialogueView::Phil;
+sf::Vector2f DialogueView::dianaSize;
+sf::Vector2f DialogueView::philSize;
+sf::Sprite DialogueView::diana_sprite;
+sf::Sprite DialogueView::phil_sprite;
+sf::Texture DialogueView::phil_texture;
+sf::Texture DialogueView::diana_texture;
+
 bool DialogueView::pressed = false;
 
 // dialogue music
@@ -107,11 +112,23 @@ void DialogueView::Create(const char* resource, int* state){
 		}
 		// loading texture for Phil's image here
 		else if (!strcmp(attr.name(), "Phil")){
-
+            phil_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
 		}
 		// loading texture for Diana's image here
 		else if (!strcmp(attr.name(), "Diana")){
-
+            diana_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
+		}
+		else if (!strcmp(attr.name(), "PhilSizeX")){
+			philSize.x = (std::strtol(attr.value(), &temp, 10));
+			if (*temp != '\0') {
+				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
+		}
+		else if (!strcmp(attr.name(), "PhilSizeY")){
+			philSize.y = (std::strtol(attr.value(), &temp, 10));
+			if (*temp != '\0') {
+				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
 		}
 		else if (!strcmp(attr.name(), "PhilPosX")){
 			philPos.x = (std::strtol(attr.value(), &temp, 10));
@@ -121,6 +138,18 @@ void DialogueView::Create(const char* resource, int* state){
 		}
 		else if (!strcmp(attr.name(), "PhilPosY")){
 			philPos.y = (std::strtol(attr.value(), &temp, 10));
+			if (*temp != '\0') {
+				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
+		}
+		else if (!strcmp(attr.name(), "DianaSizeX")){
+			dianaSize.x = (std::strtol(attr.value(), &temp, 10));
+			if (*temp != '\0') {
+				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
+		}
+		else if (!strcmp(attr.name(), "DianaSizeY")){
+			dianaSize.y = (std::strtol(attr.value(), &temp, 10));
 			if (*temp != '\0') {
 				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
 			}
@@ -137,12 +166,19 @@ void DialogueView::Create(const char* resource, int* state){
 				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
 			}
 		}
+
 	}
 
 	text.setPosition(dialogue_pos);
 	text.setColor(sf::Color::Black);
-	Diana.setPosition(dianaPos);
-	Phil.setPosition(philPos);
+
+	// Create phil_ and diana_sprite here I think?
+	std::cout << "dianaPos.x = " << dianaPos.x << "and y=" << dianaPos.y << std::endl;
+	diana_sprite.setPosition(dianaPos);
+		diana_sprite = sf::Sprite(diana_texture);
+		diana_sprite.setScale(dianaSize.x/(diana_texture.getSize()).x, dianaSize.y/(diana_texture.getSize()).y);
+	    // diana_sprite.setPosition(sf::Vector2f(0,Configuration::getWindowHeight() - diana_sprite.getGlobalBounds().height));
+	phil_sprite.setPosition(philPos);
 	
 	unsigned int width = Configuration::getWindowWidth()/1.05;
 	unsigned int height = Configuration::getWindowHeight()/4;
@@ -235,6 +271,8 @@ void DialogueView::render(sf::RenderWindow *window){
 	window->draw(backlay);
 	window->draw(text);
 	// once Diana and Phil sprites are finished, will be rendered here as well
+	window->draw(phil_sprite);
+	window->draw(diana_sprite);
 }
 
 /** Play nice with the resources...
