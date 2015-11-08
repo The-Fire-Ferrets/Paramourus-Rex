@@ -47,6 +47,7 @@ sf::SoundBuffer DialogueView::buffer;
 sf::Sound DialogueView::sound;
 
 bool DialogueView::solved = false;
+unsigned DialogueView::num_times_impressed = 0;
 
 /** Searches for the correct dialogue box the player is on and populates the text with what you want Diana to be saying 
  ** resource: filename for XML  file we are getting the dialogue from. Currently just level0, only level we have.
@@ -114,6 +115,7 @@ void DialogueView::Create(const char* resource, int* state){
 			StrongActorPtr flower = CraftView::getFlower(attr.value());
 			if (flower) {
 				CraftView::removeFlower(flower);
+				++num_times_impressed;
 				solved = true;
 			}
 		}
