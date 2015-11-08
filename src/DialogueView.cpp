@@ -355,6 +355,9 @@ std::vector<std::string> DialogueView::fitStringToDialogueBox(std::string str) {
 			current_width += word_width;
 		}
 	}
+	
+	// pick up the last text box
+	boxes.push_back(fitted_string);
 
 	// done
 	return boxes;
