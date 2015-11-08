@@ -81,6 +81,9 @@ std::vector<EventDelegate> CraftView::delegateFuncList;
 sf::SoundBuffer CraftView::buffer;
 sf::Sound CraftView::sound;
 
+sf::Texture CraftView::character_tex;
+sf::Sprite  CraftView::character_sprite;
+
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -279,6 +282,16 @@ void CraftView::Create(const char* resource, int* state) {
 	  cc->setVases(cc->getVases()+1);
       }
     }
+
+	// draw character art
+	unsigned int width = Configuration::getWindowWidth()/10;
+	unsigned int posX = Configuration::getWindowWidth()/6.6;
+	unsigned int posY = Configuration::getWindowHeight()/1.4;
+
+	character_tex.loadFromFile("./assets/sprites/Homer.png");
+	character_sprite = sf::Sprite(character_tex);
+	character_sprite.setPosition(posX+320, posY-character_tex.getSize().y-4);
+			
 
 	// set text to initial greeting from Homer
     std::string str = "Welcome back, Phil! You have " + std::to_string(totalFlowers) + " flowers!\nTo craft them, click on their icons."; 
@@ -516,6 +529,7 @@ void CraftView::render(sf::RenderWindow *window) {
     window->draw(text);
     window->draw(map);
     window->draw(bookSprite);
+	window->draw(character_sprite);
     
     // draw sprite in the "crafting table" box if there is one in it
     if (box1 == true)
