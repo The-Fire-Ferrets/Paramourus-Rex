@@ -608,6 +608,19 @@ StrongActorPtr CraftView::getFlower(int instance) {
 	return nullptr;
 }
 
+/** Returns a pointer to a flower instance of the specified type, if present
+ ** type: the type of flower to look for
+ **/
+StrongActorPtr CraftView::getFlower(std::string type) {
+	for (auto it = CraftView::actorList.begin(); it != CraftView::actorList.end(); it++) {
+		std::shared_ptr<ActorComponent> ac = (*it)->components[CraftableComponent::id];
+		if (ac->getType() == type) {
+			return *it;
+		}
+	}
+	return nullptr;
+}
+
 /** Removes the given flower, if present
  ** TODO: does not modify counts of WEFA flowers or the flower_list
  **/

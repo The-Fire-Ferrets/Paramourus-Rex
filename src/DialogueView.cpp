@@ -1,4 +1,5 @@
 #include "DialogueView.h" 
+#include "CraftView.h"
 #include "Utilities.h"
 #include <vector>
 #include <algorithm>
@@ -47,6 +48,8 @@ bool DialogueView::pressed = false;
 // dialogue music
 sf::SoundBuffer DialogueView::buffer;
 sf::Sound DialogueView::sound;
+
+bool DialogueView::solved = false;
 
 /** Searches for the correct dialogue box the player is on and populates the text with what you want Diana to be saying 
  ** resource: filename for XML  file we are getting the dialogue from. Currently just level0, only level we have.
@@ -166,7 +169,13 @@ void DialogueView::Create(const char* resource, int* state){
 				std::cout << "DialogueView::Create: Error reading attribute for " << attr.name() << std::endl;
 			}
 		}
-
+		else if (!strcmp(attr.name(), "Flower")) {
+			StrongActorPtr flower = CraftView::getFlower(attr.value());
+			if (flower) {
+				CraftView::removeFlower(flower);
+				solved = true;
+			}
+		}
 	}
 
 	text.setPosition(dialogue_pos);
@@ -280,6 +289,7 @@ void DialogueView::render(sf::RenderWindow *window){
  **/
 void DialogueView::cleanUp() {
 	sound.stop();
+	solved = false;
 }
 
 std::vector<std::string> DialogueView::fitStringToDialogueBox(std::string str) {

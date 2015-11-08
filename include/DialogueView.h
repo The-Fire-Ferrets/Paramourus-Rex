@@ -42,6 +42,8 @@ class DialogueView {
 		static sf::Sound sound;
 		static int view_state;
 
+		static bool solved;
+
 	public:
 		static std::vector<std::string> boxes;     // what gets displayed on screen
 		static std::vector<std::string> dialogues; // what gets read in from the XML

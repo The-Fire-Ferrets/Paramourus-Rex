@@ -85,6 +85,7 @@ class CraftView  {
 		static StrongActorPtr selectedActor1;
 		static StrongActorPtr selectedActor2;
 		static StrongActorPtr getFlower(int instance);
+		static StrongActorPtr getFlower(std::string type);
 		static bool removeFlower(StrongActorPtr flower);
 		static void addDelegate(EventType type);
 
