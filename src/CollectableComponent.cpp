@@ -88,8 +88,8 @@ void CollectableComponent::update(EventInterfacePtr e) {
     if (event_type == CollectEvent::event_type && owner->getVisible()) {     
 	owner->setVisible(false);
         collector = other_actor;
-        owner->setPosition(sf::Vector2f(-1000, 0));
 	Pathfinder::removeFromPaths(owner->getPosition());
+        owner->setPosition(sf::Vector2f(-1000, 0));
 	if (!EventManagerInterface::get()->queueEvent(new CollectEvent(e->getTimeStamp(), owner->getInstance(), other_actor->getInstance())))
 		std::cout << "CollectableComponent::update: Unable to queue event" << std::endl;
 	std::cout << owner->getId() << " " << owner->getInstance() << "  collected by " << other_actor->getId() << " " << other_actor->getInstance() << std::endl;

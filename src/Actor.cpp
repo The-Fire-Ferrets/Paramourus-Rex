@@ -120,6 +120,28 @@ bool Actor::Init(pugi::xml_node* elem) {
 	    addDelegate(ContactEvent::event_type);
 		initial_init = false;
 	}
+	if (id =="Player") {
+		path_type = -4;
+	}
+	else if (id == "NPC") {
+		path_type = -3;
+	}
+	else if (id == "FireFlower") {
+		path_type = -2;
+	}
+	else if (id == "EarthFlower") {
+		path_type = -1;
+	}
+	else if (id == "WaterFlower") {
+		path_type = -1;
+	}
+	else if (id == "AirFlower") {
+		path_type = -1;
+	}
+	else {
+		path_type = -1;
+	}
+	//std::cout << id << " " << path_type << std::endl;
     return true;
 }
 
@@ -193,7 +215,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		}
 	    }
 	    position = pos;
-		start_pos = position;
+		start_position = position;
 		boundary.clear();
 	    boundary.push_back(new sf::FloatRect(position.x, position.y, size.x, size.y));
 		for (int i = 0; i < num_directions; i++) {
@@ -417,9 +439,16 @@ void Actor::updateBoundary(void) {
 
 
 // Mutators and accesors
+int Actor::getPathType(void) {
+	return path_type;
+}
 
-sf::Vector2f Actor::getStartPos(void) {
-	return start_pos;
+sf::Vector2f Actor::getStartPosition(void) {
+	return start_position;
+}
+
+void Actor::setStartPosition(sf::Vector2f pos) {
+	start_position = pos;
 }
 /** returns the actors boundary
  **

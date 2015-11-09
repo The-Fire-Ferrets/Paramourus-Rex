@@ -50,7 +50,7 @@
 		</PhysicsComponent>
 	</Obstacle>
 
-	<NPC Generate = "5">
+	<NPC>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</NPC>
 	<Obstacle Generate = "10">
