@@ -30,8 +30,8 @@ int CraftView::total_craft_visits = 1;
 // holds list of flowers actor has collected
 std::string CraftView::flower_list[size];
 std::vector<StrongActorPtr> CraftView::actorList;
-StrongActorPtr CraftView::selectedActor1;
-StrongActorPtr CraftView::selectedActor2;
+StrongActorPtr CraftView::selectedActor1 = nullptr;
+StrongActorPtr CraftView::selectedActor2 = nullptr;
 
 // Holds all of sprites to be drawn
 sf::Sprite CraftView::sprites[size];
@@ -80,6 +80,9 @@ std::vector<EventDelegate> CraftView::delegateFuncList;
 // craft music
 sf::SoundBuffer CraftView::buffer;
 sf::Sound CraftView::sound;
+
+sf::Texture CraftView::character_tex;
+sf::Sprite  CraftView::character_sprite;
 
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
@@ -280,6 +283,16 @@ void CraftView::Create(const char* resource, int* state) {
       }
     }
 
+	// draw character art
+	unsigned int width = Configuration::getWindowWidth()/10;
+	unsigned int posX = Configuration::getWindowWidth()/6.6;
+	unsigned int posY = Configuration::getWindowHeight()/1.4;
+
+	character_tex.loadFromFile("./assets/sprites/Homer.png");
+	character_sprite = sf::Sprite(character_tex);
+	character_sprite.setPosition(posX+320, posY-character_tex.getSize().y-4);
+			
+
 	// set text to initial greeting from Homer
     std::string str = "Welcome back, Phil! You have " + std::to_string(totalFlowers) + " flowers!\nTo craft them, click on their icons."; 
     text.setString(str);
@@ -328,7 +341,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 				    			selectedActor1 = actorList[j];
 							break;
 				    		}
-				    		else if (box2 == false){
+				    		else if (box2 == false && actorList[j] != selectedActor1){
 				    			selectedActor2 = actorList[j];
 							break;
 				    		}
@@ -386,12 +399,14 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	   // Clear sprite image, add newly combined sprite to inventory?
 	   if (actor1CC->doesCombineWith(*actor2CC)){
 		   std::cout << "combining" << std::endl;
-	      box1 = false;
-	      box2 = false;
-	      //actor1CC->combineWith(*actor2CC); 
-	      if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0, selectedActor1->getInstance(), selectedActor2->getInstance())))
-		std::cout << "CraftView::update: Unable to queue event" << std::endl;	
-		std::cout << "Sent craft event to Flower: " << selectedActor1->getInstance() << " and Flower: " << selectedActor2->getInstance() << std::endl;
+		   box1 = false;
+		   box2 = false;
+		   //actor1CC->combineWith(*actor2CC); 
+		   if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0, selectedActor1->getInstance(), selectedActor2->getInstance())))
+			   std::cout << "CraftView::update: Unable to queue event" << std::endl;	
+		   std::cout << "Sent craft event to Flower: " << selectedActor1->getInstance() << " and Flower: " << selectedActor2->getInstance() << std::endl;
+		   selectedActor1 = nullptr;
+		   selectedActor2 = nullptr;
 	   }
 	   
 	   // update text box to indicate that you cannot combine flowers
@@ -466,37 +481,41 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 void CraftView::update(EventInterfacePtr e) {
 	// fiugre out who just got crafted so we can display their new state
 	EventType event_type = e->getEventType();
-	if (e->getReceiver() == -1) {
+	static int visits = 0; // two events are being sent
+
+	if (visits == 0 && e->getReceiver() == -1 && event_type == CraftEvent::event_type) {
 		StrongActorPtr sender = CraftView::getFlower(e->getSender());
-		// item crafting completed
-		if (event_type == CraftEvent::event_type) {
+		if (sender->hasComponent(CraftableComponent::id)) {
+			// item crafting completed
+			sender->components;
 			StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
 			text.setString("Diana's sure to love this new " + ac->getType() + ", Phil!");
+			if (ac->getType() == "SunFlower"){
+				sunFlowers++;
+			}
+			else if (ac->getType() == "Tulip"){
+				tulips++;
+			}
+			else if (ac->getType() == "Rose"){
+				roses++;
+			}
+			else if (ac->getType() == "Violet"){
+				violets++;
+			}
+			else if (ac->getType() == "Lily"){
+				lilies++;
+			}
+			else if (ac->getType() == "Orchid"){
+				orchids++;
+			}
+			else if (ac->getType() == "Magnolia"){
+				magnolias++;
+			}
+			std::cout << "updated flower count" << std::endl;
 		}
-	std::cout << "CraftView::Update: attempting to craft flower " + sender->getId();
-
-	if (sender->getId() == "SunFlower"){
-	    sunFlowers++;
 	}
-	else if (sender->getId() == "Tulip"){
-		  tulips++;
-	    }
-	    else if (sender->getId() == "Rose"){
-			  roses++;
-	    }
-	    else if (sender->getId() == "Violet"){
-			  violets++;
-	    }
-	    else if (sender->getId() == "Lily"){
-			  lilies++;
-	    }
-	    else if (sender->getId() == "Orchid"){
-			  orchids++;
-	    }
-	    else if (sender->getId() == "Magnolia"){
-			  magnolias++;
-	    }
-	}
+	++visits;
+	if (visits == 2) visits = 0;
 }
 
 /** Renders the backdrop and menu selects onto the window, as well as option to
@@ -510,6 +529,7 @@ void CraftView::render(sf::RenderWindow *window) {
     window->draw(text);
     window->draw(map);
     window->draw(bookSprite);
+	window->draw(character_sprite);
     
     // draw sprite in the "crafting table" box if there is one in it
     if (box1 == true)
@@ -596,6 +616,19 @@ void CraftView::quit(void) {
 StrongActorPtr CraftView::getFlower(int instance) {
 	for (auto it = CraftView::actorList.begin(); it != CraftView::actorList.end(); it++) {
 		if ((*it)->getInstance() == instance) {
+			return *it;
+		}
+	}
+	return nullptr;
+}
+
+/** Returns a pointer to a flower instance of the specified type, if present
+ ** type: the type of flower to look for
+ **/
+StrongActorPtr CraftView::getFlower(std::string type) {
+	for (auto it = CraftView::actorList.begin(); it != CraftView::actorList.end(); it++) {
+		std::shared_ptr<ActorComponent> ac = (*it)->components[CraftableComponent::id];
+		if (ac->getType() == type) {
 			return *it;
 		}
 	}
