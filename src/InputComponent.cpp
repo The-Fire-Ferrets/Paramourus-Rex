@@ -110,7 +110,7 @@ void InputComponent::update(float time) {
 		std::vector<float> distances;
 		std::vector<sf::Vector2f> directions;
 		sf::Vector2f last_pos = owner->getPosition();
-		sf::Vector2f next_pos = Pathfinder::getNextPosition(owner->getStartPos());
+		sf::Vector2f next_pos = Pathfinder::getNextPosition(distance, owner->getStartPosition());
 		if (last_pos.x < next_pos.x)
 			next_direction.x = 1;
 		else if (last_pos.x > next_pos.x)

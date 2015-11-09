@@ -43,6 +43,7 @@ class LevelView  {
 		static void generateActor(pugi::xml_node* elem, int* state, int generate = 1);
 		static std::vector<StrongActorPtr> actorList;	
 		static StrongActorPtr player;
+		static StrongActorPtr npc;
 		static std::string getName(void);
 		static int getNumActors(void);
 		static void start();

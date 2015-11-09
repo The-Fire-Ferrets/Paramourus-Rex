@@ -2,122 +2,170 @@
 #define PATHFINDER_H
 
 #include "Constants.h"
+
+typedef std::pair<int, int> GridLocation;
+typedef std::vector<sf::Vector2f> PathList;
+typedef int** Grid;
+
 class Pathfinder { 
 	friend class CraftView;
-
-	struct pathNode {
-		pathNode* parent;
-		std::pair<int, int> pos;
-		int cost;
-		pathNode* next;
-		pathNode (std::pair<int, int> p, int c) {
-			parent = NULL;
-			next = NULL;
-			pos = p;
-			cost = c;
-		}
-		pathNode (std::pair<int, int> p, int c, pathNode* p_node) {
-			parent = p_node;
-			next = NULL;
-			pos = p;
-			cost = c;
-		}
-		std::vector<pathNode*> neighbors(int*** flower_grid) {
-			std::vector<pathNode*> n;
-			std::pair<int, int> next_loc;
-			next_loc = std::pair<int, int>(pos.first + 1, pos.second);
-			if (isValidMove(next_loc, flower_grid))
-				n.push_back(new pathNode(next_loc, cost));
-
-			next_loc = std::pair<int, int>(pos.first - 1, pos.second);
-			if (isValidMove(next_loc, flower_grid))
-				n.push_back(new pathNode(next_loc, cost));
-
-			next_loc = std::pair<int, int>(pos.first, pos.second + 1);
-			if (isValidMove(next_loc, flower_grid))
-				n.push_back(new pathNode(next_loc, cost));
-
-			next_loc = std::pair<int, int>(pos.first, pos.second - 1);
-			if (isValidMove(next_loc, flower_grid))
-				n.push_back(new pathNode(next_loc, cost));
-
-			next_loc = std::pair<int, int>(pos.first + 1, pos.second + 1);
-			if (isValidMove(next_loc, flower_grid))
-				n.push_back(new pathNode(next_loc, cost));
-
-			next_loc = std::pair<int, int>(pos.first - 1, pos.second + 1);
-			if (isValidMove(next_loc, flower_grid))
-				n.push_back(new pathNode(next_loc, cost));
-
-			next_loc = std::pair<int, int>(pos.first - 1, pos.second - 1);
-			if (isValidMove(next_loc, flower_grid))
-				n.push_back(new pathNode(next_loc, cost));
-
-			next_loc = std::pair<int, int>(pos.first + 1, pos.second - 1);
-			if (isValidMove(next_loc, flower_grid))
-				n.push_back(new pathNode(next_loc, cost));
-			return n;
-		}
-		bool containedIn(std::vector<pathNode*> l) {
-			std::vector<pathNode*>::iterator itr;
-			for (itr = l.begin(); itr != l.end(); itr++) {
-				if ((*itr)->pos == pos)
-					return true;
+	public:
+		struct pathNode {
+			pathNode* parent;
+			GridLocation pos;
+			int cost;
+			pathNode* next;
+			pathNode (GridLocation p, int c) {
+				parent = NULL;
+				next = NULL;
+				pos = p;
+				cost = c;
 			}
-			return false;
-		}
-		bool containedIn(std::vector<pathNode*>* l) {
-			std::vector<pathNode*>::iterator itr;
-			for (itr = l->begin(); itr != l->end(); itr++) {
-				if ((*itr)->pos == pos)
-					return true;
+			pathNode (GridLocation p, int c, pathNode* p_node) {
+				parent = p_node;
+				next = NULL;
+				pos = p;
+				cost = c;
 			}
-			return false;
-		}
-		pathNode* getRoot() {
-			while (parent != NULL) {
-				parent->next = this;
-				return parent->getRoot();
+			std::vector<pathNode*> neighbors(Grid* target_grid) {
+				std::vector<pathNode*> n;
+				GridLocation next_loc;
+				next_loc = GridLocation(pos.first + 1, pos.second);
+				if (isValidMove(next_loc, target_grid))
+					n.push_back(new pathNode(next_loc, cost + 1));
+
+				next_loc = GridLocation(pos.first - 1, pos.second);
+				if (isValidMove(next_loc, target_grid))
+					n.push_back(new pathNode(next_loc, cost + 1));
+
+				next_loc = GridLocation(pos.first, pos.second + 1);
+				if (isValidMove(next_loc, target_grid))
+					n.push_back(new pathNode(next_loc, cost + 1));
+
+				next_loc = GridLocation(pos.first, pos.second - 1);
+				if (isValidMove(next_loc, target_grid))
+					n.push_back(new pathNode(next_loc, cost + 1));
+
+				next_loc = GridLocation(pos.first + 1, pos.second + 1);
+				if (isValidMove(next_loc, target_grid))
+					n.push_back(new pathNode(next_loc, cost + 1));
+
+				next_loc = GridLocation(pos.first - 1, pos.second + 1);
+				if (isValidMove(next_loc, target_grid))
+					n.push_back(new pathNode(next_loc, cost + 1));
+
+				next_loc = GridLocation(pos.first - 1, pos.second - 1);
+				if (isValidMove(next_loc, target_grid))
+					n.push_back(new pathNode(next_loc, cost + 1));
+
+				next_loc = GridLocation(pos.first + 1, pos.second - 1);
+				if (isValidMove(next_loc, target_grid))
+					n.push_back(new pathNode(next_loc, cost + 1));
+				return n;
 			}
-			return this;
-		}
-		float distance(pathNode* other) {
-			return sqrt(pow(other->pos.first - pos.first, 2.0) + pow(other->pos.second - pos.second, 2.0));
-		}
-	};
+			bool containedIn(std::vector<pathNode*> l) {
+				std::vector<pathNode*>::iterator itr;
+				for (itr = l.begin(); itr != l.end(); itr++) {
+					if ((*itr)->pos == pos)
+						return true;
+				}
+				return false;
+			}
+			bool containedIn(std::vector<pathNode*>* l) {
+				std::vector<pathNode*>::iterator itr;
+				for (itr = l->begin(); itr != l->end(); itr++) {
+					if ((*itr)->pos == pos)
+						return true;
+				}
+				return false;
+			}
+			pathNode* getRoot() {
+				while (parent != NULL) {
+					parent->next = this;
+					return parent->getRoot();
+				}
+				return this;
+			}
+			PathList getPath() {
+				PathList final_path;
+				pathNode* temp = this;
+				while ( temp != NULL ) {
+					final_path.push_back(sf::Vector2f(temp->pos.second * player_size, temp->pos.first * player_size));
+					temp = temp->parent;
+				}
+				return final_path;
+			}
+			float distance(pathNode* other) {
+				return sqrt(pow(other->pos.first - pos.first, 2.0) + pow(other->pos.second - pos.second, 2.0));
+			}
+			float distance(GridLocation other_pos) {
+				return sqrt(pow(other_pos.first - pos.first, 2.0) + pow(other_pos.second - pos.second, 2.0));
+			}
+		};
+		
 	private:
-		static std::map<std::pair<int, int>, int**> flower_grids;
-		static int** grid;
+		static std::map<GridLocation*, Grid> target_grids;
+		static Grid grid;
 		static int rows;
 		static int cols;
 		static int level_height;
 		static int level_width;
 		static int player_size;
-		static std::vector<sf::Vector2i> flowers;
-		static std::vector<sf::Vector2i> start_positions;
-		static void updateVertex(std::vector<pathNode*>* open, std::vector<pathNode*>* closed, pathNode* p_node, pathNode* c_node, int*** flower_grid);
-		static void getFullCost(pathNode* p_node, pathNode* c_node, int*** flower_grid);
+		static std::vector<GridLocation> targets;
+		static std::map<GridLocation*, int> target_values;
+		static std::vector<GridLocation> start_positions;
+		static void updateVertex(std::vector<pathNode*>* open, std::vector<pathNode*>* closed, pathNode* p_node, pathNode* c_node, Grid* target_grid);
+		static void getFullCost(pathNode* p_node, pathNode* c_node, Grid* target_grid);
 		static void removeFrom(std::vector<pathNode*>* l, pathNode* n);
-		static std::map<std::pair<int, int>, Pathfinder::pathNode*> paths;
-		static bool lineOfSight(pathNode* p_node, pathNode* c_node, int*** flower_grid);
-		static void generateHCost_helper(std::vector<sf::Vector2i> left, int*** flower_grid);
+		static std::map<GridLocation*, std::pair<GridLocation*, PathList*>> paths;
+		static std::map<std::pair<GridLocation*, GridLocation*>, PathList> allPaths;
+		static bool lineOfSight(pathNode* p_node, pathNode* c_node, Grid* target_grid);
+		static void generateHCost_helper(std::vector<GridLocation> left, Grid* target_grid);
 		static std::vector<EventDelegate> delegateFuncList;
+		static void generateHCost(GridLocation* target_pos, GridLocation curr_pos);
+		static void setVertex(std::vector<pathNode*>* closed, pathNode* p_node, Grid* target_grid);
+		static GridLocation* findTarget(GridLocation pos);
+		static GridLocation* findStart(GridLocation pos);
+		static GridLocation* findNewTarget(GridLocation pos);
+		static bool isValidTarget(GridLocation* ptr);
+		static void selectNewPath(GridLocation* start_pt);
 
 	public:
 		static void Create(int lw, int lh, int ps);
-		static void addToGrid(std::vector<sf::FloatRect*> bounds, int type);
+		static void addToGrid(std::vector<sf::FloatRect*> bounds, int type, StrongActorPtr actor_ptr);
+		static void generatePath(GridLocation start, GridLocation new_start);
 		static void generateHCosts(void);
 		static void print(void);
-		static int getCost(sf::Vector2f pos, sf::Vector2f dir, int*** flower_grid);
-		static int getCost(sf::Vector2f pos, int*** flower_grid);
-		static int getCost(std::pair<int, int> loc, int*** flower_grid);
-		static int addToCost(sf::Vector2f pos, sf::Vector2f dir, int incr, int*** flower_grid);
-		static sf::Vector2i getPositionMapping(sf::Vector2f pos); 
-		static float getDistance(sf::Vector2f pos,  sf::Vector2f dir);
+		static void print(Grid* target_grid);
+		static int getCost(sf::Vector2f pos, sf::Vector2f dir, Grid* target_grid);
+		static int getCost(sf::Vector2f pos, Grid* target_grid);
+		static int getCost(GridLocation loc, Grid* target_grid);
+		static int addToCost(sf::Vector2f pos, sf::Vector2f dir, int incr, Grid* target_grid);
+		static GridLocation getPositionMapping(sf::Vector2f pos); 
+		static float getDistance(sf::Vector2f pos,  sf::Vector2f pos2);
 		static void generatePaths(void);
-		static bool isValidMove(std::pair<int, int> loc, int*** flower_grid);
-		static sf::Vector2f getNextPosition(sf::Vector2f start_pos);
+		static bool isValidMove(GridLocation loc, Grid* target_grid);
+		static bool isValidPlacement(GridLocation loc, Grid* target_grid);
+		static sf::Vector2f getNextPosition(float dist, sf::Vector2f start_pos);
 		static void removeFromPaths(sf::Vector2f pos);
+		static void generatePath2(sf::Vector2f start_pos, sf::Vector2f curr_pos);
+		static std::mutex paths_mutex;
+		static std::mutex targets_mutex;
+		static std::map<GridLocation*, bool> inProcessTargets;
+		static std::map<std::pair<GridLocation*, GridLocation*>, bool> inProcessPaths;
+		static std::map<std::pair<GridLocation*, GridLocation*>, bool> pathUpdates;
+		static void updateTargetGrid(sf::Vector2f start_pos, sf::Vector2f curr_pos);
+		static bool canUpdateTargetGrid(sf::Vector2f start_pos);
+		static bool canUpdateStartPath(sf::Vector2f start_pos);
 };
 
+
+namespace std {
+	template <> 
+	struct hash<Pathfinder::pathNode> {
+		std::size_t operator()(const Pathfinder::pathNode &t) const {
+			return (51 + std::hash<int>()(t.pos.first)) * 51 + std::hash<int>()(t.pos.second);
+		}
+	};
+}
 #endif

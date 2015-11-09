@@ -120,11 +120,15 @@ int main(int argc, char* argv[])
 
 		//Proccess all events
 		switch(state) {
+			case 1:
+				//std::thread(&Pathfinder::generatePath2, LevelView::npc->getStartPos(), LevelView::npc->getPosition(), LevelView::player->getPosition());
+				//Pathfinder::generatePath(LevelView::npc->getStartPos(), LevelView::npc->getPosition(), LevelView::player->getPosition());
+				break;
 			default: 
-				if (!eventmanagerptr->processEvents())
-					std::cout << "Main: Failed to process events" << std::endl; 
 				break;
 		}
+		if (!eventmanagerptr->processEvents())
+			std::cout << "Main: Failed to process events" << std::endl; 
 	}
 	
 	return 0;
