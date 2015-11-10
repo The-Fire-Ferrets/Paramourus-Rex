@@ -28,7 +28,6 @@ class Actor {
 
 		void move(float distance, sf::Vector2f direction);
 		void move(sf::Vector2f next_pos, sf::Vector2f direction);
-		void move(std::vector<float> distance, std::vector<sf::Vector2f> direction);
 		void update(float time);
 		void render(sf::RenderWindow *window, bool minimap);
 		void reset(void);

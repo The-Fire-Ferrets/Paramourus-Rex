@@ -104,25 +104,9 @@ void InputComponent::update(float time) {
     sf::Vector2f last_direction = this->getDirection();
     sf::Vector2f next_direction;
 
-    if (type == "Keyboard") {
-	std::vector<float> distances;
-	std::vector<sf::Vector2f> directions;
-	sf::Vector2f last_pos = owner->getPosition();
-	sf::Vector2f next_pos = Pathfinder::getNextPosition(distance, owner->getStartPosition(), owner->getPosition());
-	if (last_pos.x < next_pos.x)
-		next_direction.x = 1;
-	else if (last_pos.x > next_pos.x)
-		next_direction.x = -1;
-	else
-		next_direction.x = 0;
-
-	if (last_pos.y < next_pos.y)
-		next_direction.y = 1;
-	else if (last_pos.y > next_pos.y)
-		next_direction.y = -1;
-	else
-		next_direction.y = 0;
-
+    if (type == "Artificial") {
+	sf::Vector2f next_pos;
+	Pathfinder::getNextPosition(distance, owner->getStartPosition(), owner->getPosition(), &next_pos, &next_direction);
 	
 	owner->move(next_pos, next_direction);
     }
@@ -133,19 +117,19 @@ void InputComponent::update(float time) {
         //Reads Input and perform actions
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
             next_direction = NORTHEAST;
-	    distance *= cos(45);
+	    //distance *= cos(45);
         }   
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             next_direction = NORTHWEST;
-	    distance *= cos(45);
+	    //distance *= cos(45);
         }      
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
             next_direction = SOUTHEAST;
-	    distance *= cos(45);
+	    //distance *= cos(45);
         }    
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             next_direction = SOUTHWEST;
-	    distance *= cos(45);
+	    //distance *= cos(45);
         }        
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
             next_direction = NORTH;

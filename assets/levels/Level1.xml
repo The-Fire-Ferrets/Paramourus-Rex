@@ -79,7 +79,7 @@
 	<Obstacle Generate = "10">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Obstacle>
-	<FireFlower Generate = "4">
+	<FireFlower Generate = "1">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</FireFlower>
 </Level1>

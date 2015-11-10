@@ -147,7 +147,7 @@ class Pathfinder {
 		static void generatePaths(void);
 		static bool isValidMove(GridLocation loc, Grid* target_grid);
 		static bool isValidPlacement(GridLocation loc, Grid* target_grid);
-		static sf::Vector2f getNextPosition(float dist, sf::Vector2f start_pos, sf::Vector2f curr_pos);
+		static void getNextPosition(float dist, sf::Vector2f start_pos, sf::Vector2f curr_pos, sf::Vector2f* next_pos, sf::Vector2f* direction);
 		static void removeFromPaths(sf::Vector2f pos);
 		static void generatePath2(sf::Vector2f start_pos, sf::Vector2f curr_pos);
 		static std::mutex paths_mutex;
