@@ -322,7 +322,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 					(*it)->setStartPosition(new_pos);
 				}
 			}
-		}
+		}*/
 
 		for (it = actorList.begin(); it != actorList.end(); it++) {
 			if((*it)->getPathType() == -3) {
@@ -335,11 +335,11 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 					(*it)->setStartPosition(new_pos);
 				}
 			}
-		}*/
+		}
 
 		for (it = actorList.begin(); it != actorList.end(); it++) {
-			//if((*it)->getPathType() == -1) {
-			if((*it)->getPathType() < 0) {
+			if((*it)->getPathType() == -1 || (*it)->getPathType() == -2 || (*it)->getPathType() == -4) {
+			//if((*it)->getPathType() < 0) {
 				(*it)->update(time);
 			}
 		}

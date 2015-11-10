@@ -134,7 +134,7 @@ class Pathfinder {
 	public:
 		static void Create(int lw, int lh, int ps);
 		static void addToGrid(std::vector<sf::FloatRect*> bounds, int type, StrongActorPtr actor_ptr);
-		static void generatePath(GridLocation start, GridLocation target, GridLocation new_start);
+		static void generatePath(GridLocation start, GridLocation target, GridLocation new_start, bool change_path = false);
 		static void generateHCosts(void);
 		static void print(void);
 		static void print(Grid* target_grid);
