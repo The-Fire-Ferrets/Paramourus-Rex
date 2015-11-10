@@ -491,7 +491,7 @@ bool Pathfinder::selectNewPath(GridLocation* start_ptr, GridLocation curr_pair) 
 			//for (auto itr1 = itr->second.begin(); itr1 != itr->second.end(); itr1++) {
 			//	std::cout << "("<< itr1->x << " " << itr1->y << "), ";
 			//}
-			std::cout << std::endl;
+			//std::cout << std::endl;
 			return true;
 		}
 	}	
@@ -511,7 +511,7 @@ bool Pathfinder::selectNewPath(GridLocation* start_ptr, GridLocation curr_pair) 
 			//for (auto itr1 = itr->second.begin(); itr1 != itr->second.end(); itr1++) {
 			//	std::cout << "("<< itr1->x << " " << itr1->y << "), ";
 			//}
-			std::cout << std::endl;
+			//std::cout << std::endl;
 			return true;
 		}
 	}
@@ -709,7 +709,7 @@ void Pathfinder::removeFromPaths(sf::Vector2f pos) {
 			//	std::cout << "("<< itr1->x << " " << itr1->y << "), ";
 			//}
 			//std::cout << std::endl;
-			std::cout << allPaths.size() << " " << paths.size() << std::endl;
+			//std::cout << allPaths.size() << " " << paths.size() << std::endl;
 		}
 	}
 
