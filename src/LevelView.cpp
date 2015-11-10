@@ -322,10 +322,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 					(*it)->setStartPosition(new_pos);
 				}
 			}
-		}
-
-		for (it = actorList.begin(); it != actorList.end(); it++) {
-			if((*it)->getPathType() == -3) {
+			else if((*it)->getPathType() == -3) {
 				//std::cout << (*it)->getId() << " Start" << std::endl;
 				(*it)->update(time);
 				sf::Vector2f start_pos = (*it)->getStartPosition();
@@ -335,14 +332,11 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 					(*it)->setStartPosition(new_pos);
 				}
 			}
-		}
-
-		for (it = actorList.begin(); it != actorList.end(); it++) {
-			if((*it)->getPathType() == -1 || (*it)->getPathType() == -2 || (*it)->getPathType() == -4) {
-			//if((*it)->getPathType() < 0) {
+			else if((*it)->getPathType() == -1) {
 				(*it)->update(time);
 			}
 		}
+
 
 		//Set timer to bottom right corner
 		sf::Vector2f gameView_bottom_corner = Configuration::getGameViewCenter();

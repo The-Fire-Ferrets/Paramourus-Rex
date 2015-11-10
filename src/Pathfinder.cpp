@@ -621,7 +621,7 @@ void Pathfinder::removeFrom(std::vector<pathNode*>* l, pathNode* n) {
  **
 **/
 bool Pathfinder::isValidMove(GridLocation loc, Grid* target_grid) {
-	return (loc.first < rows && loc.second < cols && loc.first >= 0 && loc.second >= 0 && (*target_grid)[loc.first][loc.second] != -1);
+	return (loc.first < rows) && (loc.second < cols) && (loc.first >= 0) && (loc.second >= 0) && ((*target_grid)[loc.first][loc.second] != -1);
 }
 
 /** Generates costs on the grid

@@ -273,6 +273,7 @@ void Actor::PostInit(void) {
 		sprite_idx = 1;
         sf::Vector2f p = next_pos;
 
+	
         this->setPosition(p);
         
     }
