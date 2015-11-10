@@ -56,7 +56,7 @@ unsigned DialogueView::num_times_impressed = 0;
 void DialogueView::Create(const char* resource, int* state){
 	dialogues.clear();
 	boxes.clear();
-
+	view_state = 1;
 	//Reset the index before each iteration
 	index = 0;
 	// reference to XML file we are getting our info from
@@ -198,8 +198,9 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 			if (index >= boxes.size()){
 				if (view_state == 1)
 					*state = 0;
-				else if (view_state == 2)
+				else if (view_state == 2) {
 					*state = 5;
+				}
 				cleanUp();
 			}
 			else{

@@ -104,30 +104,27 @@ void InputComponent::update(float time) {
     sf::Vector2f last_direction = this->getDirection();
     sf::Vector2f next_direction;
 
-    if (type == "Artificial") {
-	if (counter++ > 100) {
-		counter = 0;
-		std::vector<float> distances;
-		std::vector<sf::Vector2f> directions;
-		sf::Vector2f last_pos = owner->getPosition();
-		sf::Vector2f next_pos = Pathfinder::getNextPosition(distance, owner->getStartPosition());
-		if (last_pos.x < next_pos.x)
-			next_direction.x = 1;
-		else if (last_pos.x > next_pos.x)
-			next_direction.x = -1;
-		else
-			next_direction.x = 0;
+    if (type == "Keyboard") {
+	std::vector<float> distances;
+	std::vector<sf::Vector2f> directions;
+	sf::Vector2f last_pos = owner->getPosition();
+	sf::Vector2f next_pos = Pathfinder::getNextPosition(distance, owner->getStartPosition(), owner->getPosition());
+	if (last_pos.x < next_pos.x)
+		next_direction.x = 1;
+	else if (last_pos.x > next_pos.x)
+		next_direction.x = -1;
+	else
+		next_direction.x = 0;
 
-		if (last_pos.y < next_pos.y)
-			next_direction.y = 1;
-		else if (last_pos.y > next_pos.y)
-			next_direction.y = -1;
-		else
-			next_direction.y = 0;
+	if (last_pos.y < next_pos.y)
+		next_direction.y = 1;
+	else if (last_pos.y > next_pos.y)
+		next_direction.y = -1;
+	else
+		next_direction.y = 0;
+
 	
-		
-		owner->move(next_pos, next_direction);
-	}
+	owner->move(next_pos, next_direction);
     }
 
     else if (type == "Keyboard") {

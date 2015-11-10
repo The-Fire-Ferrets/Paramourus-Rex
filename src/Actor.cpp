@@ -121,22 +121,22 @@ bool Actor::Init(pugi::xml_node* elem) {
 		initial_init = false;
 	}
 	if (id =="Player") {
-		path_type = -4;
+		path_type = -3;
 	}
 	else if (id == "NPC") {
-		path_type = -3;
+		path_type = -4;
 	}
 	else if (id == "FireFlower") {
 		path_type = -2;
 	}
 	else if (id == "EarthFlower") {
-		path_type = -1;
+		path_type = -2;
 	}
 	else if (id == "WaterFlower") {
-		path_type = -1;
+		path_type = -2;
 	}
 	else if (id == "AirFlower") {
-		path_type = -1;
+		path_type = -2;
 	}
 	else {
 		path_type = -1;
@@ -199,8 +199,9 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		bool new_position = false;
 		bool conflict = false;
 		while (!new_position) {
-		    pos.x = rand() % (int)(Configuration::getWindowWidth() - size.x);
-		    pos.y = rand() % (int)(Configuration::getWindowHeight() - size.y);
+		    pos.x = rand() % (int)(Configuration::getWindowWidth() - size.x * size.x);
+		    pos.y = rand() % (int)(Configuration::getWindowHeight() - size.y * size.y);
+			//std::cout << pos.x << " " << pos.y << std::endl;
 		    bound = sf::FloatRect(pos.x, pos.y, size.x, size.y);
 		    std::vector<StrongActorPtr>::iterator it_all;
 		    for (it_all = LevelView::actorList.begin(); it_all != LevelView::actorList.end(); it_all++) {
@@ -216,6 +217,8 @@ void Actor::PostInit(pugi::xml_node* elem) {
 	    }
 	    position = pos;
 		start_position = position;
+		//if (id == "Player")
+		//	std::cout << position.x << " int " << position.y << std::endl;
 		boundary.clear();
 	    boundary.push_back(new sf::FloatRect(position.x, position.y, size.x, size.y));
 		for (int i = 0; i < num_directions; i++) {
@@ -244,7 +247,8 @@ void Actor::PostInit(pugi::xml_node* elem) {
 				sprite_texture[i].loadFromFile(("./assets/backgrounds/" + sprite_filename[0]).c_str());
 			
 	}
-	
+	//if (id == "Player")
+	//	std::cout << position.x << " final " << position.y << std::endl;
 	
 }
 
@@ -518,6 +522,7 @@ sf::Vector2f Actor::getPosition(void) {
  **
  **/
 void Actor::setPosition(sf::Vector2f pos) {
+	//std::cout << pos.x << " setting " << pos.y << std::endl;
 	position = pos;
 	updateBoundary();
 	for (int i = 0; i < num_directions; i++) {

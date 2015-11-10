@@ -111,7 +111,7 @@ class Pathfinder {
 		static int level_height;
 		static int level_width;
 		static int player_size;
-		static std::vector<GridLocation> targets;
+		static std::vector<std::pair<GridLocation, int>> targets;
 		static std::map<GridLocation*, int> target_values;
 		static std::vector<GridLocation> start_positions;
 		static void updateVertex(std::vector<pathNode*>* open, std::vector<pathNode*>* closed, pathNode* p_node, pathNode* c_node, Grid* target_grid);
@@ -128,12 +128,13 @@ class Pathfinder {
 		static GridLocation* findStart(GridLocation pos);
 		static GridLocation* findNewTarget(GridLocation pos);
 		static bool isValidTarget(GridLocation* ptr);
-		static void selectNewPath(GridLocation* start_pt);
+		static bool selectNewPath(GridLocation* start_pt, GridLocation curr_pair);
+		static int first_run;
 
 	public:
 		static void Create(int lw, int lh, int ps);
 		static void addToGrid(std::vector<sf::FloatRect*> bounds, int type, StrongActorPtr actor_ptr);
-		static void generatePath(GridLocation start, GridLocation new_start);
+		static void generatePath(GridLocation start, GridLocation target, GridLocation new_start);
 		static void generateHCosts(void);
 		static void print(void);
 		static void print(Grid* target_grid);
@@ -146,7 +147,7 @@ class Pathfinder {
 		static void generatePaths(void);
 		static bool isValidMove(GridLocation loc, Grid* target_grid);
 		static bool isValidPlacement(GridLocation loc, Grid* target_grid);
-		static sf::Vector2f getNextPosition(float dist, sf::Vector2f start_pos);
+		static sf::Vector2f getNextPosition(float dist, sf::Vector2f start_pos, sf::Vector2f curr_pos);
 		static void removeFromPaths(sf::Vector2f pos);
 		static void generatePath2(sf::Vector2f start_pos, sf::Vector2f curr_pos);
 		static std::mutex paths_mutex;

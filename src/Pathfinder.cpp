@@ -14,7 +14,7 @@ int Pathfinder::level_height;
 int Pathfinder::level_width;
 int Pathfinder::player_size;
 //target locs
-std::vector<GridLocation> Pathfinder::targets;
+std::vector<std::pair<GridLocation, int>> Pathfinder::targets;
 //start Position list
 std::vector<GridLocation> Pathfinder::start_positions;
 //Paths
@@ -30,6 +30,7 @@ std::map<std::pair<GridLocation*, GridLocation*>, bool> Pathfinder::pathUpdates;
 //Target Values
 std::map<GridLocation*, int> Pathfinder::target_values;
 std::mutex Pathfinder::targets_mutex;
+int Pathfinder::first_run = 0;
 /** Constructs the grid and resets the lists
  **
 **/
@@ -57,7 +58,7 @@ void Pathfinder::Create(int lw, int lh, int ps) {
 	pathUpdates.clear();
 	allPaths.clear();
 	target_grids.clear();
-	//target_values.clear();
+	target_values.clear();
 	////targets_mutex.lock();
 	paths_mutex.unlock();
 }
@@ -80,9 +81,9 @@ void Pathfinder::addToGrid(std::vector<sf::FloatRect*> bounds, int type, StrongA
 				paths_mutex.lock();				
 				if (type == -2 || type == -4) {
 					//targets_mutex.lock();
-					targets.push_back(GridLocation(i,j));
-					GridLocation* pos = &(targets[targets.size()-1]);
-					target_values.insert(std::pair<GridLocation*, int>(pos, type));
+					targets.push_back(std::pair<GridLocation, int>(GridLocation(i,j), type));
+					//GridLocation* pos = &(*targets.end());
+					std::cout << "Target " << type << targets.back().second << std::endl;
 					//targets_mutex.unlock();
 					//std::cout << "Target " << j * player_size << " " << i * player_size << " " << type << std::endl;
 					//target_actors_push_back.insert(std::pair(loc, actor_ptr));
@@ -104,11 +105,11 @@ void Pathfinder::addToGrid(std::vector<sf::FloatRect*> bounds, int type, StrongA
  **
 **/
 void Pathfinder::generatePaths() {
-	std::vector<GridLocation>::iterator itr_targets;
-	for (itr_targets = targets.begin(); itr_targets != targets.end(); ++itr_targets) {
-		GridLocation target_pair = *itr_targets;
-		GridLocation* target_ptr = &(*itr_targets);
+	for (auto itr_targets = targets.begin(); itr_targets != targets.end(); ++itr_targets) {
+		GridLocation target_pair = (itr_targets->first);
+		GridLocation* target_ptr = &(itr_targets->first);
 		Grid* target_grid = &(target_grids[target_ptr]);
+		target_values.insert(std::pair<GridLocation*, int>(target_ptr, itr_targets->second));
 		inProcessTargets.insert(std::pair<GridLocation*, bool>(target_ptr, false));
 		std::vector<GridLocation>::iterator itr;
 		for (itr = start_positions.begin(); itr != start_positions.end(); ++itr) {
@@ -324,8 +325,8 @@ bool Pathfinder::canUpdateStartPath(sf::Vector2f start_pos) {
 GridLocation* Pathfinder::findTarget(GridLocation pos) {
 	GridLocation* ptr = NULL;
 	for (auto itr = targets.begin(); itr != targets.end(); itr++) {
-		if (*itr == pos && (*itr).first < level_height && (*itr).first >= 0 && (*itr).second < level_width && (*itr).second >= 0) {
-			ptr = &(*itr);
+		if ((*itr).first == pos && (*itr).first.first < level_height && (*itr).first.first >= 0 && (*itr).first.second < level_width && (*itr).first.second >= 0) {
+			ptr = &((*itr).first);
 			break;
 		}
 	}
@@ -341,8 +342,8 @@ bool Pathfinder::isValidTarget(GridLocation* ptr) {
 GridLocation* Pathfinder::findNewTarget(GridLocation pos) {
 	GridLocation* ptr = NULL;
 	for (auto itr = targets.begin(); itr != targets.end(); itr++) {
-		if ((*itr) != pos && (*itr).first < level_height && (*itr).first >= 0 && (*itr).second < level_width && (*itr).second >= 0) {
-			ptr = &(*itr);
+		if ((*itr).first != pos && (*itr).first.first < level_height && (*itr).first.first >= 0 && (*itr).first.second < level_width && (*itr).first.second >= 0) {
+			ptr = &((*itr).first);
 			break;
 		}
 	}
@@ -385,163 +386,186 @@ void Pathfinder::generatePath2(sf::Vector2f start_pos, sf::Vector2f curr_pos) {
 	//targets_mutex.lock();
 	GridLocation start_pair = getPositionMapping(start_pos);
 	GridLocation curr_pair = getPositionMapping(curr_pos);
-	generatePath(start_pair, curr_pair);
+	//std::cout << "Updating Paths Called" << std::endl;
+	for (auto itr = pathUpdates.begin(); itr != pathUpdates.end(); itr++) {
+		if (*(itr->first).first == start_pair && itr->second && isValidTarget(itr->first.second)) {
+			generatePath(start_pair, *((itr->first).second), curr_pair);
+		}
+	}
 	//targets_mutex.unlock();
 }
 /** Generates path
  **
 **/
-void Pathfinder::generatePath(GridLocation start, GridLocation new_start) {			
+void Pathfinder::generatePath(GridLocation start, GridLocation target, GridLocation new_start) {			
 	std::vector<Pathfinder::pathNode*> open;
 	std::vector<Pathfinder::pathNode*> closed;
 	GridLocation* start_ptr = findStart(start);
 	if (start_ptr == NULL) {
-		//std::cout << "FAIL!" << std::endl;
+		std::cout << "FAIL!" << std::endl;
 		return;
 	}
 	*start_ptr = new_start;
-	//std::cout << "Updating Paths Called" << std::endl;
-	for (auto itr = pathUpdates.begin(); itr != pathUpdates.end(); itr++) {
-		if ((itr->first).first == start_ptr && itr->second) {
-			GridLocation* target_ptr = (itr->first).second;
-			if (target_ptr == NULL) {
-				//std::cout << "FAIL!" << std::endl;
-				return;
-			}
-			if (!inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, target_ptr)]) {
-				//std::cout << "Updating Paths" << std::endl;
-				inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, target_ptr)] = true;
-				Grid* target_grid = &(target_grids[target_ptr]);
-				//print(target_grid);
-				GridLocation pos_pair = new_start;
-				pathNode* root = new pathNode(pos_pair, 0 + getCost(pos_pair, target_grid)); 
-				bool path_found = false;
-				open.push_back(root);
-				while (!open.empty()) {
-					pathNode* s = open.front();
-					open.erase(open.begin());
-					if (Pathfinder::getCost(s->pos, target_grid) == 0) {
-						s ->next = NULL;
-						path_found = true;
-						paths_mutex.lock();
-						PathList* path_ptr = &(allPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, target_ptr)]);
-						*path_ptr = s->getPath();					
-						path_ptr->pop_back();
-						path_ptr->pop_back();
-						paths_mutex.unlock();
-						/*for (auto itr = path_ptr->begin(); itr != path_ptr->end(); itr++) {
-							std::cout << "("<< itr->x << " " << itr->y << "), ";
-						}
-						std::cout << std::endl; */
-						//std::cout << "Path Found!" << std::endl;
-						break;
-					}
-					closed.push_back(s);
 
-					std::vector<pathNode*>::iterator itr;
-					std::vector<pathNode*> n =  s->neighbors(target_grid);
-					for (itr = n.begin(); itr != n.end(); itr++) {
-						if (!( (*itr)->containedIn(closed))) {
-							if (!( (*itr)->containedIn(open))) {
-								(*itr)->cost =  rows*cols*rows*cols;
-								(*itr)->parent = NULL;
-							}
-							updateVertex(&open, &closed, s, (*itr), target_grid); 
-						}
-					}
-
+	GridLocation* target_ptr = findTarget(target);
+	bool use_target = false;
+	if (target_ptr != NULL)
+		use_target = true;
+		
+	
+	if (!inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, target_ptr)]) {
+		std::cout << "Updating Paths" << std::endl;
+		inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, target_ptr)] = true;
+		Grid* target_grid = &(target_grids[target_ptr]);
+		//print(target_grid);
+		GridLocation pos_pair = new_start;
+		pathNode* root = new pathNode(pos_pair, 0 + getCost(pos_pair, target_grid)); 
+		bool path_found = false;
+		open.push_back(root);
+		while (!open.empty()) {
+			pathNode* s = open.front();
+			open.erase(open.begin());
+			if (Pathfinder::getCost(s->pos, target_grid) == 0) {
+				*start_ptr = start; ///REMOVE AFTER DONE TESTING
+				s ->next = NULL;
+				path_found = true;
+				paths_mutex.lock();
+				PathList* path_ptr = &(allPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, target_ptr)]);
+				*path_ptr = s->getPath();					
+				path_ptr->pop_back();
+				path_ptr->pop_back();
+				paths_mutex.unlock();
+				/*for (auto itr = path_ptr->begin(); itr != path_ptr->end(); itr++) {
+					std::cout << "("<< itr->x << " " << itr->y << "), ";
 				}
-				if (!path_found) {
-					//std::cout << "No Path Found!" << std::endl;
-					//std::cout << "Start: " << start_ptr->first << " " << start_ptr->second << " Target: " << target_ptr->first << " " << target_ptr->second << std::endl;
-					//std::cout << "Start: " << pos_pair.first << " " << pos_pair.second << " Target: " << std::endl;
-				}
-				inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, target_ptr)] = false;
-				itr->second = false;
+				std::cout << std::endl; */
+				std::cout << "Path Found!" << std::endl;
+				break;
 			}
+			closed.push_back(s);
+
+			std::vector<pathNode*>::iterator itr;
+			std::vector<pathNode*> n =  s->neighbors(target_grid);
+			for (itr = n.begin(); itr != n.end(); itr++) {
+				if (!( (*itr)->containedIn(closed))) {
+					if (!( (*itr)->containedIn(open))) {
+						(*itr)->cost =  rows*cols*rows*cols;
+						(*itr)->parent = NULL;
+					}
+					updateVertex(&open, &closed, s, (*itr), target_grid); 
+				}
+			}
+
 		}
+		if (!path_found) {
+			std::cout << "No Path Found!" << std::endl;
+			std::cout << "Start: " << start_ptr->first << " " << start_ptr->second << " Target: " << target_ptr->first << " " << target_ptr->second << std::endl;
+			std::cout << "Start: " << pos_pair.first << " " << pos_pair.second << " Target: " << std::endl;
+		}
+		inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, target_ptr)] = false;
+		pathUpdates[std::pair<GridLocation*, GridLocation*>(start_ptr, target_ptr)] = false;
 	}	
 }
 
-void Pathfinder::selectNewPath(GridLocation* start_ptr) {
-	int num_valid = 0;
-	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
-		if (itr->first.first == start_ptr && isValidTarget(itr->first.second)) {
-			num_valid +=1;
-		}
+bool Pathfinder::selectNewPath(GridLocation* start_ptr, GridLocation curr_pair) {
 
-	}	
-	//std::cout << "Number Valid Paths: " << num_valid << std::endl;
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
-		if (num_valid > 1) {
-			if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && target_values[itr->first.second] == -2) {
-				if (paths.empty())
-					paths.insert(std::pair<GridLocation*,std::pair<GridLocation*, PathList*>>(start_ptr, std::pair<GridLocation*, PathList*>(itr->first.second, &(itr->second))));
-				else {
-					paths[start_ptr].first = itr->first.second;
-					paths[start_ptr].second = &(itr->second);
-				}
-				break;
+		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && target_values[itr->first.second] == -2 && !itr->second.empty()) { 
+			std::cout << "Branch 1" << std::endl;
+			if (paths.empty()) {
+				paths.insert(std::pair<GridLocation*,std::pair<GridLocation*, PathList*>>(start_ptr, std::pair<GridLocation*, PathList*>(itr->first.second, &(itr->second))));
+			}			
+			else {
+				std::thread(&Pathfinder::generatePath, *start_ptr, *(itr->first.second), curr_pair).detach();
+				paths[start_ptr].first = itr->first.second;
+				paths[start_ptr].second = &(itr->second);
 			}
+			std::cout << "Target: " << itr->first.second->first << " " << itr->first.second->second << std::endl;
+			for (auto itr1 = itr->second.begin(); itr1 != itr->second.end(); itr1++) {
+				std::cout << "("<< itr1->x << " " << itr1->y << "), ";
+			}
+			std::cout << std::endl;
+			return true;
 		}
-		else {
-			if (itr->first.first == start_ptr && isValidTarget(itr->first.second)) {
-				if (paths.empty())
-					paths.insert(std::pair<GridLocation*,std::pair<GridLocation*, PathList*>>(start_ptr, std::pair<GridLocation*, PathList*>(itr->first.second, &(itr->second))));
-				else {
-					paths[start_ptr].first = itr->first.second;
-					paths[start_ptr].second = &(itr->second);
-				}
-				break;
+	}	
+
+	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
+		std::cout << "Branch 2" << std::endl;
+		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && !itr->second.empty()) {
+			if (paths.empty()) {
+				paths.insert(std::pair<GridLocation*,std::pair<GridLocation*, PathList*>>(start_ptr, std::pair<GridLocation*, PathList*>(itr->first.second, &(itr->second))));
 			}
+			else {
+				//std::thread(&Pathfinder::generatePath, *start_ptr, curr_pair).detach();
+				paths[start_ptr].first = itr->first.second;
+				paths[start_ptr].second = &(itr->second);
+			}
+			std::cout << "Target: " << itr->first.second->first << " " << itr->first.second->second << std::endl;
+			for (auto itr1 = itr->second.begin(); itr1 != itr->second.end(); itr1++) {
+				std::cout << "("<< itr1->x << " " << itr1->y << "), ";
+			}
+			std::cout << std::endl;
+			return true;
 		}
 	}
+	return false;
 }
 
 /** Returns the next positions in the path from the given start position
  **
 **/
-sf::Vector2f Pathfinder::getNextPosition(float dist, sf::Vector2f start_pos) {
+sf::Vector2f Pathfinder::getNextPosition(float dist, sf::Vector2f start_pos, sf::Vector2f curr_pos) {
 	////targets_mutex.lock();
-	sf::Vector2f pos_next = start_pos;
+	sf::Vector2f pos_next = curr_pos;
 	GridLocation start_pair = getPositionMapping(start_pos);
 	GridLocation* start_ptr = findStart(start_pair);	
-	dist *= player_size * player_size;
-	paths_mutex.lock();
-	if (paths.empty() && start_ptr != NULL)
-		selectNewPath(start_ptr);
-
-	if (!paths.empty()) {
-		GridLocation target_pair = *(paths[start_ptr].first);
-		sf::Vector2f target_pos(target_pair.second * player_size, target_pair.first * player_size);
-		PathList* path = paths[start_ptr].second;
-		if (!path->empty()) { 
-			sf::Vector2f path_pos = path->back();
-			/*for (auto itr = path->begin(); itr != path->end(); itr++) {
-				std::cout << "("<< itr->x << " " << itr->y << "), ";
-			}
-			std::cout << std::endl;
-			std::cout << allPaths.size() << " ("<< path_pos.x << " " << path_pos.y << "), " << std::endl;*/
-			float dist_total = getDistance(start_pos, path_pos);
-			float p = dist / dist_total;
-
-			if (true) {
-				pos_next.x = start_pos.x + p*(path_pos.x - start_pos.x);
-				pos_next.y = start_pos.y + p*(path_pos.y - start_pos.y);
-
-				if (p > .99)
-					path->pop_back();
-			}
-			else {
-				pos_next = path->back();
-				path->pop_back();
-			}
-		}
-		else {
-			pos_next = start_pos;
-		}
+	if (start_ptr == NULL)
+		return pos_next;
+	GridLocation curr_pair = getPositionMapping(curr_pos);
+	//paths_mutex.lock();
+	if (paths.empty()) {
+		if(!selectNewPath(start_ptr, curr_pair))
+			return pos_next;
 	}
-	paths_mutex.unlock();
+
+	PathList* path = paths[start_ptr].second;
+
+	if (path->empty()) {
+		if(!selectNewPath(start_ptr, curr_pair))
+			return pos_next;
+	}
+
+	GridLocation target_pair = *(paths[start_ptr].first);
+	sf::Vector2f target_pos(target_pair.second * player_size, target_pair.first * player_size);
+	if (findTarget(target_pair) == NULL)
+		return pos_next;
+
+	sf::Vector2f path_pos = path->back();
+	if (first_run < 1) {
+		std::cout << "Target: " << target_pair.first << " " << target_pair.second << std::endl;
+		for (auto itr = path->begin(); itr != path->end(); itr++) {
+			std::cout << "("<< itr->x << " " << itr->y << "), ";
+		}
+		std::cout << std::endl;
+		std::cout << allPaths.size() << " ("<< path_pos.x << " " << path_pos.y << "), " << std::endl;
+	}
+
+	
+	first_run++;
+	float dist_total = getDistance(curr_pos, path_pos);
+	float p = dist / dist_total;
+	std::cout << "Curr_pos " << curr_pos.x << " " << curr_pos.y << "Path_pos: "  << path_pos.x << " " << path_pos.y << "dist_total " << dist_total << "P: " << p << std::endl;
+
+	if (p > 1)
+		p = 1;
+	pos_next.x = curr_pos.x + p*(path_pos.x - curr_pos.x);
+	pos_next.y = curr_pos.y + p*(path_pos.y - curr_pos.y);
+
+	if (p > .99)
+		path->pop_back();
+
+	
+	//paths_mutex.unlock();
 	////targets_mutex.lock();
 	return pos_next;
 }
@@ -574,9 +598,8 @@ bool Pathfinder::isValidMove(GridLocation loc, Grid* target_grid) {
 void Pathfinder::generateHCosts(void) {
 	if (targets.empty())
 		return;
-	std::vector<GridLocation>::iterator itr;
-	for (itr = targets.begin(); itr != targets.end(); itr++) {
-		GridLocation target_pair = (*itr);
+	for (auto itr = targets.begin(); itr != targets.end(); itr++) {
+		GridLocation target_pair = (*itr).first;
 
 		Grid temp_grid = new int*[rows];
 		for (int i = 0; i < rows; i++) {
@@ -585,9 +608,10 @@ void Pathfinder::generateHCosts(void) {
 				temp_grid[i][j] = grid[i][j];
 		}
 	
-		GridLocation* target_ptr = &(*itr);
+		GridLocation* target_ptr = &((*itr).first);
+		std::cout << "Target Host " << (*itr).second << std::endl;
 		//std::cout << target_values[target_ptr] << std::endl;
-		temp_grid[target_pair.first][target_pair.second] = -2;
+		temp_grid[target_pair.first][target_pair.second] = (*itr).second;
 		std::vector<GridLocation> left;
 		left.push_back(target_pair);
 		generateHCost_helper(left, &temp_grid);
@@ -607,7 +631,16 @@ void Pathfinder::generateHCost(GridLocation* target_ptr, GridLocation curr_pos) 
 		for (int j = 0; j < cols; j++)
 			temp_grid[i][j] = grid[i][j];
 	}
-	temp_grid[curr_pos.first][curr_pos.second] = -2;
+
+	int type = -2;
+	for (auto itr = targets.begin(); itr != targets.end(); itr++ ) {
+		if (*target_ptr == itr->first) {
+			type = itr->second;
+			break;
+		}
+	}
+
+	temp_grid[curr_pos.first][curr_pos.second] = type;
 	std::vector<GridLocation> left;
 	left.push_back(curr_pos);
 	generateHCost_helper(left, &temp_grid);
@@ -638,7 +671,13 @@ void Pathfinder::removeFromPaths(sf::Vector2f pos) {
 		if (itr->second.first == pos_ptr) {
 			pos_ptr->first = -1000;
 			pos_ptr->second = -1000;
-			selectNewPath(itr->first);
+			itr->second.second->clear();
+			std::cout << "Target: " << itr->second.first->first << " " << itr->second.first->second << std::endl;
+			for (auto itr1 = itr->second.second->begin(); itr1 != itr->second.second->end(); itr1++) {
+				std::cout << "("<< itr1->x << " " << itr1->y << "), ";
+			}
+			std::cout << std::endl;
+			std::cout << allPaths.size() << " " << paths.size() << std::endl;
 		}
 	}
 	/*

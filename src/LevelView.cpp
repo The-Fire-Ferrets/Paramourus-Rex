@@ -311,7 +311,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		timer_string = out.str();
 		timer.setString(timer_string);
 		std::vector<StrongActorPtr>::iterator it;
-		for (it = actorList.begin(); it != actorList.end(); it++) {
+		/*for (it = actorList.begin(); it != actorList.end(); it++) {
 			if ((*it)->getPathType() == -2 || (*it)->getPathType() == -4) {
 				//std::cout << (*it)->getId() << " Target" << std::endl;
 				(*it)->update(time);
@@ -335,10 +335,11 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 					(*it)->setStartPosition(new_pos);
 				}
 			}
-		}
+		}*/
 
 		for (it = actorList.begin(); it != actorList.end(); it++) {
-			if((*it)->getPathType() == -1) {
+			//if((*it)->getPathType() == -1) {
+			if((*it)->getPathType() < 0) {
 				(*it)->update(time);
 			}
 		}
