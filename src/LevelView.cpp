@@ -180,22 +180,22 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 		else {
 			if (!strcmp(tool.name(), "WaterFlower")) {
 				int count = flowers[3];
-				count = 1;
+				//count = 1;
 				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "FireFlower")) {
 				int count = flowers[0];
-				count  = 1;
+				//count  = 1;
 				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "EarthFlower")) {
 				int count = flowers[1];
-				count = 1;
+				//count = 1;
 				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "AirFlower")) {
 				int count = flowers[2];
-				count = 1;
+				//count = 1;
 				generateActor(&tool, state, count);
 			}
 			else {
@@ -217,12 +217,6 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	}
 	EventManagerInterface::setViewDelegate(delegate);
 
-	Pathfinder::generateHCosts();
-	std::cout << "Pathfinder Cost Generation Success!" << std::endl;
-	//Pathfinder::print();
-	Pathfinder::generatePaths();
-	std::cout << "Pathfinder Path Generation Success!" << std::endl;
-
 	std::vector<StrongActorPtr>::iterator it;
 	for (it = actorList.begin(); it != actorList.end(); it++) {
 		(*it) ->PostInit();
@@ -230,6 +224,13 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	sound.setBuffer(buffer);
 	sound.setLoop(true);
 	sound.play();
+
+	Pathfinder::generateHCosts();
+	std::cout << "Pathfinder Cost Generation Success!" << std::endl;
+	//Pathfinder::print();
+	view_state = 0;
+	Pathfinder::generatingPaths = true;
+	std::thread(Pathfinder::generatePaths).detach();
 }
 
 void LevelView::generateActor(pugi::xml_node* elem, int* state, int generate) {
@@ -265,6 +266,13 @@ int LevelView::getNumActors(void) {
  **/
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	EventManagerInterface::setCurrentActorList(&actorList);
+	if (!Pathfinder::generatingPaths && view_state == 0) {
+		view_state = 1;
+		std::cout << "Pathfinder Path Generation Success!" << std::endl;
+	}
+
+	if (view_state == 0)
+		return;
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
@@ -332,8 +340,9 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 				sf::Vector2f start_pos = (*it)->getStartPosition();
 				sf::Vector2f new_pos = (*it)->getPosition();
 				if ((*it)->getVisible() && Pathfinder::canUpdateStartPath((*it)->getInitialPosition(), start_pos) && view_state != 2) {
-					std::thread(&Pathfinder::generatePath2, (*it)->getInitialPosition(), start_pos, new_pos).detach();
-					(*it)->setStartPosition(new_pos);
+					//std::cout << (*it)->getId() << " Start2" << std::endl;
+					//std::thread(&Pathfinder::generatePath2, (*it)->getInitialPosition(), start_pos, new_pos).detach();
+					//(*it)->setStartPosition(new_pos);
 				}
 			}
 			else if((*it)->getPathType() == -1 || (*it)->getPathType() == -2 ||  (*it)->getPathType() == -5) {
@@ -370,6 +379,13 @@ void LevelView::update(EventInterfacePtr e) {
 **
 **/
 void LevelView::render(sf::RenderWindow *window) {
+
+	if (view_state == 0) {
+		window->clear(sf::Color::White);
+		window->draw(Configuration::getLoadingSprite());
+		window->display();
+		return;
+	}
 	//Get the player location and center gameView to it
 	sf::Vector2f player_pos = player->getPosition();
 	sf::Vector2f player_size = player->getSize();

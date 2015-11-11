@@ -107,7 +107,9 @@ void InputComponent::update(float time) {
     if (type == "Artificial") {
 	sf::Vector2f next_pos = owner->getPosition();
 	//std::cout << "Input1" << std::endl;
-	Pathfinder::getNextPosition(distance, owner->getInitialPosition(), owner->getStartPosition(), owner->getPosition(), &next_pos, &next_direction);
+	bool start_changed = Pathfinder::getNextPosition(distance, owner->getInitialPosition(), owner->getStartPosition(), owner->getPosition(), &next_pos, &next_direction);
+	if (start_changed)
+		owner->setStartPosition(owner->getPosition());
 	//std::cout << "Input2" << std::endl;
 	owner->move(next_pos, next_direction);
     }

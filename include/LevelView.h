@@ -6,6 +6,9 @@
 
 class LevelView  {
 	friend class CraftView;
+	friend class Pathfinder;
+	protected:
+		static int view_state;
 	private:
 		static const int size;
 		static int num_actors;
@@ -25,7 +28,6 @@ class LevelView  {
 		static int duration;
 		static sf::SoundBuffer buffer;
 		static sf::Sound sound;
-		static int view_state;
 		static sf::Text commentary;
 		static std::vector<sf::Vector2f> commentary_positions;
 		static std::vector<std::string> commentary_strings;

@@ -101,11 +101,12 @@ class Pathfinder {
 		static int level_height;
 		static int level_width;
 		static int player_size;
-		static std::vector<std::pair<GridLocation, int>> targets;
+		static std::vector<std::pair<GridLocation, std::pair<GridLocation, int>>> targets;
 		static std::map<GridLocation*, bool> target_taken;
 		static std::map<GridLocation*, int> target_values;
 		static std::map<GridLocation*, int> start_targets;
 		static std::vector<std::pair<GridLocation, std::pair<GridLocation, int>>> start_positions;
+		static std::map<GridLocation*, GridLocation> initial_positions;
 		static void updateVertex(std::vector<pathNode*>* open, std::vector<pathNode*>* closed, pathNode* p_node, pathNode* c_node, Grid* target_grid);
 		static void getFullCost(pathNode* p_node, pathNode* c_node, Grid* target_grid);
 		static void removeFrom(std::vector<pathNode*>* l, pathNode* n);
@@ -122,6 +123,7 @@ class Pathfinder {
 		static bool isValidTarget(GridLocation* ptr);
 		static bool selectNewPath(GridLocation init_pair, GridLocation* start_pt, GridLocation curr_pair);
 		static int first_run;
+		static bool positionsEqual(GridLocation* pos1, GridLocation* pos2);
 
 	public:
 		static void Create(int lw, int lh, int ps);
@@ -139,7 +141,7 @@ class Pathfinder {
 		static void generatePaths(void);
 		static bool isValidMove(GridLocation loc, Grid* target_grid);
 		static bool isValidPlacement(GridLocation loc, Grid* target_grid);
-		static void getNextPosition(float dist, sf::Vector2f init_pos, sf::Vector2f start_pos, sf::Vector2f curr_pos, sf::Vector2f* next_pos, sf::Vector2f* direction);
+		static bool getNextPosition(float dist, sf::Vector2f init_pos, sf::Vector2f start_pos, sf::Vector2f curr_pos, sf::Vector2f* next_pos, sf::Vector2f* direction);
 		static void removeFromPaths(sf::Vector2f pos);
 		static void generatePath2(sf::Vector2f init_pos, sf::Vector2f start_pos, sf::Vector2f curr_pos);
 		static std::mutex paths_mutex;
@@ -150,6 +152,7 @@ class Pathfinder {
 		static void updateTargetGrid(sf::Vector2f start_pos, sf::Vector2f curr_pos);
 		static bool canUpdateTargetGrid(sf::Vector2f start_pos);
 		static bool canUpdateStartPath(sf::Vector2f init_pos, sf::Vector2f start_pos);
+		static bool generatingPaths;
 };
 
 
