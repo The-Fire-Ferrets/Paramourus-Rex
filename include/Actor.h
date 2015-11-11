@@ -99,6 +99,7 @@ class Actor {
 		bool renderToGameView;
 		void AddComponent(StrongActorComponentPtr component);
 		void updateBoundary(void);
+		void setMinimapSpritePosition(sf::Vector2f pos);
 };
 
 #endif

@@ -1,6 +1,7 @@
 #include "Actor.h"
 #include "Constants.h" // for window_[width|height]
 #include "PhysicsComponent.h"
+#include "InputComponent.h"
 //unique instance id among actors
 int Actor::instances = 0;
 //Number of directions possible
@@ -264,7 +265,8 @@ void Actor::PostInit(pugi::xml_node* elem) {
 			spriteMinimap_texture.loadFromFile(("./assets/sprites/" + spriteMinimap_filename).c_str());
 			sprite_minimap = sf::Sprite(spriteMinimap_texture, sf::IntRect(0, 0, (spriteMinimap_texture.getSize()).x, (spriteMinimap_texture.getSize()).y));
 			sprite_minimap.setScale(10.0 * size.x/(spriteMinimap_texture.getSize()).x, 10.0 * size.y/(spriteMinimap_texture.getSize()).y);
-			sprite_minimap.setPosition(position);
+			//sprite_minimap.setPosition(position);
+			setMinimapSpritePosition(position);
 		}
 
 		sprite_idx = 0;
@@ -524,7 +526,8 @@ void Actor::setPosition(sf::Vector2f pos) {
 		}
 	}
 	if (renderToMinimap)
-		sprite_minimap.setPosition(position);
+		//sprite_minimap.setPosition(position);
+		setMinimapSpritePosition(position);
 }
 
 /** Return the actors instance
@@ -643,4 +646,16 @@ sf::FloatRect* Actor::contains(sf::Vector2f pnt) {
  **/
 bool Actor::causesDamage(void) {
     return damage;
+}
+
+/**
+ **
+ **/
+void Actor::setMinimapSpritePosition(sf::Vector2f pos) {
+	if (this->hasComponent(InputComponent::id)) {
+		pos.x -= size.x/2 / sprite_minimap.getScale().x;
+		pos.y -= size.y/2 / sprite_minimap.getScale().y;
+	}
+
+	sprite_minimap.setPosition(pos);
 }
