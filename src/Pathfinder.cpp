@@ -137,62 +137,13 @@ void Pathfinder::generatePaths() {
 			//std::cout << "Start: " << pos_pair.first << " " << pos_pair.second << " Target: " << target_pair.first << " " << target_pair.second << std::endl;
 			//print(target_grid);			
 			GridLocation* pos_ptr = &(itr_start->first);
-			inProcessPaths.insert(std::pair<std::pair<GridLocation*,GridLocation*>, bool>(std::pair<GridLocation*,GridLocation*>(pos_ptr, target_ptr), false));
-			std::vector<Pathfinder::pathNode*> open;
-			std::unordered_set<pathNode*> closed_set;
-			std::vector<Pathfinder::pathNode*> closed;
-			pathNode* root = new pathNode(pos_pair, 0 + getCost(pos_pair, target_grid)); 
-			bool path_found = false;
-			open.push_back(root);
-			//std::cout << "Generate Paths Progress: 4" << std::endl;
-			while (!open.empty()) {
-				pathNode* s = open.front();
-				open.erase(open.begin());
-				//std::cout << "Generate Paths Progress: 8.5" << std::endl;
-				if (Pathfinder::getCost(s->pos, target_grid) == 0) {
-					path_found = true;
-					paths_mutex.lock();
-					//targets_mutex.lock();
-					//std::cout << "Generate Paths Progress: 5" << std::endl;
-					allPaths.insert(std::pair<std::pair<GridLocation*, GridLocation*>, PathList>(std::pair<GridLocation*, GridLocation*>(pos_ptr, target_ptr), s->getPath()));
-					//std::cout << "Generate Paths Progress: 6" << std::endl;
-					PathList* path_ptr = &(allPaths[std::pair<GridLocation*, GridLocation*>(pos_ptr, target_ptr)]);					
-					//if (target_values[target_ptr] != -2)				
-					//paths.insert(std::pair<GridLocation*,std::pair<GridLocation*, PathList*>>(pos_ptr, std::pair<GridLocation*, PathList*>(target_ptr, path_ptr)));
-					//std::cout << "Generate Paths Progress: 7" << std::endl;
-					pathUpdates.insert(std::pair<std::pair<GridLocation*, GridLocation*>, bool>(std::pair<GridLocation*, GridLocation*>(pos_ptr, target_ptr), false));
-					//std::cout << "Generate Paths Progress: 8 " << start_positions.size() << " " << targets.size() << std::endl;
-					//targets_mutex.unlock();
-					paths_mutex.unlock();
-					//for (auto itr = path_ptr->begin(); itr != path_ptr->end(); itr++) {
-					//	std::cout << "("<< itr->x << " " << itr->y << "), ";
-					//}
-					//std::cout << std::endl; 
-					//std::cout << "Path Found!" << std::endl;
-					break;
-				}
-				//std::cout << "Generate Paths Progress: 9" << std::endl;
-				closed.push_back(s);
-				//std::cout << "Generate Paths Progress: 10" << std::endl;
-				std::vector<pathNode*> n =  s->neighbors(target_grid);
-				//std::cout << "Generate Paths Progress: 11" << std::endl;
-				for (auto itr_n = n.begin(); itr_n != n.end(); itr_n++) {
-					if (!( (*itr_n)->containedIn(closed))) {
-						if (!( (*itr_n)->containedIn(open))) {
-							//std::cout << "Generate Paths Progress: 11.2" << std::endl;
-							(*itr_n)->cost =  rows*cols*rows*cols;
-							(*itr_n)->parent = NULL;
-							//std::cout << "Generate Paths Progress: 11.5" << std::endl;
-						}
-						//std::cout << "Generate Paths Progress: 12" << std::endl;
-						updateVertex(&open, &closed, s, (*itr_n), target_grid); 
-						//std::cout << "Generate Paths Progress: 13" << std::endl;
-					}
-				}
-
-			}
-			if (!path_found) {
-				//std::cout << "No Path Found!" << std::endl;
+			
+			if (start_targets[pos_ptr] == target_values[target_ptr]) {
+				inProcessPaths.insert(std::pair<std::pair<GridLocation*,GridLocation*>, bool>(std::pair<GridLocation*,GridLocation*>(pos_ptr, target_ptr), false));
+				pathUpdates.insert(std::pair<std::pair<GridLocation*, GridLocation*>, bool>(std::pair<GridLocation*, GridLocation*>(pos_ptr, target_ptr), false));
+				PathList temp;
+				temp.push_back(sf::Vector2f(pos_pair.second * player_size, pos_pair.first * player_size));
+				allPaths.insert(std::pair<std::pair<GridLocation*, GridLocation*>, PathList>(std::pair<GridLocation*, GridLocation*>(pos_ptr, target_ptr), temp));
 			}
 		}
 	}	

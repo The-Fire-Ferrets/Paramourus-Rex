@@ -15,7 +15,10 @@
 	</Obstacle>
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-4"/>
+		<InputComponent>
+			<Control Type = "Artificial" Speed = "50"/>
+		</InputComponent>
+		<Pathfinder PathType = "-3"  TargetType = "-2"/>
 	</Player>
 	<NPC Generate = "2">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>

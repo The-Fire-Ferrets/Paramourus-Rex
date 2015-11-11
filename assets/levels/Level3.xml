@@ -107,6 +107,9 @@
 	</Obstacle>
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<InputComponent>
+			<Control Type = "Keyboard" Speed = "50"/>
+		</InputComponent>
 		<Pathfinder PathType = "-4"/>
 	</Player>
 	<NPC Generate = "2">
