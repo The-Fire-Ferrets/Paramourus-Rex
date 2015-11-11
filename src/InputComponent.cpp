@@ -102,12 +102,13 @@ void InputComponent::update(float time) {
     std::shared_ptr<ActorComponent>     ac;
 
     sf::Vector2f last_direction = this->getDirection();
-    sf::Vector2f next_direction;
+    sf::Vector2f next_direction = this->getDirection();;
 
     if (type == "Artificial") {
-	sf::Vector2f next_pos;
-	Pathfinder::getNextPosition(distance, owner->getStartPosition(), owner->getPosition(), &next_pos, &next_direction);
-	
+	sf::Vector2f next_pos = owner->getPosition();
+	//std::cout << "Input1" << std::endl;
+	Pathfinder::getNextPosition(distance, owner->getInitialPosition(), owner->getStartPosition(), owner->getPosition(), &next_pos, &next_direction);
+	//std::cout << "Input2" << std::endl;
 	owner->move(next_pos, next_direction);
     }
 

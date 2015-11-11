@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<Crater Type = "Crater"  Sprite = "Crater.png"  SpriteMinimap = "" Damage = "False">
-	<PhysicsComponent>
-		<Properties Type = "Opaque" />
-	</PhysicsComponent>
-</Crater>

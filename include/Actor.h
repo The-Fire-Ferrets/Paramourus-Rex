@@ -60,14 +60,17 @@ class Actor {
 		sf::FloatRect* contains(sf::Vector2f pnt);
 		bool causesDamage(void);
 		sf::Vector2f getStartPosition(void);
+		sf::Vector2f getInitialPosition(void);
 		void setStartPosition(sf::Vector2f pos);
 		Actor* getCopy(void);
 		const Actor* getCopy(void) const;
 		int getPathType(void);
+		int getTargetType(void);
 
 	private:
 		ActorId id;
 		sf::Vector2f start_position;
+		sf::Vector2f initial_position;
 		const static int num_directions;
 		std::vector<EventDelegate> delegateFuncList;
 		bool damage = false;
@@ -85,6 +88,7 @@ class Actor {
 		bool initial_init = true;
 		bool initial_postinit = true;
 		int path_type;
+		int target_type;
 		int instance;
 		int* game_state;
 		int state;
@@ -92,6 +96,7 @@ class Actor {
 		sf::FloatRect* obstacle;
 		std::vector<sf::FloatRect*> boundary;
 		bool renderToMinimap;
+		bool renderToGameView;
 		void AddComponent(StrongActorComponentPtr component);
 		void updateBoundary(void);
 };

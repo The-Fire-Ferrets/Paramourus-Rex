@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<NPC Type = "NPC" SpriteUp = "NPCUp.png" SpriteRight = "NPCRight.png" SpriteLeft = "NPCLeft.png" SpriteDown = "NPCDown.png"  SpriteMinimap = "" Damage = "True" >
+<NPC Type = "NPC" SpriteUp = "NPCUp.png" SpriteRight = "NPCRight.png" SpriteLeft = "NPCLeft.png" SpriteDown = "NPCDown.png"  SpriteMinimap = "" Damage = "True" PathType = "-1" TargetType = "0">
 	<InputComponent>
-		<Control Type = "Artificial" Speed = "25"/>
+		<Control Type = "Artificial" Speed = "50"/>
 	</InputComponent>	
 	<CollectorComponent>
 		<Items Vases = "5000" Size = "3" FireFlower = "vase_fireflower.png" AirFlower = "vase_airflower.png" Empty = "vase_empty.png" WaterFlower = "vase_waterflower.png" EarthFlower = "vase_earthflower.png"/>

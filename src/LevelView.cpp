@@ -173,7 +173,8 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 		else if (!strcmp(tool.name(), "Player")) {
 			actorList.push_back(player);
 			player->PostInit(&tool);
-			Pathfinder::addToGrid(player->getBoundary(), player->getPathType(), player);
+			std::cout << player->getPathType() << std::endl;
+			Pathfinder::addToGrid(player->getBoundary(), player->getPathType(), player->getTargetType());
 			num_actors++;
 		}
 		else {
@@ -217,8 +218,10 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	EventManagerInterface::setViewDelegate(delegate);
 
 	Pathfinder::generateHCosts();
+	std::cout << "Pathfinder Cost Generation Success!" << std::endl;
 	//Pathfinder::print();
 	Pathfinder::generatePaths();
+	std::cout << "Pathfinder Path Generation Success!" << std::endl;
 
 	std::vector<StrongActorPtr>::iterator it;
 	for (it = actorList.begin(); it != actorList.end(); it++) {
@@ -244,7 +247,8 @@ void LevelView::generateActor(pugi::xml_node* elem, int* state, int generate) {
 		new_actor->PostInit(elem);
 		actorList.push_back(new_actor);
 		num_actors++;
-		Pathfinder::addToGrid(new_actor->getBoundary(), new_actor->getPathType(), new_actor);
+		std::cout << new_actor->getPathType() << std::endl;
+		Pathfinder::addToGrid(new_actor->getBoundary(), new_actor->getPathType(), new_actor->getTargetType());
 	}
 }
 
@@ -312,7 +316,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		timer.setString(timer_string);
 		std::vector<StrongActorPtr>::iterator it;
 		for (it = actorList.begin(); it != actorList.end(); it++) {
-			if ((*it)->getPathType() == -2 || (*it)->getPathType() == -4) {
+			if ((*it)->getPathType() == -4) {
 				//std::cout << (*it)->getId() << " Target" << std::endl;
 				(*it)->update(time);
 				sf::Vector2f start_pos = (*it)->getStartPosition();
@@ -327,12 +331,13 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 				(*it)->update(time);
 				sf::Vector2f start_pos = (*it)->getStartPosition();
 				sf::Vector2f new_pos = (*it)->getPosition();
-				if ((*it)->getVisible() && Pathfinder::canUpdateStartPath(start_pos) && view_state != 2) {
-					std::thread(&Pathfinder::generatePath2, start_pos, new_pos).detach();
+				if ((*it)->getVisible() && Pathfinder::canUpdateStartPath((*it)->getInitialPosition(), start_pos) && view_state != 2) {
+					std::thread(&Pathfinder::generatePath2, (*it)->getInitialPosition(), start_pos, new_pos).detach();
 					(*it)->setStartPosition(new_pos);
 				}
 			}
-			else if((*it)->getPathType() == -1) {
+			else if((*it)->getPathType() == -1 || (*it)->getPathType() == -2 ||  (*it)->getPathType() == -5) {
+				//std::cout << (*it)->getId() << " Obstacle" << std::endl;
 				(*it)->update(time);
 			}
 		}

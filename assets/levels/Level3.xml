@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level3 Name = "Hello World!" Background = "Level3.png" Edge = "Water.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "15000">
+<Level3 Name = "Hello World!" Background = "Level3.png" Edge = "Water.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "150000">
 
 	<Obstacle Type = "Wall"  Sprite = "L3Obs1.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 0 0 800 0 0 50 800 50 ">		
 		<PhysicsComponent>
@@ -104,14 +104,17 @@
 
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-4"/>
 	</Player>
 	<NPC>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-3" TargetType = "-2"/>
 	</NPC>
 	<Obstacle Generate = "50">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Obstacle>
-	<WaterFlower>
+	<WaterFlower Generate = "3">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-2"/>
 	</WaterFlower>
 </Level3>

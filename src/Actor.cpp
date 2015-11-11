@@ -27,6 +27,7 @@ Actor::Actor(void) {
 	instance = instances++;
 	state = 0;
 	visible = true;
+	renderToGameView = true;
 }
 
 
@@ -53,8 +54,22 @@ bool Actor::Init(pugi::xml_node* elem) {
     for (pugi::xml_attribute attr = elem->first_attribute(); attr; attr = attr.next_attribute()) {
         if (!strcmp(attr.name(),"Type"))
             id = attr.value();
+	 else if (!strcmp(attr.name(),"PathType")) {
+		path_type  = std::strtol(attr.value(), &temp, 10);
+		if (*temp != '\0') {
+		    std::cout << "Actor::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+		}
+	    }
+	else if (!strcmp(attr.name(),"TargetType")) {
+		target_type  = std::strtol(attr.value(), &temp, 10);
+		if (*temp != '\0') {
+		    std::cout << "Actor::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+		}
+	    }
         else if (!strcmp(attr.name(),"SpriteUp") || !strcmp(attr.name(),"Sprite")) {
             sprite_filename[0] = attr.value();
+		if (sprite_filename[0] == "")
+			renderToGameView = false;
 	}
 	else if (!strcmp(attr.name(),"SpriteDown"))
             sprite_filename[1] = attr.value();
@@ -120,7 +135,7 @@ bool Actor::Init(pugi::xml_node* elem) {
 	    addDelegate(ContactEvent::event_type);
 		initial_init = false;
 	}
-	if (id =="Player") {
+	/*if (id =="Player") {
 		path_type = -4;
 	}
 	else if (id == "NPC") {
@@ -140,7 +155,7 @@ bool Actor::Init(pugi::xml_node* elem) {
 	}
 	else {
 		path_type = -1;
-	}
+	}*/
 	//std::cout << id << " " << path_type << std::endl;
     return true;
 }
@@ -156,7 +171,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		components[tool.name()]->PostInit(&tool);
 	}
 	else {
-		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {;
+		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
 			if (!use_vertexarray) {
 			    if (!strcmp(attr.name(),"X")) {
 				position.x = std::strtol(attr.value(), &temp, 10);
@@ -188,6 +203,18 @@ void Actor::PostInit(pugi::xml_node* elem) {
 				else if(!strcmp(attr.value(),"False"))
 					damage = false;
 			}
+			 else if (!strcmp(attr.name(),"PathType")) {
+				path_type  = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+				    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+				}
+			    }
+			 else if (!strcmp(attr.name(),"TargetType")) {
+				target_type  = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+				    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+				}
+			    }
 			}
 		}
 	}
@@ -217,18 +244,21 @@ void Actor::PostInit(pugi::xml_node* elem) {
 	    }
 	    position = pos;
 		start_position = position;
+		initial_position = position;
 		//if (id == "Player")
 		//	std::cout << position.x << " int " << position.y << std::endl;
 		boundary.clear();
 	    boundary.push_back(new sf::FloatRect(position.x, position.y, size.x, size.y));
-		for (int i = 0; i < num_directions; i++) {
-			if (!sprite_filename[i].empty())
-	    			sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[i]).c_str());
-			else
-				sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[0]).c_str());
-	    		sprite[i] = sf::Sprite(sprite_texture[i], sf::IntRect(0, 0, (sprite_texture[i].getSize()).x, (sprite_texture[i].getSize()).y));
-	   		sprite[i].setScale(size.x/(sprite_texture[i].getSize()).x, size.y/(sprite_texture[i].getSize()).y);
-	    		sprite[i].setPosition(position);
+		if (renderToGameView) {
+			for (int i = 0; i < num_directions; i++) {
+				if (!sprite_filename[i].empty())
+		    			sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[i]).c_str());
+				else
+					sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[0]).c_str());
+		    		sprite[i] = sf::Sprite(sprite_texture[i], sf::IntRect(0, 0, (sprite_texture[i].getSize()).x, (sprite_texture[i].getSize()).y));
+		   		sprite[i].setScale(size.x/(sprite_texture[i].getSize()).x, size.y/(sprite_texture[i].getSize()).y);
+		    		sprite[i].setPosition(position);
+			}
 		}
 		if (renderToMinimap) {
 			spriteMinimap_texture.loadFromFile(("./assets/sprites/" + spriteMinimap_filename).c_str());
@@ -323,13 +353,13 @@ void Actor::update(float time) {
  **/
 void Actor::render(sf::RenderWindow *window, bool minimap) {
     	if (visible) {
-		if (use_vertexarray) {
+		if (use_vertexarray && renderToGameView) {
 			window->draw(sprite_vertexarray, &(sprite_texture[0]));
 		}
 		else if (minimap && renderToMinimap) {
 			window->draw(sprite_minimap);
 		}
-		else if (!minimap) {
+		else if (!minimap && renderToGameView) {
         		window->draw(sprite[sprite_idx]);
 		}
 		for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
@@ -401,8 +431,16 @@ int Actor::getPathType(void) {
 	return path_type;
 }
 
+int Actor::getTargetType(void) {
+	return target_type;
+}
+
 sf::Vector2f Actor::getStartPosition(void) {
 	return start_position;
+}
+
+sf::Vector2f Actor::getInitialPosition(void) {
+	return initial_position;
 }
 
 void Actor::setStartPosition(sf::Vector2f pos) {
@@ -479,8 +517,10 @@ void Actor::setPosition(sf::Vector2f pos) {
 	//std::cout << pos.x << " setting " << pos.y << std::endl;
 	position = pos;
 	updateBoundary();
-	for (int i = 0; i < num_directions; i++) {
-		sprite[i].setPosition(position);
+	if (renderToGameView) {
+		for (int i = 0; i < num_directions; i++) {
+			sprite[i].setPosition(position);
+		}
 	}
 	if (renderToMinimap)
 		sprite_minimap.setPosition(position);
