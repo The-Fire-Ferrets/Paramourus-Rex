@@ -487,7 +487,6 @@ void CraftView::update(EventInterfacePtr e) {
 		StrongActorPtr sender = CraftView::getFlower(e->getSender());
 		if (sender->hasComponent(CraftableComponent::id)) {
 			// item crafting completed
-			sender->components;
 			StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
 			text.setString("Diana's sure to love this new " + ac->getType() + ", Phil!");
 			if (ac->getType() == "SunFlower"){
