@@ -329,6 +329,18 @@ void Actor::PostInit(void) {
 	else if (direction.y > 0)
 		sprite_idx = 1;
 
+	// disallow movement off the screen
+	unsigned width = Configuration::getWindowWidth();
+	unsigned height = Configuration::getWindowHeight();
+
+	if (p.x < FLT_EPSILON)
+		p.x = FLT_EPSILON;
+	if (p.y < FLT_EPSILON)
+		p.y = FLT_EPSILON;
+	if (p.x > width-size.x)
+		p.x = width - size.x;
+	if (p.y > height-size.y)
+		p.y = height - size.y;
 
         //Get the bounds after movement and check if the movement is allowed
         sf::FloatRect bound_after = sf::FloatRect(p, getSize());
