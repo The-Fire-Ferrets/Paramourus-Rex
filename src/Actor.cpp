@@ -421,7 +421,8 @@ void Actor::updateBoundary(void) {
 		}
 	}	
 	else {
-		*boundary.back() = sf::FloatRect(position.x, position.y, size.x, size.y);
+		float minimize = .25;
+		*boundary.back() = sf::FloatRect(position.x + size.x * minimize, position.y + size.y * minimize, size.x * (1 - 2*minimize), size.y * (1 - 2*minimize));
 	}
 }
 
