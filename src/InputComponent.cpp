@@ -115,41 +115,41 @@ void InputComponent::update(float time) {
     }
 
     else if (type == "Keyboard") {
-        // TODO: I'd like to move controls to a configuration file so we could 
-        // choose between up/down/left/right, wasd, and hjkl.
-        //Reads Input and perform actions
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            next_direction = NORTHEAST;
-	    //distance *= cos(45);
-        }   
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            next_direction = NORTHWEST;
-	    //distance *= cos(45);
-        }      
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            next_direction = SOUTHEAST;
-	    //distance *= cos(45);
-        }    
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            next_direction = SOUTHWEST;
-	    //distance *= cos(45);
-        }        
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-            next_direction = NORTH;
-        } 
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-            next_direction = SOUTH;
-        } 
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            next_direction = WEST;
-        } 
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            next_direction = EAST;
-        }
-        else return; // No input provided.
-	
-	 this ->setDirection(next_direction);
-    	owner->move(distance, direction);
+		// TODO: I'd like to move controls to a configuration file so we could 
+		// choose between up/down/left/right, wasd, and hjkl.
+		//Reads Input and perform actions
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		    next_direction = NORTHEAST;
+		    //distance *= cos(45);
+		}   
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		    next_direction = NORTHWEST;
+		    //distance *= cos(45);
+		}      
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		    next_direction = SOUTHEAST;
+		    //distance *= cos(45);
+		}    
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		    next_direction = SOUTHWEST;
+		    //distance *= cos(45);
+		}        
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		    next_direction = NORTH;
+		} 
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		    next_direction = SOUTH;
+		} 
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		    next_direction = WEST;
+		} 
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		    next_direction = EAST;
+		}
+		else return; // No input provided.
+		
+		 this ->setDirection(next_direction);
+	    	owner->move(distance, direction);
     }
 
 }

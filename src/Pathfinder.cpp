@@ -551,7 +551,7 @@ void Pathfinder::generatePath(GridLocation init, GridLocation start, GridLocatio
 }
 
 bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, GridLocation curr_pair) {
-	//std::cout << "SelectPath1 " << start_ptr << " " << curr_pair.first << " " << curr_pair.second  << std::endl;
+	std::cout << "SelectPath1 " << start_ptr << " " << curr_pair.first << " " << curr_pair.second  << std::endl;
 
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
 		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] == target_values[itr->first.second] && !itr->second.empty() && target_values[itr->first.second] == -2 && !target_taken[itr->first.second]) { 
@@ -574,10 +574,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 	}	
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
 		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] == target_values[itr->first.second] && target_values[itr->first.second] <= -5 && *itr->first.second != curr_pair) {
-			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
-				return false;
-			//std::cout << "Branch 2" << std::endl;
-			*start_ptr = curr_pair;
+			std::cout << "Branch 2" << std::endl;
 			//itr->second.clear();
 			//std::cout << "Location: " << start_ptr->first << " " << start_ptr->second << " Target: " << itr->first.second->first << " " << itr->first.second->second << std::endl;
 			for(auto itr_tvals = target_values.begin(); itr_tvals != target_values.end(); itr_tvals++) {
@@ -586,8 +583,8 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 					return false;
 				}
 			}
-
-			//std::thread(&Pathfinder::generatePath, init_pair, *start_ptr, *(itr->first.second), curr_pair, true).detach();
+			*start_ptr = curr_pair;
+			std::thread(&Pathfinder::generatePath, init_pair, *start_ptr, *(itr->first.second), curr_pair, true).detach();
 			//std::cout << "Target: " << itr->first.second->first << " " << itr->first.second->second << std::endl;
 			//for (auto itr1 = itr->second.begin(); itr1 != itr->second.end(); itr1++) {
 			//	std::cout << "("<< itr1->x << " " << itr1->y << "), ";

@@ -267,7 +267,11 @@ int LevelView::getNumActors(void) {
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	EventManagerInterface::setCurrentActorList(&actorList);
 	if (!Pathfinder::generatingPaths && view_state == 0) {
-		view_state = 1;
+		if (name == "Introduction") {
+			view_state = 2;
+		}
+		else
+			view_state = 1;
 		std::cout << "Pathfinder Path Generation Success!" << std::endl;
 	}
 
@@ -334,18 +338,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 					(*it)->setStartPosition(new_pos);
 				}
 			}
-			else if((*it)->getPathType() == -3) {
-				//std::cout << (*it)->getId() << " Start" << std::endl;
-				(*it)->update(time);
-				sf::Vector2f start_pos = (*it)->getStartPosition();
-				sf::Vector2f new_pos = (*it)->getPosition();
-				if ((*it)->getVisible() && Pathfinder::canUpdateStartPath((*it)->getInitialPosition(), start_pos) && view_state != 2) {
-					//std::cout << (*it)->getId() << " Start2" << std::endl;
-					//std::thread(&Pathfinder::generatePath2, (*it)->getInitialPosition(), start_pos, new_pos).detach();
-					//(*it)->setStartPosition(new_pos);
-				}
-			}
-			else if((*it)->getPathType() == -1 || (*it)->getPathType() == -2 ||  (*it)->getPathType() == -5) {
+			else {
 				//std::cout << (*it)->getId() << " Obstacle" << std::endl;
 				(*it)->update(time);
 			}

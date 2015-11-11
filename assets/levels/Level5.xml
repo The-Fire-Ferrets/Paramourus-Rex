@@ -5,27 +5,24 @@
 	</Obstacle>
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-4"/>
+		<InputComponent>
+			<Control Type = "Artificial" Speed = "50"/>
+		</InputComponent>	
+		<Pathfinder PathType = "-3" TargetType = "-5"/>
 	</Player>
-	<NPC Generate = "2">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-3" TargetType = "-2"/>
-	</NPC>
-	<EarthFlower>
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-2"/>
-	</EarthFlower>
-	<AirFlower>
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-2"/>
-	</AirFlower>
-	<WaterFlower>
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-2"/>
-	</WaterFlower>
-	<FireFlower>
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-2"/>
-	</FireFlower>
+	<Obstacle Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-5"/>
+	</Obstacle>
+	<Obstacle Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-5"/>
+	</Obstacle>
 
 </Level5>
