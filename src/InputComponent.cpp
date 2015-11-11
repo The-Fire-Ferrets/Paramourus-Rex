@@ -158,15 +158,7 @@ void InputComponent::update(float time) {
  **
  **/
 void InputComponent::update(EventInterfacePtr e) {
-	// If a contact event is received, updates the AIs direction bit to notify which side caused collision and sets the actor that caused that collision
-	if (type == "Artificial") {
-		EventType event_type = e->getEventType();
-    		if (event_type == ContactEvent::event_type) {
-			sf::Vector2f last_direction = getDirection();
-			StrongActorPtr other_actor =  EventManagerInterface::getActor(e->getSender());
-			std::cout << last_direction.x << " " << last_direction.y << std::endl;
-		}
-	}
+
 }
 
 /** Reset the component

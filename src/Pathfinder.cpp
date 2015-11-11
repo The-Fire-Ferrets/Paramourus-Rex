@@ -241,8 +241,8 @@ bool Pathfinder::lineOfSight(pathNode* p_node, pathNode* c_node, Grid* target_gr
 	int c_row = c_node->pos.first;
 	int c_col = c_node->pos.second;
 
-	int d_row = c_row - p_row;
-	int d_col = c_col - p_col;
+	int d_row = p_row - c_row;
+	int d_col = p_col - c_col;
 
 	int f = 0;
 	int s_col;
@@ -268,16 +268,16 @@ bool Pathfinder::lineOfSight(pathNode* p_node, pathNode* c_node, Grid* target_gr
 		while (p_row != c_row) {
 			f += d_col;
 			if (f >= d_row) {
-				if (isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid)) {
+				if (!isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid)) {
 					return false;
 				}
 				p_col += s_col;
 				f -= d_row;
 			}
-			if (f != 0 && isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid)) {
+			if (f != 0 && !isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid)) {
 				return false;
 			}
-			if (d_col == 0 && isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col), target_grid) && isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col - 1), target_grid)) {
+			if (d_col == 0 && !isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col), target_grid) && !isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col - 1), target_grid)) {
 				return false;
 			}
 			p_row += s_row;
@@ -287,16 +287,16 @@ bool Pathfinder::lineOfSight(pathNode* p_node, pathNode* c_node, Grid* target_gr
 		while (p_col != c_col) {
 			f += d_row;
 			if (f >= d_col) {
-				if (isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid)) {
+				if (!isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid)) {
 					return false;
 				}
 				p_row += s_row;
 				f -= d_col;
 			}
-			if (f != 0 && isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid)) {
+			if (f != 0 && !isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid)) {
 				return false;
 			}
-			if (d_row == 0 && isValidMove(GridLocation(p_row, p_col + ((s_col - 1)/2)), target_grid) && isValidMove(GridLocation(p_row - 1, p_col + ((s_col - 1)/2)), target_grid)) {
+			if (d_row == 0 && !isValidMove(GridLocation(p_row, p_col + ((s_col - 1)/2)), target_grid) && !isValidMove(GridLocation(p_row - 1, p_col + ((s_col - 1)/2)), target_grid)) {
 				return false;
 			}
 			p_col += s_col;
