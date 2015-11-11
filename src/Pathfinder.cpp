@@ -86,7 +86,7 @@ void Pathfinder::addToGrid(std::vector<sf::FloatRect*> bounds, int path_type, in
 			for (int j = top_left_col; j < bottom_right_col; j++) {
 				GridLocation loc(i, j);
 				paths_mutex.lock();				
-				if (path_type == -2 || path_type == -4 || path_type == -5) {
+				if (path_type == -2 || path_type == -4 || path_type <= -5) {
 					//targets_mutex.lock();
 					targets.push_back(std::pair<GridLocation, std::pair<GridLocation, int>>(GridLocation(i,j), std::pair<GridLocation, int>(GridLocation(i,j), path_type)));
 					//GridLocation* pos = &(*targets.end());
@@ -96,7 +96,7 @@ void Pathfinder::addToGrid(std::vector<sf::FloatRect*> bounds, int path_type, in
 					//target_actors_push_back.insert(std::pair(loc, actor_ptr));
 				}
 				else if (path_type == -3) {
-					std::cout << "Num Start" << path_type << std::endl;
+					//std::cout << "Num Start" << path_type << std::endl;
 					start_positions.push_back(std::pair<GridLocation, std::pair<GridLocation, int>>(GridLocation(i,j), std::pair<GridLocation, int>(GridLocation(i,j), target_type)));
 					//std::cout << "Start " << j * player_size << " " << i * player_size << " " << type << std::endl;
 				}
@@ -494,7 +494,7 @@ void Pathfinder::generatePath(GridLocation init, GridLocation start, GridLocatio
 
 	GridLocation* target_ptr = findTarget(target);
 		
-	std::cout << "Updating Paths " << new_start.first << " " << new_start.second << " " << target.first << " " << target.second << std::endl;
+	//std::cout << "Updating Paths " << new_start.first << " " << new_start.second << " " << target.first << " " << target.second << std::endl;
 	inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, target_ptr)] = true;
 	Grid* target_grid = &(target_grids[target_ptr]);
 	//print(target_grid);
@@ -573,15 +573,15 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 		}
 	}	
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
-		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] == target_values[itr->first.second] && target_values[itr->first.second] == -5 && *itr->first.second != curr_pair) {
+		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] == target_values[itr->first.second] && target_values[itr->first.second] <= -5 && *itr->first.second != curr_pair) {
 			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 				return false;
 			//std::cout << "Branch 2" << std::endl;
 			*start_ptr = curr_pair;
 			//itr->second.clear();
 			//std::cout << "Location: " << start_ptr->first << " " << start_ptr->second << " Target: " << itr->first.second->first << " " << itr->first.second->second << std::endl;
-			for(auto itr = target_values.begin(); itr != target_values.end(); itr++) {
-				if (itr->second == -5 && inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, itr->first)]) {
+			for(auto itr_tvals = target_values.begin(); itr_tvals != target_values.end(); itr_tvals++) {
+				if (itr_tvals->second == start_targets[start_ptr] && inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, itr_tvals->first)]) {
 					//std::cout << "Target Already in Process" << std::endl;				
 					return false;
 				}
@@ -756,7 +756,9 @@ void Pathfinder::generateHCosts(void) {
 		paths_mutex.lock();
 		target_grids.insert(std::pair<GridLocation*, Grid>(target_ptr, temp_grid));
 		paths_mutex.unlock();
-	}	
+	}
+	std::cout << "Pathfinder Cost Generation Success!" << std::endl;
+	generatePaths();	
 }
 
 /** Generates costs on the grid
@@ -892,7 +894,7 @@ int Pathfinder::getCost(sf::Vector2f pos, sf::Vector2f dir, Grid* target_grid) {
 
 	if (grid_pair.first < rows && grid_pair.second < cols && grid_pair.first >= 0 && grid_pair.second >= 0) {
 		int value =  (*target_grid)[grid_pair.first][grid_pair.second];
-		if (value == -2 || value == -4 || value == -5)
+		if (value == -2 || value == -4 || value <= -5)
 			return 0;
 		else if (value >= 0)
 			return	value;
@@ -913,7 +915,7 @@ int Pathfinder::getCost(sf::Vector2f pos, Grid* target_grid) {
 
 	if (grid_pair.first < rows && grid_pair.second < cols && grid_pair.first >= 0 && grid_pair.second >= 0) {
 		int value =  (*target_grid)[grid_pair.first][grid_pair.second];
-		if (value == -2 || value == -4 || value == -5)
+		if (value == -2 || value == -4 || value <= -5)
 			return 0;
 		else if (value >= 0)
 			return	value;
@@ -933,7 +935,7 @@ int Pathfinder::getCost(GridLocation loc, Grid* target_grid)  {
 
 	if (loc.first < rows && loc.second < cols && loc.first >= 0 && loc.second >= 0) {
 		int value =  (*target_grid)[loc.first][loc.second];
-		if (value == -2 || value == -4 || value == -5)
+		if (value == -2 || value == -4 || value <= -5)
 			return 0;
 		else if (value >= 0)
 			return	value;

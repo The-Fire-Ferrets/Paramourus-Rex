@@ -173,7 +173,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 		else if (!strcmp(tool.name(), "Player")) {
 			actorList.push_back(player);
 			player->PostInit(&tool);
-			std::cout << player->getPathType() << std::endl;
+			//std::cout << player->getPathType() << std::endl;
 			Pathfinder::addToGrid(player->getBoundary(), player->getPathType(), player->getTargetType());
 			num_actors++;
 		}
@@ -225,12 +225,12 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	sound.setLoop(true);
 	sound.play();
 
-	Pathfinder::generateHCosts();
-	std::cout << "Pathfinder Cost Generation Success!" << std::endl;
-	//Pathfinder::print();
 	view_state = 0;
 	Pathfinder::generatingPaths = true;
-	std::thread(Pathfinder::generatePaths).detach();
+	std::thread(Pathfinder::generateHCosts).detach();
+	
+	//Pathfinder::print();
+
 }
 
 void LevelView::generateActor(pugi::xml_node* elem, int* state, int generate) {
@@ -248,7 +248,7 @@ void LevelView::generateActor(pugi::xml_node* elem, int* state, int generate) {
 		new_actor->PostInit(elem);
 		actorList.push_back(new_actor);
 		num_actors++;
-		std::cout << new_actor->getPathType() << std::endl;
+		//std::cout << new_actor->getPathType() << std::endl;
 		Pathfinder::addToGrid(new_actor->getBoundary(), new_actor->getPathType(), new_actor->getTargetType());
 	}
 }
@@ -468,6 +468,7 @@ void LevelView::cleanUp(void) {
 	ActorFactory::reset();
 	actorList.clear();
 	sound.stop();
+	view_state = 1;
 }
 
 /** Quit level

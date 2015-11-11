@@ -102,19 +102,31 @@
 		</PhysicsComponent>
 	</Obstacle>
 
+	<Obstacle Generate = "50">
+    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+	</Obstacle>
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-4"/>
 	</Player>
-	<NPC>
+	<NPC Generate = "2">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
 	</NPC>
-	<Obstacle Generate = "50">
+	<EarthFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-	</Obstacle>
-	<WaterFlower Generate = "3">
+		<Pathfinder PathType = "-2"/>
+	</EarthFlower>
+	<AirFlower>
+    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-2"/>
+	</AirFlower>
+	<WaterFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</WaterFlower>
+	<FireFlower>
+    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-2"/>
+	</FireFlower>
 </Level3>

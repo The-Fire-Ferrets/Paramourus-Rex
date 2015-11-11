@@ -69,22 +69,36 @@
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>	
+	<Obstacle Generate = "10">
+    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+	</Obstacle>
+
+	<Obstacle Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-5"/>
+	</Obstacle>
+
+	<Obstacle Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-5"/>
+	</Obstacle>	
 
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-4"/>
 	</Player>
-	<NPC>
+	<NPC Generate = "2">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
 	</NPC>
 	<NPC>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-3" TargetType = "-2"/>
+		<Pathfinder PathType = "-3" TargetType = "-5"/>
 	</NPC>
-	<Obstacle Generate = "10">
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-	</Obstacle>
 	<EarthFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
