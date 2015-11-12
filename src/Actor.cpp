@@ -2,6 +2,7 @@
 #include "Constants.h" // for window_[width|height]
 #include "PhysicsComponent.h"
 #include "InputComponent.h"
+#include "CollectableComponent.h"
 //unique instance id among actors
 int Actor::instances = 0;
 //Number of directions possible
@@ -664,7 +665,7 @@ bool Actor::causesDamage(void) {
  **
  **/
 void Actor::setMinimapSpritePosition(sf::Vector2f pos) {
-	if (this->hasComponent(InputComponent::id)) {
+	if (this->hasComponent(InputComponent::id) || this->hasComponent(CollectableComponent::id)) {
 		pos.x -= size.x/2 / sprite_minimap.getScale().x;
 		pos.y -= size.y/2 / sprite_minimap.getScale().y;
 	}

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level4 Name = "Hello World!" Background = "Level4.png" Edge = "Sky.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "70000" Damage = "True">	
+<Level4 Name = "Hello World!" Background = "Level4.png" MinimapBackground = "minimapbg.png" Edge = "Sky.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "70000" Damage = "True">	
 	<Obstacle Type = "Wall"  Sprite = "Sky.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 133 0 150 0 133 150 150 150">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
