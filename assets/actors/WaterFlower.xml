@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<WaterFlower Type = "WaterFlower"  Sprite = "WaterFlower.png"  SpriteMinimap = "WaterFlowerSpot.png" Damage = "False">
+<WaterFlower Type = "WaterFlower"  Sprite = "WaterFlower.png"  SpriteMinimap = "WaterFlowerSpot.png" Damage = "False" PathType = "-1" TargetType = "0">
 	<CollectableComponent>
 		<Category Some_Attribute = "Value" />
 	</CollectableComponent>
@@ -8,5 +8,6 @@
 	</CraftableComponent>
 	<PhysicsComponent>
 		<Properties Type = "Transparent" />
+		<VisionBoundary Height = "" Width = "" X = "" Y = ""/>
 	</PhysicsComponent>
 </WaterFlower>

@@ -44,6 +44,13 @@ class PhysicsComponent : public ActorComponent {
 		static const bool registered;
 		static int instances;
 		int direction_bit;
+		sf::IntRect vision_boundary;
+		sf::Vector2f vision_boundary_size;
+		sf::Vector2f vision_boundary_position;
+		bool use_vision_boundary;
+		bool inVision;
+		sf::Texture vision_boundary_texture;
+		sf::Sprite vision_boundary_sprite;
 };
 
 #endif

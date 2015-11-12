@@ -1,16 +1,28 @@
 <?xml version="1.0"?>
-<Level5 Name = "Hello World!" Background = "Level5.png" Edge = "Rocks.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "90000">
-	<Player>
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-	</Player>
-	<NPC Generate = "8">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-	</NPC>
+<Level5 Name = "Hello World!" Background = "Level5.png" MinimapBackground = "minimapbg.png" Edge = "Rocks.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "90000">
 	<Obstacle Generate = "50">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Obstacle>
-	<WaterFlower>
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-	</WaterFlower>
+	<Player>
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<InputComponent>
+			<Control Type = "Artificial" Speed = "50"/>
+		</InputComponent>	
+		<Pathfinder PathType = "-3" TargetType = "-5"/>
+	</Player>
+	<Obstacle Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-5"/>
+	</Obstacle>
+	<Obstacle Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-5"/>
+	</Obstacle>
 
 </Level5>

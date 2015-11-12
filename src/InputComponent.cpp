@@ -102,70 +102,54 @@ void InputComponent::update(float time) {
     std::shared_ptr<ActorComponent>     ac;
 
     sf::Vector2f last_direction = this->getDirection();
-    sf::Vector2f next_direction;
+    sf::Vector2f next_direction = this->getDirection();;
 
     if (type == "Artificial") {
-	if (counter++ > 100) {
-		counter = 0;
-		std::vector<float> distances;
-		std::vector<sf::Vector2f> directions;
-		sf::Vector2f last_pos = owner->getPosition();
-		sf::Vector2f next_pos = Pathfinder::getNextPosition(owner->getStartPos());
-		if (last_pos.x < next_pos.x)
-			next_direction.x = 1;
-		else if (last_pos.x > next_pos.x)
-			next_direction.x = -1;
-		else
-			next_direction.x = 0;
-
-		if (last_pos.y < next_pos.y)
-			next_direction.y = 1;
-		else if (last_pos.y > next_pos.y)
-			next_direction.y = -1;
-		else
-			next_direction.y = 0;
-	
-		
-		owner->move(next_pos, next_direction);
-	}
+	sf::Vector2f next_pos = owner->getPosition();
+	//std::cout << "Input1" << std::endl;
+	bool start_changed = Pathfinder::getNextPosition(distance, owner->getInitialPosition(), owner->getStartPosition(), owner->getPosition(), &next_pos, &next_direction);
+	if (start_changed)
+		owner->setStartPosition(owner->getPosition());
+	//std::cout << "Input2" << std::endl;
+	owner->move(next_pos, next_direction);
     }
 
     else if (type == "Keyboard") {
-        // TODO: I'd like to move controls to a configuration file so we could 
-        // choose between up/down/left/right, wasd, and hjkl.
-        //Reads Input and perform actions
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            next_direction = NORTHEAST;
-	    distance *= cos(45);
-        }   
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            next_direction = NORTHWEST;
-	    distance *= cos(45);
-        }      
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            next_direction = SOUTHEAST;
-	    distance *= cos(45);
-        }    
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            next_direction = SOUTHWEST;
-	    distance *= cos(45);
-        }        
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-            next_direction = NORTH;
-        } 
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-            next_direction = SOUTH;
-        } 
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            next_direction = WEST;
-        } 
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            next_direction = EAST;
-        }
-        else return; // No input provided.
-	
-	 this ->setDirection(next_direction);
-    	owner->move(distance, direction);
+		// TODO: I'd like to move controls to a configuration file so we could 
+		// choose between up/down/left/right, wasd, and hjkl.
+		//Reads Input and perform actions
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		    next_direction = NORTHEAST;
+		    //distance *= cos(45);
+		}   
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		    next_direction = NORTHWEST;
+		    //distance *= cos(45);
+		}      
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		    next_direction = SOUTHEAST;
+		    //distance *= cos(45);
+		}    
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		    next_direction = SOUTHWEST;
+		    //distance *= cos(45);
+		}        
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		    next_direction = NORTH;
+		} 
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		    next_direction = SOUTH;
+		} 
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		    next_direction = WEST;
+		} 
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		    next_direction = EAST;
+		}
+		else return; // No input provided.
+		
+		 this ->setDirection(next_direction);
+	    	owner->move(distance, direction);
     }
 
 }
@@ -174,15 +158,7 @@ void InputComponent::update(float time) {
  **
  **/
 void InputComponent::update(EventInterfacePtr e) {
-	// If a contact event is received, updates the AIs direction bit to notify which side caused collision and sets the actor that caused that collision
-	if (type == "Artificial") {
-		EventType event_type = e->getEventType();
-    		if (event_type == ContactEvent::event_type) {
-			sf::Vector2f last_direction = getDirection();
-			StrongActorPtr other_actor =  EventManagerInterface::getActor(e->getSender());
-			std::cout << last_direction.x << " " << last_direction.y << std::endl;
-		}
-	}
+
 }
 
 /** Reset the component

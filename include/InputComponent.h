@@ -46,6 +46,5 @@ class InputComponent : public ActorComponent {
 		static const bool registered;
 		sf::Vector2f direction;
 		bool first_postinit;
-		int counter = 0;
 };
 #endif

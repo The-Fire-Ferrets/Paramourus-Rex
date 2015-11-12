@@ -81,6 +81,9 @@ std::vector<EventDelegate> CraftView::delegateFuncList;
 sf::SoundBuffer CraftView::buffer;
 sf::Sound CraftView::sound;
 
+sf::Texture CraftView::character_tex;
+sf::Sprite  CraftView::character_sprite;
+
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -280,6 +283,16 @@ void CraftView::Create(const char* resource, int* state) {
       }
     }
 
+	// draw character art
+	unsigned int width = Configuration::getWindowWidth()/10;
+	unsigned int posX = Configuration::getWindowWidth()/6.6;
+	unsigned int posY = Configuration::getWindowHeight()/1.4;
+
+	character_tex.loadFromFile("./assets/sprites/Homer.png");
+	character_sprite = sf::Sprite(character_tex);
+	character_sprite.setPosition(posX+320, posY-character_tex.getSize().y-4);
+			
+
 	// set text to initial greeting from Homer
     std::string str = "Welcome back, Phil! You have " + std::to_string(totalFlowers) + " flowers!\nTo craft them, click on their icons."; 
     text.setString(str);
@@ -474,7 +487,6 @@ void CraftView::update(EventInterfacePtr e) {
 		StrongActorPtr sender = CraftView::getFlower(e->getSender());
 		if (sender->hasComponent(CraftableComponent::id)) {
 			// item crafting completed
-			sender->components;
 			StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
 			text.setString("Diana's sure to love this new " + ac->getType() + ", Phil!");
 			if (ac->getType() == "SunFlower"){
@@ -516,6 +528,7 @@ void CraftView::render(sf::RenderWindow *window) {
     window->draw(text);
     window->draw(map);
     window->draw(bookSprite);
+	window->draw(character_sprite);
     
     // draw sprite in the "crafting table" box if there is one in it
     if (box1 == true)

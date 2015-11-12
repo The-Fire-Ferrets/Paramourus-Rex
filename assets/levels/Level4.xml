@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level4 Name = "Hello World!" Background = "Level4.png" Edge = "Sky.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "70000" Damage = "True">	
+<Level4 Name = "Hello World!" Background = "Level4.png" MinimapBackground = "minimapbg.png" Edge = "Sky.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "70000" Damage = "True">	
 	<Obstacle Type = "Wall"  Sprite = "Sky.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 133 0 150 0 133 150 150 150">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
@@ -10,16 +10,34 @@
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>	
-	<Player>
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-	</Player>
-	<NPC Generate = "8">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-	</NPC>
 	<Obstacle Generate = "50">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Obstacle>
+	<Player>
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<InputComponent>
+			<Control Type = "Artificial" Speed = "50"/>
+		</InputComponent>
+		<Pathfinder PathType = "-3"  TargetType = "-2"/>
+	</Player>
+	<NPC Generate = "2">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-3" TargetType = "-2"/>
+	</NPC>
+	<EarthFlower>
+    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-2"/>
+	</EarthFlower>
+	<AirFlower>
+    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-2"/>
+	</AirFlower>
 	<WaterFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-2"/>
 	</WaterFlower>
+	<FireFlower>
+    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-2"/>
+	</FireFlower>
 </Level4>

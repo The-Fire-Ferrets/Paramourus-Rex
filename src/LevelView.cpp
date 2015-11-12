@@ -54,6 +54,9 @@ sf::Sprite LevelView::title_sprite;
 sf::Texture LevelView::title_texture;
 sf::Vector2f LevelView::title_size;	
 bool LevelView::pressed = false;
+//NPC Test
+StrongActorPtr LevelView::npc;
+
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -169,29 +172,30 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 		}
 		else if (!strcmp(tool.name(), "Player")) {
 			actorList.push_back(player);
-			(actorList.back())->PostInit(&tool);
-			Pathfinder::addToGrid(player->getBoundary(), -3);
+			player->PostInit(&tool);
+			//std::cout << player->getPathType() << std::endl;
+			Pathfinder::addToGrid(player->getBoundary(), player->getPathType(), player->getTargetType());
 			num_actors++;
 		}
 		else {
 			if (!strcmp(tool.name(), "WaterFlower")) {
 				int count = flowers[3];
-				count = 1;
+				//count = 1;
 				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "FireFlower")) {
 				int count = flowers[0];
-				count  = 1;
+				//count  = 1;
 				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "EarthFlower")) {
 				int count = flowers[1];
-				count = 1;
+				//count = 1;
 				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "AirFlower")) {
 				int count = flowers[2];
-				count = 1;
+				//count = 1;
 				generateActor(&tool, state, count);
 			}
 			else {
@@ -213,10 +217,6 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	}
 	EventManagerInterface::setViewDelegate(delegate);
 
-	Pathfinder::generateHCosts();
-	//Pathfinder::print();
-	Pathfinder::generatePaths();
-
 	std::vector<StrongActorPtr>::iterator it;
 	for (it = actorList.begin(); it != actorList.end(); it++) {
 		(*it) ->PostInit();
@@ -224,6 +224,13 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	sound.setBuffer(buffer);
 	sound.setLoop(true);
 	sound.play();
+
+	view_state = 0;
+	Pathfinder::generatingPaths = true;
+	std::thread(Pathfinder::generateHCosts).detach();
+	
+	//Pathfinder::print();
+
 }
 
 void LevelView::generateActor(pugi::xml_node* elem, int* state, int generate) {
@@ -241,20 +248,8 @@ void LevelView::generateActor(pugi::xml_node* elem, int* state, int generate) {
 		new_actor->PostInit(elem);
 		actorList.push_back(new_actor);
 		num_actors++;
-		int type = 0;
-		if (!strcmp(elem->name(), "Obstacle")) {
-			type = -1;
-		}
-		else if (!strcmp(elem->name(), "Player")) {
-			type = -3;
-		}
-		else if (!strcmp(elem->name(), "NPC")) {
-			type = -3;
-		}
-		else {
-			type = -2;
-		}
-		Pathfinder::addToGrid(new_actor->getBoundary(), type);
+		//std::cout << new_actor->getPathType() << std::endl;
+		Pathfinder::addToGrid(new_actor->getBoundary(), new_actor->getPathType(), new_actor->getTargetType());
 	}
 }
 
@@ -271,6 +266,17 @@ int LevelView::getNumActors(void) {
  **/
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	EventManagerInterface::setCurrentActorList(&actorList);
+	if (!Pathfinder::generatingPaths && view_state == 0) {
+		if (name == "Introduction") {
+			view_state = 2;
+		}
+		else
+			view_state = 1;
+		std::cout << "Pathfinder Path Generation Success!" << std::endl;
+	}
+
+	if (view_state == 0)
+		return;
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
@@ -321,8 +327,23 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		timer_string = out.str();
 		timer.setString(timer_string);
 		std::vector<StrongActorPtr>::iterator it;
-		for (it = actorList.begin(); it != actorList.end(); it++)
-			(*it)->update(time);
+		for (it = actorList.begin(); it != actorList.end(); it++) {
+			if ((*it)->getPathType() == -4) {
+				//std::cout << (*it)->getId() << " Target" << std::endl;
+				(*it)->update(time);
+				sf::Vector2f start_pos = (*it)->getStartPosition();
+				sf::Vector2f new_pos = (*it)->getPosition();
+				if ((start_pos != new_pos) && (*it)->getVisible() && Pathfinder::canUpdateTargetGrid(start_pos) && view_state != 2) {
+					std::thread(&Pathfinder::updateTargetGrid, start_pos, new_pos).detach();
+					(*it)->setStartPosition(new_pos);
+				}
+			}
+			else {
+				//std::cout << (*it)->getId() << " Obstacle" << std::endl;
+				(*it)->update(time);
+			}
+		}
+
 
 		//Set timer to bottom right corner
 		sf::Vector2f gameView_bottom_corner = Configuration::getGameViewCenter();
@@ -351,6 +372,13 @@ void LevelView::update(EventInterfacePtr e) {
 **
 **/
 void LevelView::render(sf::RenderWindow *window) {
+
+	if (view_state == 0) {
+		window->clear(sf::Color::White);
+		window->draw(Configuration::getLoadingSprite());
+		window->display();
+		return;
+	}
 	//Get the player location and center gameView to it
 	sf::Vector2f player_pos = player->getPosition();
 	sf::Vector2f player_size = player->getSize();
@@ -433,6 +461,7 @@ void LevelView::cleanUp(void) {
 	ActorFactory::reset();
 	actorList.clear();
 	sound.stop();
+	view_state = 1;
 }
 
 /** Quit level

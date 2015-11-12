@@ -6,6 +6,9 @@
 
 class LevelView  {
 	friend class CraftView;
+	friend class Pathfinder;
+	protected:
+		static int view_state;
 	private:
 		static const int size;
 		static int num_actors;
@@ -25,7 +28,6 @@ class LevelView  {
 		static int duration;
 		static sf::SoundBuffer buffer;
 		static sf::Sound sound;
-		static int view_state;
 		static sf::Text commentary;
 		static std::vector<sf::Vector2f> commentary_positions;
 		static std::vector<std::string> commentary_strings;
@@ -43,6 +45,7 @@ class LevelView  {
 		static void generateActor(pugi::xml_node* elem, int* state, int generate = 1);
 		static std::vector<StrongActorPtr> actorList;	
 		static StrongActorPtr player;
+		static StrongActorPtr npc;
 		static std::string getName(void);
 		static int getNumActors(void);
 		static void start();

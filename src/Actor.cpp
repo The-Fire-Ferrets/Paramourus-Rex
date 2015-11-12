@@ -1,6 +1,8 @@
 #include "Actor.h"
 #include "Constants.h" // for window_[width|height]
 #include "PhysicsComponent.h"
+#include "InputComponent.h"
+#include "CollectableComponent.h"
 //unique instance id among actors
 int Actor::instances = 0;
 //Number of directions possible
@@ -27,6 +29,7 @@ Actor::Actor(void) {
 	instance = instances++;
 	state = 0;
 	visible = true;
+	renderToGameView = true;
 }
 
 
@@ -53,8 +56,22 @@ bool Actor::Init(pugi::xml_node* elem) {
     for (pugi::xml_attribute attr = elem->first_attribute(); attr; attr = attr.next_attribute()) {
         if (!strcmp(attr.name(),"Type"))
             id = attr.value();
+	 else if (!strcmp(attr.name(),"PathType")) {
+		path_type  = std::strtol(attr.value(), &temp, 10);
+		if (*temp != '\0') {
+		    std::cout << "Actor::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+		}
+	    }
+	else if (!strcmp(attr.name(),"TargetType")) {
+		target_type  = std::strtol(attr.value(), &temp, 10);
+		if (*temp != '\0') {
+		    std::cout << "Actor::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+		}
+	    }
         else if (!strcmp(attr.name(),"SpriteUp") || !strcmp(attr.name(),"Sprite")) {
             sprite_filename[0] = attr.value();
+		if (sprite_filename[0] == "")
+			renderToGameView = false;
 	}
 	else if (!strcmp(attr.name(),"SpriteDown"))
             sprite_filename[1] = attr.value();
@@ -120,6 +137,28 @@ bool Actor::Init(pugi::xml_node* elem) {
 	    addDelegate(ContactEvent::event_type);
 		initial_init = false;
 	}
+	/*if (id =="Player") {
+		path_type = -4;
+	}
+	else if (id == "NPC") {
+		path_type = -3;
+	}
+	else if (id == "FireFlower") {
+		path_type = -2;
+	}
+	else if (id == "EarthFlower") {
+		path_type = -2;
+	}
+	else if (id == "WaterFlower") {
+		path_type = -2;
+	}
+	else if (id == "AirFlower") {
+		path_type = -2;
+	}
+	else {
+		path_type = -1;
+	}*/
+	//std::cout << id << " " << path_type << std::endl;
     return true;
 }
 
@@ -134,7 +173,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		components[tool.name()]->PostInit(&tool);
 	}
 	else {
-		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {;
+		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
 			if (!use_vertexarray) {
 			    if (!strcmp(attr.name(),"X")) {
 				position.x = std::strtol(attr.value(), &temp, 10);
@@ -166,6 +205,18 @@ void Actor::PostInit(pugi::xml_node* elem) {
 				else if(!strcmp(attr.value(),"False"))
 					damage = false;
 			}
+			 else if (!strcmp(attr.name(),"PathType")) {
+				path_type  = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+				    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+				}
+			    }
+			 else if (!strcmp(attr.name(),"TargetType")) {
+				target_type  = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+				    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+				}
+			    }
 			}
 		}
 	}
@@ -177,8 +228,9 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		bool new_position = false;
 		bool conflict = false;
 		while (!new_position) {
-		    pos.x = rand() % (int)(Configuration::getWindowWidth() - size.x);
-		    pos.y = rand() % (int)(Configuration::getWindowHeight() - size.y);
+		    pos.x = rand() % (int)(Configuration::getWindowWidth() - size.x * size.x);
+		    pos.y = rand() % (int)(Configuration::getWindowHeight() - size.y * size.y);
+			//std::cout << pos.x << " " << pos.y << std::endl;
 		    bound = sf::FloatRect(pos.x, pos.y, size.x, size.y);
 		    std::vector<StrongActorPtr>::iterator it_all;
 		    for (it_all = LevelView::actorList.begin(); it_all != LevelView::actorList.end(); it_all++) {
@@ -193,23 +245,29 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		}
 	    }
 	    position = pos;
-		start_pos = position;
+		start_position = position;
+		initial_position = position;
+		//if (id == "Player")
+		//	std::cout << position.x << " int " << position.y << std::endl;
 		boundary.clear();
 	    boundary.push_back(new sf::FloatRect(position.x, position.y, size.x, size.y));
-		for (int i = 0; i < num_directions; i++) {
-			if (!sprite_filename[i].empty())
-	    			sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[i]).c_str());
-			else
-				sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[0]).c_str());
-	    		sprite[i] = sf::Sprite(sprite_texture[i], sf::IntRect(0, 0, (sprite_texture[i].getSize()).x, (sprite_texture[i].getSize()).y));
-	   		sprite[i].setScale(size.x/(sprite_texture[i].getSize()).x, size.y/(sprite_texture[i].getSize()).y);
-	    		sprite[i].setPosition(position);
+		if (renderToGameView) {
+			for (int i = 0; i < num_directions; i++) {
+				if (!sprite_filename[i].empty())
+		    			sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[i]).c_str());
+				else
+					sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[0]).c_str());
+		    		sprite[i] = sf::Sprite(sprite_texture[i], sf::IntRect(0, 0, (sprite_texture[i].getSize()).x, (sprite_texture[i].getSize()).y));
+		   		sprite[i].setScale(size.x/(sprite_texture[i].getSize()).x, size.y/(sprite_texture[i].getSize()).y);
+		    		sprite[i].setPosition(position);
+			}
 		}
 		if (renderToMinimap) {
 			spriteMinimap_texture.loadFromFile(("./assets/sprites/" + spriteMinimap_filename).c_str());
 			sprite_minimap = sf::Sprite(spriteMinimap_texture, sf::IntRect(0, 0, (spriteMinimap_texture.getSize()).x, (spriteMinimap_texture.getSize()).y));
 			sprite_minimap.setScale(10.0 * size.x/(spriteMinimap_texture.getSize()).x, 10.0 * size.y/(spriteMinimap_texture.getSize()).y);
-			sprite_minimap.setPosition(position);
+			//sprite_minimap.setPosition(position);
+			setMinimapSpritePosition(position);
 		}
 
 		sprite_idx = 0;
@@ -222,7 +280,8 @@ void Actor::PostInit(pugi::xml_node* elem) {
 				sprite_texture[i].loadFromFile(("./assets/backgrounds/" + sprite_filename[0]).c_str());
 			
 	}
-	
+	//if (id == "Player")
+	//	std::cout << position.x << " final " << position.y << std::endl;
 	
 }
 
@@ -247,6 +306,7 @@ void Actor::PostInit(void) {
 		sprite_idx = 1;
         sf::Vector2f p = next_pos;
 
+	
         this->setPosition(p);
         
     }
@@ -257,48 +317,9 @@ void Actor::PostInit(void) {
  ** Prevents actors from moving past the top and bottom boundaries
  ** if the obstacle pointer is set (by a physics component o fthe actor or another actor after contact) it prevents the actors from moving into each other
  **/
-    void Actor::move(std::vector<float> distance, std::vector<sf::Vector2f> direction) {
-        for (int i = 0; i < distance.size(); i++) {
-		sf::Vector2f p = this->getPosition() + direction[i] * distance[i];
-
-		// disallow movement off the screen
-		unsigned width = Configuration::getWindowWidth();
-		unsigned height = Configuration::getWindowHeight();
-
-		if (direction[i].x < 0)
-			sprite_idx = 2;
-		else if (direction[i].x > 0)
-			sprite_idx = 3;
-		else if (direction[i].y < 0)
-			sprite_idx = 0;
-		else if (direction[i].y > 0)
-			sprite_idx = 1;
-
-		if (p.x < FLT_EPSILON)
-		    p.x = FLT_EPSILON;
-		if (p.y < FLT_EPSILON)
-		    p.y = FLT_EPSILON;
-		if (p.x > width-size.x)
-		    p.x = width - size.x;
-		if (p.y > height-size.y)
-		    p.y = height - size.y;
-
-		this->setPosition(p + direction[i] * distance[i]);
-	}
-    }
-
-/** Moves the actor a certain distance based on the current game time
- ** time: current game time
- ** Prevents actors from moving past the top and bottom boundaries
- ** if the obstacle pointer is set (by a physics component o fthe actor or another actor after contact) it prevents the actors from moving into each other
- **/
     void Actor::move(float distance, sf::Vector2f direction) {
         //Move Actor
         sf::Vector2f p = this->getPosition() + direction * distance;
-
-        // disallow movement off the screen
-        unsigned width = Configuration::getWindowWidth();
-        unsigned height = Configuration::getWindowHeight();
 
 	if (direction.x < 0)
 		sprite_idx = 2;
@@ -309,24 +330,28 @@ void Actor::PostInit(void) {
 	else if (direction.y > 0)
 		sprite_idx = 1;
 
-        if (p.x < FLT_EPSILON)
-            p.x = FLT_EPSILON;
-        if (p.y < FLT_EPSILON)
-            p.y = FLT_EPSILON;
-        if (p.x > width-size.x)
-            p.x = width - size.x;
-        if (p.y > height-size.y)
-            p.y = height - size.y;
+	// disallow movement off the screen
+	unsigned width = Configuration::getWindowWidth();
+	unsigned height = Configuration::getWindowHeight();
+
+	if (p.x < FLT_EPSILON)
+		p.x = FLT_EPSILON;
+	if (p.y < FLT_EPSILON)
+		p.y = FLT_EPSILON;
+	if (p.x > width-size.x)
+		p.x = width - size.x;
+	if (p.y > height-size.y)
+		p.y = height - size.y;
 
         //Get the bounds after movement and check if the movement is allowed
-        sf::FloatRect bound_after = sf::FloatRect(p + direction * distance, getSize());
+        sf::FloatRect bound_after = sf::FloatRect(p, getSize());
         std::shared_ptr<ActorComponent>     ac;
         std::shared_ptr<PhysicsComponent>   pc;
         ac = components[PhysicsComponent::id];
         pc = std::dynamic_pointer_cast<PhysicsComponent>(ac);
         if (pc->query(bound_after, direction)) {
             // set the position
-            this->setPosition(p + direction * distance);
+            this->setPosition(p);
         }
     }
 
@@ -342,18 +367,18 @@ void Actor::update(float time) {
  ** window: current game render window
  **/
 void Actor::render(sf::RenderWindow *window, bool minimap) {
+	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
+			(it->second)->render(window, minimap);
     	if (visible) {
-		if (use_vertexarray) {
+		if (use_vertexarray && renderToGameView) {
 			window->draw(sprite_vertexarray, &(sprite_texture[0]));
 		}
 		else if (minimap && renderToMinimap) {
 			window->draw(sprite_minimap);
 		}
-		else if (!minimap) {
+		else if (!minimap && renderToGameView) {
         		window->draw(sprite[sprite_idx]);
 		}
-		for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
-			(it->second)->render(window, minimap);
 	}
 	
 }
@@ -411,15 +436,31 @@ void Actor::updateBoundary(void) {
 		}
 	}	
 	else {
-		*boundary.back() = sf::FloatRect(position.x, position.y, size.x, size.y);
+		float minimize = .25;
+		*boundary.back() = sf::FloatRect(position.x + size.x * minimize, position.y + size.y * minimize, size.x * (1 - 2*minimize), size.y * (1 - 2*minimize));
 	}
 }
 
 
 // Mutators and accesors
+int Actor::getPathType(void) {
+	return path_type;
+}
 
-sf::Vector2f Actor::getStartPos(void) {
-	return start_pos;
+int Actor::getTargetType(void) {
+	return target_type;
+}
+
+sf::Vector2f Actor::getStartPosition(void) {
+	return start_position;
+}
+
+sf::Vector2f Actor::getInitialPosition(void) {
+	return initial_position;
+}
+
+void Actor::setStartPosition(sf::Vector2f pos) {
+	start_position = pos;
 }
 /** returns the actors boundary
  **
@@ -489,13 +530,17 @@ sf::Vector2f Actor::getPosition(void) {
  **
  **/
 void Actor::setPosition(sf::Vector2f pos) {
+	//std::cout << pos.x << " setting " << pos.y << std::endl;
 	position = pos;
 	updateBoundary();
-	for (int i = 0; i < num_directions; i++) {
-		sprite[i].setPosition(position);
+	if (renderToGameView) {
+		for (int i = 0; i < num_directions; i++) {
+			sprite[i].setPosition(position);
+		}
 	}
 	if (renderToMinimap)
-		sprite_minimap.setPosition(position);
+		//sprite_minimap.setPosition(position);
+		setMinimapSpritePosition(position);
 }
 
 /** Return the actors instance
@@ -614,4 +659,16 @@ sf::FloatRect* Actor::contains(sf::Vector2f pnt) {
  **/
 bool Actor::causesDamage(void) {
     return damage;
+}
+
+/**
+ **
+ **/
+void Actor::setMinimapSpritePosition(sf::Vector2f pos) {
+	if (this->hasComponent(InputComponent::id) || this->hasComponent(CollectableComponent::id)) {
+		pos.x -= size.x/2 / sprite_minimap.getScale().x;
+		pos.y -= size.y/2 / sprite_minimap.getScale().y;
+	}
+
+	sprite_minimap.setPosition(pos);
 }
