@@ -51,6 +51,7 @@ class PhysicsComponent : public ActorComponent {
 		bool inVision;
 		sf::Texture vision_boundary_texture;
 		sf::Sprite vision_boundary_sprite;
+		sf::Clock vision_timer;
 };
 
 #endif

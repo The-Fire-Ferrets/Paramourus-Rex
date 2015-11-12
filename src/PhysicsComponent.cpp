@@ -129,7 +129,14 @@ void PhysicsComponent::update(float time) {
 			inVision = true;
 			//std::cout << "Player Seen" << std::endl;
 			Pathfinder::changeVision(owner->getInitialPosition());
+			vision_timer.restart();
 		}
+		else if (vision_timer.getElapsedTime().asSeconds() > 5) {
+			inVision = false;
+			//std::cout << "Player Seen" << std::endl;
+			Pathfinder::changeVision(owner->getInitialPosition());
+		}
+			 
 	}
     bool madeContact = false;
     std::vector<StrongActorPtr>::iterator it_all;
