@@ -119,7 +119,6 @@ void CraftableComponent::update(EventInterfacePtr e) {
 			if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0.f, receiver->getInstance(), -1))) {
 				std::cout << "CraftableComponent::update: unable to send response to CraftView" << std::endl;
 			}
-			std::cout << "Flower: " << owner->getInstance() << " processing craft event from: " << sender->getInstance() << std::endl;
 		}
 
 	}
@@ -150,6 +149,11 @@ void CraftableComponent::quit(void) {
  ** is possible.
  **/
 bool CraftableComponent::doesCombineWith(const CraftableComponent& other) const {
+	// no combining a flower with itself
+	if (owner->getInstance() == other.owner->getInstance()) {
+		return false;
+	}
+
 	// get resulting component list
 	std::vector<std::string> combo;
 	combo.insert(combo.end(), elements.begin(), elements.end());
@@ -189,12 +193,9 @@ void CraftableComponent::combineWith(const CraftableComponent& other) {
 	if (!this->doesCombineWith(other)) {
 		return;
 	}
-	std::cout << 2 << std::endl;
 
 	// get resulting component list
-	std::vector<std::string> combo;
-	combo.insert(combo.end(), elements.begin(), elements.end());
-	combo.insert(combo.end(), other.elements.begin(), other.elements.end());
+	elements.insert(elements.end(), other.elements.begin(), other.elements.end());
 
 	// open the recipe book
 	pugi::xml_document doc;
@@ -211,13 +212,11 @@ void CraftableComponent::combineWith(const CraftableComponent& other) {
 			// find matching components
 			if (!strcmp(attr.name(), "Components")) {
 				std::vector<std::string> components = split(std::string(attr.value()), ' ');
-				if (have_equivalent_strings(combo, components)) {
-					std::cout << 3 << std::endl;
+				if (have_equivalent_strings(elements, components)) {
 					std::string type = this->getCraftResultValue(recipe, "Type");
 					std::string sprite = this->getCraftResultValue(recipe, "Sprite");
 
 					// change the owner actor to the appropirate type
-					elements.clear();  elements = combo;
 					this->type = type;
 					owner->sprite_texture[0].loadFromFile("./assets/sprites/" + sprite);
 					owner->sprite[0].setTexture(owner->sprite_texture[0]);

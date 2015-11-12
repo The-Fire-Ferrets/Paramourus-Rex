@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include "ActorFactory.h"
 #include <vector>
+#include <utility>
 
 class DialogueView {
 
@@ -16,8 +17,6 @@ class DialogueView {
 		
 		//images
 		static sf::Texture background_texture;
-		static sf::Sprite Diana;
-		static sf::Sprite Phil;
 		static sf::Sprite background;
 		static sf::RectangleShape backlay;
 
@@ -25,9 +24,12 @@ class DialogueView {
 		static sf::Font font;
 		static sf::Text text;
 
-		// positions
-		static sf::Vector2f dianaPos;
-		static sf::Vector2f philPos;
+		// character art
+		static sf::Texture  lhs_character_tex;
+		static sf::Sprite   lhs_character_sprite;
+
+		static sf::Texture  rhs_character_tex;
+		static sf::Sprite	rhs_character_sprite;
 		static sf::Vector2f dialogue_pos;
 
 		static bool pressed;
@@ -38,9 +40,11 @@ class DialogueView {
 		static sf::Sound sound;
 		static int view_state;
 
+		static bool solved;
+
 	public:
-		static std::vector<std::string> boxes;     // what gets displayed on screen
-		static std::vector<std::string> dialogues; // what gets read in from the XML
+		static std::vector<std::pair<std::string, std::string>> boxes;     // what gets displayed on screen
+		static std::vector<std::pair<std::string, std::string>> dialogues; // what gets read in from the XML
 		static void Create(const char* resource, int* state);
 		static void update(sf::RenderWindow *window, int* state);
 		static void update(EventInterfacePtr e);
