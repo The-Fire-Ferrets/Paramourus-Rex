@@ -36,10 +36,11 @@ class LevelView  {
 		static bool commentary_change;
 		static std::vector<pugi::xml_node> spawn;
 		static pugi::xml_document doc;
-		static sf::Sprite title_sprite;
+		static sf::Sprite back_button;
 		static sf::Texture title_texture;
 		static sf::Vector2f title_size;	
 		static bool pressed;
+		static bool reveal_back_button;
 
 	public:
 		static void generateActor(pugi::xml_node* elem, int* state, int generate = 1);
@@ -53,7 +54,8 @@ class LevelView  {
 		static StrongActorPtr getActor(int instance);
 		static void removeActor(int instance);
 		static void cleanUp(void);
-
+		static int flowers_left;
+		static int inVision;
 		static void Create(const char* resource, int* state, int flowers[]);
 		static void update(sf::RenderWindow *window, int* state, float time);
 		static void update(EventInterfacePtr e);

@@ -130,11 +130,13 @@ void PhysicsComponent::update(float time) {
 			//std::cout << "Player Seen" << std::endl;
 			Pathfinder::changeVision(owner->getInitialPosition());
 			vision_timer.restart();
+			LevelView::inVision++;
 		}
-		else if (vision_timer.getElapsedTime().asSeconds() > 5) {
+		else if (inVision && vision_timer.getElapsedTime().asSeconds() > 15) {
 			inVision = false;
 			//std::cout << "Player Seen" << std::endl;
 			Pathfinder::changeVision(owner->getInitialPosition());
+			LevelView::inVision--;
 		}
 			 
 	}

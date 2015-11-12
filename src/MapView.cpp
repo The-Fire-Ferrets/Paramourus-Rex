@@ -222,7 +222,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
  **
 **/
 void MapView::resetPopulationValues(void) {
-	flowers = rand() % 20 + 5;
+	flowers = rand() % 5 + 5;
 	for (int i = 0; i < num_levels; i++) {
 		if (i > 1) {
 			fireflowers_count[i] = (int)(flowers * fireflowers[i]);

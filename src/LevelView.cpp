@@ -50,12 +50,15 @@ bool LevelView::commentary_change = true;
 std::vector<pugi::xml_node> LevelView::spawn;
 pugi::xml_document LevelView::doc;
 //Back Button
-sf::Sprite LevelView::title_sprite;
+sf::Sprite LevelView::back_button;
 sf::Texture LevelView::title_texture;
 sf::Vector2f LevelView::title_size;	
 bool LevelView::pressed = false;
 //NPC Test
 StrongActorPtr LevelView::npc;
+bool LevelView::reveal_back_button;
+int LevelView::flowers_left;
+int LevelView::inVision;
 
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
@@ -67,6 +70,8 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	delegate.bind(&LevelView::update);
 	Pathfinder::Create(Configuration::getWindowWidth(), Configuration::getWindowHeight(), 10);
 	num_actors = 0;
+	reveal_back_button = false;
+	inVision = 0;
 
 	//Error check to see if file was loaded correctly
 	pugi::xml_parse_result result;
@@ -142,9 +147,9 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			}
 		}
 	}
-	title_sprite = sf::Sprite(title_texture, sf::IntRect(0, 0, title_texture.getSize().x, title_texture.getSize().y));
-	title_sprite.setScale(title_size.x/(title_texture.getSize()).x, title_size.y/(title_texture.getSize()).y);
-	title_sprite.setPosition(sf::Vector2f(-1000,-1000));
+	back_button = sf::Sprite(title_texture, sf::IntRect(0, 0, title_texture.getSize().x, title_texture.getSize().y));
+	back_button.setScale(title_size.x/(title_texture.getSize()).x, title_size.y/(title_texture.getSize()).y);
+	back_button.setPosition(sf::Vector2f(-1000,-1000));
 
 	timer.setPosition(timer_position);
 	//Iterates over XML to get components to add
@@ -181,21 +186,25 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			if (!strcmp(tool.name(), "WaterFlower")) {
 				int count = flowers[3];
 				//count = 1;
+				flowers_left += count;
 				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "FireFlower")) {
 				int count = flowers[0];
 				//count  = 1;
+				flowers_left += count;
 				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "EarthFlower")) {
 				int count = flowers[1];
 				//count = 1;
+				flowers_left += count;
 				generateActor(&tool, state, count);
 			}
 			else if (!strcmp(tool.name(), "AirFlower")) {
 				int count = flowers[2];
 				//count = 1;
+				flowers_left += count;
 				generateActor(&tool, state, count);
 			}
 			else {
@@ -277,10 +286,10 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 
 	if (view_state == 0)
 		return;
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && reveal_back_button) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
-            if (title_sprite.getGlobalBounds().contains(pos.x * Configuration::getGameViewWidth() / Configuration::getWindowWidth() +  Configuration::getGameViewPosition().x, pos.y * Configuration::getGameViewHeight() / Configuration::getWindowHeight() +  Configuration::getGameViewPosition().y)) {
+            if (back_button.getGlobalBounds().contains(pos.x * Configuration::getGameViewWidth() / Configuration::getWindowWidth() +  Configuration::getGameViewPosition().x, pos.y * Configuration::getGameViewHeight() / Configuration::getWindowHeight() +  Configuration::getGameViewPosition().y)) {
 		if (view_state == 2) {
 			view_state = 1;
 			LevelView::player->reset();
@@ -319,8 +328,9 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 			commentary.setString(commentary_strings.front());
 			commentary.setPosition(Configuration::getGameViewCenter());
 		}
-		else {
-			title_sprite.setPosition(sf::Vector2f(Configuration::getGameViewPosition().x,Configuration::getGameViewPosition().y + Configuration::getGameViewHeight() - title_sprite.getGlobalBounds().height));
+		else if (view_state == 2) {
+			
+			reveal_back_button = true;
 		}
 		std::ostringstream out;
 		out << std::setprecision(2) << std::fixed << timer_time/1000;
@@ -344,11 +354,17 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 			}
 		}
 
-
+		if (flowers_left == 0 && inVision == 0) {
+			reveal_back_button = true;
+		}
+		else if (inVision) {
+			reveal_back_button = false;
+		}
 		//Set timer to bottom right corner
 		sf::Vector2f gameView_bottom_corner = Configuration::getGameViewCenter();
 		gameView_bottom_corner.x += Configuration::getGameViewWidth()/2 - timer.getGlobalBounds().width;
 		gameView_bottom_corner.y += Configuration::getGameViewHeight()/2 - timer.getGlobalBounds().height * 1.25;
+		back_button.setPosition(sf::Vector2f(Configuration::getGameViewPosition().x,Configuration::getGameViewPosition().y + Configuration::getGameViewHeight() - back_button.getGlobalBounds().height));
 		timer.setPosition(gameView_bottom_corner);
 	}
 
@@ -399,7 +415,9 @@ void LevelView::render(sf::RenderWindow *window) {
 	if (view_state == 2) {
 		window->draw(commentary);
 	}
-	window->draw(title_sprite);
+	if (reveal_back_button) {
+		window->draw(back_button);
+	}
 
 	//Set minimap view
 	minimapView.setViewport(sf::FloatRect(.9, 0, .1, .1));
