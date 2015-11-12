@@ -124,6 +124,7 @@ class Pathfinder {
 		static bool selectNewPath(GridLocation init_pair, GridLocation* start_pt, GridLocation curr_pair);
 		static int first_run;
 		static bool positionsEqual(GridLocation* pos1, GridLocation* pos2);
+		static std::map<GridLocation*, bool> inVision;
 
 	public:
 		static void Create(int lw, int lh, int ps);
@@ -153,6 +154,7 @@ class Pathfinder {
 		static bool canUpdateTargetGrid(sf::Vector2f start_pos);
 		static bool canUpdateStartPath(sf::Vector2f init_pos, sf::Vector2f start_pos);
 		static bool generatingPaths;
+		static void changeVision(sf::Vector2f init_pos);
 };
 
 

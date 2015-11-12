@@ -366,6 +366,8 @@ void Actor::update(float time) {
  ** window: current game render window
  **/
 void Actor::render(sf::RenderWindow *window, bool minimap) {
+	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
+			(it->second)->render(window, minimap);
     	if (visible) {
 		if (use_vertexarray && renderToGameView) {
 			window->draw(sprite_vertexarray, &(sprite_texture[0]));
@@ -376,8 +378,6 @@ void Actor::render(sf::RenderWindow *window, bool minimap) {
 		else if (!minimap && renderToGameView) {
         		window->draw(sprite[sprite_idx]);
 		}
-		for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
-			(it->second)->render(window, minimap);
 	}
 	
 }

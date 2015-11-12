@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level2 Name = "Hello World!" Background = "Level2.png" Edge = "Water.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "50000">
+<Level2 Name = "Hello World!" Background = "Level2.png" Edge = "Water.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "500000">
 
 	<!-- ObsA 50x150-->
 	<Obstacle Type = "Wall"  Sprite = "Water.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 100 0 150 0 100 150 150 150">		
@@ -64,6 +64,12 @@
 	<NPC Generate = "2">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
+		<InputComponent>
+			<Control Speed = "40"/>
+		</InputComponent>
+		<PhysicsComponent>
+			<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
+		</PhysicsComponent>
 	</NPC>
 	<EarthFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>

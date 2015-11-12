@@ -8,5 +8,6 @@
 	</CollectorComponent>
 	<PhysicsComponent>
 		<Properties Type = "Transparent" />
+		<VisionBoundary Height = "" Width = "" X = "" Y = ""/>
 	</PhysicsComponent>
 </NPC>

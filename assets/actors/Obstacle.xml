@@ -2,5 +2,6 @@
 <Obstacle Type = "Obstacle"  Sprite = "Cactus.png"  SpriteMinimap = "" Damage = "True" PathType = "-1" TargetType = "0">
 	<PhysicsComponent>
 		<Properties Type = "Opaque" />
+		<VisionBoundary Height = "" Width = "" X = "" Y = ""/>
 	</PhysicsComponent>
 </Obstacle>

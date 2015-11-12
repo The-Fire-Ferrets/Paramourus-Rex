@@ -29,6 +29,8 @@ ActorComponent* PhysicsComponent::create() {
 PhysicsComponent::PhysicsComponent(void) {
     instance = instances;
 	direction_bit = 0;
+	use_vision_boundary = false;
+	inVision = false;
 }
 
 /** Destructor
@@ -42,13 +44,62 @@ PhysicsComponent::~PhysicsComponent(void) {
  ** elem : node pointing to section of XML configuration holding more attribute defaults to setup
  ** Sets up additional attribute defaults
  **/
-bool PhysicsComponent::Init(pugi::xml_node* elem) {;
+bool PhysicsComponent::Init(pugi::xml_node* elem) {
+	char* temp;
     for (pugi::xml_node tool = elem->first_child(); tool; tool = tool.next_sibling()) {
         for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
+		//std::cout << tool.name() << " " << attr.name() << " " << attr.value() << std::endl;
             if (!strcmp(attr.name(),"Type"))
                 type = attr.value();
+		 else if (!strcmp(tool.name(), "VisionBoundary"), !strcmp(attr.name(),"X")) {
+			if (!strcmp(attr.value(), ""))
+				vision_boundary_position.x = 0;
+			else {
+				vision_boundary_position.x  = std::strtol(attr.value(), &temp, 10);
+				use_vision_boundary = true;
+				if (*temp != '\0') {
+				    std::cout << "PhysicsComponent::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+				}
+			}
+		    }
+		else if (!strcmp(tool.name(), "VisionBoundary"), !strcmp(attr.name(),"Y")) {
+			if (!strcmp(attr.value(), ""))
+				vision_boundary_position.y = 0;
+			else {
+				vision_boundary_position.y  = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+				    std::cout << "PhysicsComponent::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+				}
+			}
+		    }
+		else if (!strcmp(tool.name(), "VisionBoundary"), !strcmp(attr.name(),"Width")) {
+			if (!strcmp(attr.value(), ""))
+				vision_boundary_size.x = 0;
+			else {
+				vision_boundary_size.x  = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+				    std::cout << "PhysicsComponent::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+				}
+			}
+		    }
+		else if (!strcmp(tool.name(), "VisionBoundary"), !strcmp(attr.name(),"Height")) {
+			if (!strcmp(attr.value(), ""))
+				vision_boundary_size.y = 0;
+			else {
+				vision_boundary_size.y  = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+				    std::cout << "PhysicsComponent::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+				}
+			}
+		    }
         }
-    }	
+    }
+	if (use_vision_boundary) {
+		vision_boundary_texture.loadFromFile("./assets/backgrounds/Level0.png");
+		vision_boundary_sprite = sf::Sprite(vision_boundary_texture);
+		//std::cout << "HERE" << std::endl;
+	}
+	
     return true;	
 }
 
@@ -69,6 +120,17 @@ bool PhysicsComponent::PostInit(void) {
  ** time: current game time
  **/
 void PhysicsComponent::update(float time) {
+	//Checks vision boundary to see if player is seen
+	if (use_vision_boundary) {	
+		vision_boundary = sf::IntRect(0, 0, (int) (vision_boundary_size.x), (int) (vision_boundary_size.y));
+		vision_boundary_sprite.setTextureRect(vision_boundary);
+		vision_boundary_sprite.setPosition(owner->getPosition().x + vision_boundary_position.x, owner->getPosition().y + vision_boundary_position.y);
+		if (LevelView::player->intersects(vision_boundary_sprite.getGlobalBounds()) && !inVision) {
+			inVision = true;
+			//std::cout << "Player Seen" << std::endl;
+			Pathfinder::changeVision(owner->getInitialPosition());
+		}
+	}
     bool madeContact = false;
     std::vector<StrongActorPtr>::iterator it_all;
     for (it_all =  LevelView::actorList.begin(); it_all !=  LevelView::actorList.end(); it_all++) {
@@ -198,7 +260,8 @@ bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
  ** window: current game render window
  **/
 void PhysicsComponent::render(sf::RenderWindow *window, bool minimap) {
-	
+	if (use_vision_boundary)
+		window->draw(vision_boundary_sprite);
 }
 
 /** Sets the value of the given bit
