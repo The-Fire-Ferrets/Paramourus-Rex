@@ -1,4 +1,5 @@
 #include "LevelView.h"
+#include "CollectableComponent.h"
 
 EventDelegate LevelView::delegate = NULL;
 //Total size of pointer arrays
@@ -9,10 +10,12 @@ int LevelView::num_actors = 0;
 std::vector<StrongActorPtr> LevelView::actorList;
 //Holds background texture
 sf::Texture LevelView::background_texture;
+sf::Texture LevelView::minimap_background_texture;
 //Edge texture
 sf::Texture LevelView::edge_texture;
 //Holds background
 sf::Sprite LevelView::background;
+sf::Sprite LevelView::minimap_background;
 //Holds edge
 sf::Sprite LevelView::edge;
 //Holds level name
@@ -31,6 +34,8 @@ sf::Vector2f LevelView::timer_position;
 sf::View LevelView::gameView;
 //minimap view
 sf::View LevelView::minimapView;
+//pause map view
+sf::View LevelView::pauseView;
 //reference to player
 StrongActorPtr LevelView::player = NULL;
 //Level duration in ms
@@ -56,6 +61,10 @@ sf::Vector2f LevelView::title_size;
 bool LevelView::pressed = false;
 //NPC Test
 StrongActorPtr LevelView::npc;
+
+// pause screen medium map
+bool LevelView::paused = false;
+bool LevelView::pause_key_pressed = false;
 
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
@@ -91,6 +100,11 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			background = sf::Sprite(background_texture, sf::IntRect(0, 0, background_texture.getSize().x, background_texture.getSize().y));
 			background.scale((1.0*Configuration::getWindowWidth())/(background_texture.getSize().x), (1.0*Configuration::getWindowHeight())/(background_texture.getSize().y));
 			background.setPosition(sf::Vector2f(0,0));
+		}
+		else if (!strcmp(attr.name(), "MinimapBackground")) {
+			minimap_background_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
+			minimap_background = sf::Sprite(minimap_background_texture);
+			minimap_background.setScale(Configuration::getWindowWidth()/10.f, Configuration::getWindowHeight()/10.f);
 		}
 		else if (!strcmp(attr.name(), "TitleSprite")) {
 		    title_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
@@ -266,6 +280,21 @@ int LevelView::getNumActors(void) {
  **/
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	EventManagerInterface::setCurrentActorList(&actorList);
+
+	// handle paused screen
+	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+		pause_key_pressed = false;
+	}
+	if (paused) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !pause_key_pressed) {
+			paused = false;
+			pause_key_pressed = true;
+			level_clock.restart();    // don't count the time level was paused toward the timer
+		}
+		
+		return;
+	}
+
 	if (!Pathfinder::generatingPaths && view_state == 0) {
 		if (name == "Introduction") {
 			view_state = 2;
@@ -352,6 +381,11 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		timer.setPosition(gameView_bottom_corner);
 	}
 
+	// should we pause the screen?
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !pause_key_pressed) {
+		paused = true;
+		pause_key_pressed = true;
+	}
 }
 
 /** Checks for events and update accordingly
@@ -406,12 +440,27 @@ void LevelView::render(sf::RenderWindow *window) {
 	window->setView(minimapView);
 
 	//Update graphics
-	window->draw(background);
+	window->draw(minimap_background);
 	window->draw(timer);
-	for (it = actorList.begin(); it != actorList.end(); it++)
-		(*it)->render(window, true);
+	for (it = actorList.begin(); it != actorList.end(); it++) {
+		if ((*it)->hasComponent(CollectableComponent::id)) {
+			(*it)->render(window, true);
+		}
+	}
 	player->render(window, true);
 	//window->draw(minimap_border);
+	
+	if (paused) {
+		// reset the view to the pause map
+		pauseView.setViewport(sf::FloatRect(0.2, 0.2, 0.8, 0.8));
+		window->setView(pauseView);
+
+		// actual rendering
+		window->draw(background);
+		for (it = actorList.begin(); it != actorList.end(); it++)
+			(*it)->render(window, true);
+		player->render(window, true);
+	}
 }
 
 /** Ready the level for start

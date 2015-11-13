@@ -13,8 +13,10 @@ class LevelView  {
 		static const int size;
 		static int num_actors;
 		static sf::Texture background_texture;
+		static sf::Texture minimap_background_texture;
 		static sf::Texture edge_texture;
 		static sf::Sprite background;
+		static sf::Sprite minimap_background;
 		static sf::Sprite edge;
 		static std::string name;
 		static sf::Clock level_clock;
@@ -24,6 +26,7 @@ class LevelView  {
 		static sf::Vector2f timer_position;
 		static sf::View gameView;
 		static sf::View minimapView;
+		static sf::View pauseView;
 		static sf::Sprite minimap_border;
 		static int duration;
 		static sf::SoundBuffer buffer;
@@ -40,6 +43,9 @@ class LevelView  {
 		static sf::Texture title_texture;
 		static sf::Vector2f title_size;	
 		static bool pressed;
+
+		static bool paused;
+		static bool pause_key_pressed;
 
 	public:
 		static void generateActor(pugi::xml_node* elem, int* state, int generate = 1);
