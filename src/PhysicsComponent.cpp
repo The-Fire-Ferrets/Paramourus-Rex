@@ -220,12 +220,16 @@ void PhysicsComponent::restart(void) {
  **/
 bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
     // is the owner currently in another actor's bounding box?
+	int border = 5;
+	sf::FloatRect boundwborder = sf::FloatRect(bound.left - border, bound.top - border, bound.width + 2*border, bound.height + 2*border);
+
     for (auto it = last_actors.begin(); it != last_actors.end(); it++) {
         if ( (*it)->hasAttribute("Opaque") && (*it)->intersects(bound) != NULL) {
             setDirectionBit(dir);
-
+		std::cout << dir.x << " " << dir.y << std::endl;
             //If caused contact but on an edge, ignore it and only return false if a majoriry of the player is making contact
             //Allows for smoother movement and continued movement
+
             if (dir.x == 1) {
                 if ((*it)->contains(sf::Vector2f(bound.left + bound.width, bound.top  + bound.height / 4)) != NULL)
                     return false;

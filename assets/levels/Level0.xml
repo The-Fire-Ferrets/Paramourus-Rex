@@ -3,7 +3,7 @@
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<InputComponent>
-			<Control Type = "Keyboard" Speed = "50"/>
+			<Control Type = "Keyboard" Speed = "4"/>
 		</InputComponent>
 		<Pathfinder PathType = "-4"/>
 	</Player>
@@ -32,6 +32,9 @@
 			<Dialogue Text = "Oh, looks like you have some competition. Dont let them touch you or they may steal your vases and/or flowers. Touch one to see." />
 			<NPC Generate = "2">
 				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+				<InputComponent>
+					<Control Type = "Keyboard" Speed = "3.5"/>
+				</InputComponent>
 				<PhysicsComponent>
 					<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
 				</PhysicsComponent>

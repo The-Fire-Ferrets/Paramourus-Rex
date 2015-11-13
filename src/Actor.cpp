@@ -423,6 +423,7 @@ void Actor::quit(void) {
  **
  **/
 void Actor::updateBoundary(void) {
+	float minimize = .25;
 	if (use_vertexarray) {
 		boundary.clear();
 		sf::Vector2f pos;
@@ -436,8 +437,10 @@ void Actor::updateBoundary(void) {
 		}
 	}	
 	else {
-		float minimize = .25;
-		*boundary.back() = sf::FloatRect(position.x + size.x * minimize, position.y + size.y * minimize, size.x * (1 - 2*minimize), size.y * (1 - 2*minimize));
+		if (id == "Obstacle")
+			*boundary.back() = sf::FloatRect(position.x + size.x * minimize, position.y + size.y * minimize, size.x * (1 - 2*minimize), size.y * (1 - 2*minimize));
+		else
+			*boundary.back() = sf::FloatRect(position.x, position.y, size.x, size.y);
 	}
 }
 
