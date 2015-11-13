@@ -385,6 +385,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !pause_key_pressed) {
 		paused = true;
 		pause_key_pressed = true;
+		duration = timer_time;
 	}
 }
 
