@@ -41,6 +41,7 @@ class InputComponent : public ActorComponent {
 
 	private:
 		float speed;
+		int last_framerate;
 		static ActorComponent* create();
 		static int instances;
 		static const bool registered;

@@ -92,16 +92,28 @@
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<InputComponent>
-			<Control Type = "Keyboard" Speed = "50"/>
+			<Control Speed = "4"/>
 		</InputComponent>
 		<Pathfinder PathType = "-4"/>
 	</Player>
 	<NPC Generate = "2">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<InputComponent>
+			<Control Speed = "3.5"/>
+		</InputComponent>
+		<PhysicsComponent>
+			<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
+		</PhysicsComponent>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
 	</NPC>
 	<NPC>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<InputComponent>
+			<Control Speed = "3.5"/>
+		</InputComponent>
+		<PhysicsComponent>
+			<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
+		</PhysicsComponent>
 		<Pathfinder PathType = "-3" TargetType = "-5"/>
 	</NPC>
 	<EarthFlower>

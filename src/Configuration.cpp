@@ -12,6 +12,8 @@ unsigned int Configuration::gameview_height = 0;
 unsigned int Configuration::gameview_width = 0;
 sf::Vector2f Configuration::gameview_center;
 
+float Configuration::frame_rate = 0;
+
 sf::Texture Configuration::loading_texture;
 sf::Sprite Configuration::loading_sprite;
 
@@ -133,4 +135,14 @@ void Configuration::setLoadingTexture(sf::Texture t) {
  **/
 sf::Sprite Configuration::getLoadingSprite(void) {
 	return loading_sprite;
+}
+
+/** Get and set the Frame rate
+ **
+ **/
+void Configuration::setFrameRate(float fr) {
+	frame_rate = fr;
+}
+float Configuration::getFrameRate(void) {
+	return frame_rate;
 }

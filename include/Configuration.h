@@ -16,6 +16,7 @@ class Configuration
 		static sf::Texture minimap_border;
 		static sf::Texture loading_texture;
 		static sf::Sprite loading_sprite;
+		static float frame_rate;
 
 	public:
 		static void setWindowDimensions(unsigned width, unsigned height);
@@ -38,5 +39,8 @@ class Configuration
 		static sf::Texture getLoadingTexture(void);
 		static void setLoadingTexture(sf::Texture t);
 		static sf::Sprite getLoadingSprite(void);
+	
+		static void setFrameRate(float fr);
+		static float getFrameRate(void);
 };
 #endif

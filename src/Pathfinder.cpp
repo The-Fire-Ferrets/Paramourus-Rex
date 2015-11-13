@@ -655,6 +655,8 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 	
 	first_run++;
 	float dist_total = getDistance(curr_pos, path_pos);
+	if (dist_total < 1)
+		dist_total = 1;
 	float p = dist / dist_total;
 	//std::cout << "Curr_pos " << curr_pos.x << " " << curr_pos.y << "Path_pos: "  << path_pos.x << " " << path_pos.y << "dist_total " << dist_total << "P: " << p << std::endl;
 

@@ -3,6 +3,7 @@
 
 #include "Constants.h"
 #include "ActorFactory.h"
+#include "DialogueView.h"
 
 class LevelView  {
 	friend class CraftView;
@@ -13,6 +14,8 @@ class LevelView  {
 		static const int size;
 		static int num_actors;
 		static sf::Texture background_texture;
+		static sf::Texture timeout_texture;
+		static sf::Sprite timeout_sprite;
 		static sf::Texture edge_texture;
 		static sf::Sprite background;
 		static sf::Sprite edge;
@@ -40,7 +43,9 @@ class LevelView  {
 		static sf::Texture title_texture;
 		static sf::Vector2f title_size;	
 		static bool pressed;
+		static int flashing;
 		static bool reveal_back_button;
+		static float timer_time;
 
 	public:
 		static void generateActor(pugi::xml_node* elem, int* state, int generate = 1);

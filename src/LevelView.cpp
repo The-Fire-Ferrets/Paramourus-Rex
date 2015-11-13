@@ -59,7 +59,10 @@ StrongActorPtr LevelView::npc;
 bool LevelView::reveal_back_button;
 int LevelView::flowers_left;
 int LevelView::inVision;
-
+int LevelView::flashing;
+float LevelView::timer_time;
+sf::Texture LevelView::timeout_texture;
+sf::Sprite LevelView::timeout_sprite;
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -72,7 +75,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	num_actors = 0;
 	reveal_back_button = false;
 	inVision = 0;
-
+	flashing = 0;
 	//Error check to see if file was loaded correctly
 	pugi::xml_parse_result result;
 	std::string resource_str(resource);
@@ -151,6 +154,10 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	back_button.setScale(title_size.x/(title_texture.getSize()).x, title_size.y/(title_texture.getSize()).y);
 	back_button.setPosition(sf::Vector2f(-1000,-1000));
 
+	const char* timeout_file = {"./assets/backgrounds/TimeOut.png"};
+	timeout_texture.loadFromFile(timeout_file);
+	timeout_sprite = sf::Sprite(timeout_texture, sf::IntRect(0, 0, timeout_texture.getSize().x, timeout_texture.getSize().y));
+	timeout_sprite.setScale(1.0 * Configuration::getGameViewWidth()/(timeout_texture.getSize()).x, 1.0 * Configuration::getGameViewHeight()/(timeout_texture.getSize()).y);
 	timer.setPosition(timer_position);
 	//Iterates over XML to get components to add
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
@@ -274,6 +281,7 @@ int LevelView::getNumActors(void) {
  **
  **/
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
+	flashing = 1;
 	EventManagerInterface::setCurrentActorList(&actorList);
 	if (!Pathfinder::generatingPaths && view_state == 0) {
 		if (name == "Introduction") {
@@ -305,11 +313,16 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
     else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
         pressed = false;
     } 
-	float timer_time = duration - level_clock.getElapsedTime().asMilliseconds();
+	timer_time = (duration - level_clock.getElapsedTime().asMilliseconds());
 
-	if (timer_time <= 0) {
-		if (view_state == 1)
-			*state = 0;
+	if (timer_time/1000 <= -3) {
+		if (view_state == 1) {
+			//std::cout << "HERE" << std::endl;
+			const char* time_out = {"TimeOut"};
+			DialogueView::Create(time_out, state);
+			LevelView::player->reset();
+			*state = 2;
+		}
 		else if (view_state == 2) {
 			view_state = 1;
 			LevelView::player->reset();
@@ -317,7 +330,8 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		}
 		cleanUp();
 	}
-	else {
+	else if (timer_time/1000 >= 0) {
+		flashing = 0;
 		if (view_state == 2 && !commentary_strings.empty()) {
 			if (commentary_change && !spawn.empty()) {
 				pugi::xml_node temp = spawn.front();
@@ -334,6 +348,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		}
 		std::ostringstream out;
 		out << std::setprecision(2) << std::fixed << timer_time/1000;
+
 		timer_string = out.str();
 		timer.setString(timer_string);
 		std::vector<StrongActorPtr>::iterator it;
@@ -365,9 +380,18 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		gameView_bottom_corner.x += Configuration::getGameViewWidth()/2 - timer.getGlobalBounds().width;
 		gameView_bottom_corner.y += Configuration::getGameViewHeight()/2 - timer.getGlobalBounds().height * 1.25;
 		back_button.setPosition(sf::Vector2f(Configuration::getGameViewPosition().x,Configuration::getGameViewPosition().y + Configuration::getGameViewHeight() - back_button.getGlobalBounds().height));
+		//std::cout << timeout_sprite.getPosition().x << " " << timeout_sprite.getPosition().y << std::endl;
+		//std::cout << timeout_sprite.getGlobalBounds().left << " " << timeout_sprite.getGlobalBounds().top << " " << timeout_sprite.getGlobalBounds().width << " " << timeout_sprite.getGlobalBounds().height << std::endl;		
 		timer.setPosition(gameView_bottom_corner);
 	}
-
+	timeout_sprite.setPosition(sf::Vector2f(Configuration::getGameViewPosition().x, Configuration::getGameViewPosition().y));
+	//timeout_sprite.setPosition(0, 0);
+	
+	if (view_state == 1) {
+		if ( (timer_time/1000 > 9.9 && timer_time/1000 <= 10) || (timer_time/1000 > 5.9 && timer_time/1000 <= 6) || (timer_time/1000 > 3.9 && timer_time/1000 <= 4) || (timer_time/1000 > 2.9 && timer_time/1000 <= 3) || (timer_time/1000 > 1.9 && timer_time/1000 <= 2) || (timer_time/1000 > .9 && timer_time/1000 <= 1) || (timer_time/1000 <= 0)) {
+			flashing = 1;
+		}
+	}
 }
 
 /** Checks for events and update accordingly
@@ -395,41 +419,59 @@ void LevelView::render(sf::RenderWindow *window) {
 		window->display();
 		return;
 	}
-	//Get the player location and center gameView to it
-	sf::Vector2f player_pos = player->getPosition();
-	sf::Vector2f player_size = player->getSize();
-	gameView.setCenter(player_pos.x + player_size.x/2, player_pos.y + player_size.y/2);
-	Configuration::setGameViewDimensions(gameView.getSize().x, gameView.getSize().y);
-	Configuration::setGameViewCenter(gameView.getCenter());
-	gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
-	window->setView(gameView);
-	//Update graphics	
-	window->draw(edge);
-	window->draw(background);
-	window->draw(minimap_border);
-	std::vector<StrongActorPtr>::iterator it;
-	for (it = actorList.begin(); it != actorList.end(); it++)
-		(*it)->render(window, false);
-	player->render(window, false);
-	window->draw(timer);
-	if (view_state == 2) {
-		window->draw(commentary);
-	}
-	if (reveal_back_button) {
-		window->draw(back_button);
-	}
+	
+	if (timer_time/1000 >= 0) {
+		if (flashing && view_state == 1) {
+			window->clear(sf::Color::Black);
+			window->display();
+		}
+		//Get the player location and center gameView to it
+		sf::Vector2f player_pos = player->getPosition();
+		sf::Vector2f player_size = player->getSize();
+		gameView.setCenter(player_pos.x + player_size.x/2, player_pos.y + player_size.y/2);
+		Configuration::setGameViewDimensions(gameView.getSize().x, gameView.getSize().y);
+		Configuration::setGameViewCenter(gameView.getCenter());
+		gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
+		window->setView(gameView);
+		//Update graphics	
+		window->draw(edge);
+		window->draw(background);
+		window->draw(minimap_border);
+		std::vector<StrongActorPtr>::iterator it;
+		for (it = actorList.begin(); it != actorList.end(); it++)
+			(*it)->render(window, false);
+		player->render(window, false);
+		window->draw(timer);
+		if (view_state == 2) {
+			window->draw(commentary);
+		}
+		if (reveal_back_button) {
+			window->draw(back_button);
+		}
 
-	//Set minimap view
-	minimapView.setViewport(sf::FloatRect(.9, 0, .1, .1));
-	window->setView(minimapView);
+		//Set minimap view
+		minimapView.setViewport(sf::FloatRect(.9, 0, .1, .1));
+		window->setView(minimapView);
 
-	//Update graphics
-	window->draw(background);
-	window->draw(timer);
-	for (it = actorList.begin(); it != actorList.end(); it++)
-		(*it)->render(window, true);
-	player->render(window, true);
-	//window->draw(minimap_border);
+		//Update graphics
+		window->draw(background);
+		window->draw(timer);
+		for (it = actorList.begin(); it != actorList.end(); it++)
+			(*it)->render(window, true);
+		player->render(window, true);
+		//window->draw(minimap_border);
+	}
+	else {
+		sf::Vector2f player_pos = player->getPosition();
+		sf::Vector2f player_size = player->getSize();
+		gameView.setCenter(player_pos.x + player_size.x/2, player_pos.y + player_size.y/2);
+		Configuration::setGameViewDimensions(gameView.getSize().x, gameView.getSize().y);
+		Configuration::setGameViewCenter(gameView.getCenter());
+		gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
+		window->setView(gameView);
+		player->render(window, false);
+		window->draw(timeout_sprite);
+	}
 }
 
 /** Ready the level for start

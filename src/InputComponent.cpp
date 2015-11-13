@@ -49,6 +49,7 @@ ActorComponent* InputComponent::create() {
 InputComponent::InputComponent(void)
 {
     instance = instances;
+	last_framerate = 0;
 	first_postinit = false;
 }
 
@@ -96,7 +97,11 @@ bool InputComponent::PostInit(void) {
  ** time: current game time
  **/
 void InputComponent::update(float time) {
-    float distance = time * speed;
+    float distance = ((time - last_framerate));
+	if (distance < 0)
+		distance = Configuration::getFrameRate() + distance;
+	last_framerate = time;
+	distance *= speed;
     // cast base class to derived so we can use derived class methods
     std::shared_ptr<PhysicsComponent>   pc;
     std::shared_ptr<ActorComponent>     ac;
@@ -106,6 +111,10 @@ void InputComponent::update(float time) {
 
     if (type == "Artificial") {
 	sf::Vector2f next_pos = owner->getPosition();
+	/*if (distance > 0) {
+		std::cout << distance << std::endl;
+		std::cout << next_pos.x << " " << next_pos.y << std::endl;
+	}*/
 	//std::cout << "Input1" << std::endl;
 	bool start_changed = Pathfinder::getNextPosition(distance, owner->getInitialPosition(), owner->getStartPosition(), owner->getPosition(), &next_pos, &next_direction);
 	if (start_changed)
@@ -151,7 +160,6 @@ void InputComponent::update(float time) {
 		 this ->setDirection(next_direction);
 	    	owner->move(distance, direction);
     }
-
 }
 
 /** Receives event when the actor is being contacted by another actor and responds by accordingly
