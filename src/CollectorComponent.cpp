@@ -137,7 +137,7 @@ void CollectorComponent::update(EventInterfacePtr e) {
 				}
 				vases--;
 				vase_sprites.erase(vase_sprites.end());
-				std::cout << owner->getId() << "  lost a vase and has " << vases << std::endl;
+				//std::cout << owner->getId() << "  lost a vase and has " << vases << std::endl;
 			}
 		}
 	}
@@ -162,7 +162,7 @@ void CollectorComponent::update(EventInterfacePtr e) {
 				//vase_sprites[flowers++].scale(1.0*vase_size/(vase_waterflower.getSize().x), 1.0*vase_size/(vase_waterflower.getSize().y));
 			}
 		}
-		std::cout << owner->getId() << "  collecting " << other_actor->getId() << " vase number now " << vases << std::endl;	
+		//std::cout << owner->getId() << "  collecting " << other_actor->getId() << " vase number now " << vases << std::endl;	
 	}	
 }
 

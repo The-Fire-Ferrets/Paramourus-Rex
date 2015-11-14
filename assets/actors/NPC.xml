@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <NPC Type = "NPC" SpriteUp = "NPCUp.png" SpriteRight = "NPCRight.png" SpriteLeft = "NPCLeft.png" SpriteDown = "NPCDown.png"  SpriteMinimap = "" Damage = "True" PathType = "-1" TargetType = "0">
+	<PhysicsComponent>
+		<Properties Type = "Transparent" />
+		<VisionBoundary Height = "" Width = "" X = "" Y = ""/>
+	</PhysicsComponent>	
 	<InputComponent>
 		<Control Type = "Artificial" Speed = "1"/>
 	</InputComponent>	
 	<CollectorComponent>
 		<Items Vases = "5000" Size = "3" FireFlower = "vase_fireflower.png" AirFlower = "vase_airflower.png" Empty = "vase_empty.png" WaterFlower = "vase_waterflower.png" EarthFlower = "vase_earthflower.png"/>
 	</CollectorComponent>
-	<PhysicsComponent>
-		<Properties Type = "Transparent" />
-		<VisionBoundary Height = "" Width = "" X = "" Y = ""/>
-	</PhysicsComponent>
 </NPC>

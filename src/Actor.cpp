@@ -30,6 +30,7 @@ Actor::Actor(void) {
 	state = 0;
 	visible = true;
 	renderToGameView = true;
+	direction = sf::Vector2f(0,0);
 }
 
 
@@ -294,15 +295,16 @@ void Actor::PostInit(void) {
  ** Prevents actors from moving past the top and bottom boundaries
  ** if the obstacle pointer is set (by a physics component o fthe actor or another actor after contact) it prevents the actors from moving into each other
  **/
-    void Actor::move(sf::Vector2f next_pos, sf::Vector2f direction) {
+    void Actor::move(sf::Vector2f next_pos, sf::Vector2f dir) {
        //Move Actor
-	if (direction.x < 0)
+	direction = dir;
+	if (dir.x < 0)
 		sprite_idx = 2;
-	else if (direction.x > 0)
+	else if (dir.x > 0)
 		sprite_idx = 3;
-	else if (direction.y < 0)
+	else if (dir.y < 0)
 		sprite_idx = 0;
-	else if (direction.y > 0)
+	else if (dir.y > 0)
 		sprite_idx = 1;
         sf::Vector2f p = next_pos;
 
@@ -317,17 +319,17 @@ void Actor::PostInit(void) {
  ** Prevents actors from moving past the top and bottom boundaries
  ** if the obstacle pointer is set (by a physics component o fthe actor or another actor after contact) it prevents the actors from moving into each other
  **/
-    void Actor::move(float distance, sf::Vector2f direction) {
+    void Actor::move(float distance, sf::Vector2f dir) {
         //Move Actor
-        sf::Vector2f p = this->getPosition() + direction * distance;
-
-	if (direction.x < 0)
+        sf::Vector2f p = this->getPosition() + dir * distance;
+	direction = dir;
+	if (dir.x < 0)
 		sprite_idx = 2;
-	else if (direction.x > 0)
+	else if (dir.x > 0)
 		sprite_idx = 3;
-	else if (direction.y < 0)
+	else if (dir.y < 0)
 		sprite_idx = 0;
-	else if (direction.y > 0)
+	else if (dir.y > 0)
 		sprite_idx = 1;
 
 	// disallow movement off the screen
@@ -344,12 +346,12 @@ void Actor::PostInit(void) {
 		p.y = height - size.y;
 
         //Get the bounds after movement and check if the movement is allowed
-        sf::FloatRect bound_after = sf::FloatRect(p, getSize());
+        sf::FloatRect bound_after = sf::FloatRect(p, getSize() );
         std::shared_ptr<ActorComponent>     ac;
         std::shared_ptr<PhysicsComponent>   pc;
         ac = components[PhysicsComponent::id];
         pc = std::dynamic_pointer_cast<PhysicsComponent>(ac);
-        if (pc->query(bound_after, direction)) {
+        if (pc->query(bound_after, dir)) {
             // set the position
             this->setPosition(p);
         }
@@ -574,8 +576,8 @@ void Actor::getEvent(EventInterfacePtr e) {
 	if (other_actor == NULL)
 		return;
 
-	if (event_type == ContactEvent::event_type)
-		std::cout << other_actor->getId() << " made contact with " << id << std::endl;
+	//if (event_type == ContactEvent::event_type)
+	//	std::cout << other_actor->getId() << " made contact with " << id << std::endl;
 	
 	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
 		(it->second)->update(e);
@@ -628,32 +630,51 @@ void Actor::addDelegate(EventType type) {
 /** Checks to see if the Actors intersect
  **
  **/
-sf::FloatRect* Actor::intersects(StrongActorPtr other_actor) {
+sf::FloatRect* Actor::intersects(StrongActorPtr other_actor, bool use_border) {
+	if (!use_border)
+		border = 0;
 	std::vector<sf::FloatRect*> other_boundary = other_actor->getBoundary();
-	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
+	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it) {
+		sf::FloatRect my_border = sf::FloatRect((*it)->left - border, (*it)->top - border, (*it)->width + 2*border, (*it)->height + 2*border);
 		for (std::vector<sf::FloatRect*>::iterator other_it = other_boundary.begin(); other_it != other_boundary.end(); ++other_it)
-			if ((*it)->intersects(**other_it))
-				return *it;
+			if ((my_border).intersects(**other_it))
+				return (*it);
+	}
 	return NULL;
 }
 
 /** Checks to see if the Actor and boundary intersect
  **
  **/
-sf::FloatRect* Actor::intersects(sf::FloatRect bound) {
-	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
-		if ((*it)->intersects(bound))
-			return *it;
+sf::FloatRect* Actor::intersects(sf::FloatRect bound, bool use_border) {
+	if (!use_border)
+		border = 0;
+	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it) {
+		sf::FloatRect my_border = sf::FloatRect((*it)->left - border, (*it)->top - border, (*it)->width + 2*border, (*it)->height + 2*border);
+		if ((my_border).intersects(bound))
+			return (*it);
+	}
 	return NULL;
 }
 
+sf::Vector2f Actor::getDirection(void) {
+	return direction;
+}
+
+void Actor::setDirection(sf::Vector2f dir) {
+	direction = dir;
+}
 /** Checks to see if the Actor contains point
  **
  **/
-sf::FloatRect* Actor::contains(sf::Vector2f pnt) {
-	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
-		if ((*it)->contains(pnt))
+sf::FloatRect* Actor::contains(sf::Vector2f pnt, bool use_border) {
+	if (!use_border)
+		border = 0;
+	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it) {
+		sf::FloatRect my_border = sf::FloatRect((*it)->left - border, (*it)->top - border, (*it)->width + 2*border, (*it)->height + 2*border);
+		if ((my_border).contains(pnt))
 			return *it;
+	}
 	return NULL;
 }
 

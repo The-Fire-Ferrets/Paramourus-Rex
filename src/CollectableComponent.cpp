@@ -93,7 +93,7 @@ void CollectableComponent::update(EventInterfacePtr e) {
 	LevelView::flowers_left--;
 	if (!EventManagerInterface::get()->queueEvent(new CollectEvent(e->getTimeStamp(), owner->getInstance(), other_actor->getInstance())))
 		std::cout << "CollectableComponent::update: Unable to queue event" << std::endl;
-	std::cout << owner->getId() << " " << owner->getInstance() << "  collected by " << other_actor->getId() << " " << other_actor->getInstance() << std::endl;
+	//std::cout << owner->getId() << " " << owner->getInstance() << "  collected by " << other_actor->getId() << " " << other_actor->getInstance() << std::endl;
     }
 }
 

@@ -1,4 +1,5 @@
 #include "LevelView.h"
+#include "CollectableComponent.h"
 
 EventDelegate LevelView::delegate = NULL;
 //Total size of pointer arrays
@@ -9,10 +10,12 @@ int LevelView::num_actors = 0;
 std::vector<StrongActorPtr> LevelView::actorList;
 //Holds background texture
 sf::Texture LevelView::background_texture;
+sf::Texture LevelView::minimap_background_texture;
 //Edge texture
 sf::Texture LevelView::edge_texture;
 //Holds background
 sf::Sprite LevelView::background;
+sf::Sprite LevelView::minimap_background;
 //Holds edge
 sf::Sprite LevelView::edge;
 //Holds level name
@@ -31,6 +34,8 @@ sf::Vector2f LevelView::timer_position;
 sf::View LevelView::gameView;
 //minimap view
 sf::View LevelView::minimapView;
+//pause map view
+sf::View LevelView::pauseView;
 //reference to player
 StrongActorPtr LevelView::player = NULL;
 //Level duration in ms
@@ -63,6 +68,11 @@ int LevelView::flashing;
 float LevelView::timer_time;
 sf::Texture LevelView::timeout_texture;
 sf::Sprite LevelView::timeout_sprite;
+
+// pause screen medium map
+bool LevelView::paused = false;
+bool LevelView::pause_key_pressed = false;
+
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -99,6 +109,11 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			background = sf::Sprite(background_texture, sf::IntRect(0, 0, background_texture.getSize().x, background_texture.getSize().y));
 			background.scale((1.0*Configuration::getWindowWidth())/(background_texture.getSize().x), (1.0*Configuration::getWindowHeight())/(background_texture.getSize().y));
 			background.setPosition(sf::Vector2f(0,0));
+		}
+		else if (!strcmp(attr.name(), "MinimapBackground")) {
+			minimap_background_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
+			minimap_background = sf::Sprite(minimap_background_texture);
+			minimap_background.setScale(Configuration::getWindowWidth()/10.f, Configuration::getWindowHeight()/10.f);
 		}
 		else if (!strcmp(attr.name(), "TitleSprite")) {
 		    title_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
@@ -283,6 +298,21 @@ int LevelView::getNumActors(void) {
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	flashing = 1;
 	EventManagerInterface::setCurrentActorList(&actorList);
+
+	// handle paused screen
+	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+		pause_key_pressed = false;
+	}
+	if (paused) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !pause_key_pressed) {
+			paused = false;
+			pause_key_pressed = true;
+			level_clock.restart();    // don't count the time level was paused toward the timer
+		}
+		
+		return;
+	}
+
 	if (!Pathfinder::generatingPaths && view_state == 0) {
 		if (name == "Introduction") {
 			view_state = 2;
@@ -384,13 +414,20 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		//std::cout << timeout_sprite.getGlobalBounds().left << " " << timeout_sprite.getGlobalBounds().top << " " << timeout_sprite.getGlobalBounds().width << " " << timeout_sprite.getGlobalBounds().height << std::endl;		
 		timer.setPosition(gameView_bottom_corner);
 	}
+
 	timeout_sprite.setPosition(sf::Vector2f(Configuration::getGameViewPosition().x, Configuration::getGameViewPosition().y));
 	//timeout_sprite.setPosition(0, 0);
 	
-	if (view_state == 1) {
+	if (!paused && view_state == 1) {
 		if ( (timer_time/1000 > 9.9 && timer_time/1000 <= 10) || (timer_time/1000 > 5.9 && timer_time/1000 <= 6) || (timer_time/1000 > 3.9 && timer_time/1000 <= 4) || (timer_time/1000 > 2.9 && timer_time/1000 <= 3) || (timer_time/1000 > 1.9 && timer_time/1000 <= 2) || (timer_time/1000 > .9 && timer_time/1000 <= 1) || (timer_time/1000 <= 0)) {
 			flashing = 1;
 		}
+	}
+
+	// should we pause the screen?
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !pause_key_pressed) {
+		paused = true;
+		pause_key_pressed = true;
 	}
 }
 
@@ -421,7 +458,7 @@ void LevelView::render(sf::RenderWindow *window) {
 	}
 	
 	if (timer_time/1000 >= 0) {
-		if (flashing && view_state == 1) {
+		if (!paused && flashing && view_state == 1) {
 			window->clear(sf::Color::Black);
 			window->display();
 		}
@@ -460,6 +497,18 @@ void LevelView::render(sf::RenderWindow *window) {
 			(*it)->render(window, true);
 		player->render(window, true);
 		//window->draw(minimap_border);
+
+		if (paused) {
+			// reset the view to the pause map
+			pauseView.setViewport(sf::FloatRect(0.2, 0.2, 0.8, 0.8));
+			window->setView(pauseView);
+
+			// actual rendering
+			window->draw(background);
+			for (it = actorList.begin(); it != actorList.end(); it++)
+				(*it)->render(window, true);
+			player->render(window, true);
+		}
 	}
 	else {
 		sf::Vector2f player_pos = player->getPosition();
@@ -472,6 +521,9 @@ void LevelView::render(sf::RenderWindow *window) {
 		player->render(window, false);
 		window->draw(timeout_sprite);
 	}
+
+	
+	
 }
 
 /** Ready the level for start
