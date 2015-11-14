@@ -81,6 +81,7 @@ std::vector<EventDelegate> CraftView::delegateFuncList;
 sf::SoundBuffer CraftView::buffer;
 sf::Sound CraftView::sound;
 
+// Homer's sprite
 sf::Texture CraftView::character_tex;
 sf::Sprite  CraftView::character_sprite;
 
@@ -234,7 +235,7 @@ void CraftView::Create(const char* resource, int* state) {
     button_text.setFont(font);
     button_text.setColor(sf::Color::Black);
     
-    craftButton.setPosition(195, 170);
+    craftButton.setPosition(200, 170);
     craftButton.setFillColor(sf::Color::White);
     craftButton.setOutlineColor(sf::Color::Black);
     craftButton.setOutlineThickness(5);
@@ -374,13 +375,16 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 					  totalFlowers--;
 					  // scale the sprite up in size?
 					  //box1Sprite.setScale(sprites[i].width*4, sprites[i].height*4);
-					  box1Sprite.setPosition(180,100);
+					  box1Sprite.setPosition(140,50);
+					  box1Sprite.setScale(1.0f, 1.0f);
 				  }
 			      else if (box2 == false && inList == true){
 					 // draw sprite in box 2 
 					box2 = true;
 					box2Sprite = sprites[i];
-					box2Sprite.setPosition(240, 100);
+					box2Sprite.setPosition(250, 50);
+					box2Sprite.setScale(1.0f, 1.0f);
+
 					totalFlowers--;
 				  }
 		    }
@@ -411,7 +415,8 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	   
 	   // update text box to indicate that you cannot combine flowers
 	   else {
-	     
+	     text.setString("Gee Phil, that sure doesn't look too pretty.\n Why don't you try somethin' else?");
+
 	   }
 
 
