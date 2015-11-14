@@ -643,12 +643,17 @@ StrongActorPtr CraftView::getFlower(std::string type) {
  ** TODO: does not modify counts of WEFA flowers or the flower_list
  **/
 bool CraftView::removeFlower(StrongActorPtr flower) {
+  	static int visits = 0; // two events are being sent
 	for (auto it = CraftView::actorList.begin(); it != CraftView::actorList.end(); it++) {
-		if ( *(*it) == (*flower) ) {
+		if ( *(*it) == (*flower) && visits == 0) {
 			CraftView::actorList.erase(it);
-			return true;
+			std::shared_ptr<ActorComponent> ac = (*it)->components[CraftableComponent::id];
+
 		}
 	}
+	
+	++visits;
+	if (visits == 2) visits = 0;
 
 	return false;
 }
