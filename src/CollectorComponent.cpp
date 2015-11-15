@@ -220,7 +220,7 @@ int CollectorComponent::getVases(void) {
  ** window: current game render window
  **/
 void CollectorComponent::render(sf::RenderWindow *window, bool minimap) {
-	if (owner->getId() == "Player") {
+	if (owner->getId() == "Player" && !minimap) {
 		std::vector<sf::Sprite>::iterator it;
 		int i = 0;
 		int sep = 2;
