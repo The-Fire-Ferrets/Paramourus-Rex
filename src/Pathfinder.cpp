@@ -392,7 +392,7 @@ GridLocation* Pathfinder::findStart(GridLocation init, GridLocation pos) {
 }
 void Pathfinder::updateTargetGrid(sf::Vector2f start_pos, sf::Vector2f curr_pos) {
 	GridLocation start_pair = getPositionMapping(start_pos);
-	GridLocation curr_pair = getPositionMapping(curr_pos);
+	GridLocation curr_pair = getPositionMapping(curr_pos, true);
 	//targets_mutex.lock();
 	GridLocation* ptr = findTarget(start_pair);
 	inProcessTargets[ptr] = true;
@@ -581,6 +581,16 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 	return false;
 }
 
+void Pathfinder::removePositionFromPath(sf::Vector2f init_pos) {
+	GridLocation init_pair = getPositionMapping(init_pos);
+	for ( auto itr = initial_positions.begin(); itr != initial_positions.end(); itr++) {
+		if (init_pair == itr->second) {
+			//std::cout << "HERE" << std::endl;
+			paths[itr->first].second->pop_back();
+			break;
+		}
+	}
+}
 void Pathfinder::changeVision(sf::Vector2f init_pos) {
 	GridLocation init_pair = getPositionMapping(init_pos);
 	for ( auto itr = initial_positions.begin(); itr != initial_positions.end(); itr++) {
@@ -731,9 +741,9 @@ void Pathfinder::generateHCosts(void) {
 		std::vector<GridLocation> left;
 		left.push_back(target_pair);
 		generateHCost_helper(left, &temp_grid);
-		paths_mutex.lock();
+		//paths_mutex.lock();
 		target_grids.insert(std::pair<GridLocation*, Grid>(target_ptr, temp_grid));
-		paths_mutex.unlock();
+		//paths_mutex.unlock();
 	}
 	std::cout << "Pathfinder Cost Generation Success!" << std::endl;
 	generatePaths();	
@@ -758,7 +768,30 @@ void Pathfinder::generateHCost(GridLocation* target_ptr, GridLocation curr_pos) 
 		}
 	}
 
-	temp_grid[curr_pos.first][curr_pos.second] = type;
+	/*int dir = 0;
+	if (temp_grid[curr_pos.first][curr_pos.second] == -1) {
+		if (temp_grid[curr_pos.first + 1][curr_pos.second] != -1)
+			dir = 1;
+		else if (temp_grid[curr_pos.first - 1][curr_pos.second] != -1)
+			dir = 2;	
+		else if (temp_grid[curr_pos.first][curr_pos.second + 1] != -1)
+			dir = 3;
+		else if (temp_grid[curr_pos.first][curr_pos.second - 1] != -1)
+			dir = 4;
+	}
+
+	if (dir == 1)
+		temp_grid[++curr_pos.first][curr_pos.second] = type;
+	else if (dir == 2)
+		temp_grid[--curr_pos.first][curr_pos.second] = type;
+	else if (dir == 3)
+		temp_grid[curr_pos.first][++curr_pos.second] = type;
+	else if (dir == 4)
+		temp_grid[curr_pos.first][--curr_pos.second] = type;
+	else */
+		temp_grid[curr_pos.first][curr_pos.second] = type;
+
+
 	std::vector<GridLocation> left;
 	left.push_back(curr_pos);
 	generateHCost_helper(left, &temp_grid);
@@ -938,10 +971,32 @@ int Pathfinder::addToCost(sf::Vector2f pos, sf::Vector2f dir, int incr, Grid* ta
 /** Gets the grid mapping of the position
  **
 **/
-GridLocation Pathfinder::getPositionMapping(sf::Vector2f pos) {
+GridLocation Pathfinder::getPositionMapping(sf::Vector2f pos, bool non_wall) {
 	GridLocation grid_pair;
 	grid_pair.first = (pos.y)  / player_size;
 	grid_pair.second = (pos.x) / player_size;
+
+	int dir = 0;
+	if (non_wall && grid[grid_pair.first][grid_pair.second] == -1) {
+		if (grid[grid_pair.first + 1][grid_pair.second] != -1)
+			dir = 1;
+		else if (grid[grid_pair.first - 1][grid_pair.second] != -1)
+			dir = 2;	
+		else if (grid[grid_pair.first][grid_pair.second + 1] != -1)
+			dir = 3;
+		else if (grid[grid_pair.first][grid_pair.second - 1] != -1)
+			dir = 4;
+	}
+
+	if (dir == 1)
+		++grid_pair.first;
+	else if (dir == 2)
+		--grid_pair.first;
+	else if (dir == 3)
+		++grid_pair.second;
+	else if (dir == 4)
+		--grid_pair.second;
+
 	return grid_pair;
 }
 

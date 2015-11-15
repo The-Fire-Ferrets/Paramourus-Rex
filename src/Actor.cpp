@@ -307,9 +307,13 @@ void Actor::PostInit(void) {
 	else if (dir.y > 0)
 		sprite_idx = 1;
         sf::Vector2f p = next_pos;
-
-	
-        this->setPosition(p);
+	 sf::FloatRect bound_after = sf::FloatRect(p, getSize() );
+        std::shared_ptr<ActorComponent>     ac;
+        std::shared_ptr<PhysicsComponent>   pc;
+        ac = components[PhysicsComponent::id];
+        pc = std::dynamic_pointer_cast<PhysicsComponent>(ac);
+	//if (pc->query(bound_after, dir)) 
+        	this->setPosition(p);
         
     }
 

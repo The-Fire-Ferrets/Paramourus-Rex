@@ -172,7 +172,7 @@ void PhysicsComponent::update(float time) {
 			madeContactPrev = false;
 			}
 			if (other_actor->hasAttribute("Opaque")) {
-			if (owner->getId() == "Player")
+			//if (owner->getId() == "Player")
 			//std::cout << "Added new boundary!" << std::endl;
 			last_boundaries.push_back(std::pair<sf::FloatRect*, int>(bound, setDirectionBit(0, collisionSide(*bound) ) ) );
 			}
@@ -259,12 +259,17 @@ bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
 	for (auto it = last_boundaries.begin(); it != last_boundaries.end(); it++) {
 		other_bound = it->first;
 		bool val;
+		if (owner->getId() == "NPC" && other_bound-> intersects(bound)) {
+			std::cout << bound.left << " " << bound.top << " " << bound.height << " " << bound.width << " " << other_bound->left << " " << other_bound->top << " " << other_bound->width << " " << other_bound->height << std::endl;
+			Pathfinder::removePositionFromPath(owner->getInitialPosition());
+			return false;
+		}
 		if (other_bound-> intersects(bound) && (val = getDirectionBit(it->second, dir))) {
-			std::cout << "Direction: " << dir.x << " " << dir.y << " val: " << val << std::endl;
+		//	std::cout << "Direction: " << dir.x << " " << dir.y << " val: " << val << std::endl;
 			
 			return false;
 		}
-		std::cout << "Direction: " << dir.x << " " << dir.y << " val: " << val << std::endl;
+		//std::cout << "Direction: " << dir.x << " " << dir.y << " val: " << val << std::endl;
 	}
 	return true;
 }
@@ -332,8 +337,8 @@ bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
  ** window: current game render window
  **/
 void PhysicsComponent::render(sf::RenderWindow *window, bool minimap) {
-	if (use_vision_boundary)
-		window->draw(vision_boundary_sprite);
+	//if (use_vision_boundary)
+	//	window->draw(vision_boundary_sprite);
 }
 
 /** Sets the value of the given bit
