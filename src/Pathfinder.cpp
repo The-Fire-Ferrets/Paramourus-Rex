@@ -392,7 +392,7 @@ GridLocation* Pathfinder::findStart(GridLocation init, GridLocation pos) {
 }
 void Pathfinder::updateTargetGrid(sf::Vector2f start_pos, sf::Vector2f curr_pos) {
 	GridLocation start_pair = getPositionMapping(start_pos);
-	GridLocation curr_pair = getPositionMapping(curr_pos, true);
+	GridLocation curr_pair = getPositionMapping(curr_pos);
 	//targets_mutex.lock();
 	GridLocation* ptr = findTarget(start_pair);
 	inProcessTargets[ptr] = true;
@@ -653,6 +653,11 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 
 	sf::Vector2f path_pos = path->back();
 
+	//if (grid[target_pair.first][target_pair.second] == -1) {
+	//	path->pop_back();
+	//	return start_changed;
+	//}
+
 	/*if (first_run < 1) {
 		std::cout << "Target: " << target_pair.first << " " << target_pair.second << std::endl;
 		for (auto itr = path->begin(); itr != path->end(); itr++) {
@@ -684,6 +689,30 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 		dir.y = 1;
 	else if (path_pos.y - curr_pos.y < 0)
 		dir.y = -1;
+
+	GridLocation pos_check = getPositionMapping(pos_next);
+	int fix = 0;
+	if (grid[pos_check.first][pos_check.second] == -1) {
+		path->pop_back();
+		return start_changed;
+		/*std::cout << "Going through wall " << pos_check.first << " " << pos_check.second << " " << dir.x << " " << dir.y << std::endl;
+		if (grid[pos_check.first - (int) dir.y][pos_check.second] != -1) {
+			fix = 1;
+			std::cout << "Fix by going up/down " << pos_check.first - (int) dir.y << " " << pos_check.second << std::endl;
+		}
+		else if (grid[pos_check.first][pos_check.second - (int) dir.x] != -1) {
+			fix = 2;
+			std::cout << "Fix by going left/right " << dir.x << " " << dir.y << std::endl;
+		}
+		if (fix == 1) {
+			pos_next.y = (pos_check.first - dir.y) * player_size;
+			//path_pos.x = (pos_check.second + dir.x) * player_size;
+		}
+		else if (fix == 2) {
+			pos_next.x = (pos_check.second - dir.x) * player_size;
+			//path_pos.y = (pos_check.first + dir.y) * player_size;
+		}*/
+	}	
 
 	if (p > .99)
 		path->pop_back();

@@ -51,6 +51,8 @@ InputComponent::InputComponent(void)
     instance = instances;
 	last_framerate = 0;
 	first_postinit = false;
+	fake_pos = sf::Vector2f(0,0);
+	fake_dir = sf::Vector2f(0,0);
 }
 
 /** Destructor
@@ -106,21 +108,45 @@ void InputComponent::update(float time) {
     std::shared_ptr<PhysicsComponent>   pc;
     std::shared_ptr<ActorComponent>     ac;
 
-    sf::Vector2f last_direction = this->getDirection();
-    sf::Vector2f next_direction = this->getDirection();;
+    sf::Vector2f next_direction = owner->getDirection();;
 
     if (type == "Artificial") {
-	sf::Vector2f next_pos = owner->getPosition();
+	sf::Vector2f next_pos;
+	sf::Vector2f curr_pos;
+	//if (fake_pos == sf::Vector2f(0,0)) {
+		next_pos = owner->getPosition();
+		curr_pos = owner->getPosition();
+	/*}
+	else {
+		next_pos = fake_pos;
+		curr_pos = fake_pos;
+	}*/
+
 	/*if (distance > 0) {
 		std::cout << distance << std::endl;
 		std::cout << next_pos.x << " " << next_pos.y << std::endl;
 	}*/
 	//std::cout << "Input1" << std::endl;
-	bool start_changed = Pathfinder::getNextPosition(distance, owner->getInitialPosition(), owner->getStartPosition(), owner->getPosition(), &next_pos, &next_direction);
+	bool start_changed = Pathfinder::getNextPosition(distance, owner->getInitialPosition(), owner->getStartPosition(), curr_pos, &next_pos, &next_direction);
+
 	if (start_changed)
 		owner->setStartPosition(owner->getPosition());
-	//std::cout << "Input2" << std::endl;
-	owner->move(next_pos, next_direction);
+
+	/*sf::FloatRect bound_after = sf::FloatRect(next_pos, owner->getSize() );
+        std::shared_ptr<ActorComponent>     ac;
+        std::shared_ptr<PhysicsComponent>   pc;
+        ac = owner->components[PhysicsComponent::id];
+        pc = std::dynamic_pointer_cast<PhysicsComponent>(ac);
+	if (pc->query(bound_after, next_direction)) {*/
+		owner->move(next_pos, next_direction);
+		/*fake_pos = sf::Vector2f(0,0);
+		fake_dir = sf::Vector2f(0,0);
+	}
+	else {
+		fake_pos = next_pos;
+		fake_dir = next_direction;
+	}*/
+
     }
 
     else if (type == "Keyboard") {

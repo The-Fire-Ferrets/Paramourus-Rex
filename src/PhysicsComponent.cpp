@@ -259,12 +259,12 @@ bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
 	for (auto it = last_boundaries.begin(); it != last_boundaries.end(); it++) {
 		other_bound = it->first;
 		bool val;
-		if (owner->getId() == "NPC" && other_bound-> intersects(bound)) {
+		/*if (owner->getId() == "NPC" && other_bound-> intersects(bound)) {
 			std::cout << bound.left << " " << bound.top << " " << bound.height << " " << bound.width << " " << other_bound->left << " " << other_bound->top << " " << other_bound->width << " " << other_bound->height << std::endl;
 			Pathfinder::removePositionFromPath(owner->getInitialPosition());
 			return false;
-		}
-		if (other_bound-> intersects(bound) && (val = getDirectionBit(it->second, dir))) {
+		}*/
+		if (other_bound-> intersects(bound) && (owner->getId() == "NPC" || (val = getDirectionBit(it->second, dir)))) {
 		//	std::cout << "Direction: " << dir.x << " " << dir.y << " val: " << val << std::endl;
 			
 			return false;
