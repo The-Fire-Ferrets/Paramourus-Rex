@@ -81,6 +81,7 @@ std::vector<EventDelegate> CraftView::delegateFuncList;
 sf::SoundBuffer CraftView::buffer;
 sf::Sound CraftView::sound;
 
+// Homer's sprite
 sf::Texture CraftView::character_tex;
 sf::Sprite  CraftView::character_sprite;
 
@@ -234,7 +235,7 @@ void CraftView::Create(const char* resource, int* state) {
     button_text.setFont(font);
     button_text.setColor(sf::Color::Black);
     
-    craftButton.setPosition(195, 170);
+    craftButton.setPosition(200, 170);
     craftButton.setFillColor(sf::Color::White);
     craftButton.setOutlineColor(sf::Color::Black);
     craftButton.setOutlineThickness(5);
@@ -294,8 +295,8 @@ void CraftView::Create(const char* resource, int* state) {
 			
 
 	// set text to initial greeting from Homer
-    std::string str = "Welcome back, Phil! You have " + std::to_string(totalFlowers) + " flowers!\nTo craft them, click on their icons."; 
-    text.setString(str);
+    std::string str = "Welcome back, Phil! You have " + std::to_string(totalFlowers) + " flowers! To craft them, click on their icons."; 
+    text.setString(fitStringToDialogueBox(str));
 
     if (!buffer.loadFromFile("./assets/music/marina-s-rhythm.ogg")) {
 	std::cout << "CraftView::Create: failed to load music" << std::endl;
@@ -374,13 +375,16 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 					  totalFlowers--;
 					  // scale the sprite up in size?
 					  //box1Sprite.setScale(sprites[i].width*4, sprites[i].height*4);
-					  box1Sprite.setPosition(180,100);
+					  box1Sprite.setPosition(140,50);
+					  box1Sprite.setScale(1.0f, 1.0f);
 				  }
 			      else if (box2 == false && inList == true){
 					 // draw sprite in box 2 
 					box2 = true;
 					box2Sprite = sprites[i];
-					box2Sprite.setPosition(240, 100);
+					box2Sprite.setPosition(250, 50);
+					box2Sprite.setScale(1.0f, 1.0f);
+
 					totalFlowers--;
 				  }
 		    }
@@ -411,10 +415,8 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	   
 	   // update text box to indicate that you cannot combine flowers
 	   else {
-	     
+	     text.setString(fitStringToDialogueBox("Gee Phil, that sure doesn't look too pretty. Why don't you try somethin' else?"));
 	   }
-
-
 	}
 
 	// Check to see if flowers within the craft box are clicked to return them to player inventory
@@ -488,7 +490,7 @@ void CraftView::update(EventInterfacePtr e) {
 		if (sender->hasComponent(CraftableComponent::id)) {
 			// item crafting completed
 			StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
-			text.setString("Diana's sure to love this new " + ac->getType() + ", Phil!");
+			text.setString(fitStringToDialogueBox("Diana's sure to love this new " + ac->getType() + ", Phil!"));
 			if (ac->getType() == "SunFlower"){
 				sunFlowers++;
 			}
@@ -638,12 +640,17 @@ StrongActorPtr CraftView::getFlower(std::string type) {
  ** TODO: does not modify counts of WEFA flowers or the flower_list
  **/
 bool CraftView::removeFlower(StrongActorPtr flower) {
+  	static int visits = 0; // two events are being sent
 	for (auto it = CraftView::actorList.begin(); it != CraftView::actorList.end(); it++) {
-		if ( *(*it) == (*flower) ) {
+		if ( *(*it) == (*flower) && visits == 0) {
 			CraftView::actorList.erase(it);
-			return true;
+			std::shared_ptr<ActorComponent> ac = (*it)->components[CraftableComponent::id];
+
 		}
 	}
+	
+	++visits;
+	if (visits == 2) visits = 0;
 
 	return false;
 }
@@ -656,4 +663,61 @@ void CraftView::addDelegate(EventType type) {
 	if (!EventManagerInterface::get()->addDelegate(delegateFuncList.back(), EventInstance(type, -1))) {
 		std::cout << "CraftView::Create: Unable to register delegate function" << std::endl;
 	}
+}
+
+/** Rewraps the given string such that it can be displayed
+ ** appropriately in the dialogue box.  Assumes the string
+ ** will fit into a single box.
+ ** str: the string to rewrap
+ **/
+std::string CraftView::fitStringToDialogueBox(std::string str) {
+	// get dialogue box bounds
+	int box_begin_x = backlay.getPosition().x;
+	int box_begin_y = backlay.getPosition().x;
+	int box_end_x   = box_begin_x + backlay.getSize().x;
+	int box_end_y   = box_begin_y + backlay.getSize().y;
+
+	int text_begin_x = text_pos.x;
+	int text_begin_y = text_pos.y;
+	int text_end_x   = box_end_x - (text_begin_x - box_begin_x);
+	int text_end_y   = box_end_y - (text_begin_y - box_begin_y);
+
+	int max_width = text_end_x - text_begin_x;
+
+	// text object used to see how close each word puts us to the bounds
+	sf::Text temp;
+	temp.setFont(font);
+	temp.setCharacterSize(text.getCharacterSize());
+
+	// current string and width
+	std::string fitted_string = "";
+	float current_width = 0.f;
+	float word_width = 0.f, word_height = 0.f;
+
+	// split the dialogue into words;
+	std::vector<std::string> words = split(str, ' ');
+
+	// for each word...
+	for (std::string word : words) {
+		std::cout << word << " ";
+		// get the bounding box
+		temp.setString(word + " ");
+		word_width = temp.findCharacterPos(temp.getString().getSize()).x;
+
+		// will it go past the horizontal bound?
+		if (current_width + word_width > max_width) {
+			std::cout << "\n" << word << " ";
+			fitted_string += "\n" + word + " ";
+			current_width = word_width;
+		}
+		else {
+			// just add to string
+			fitted_string += word + " ";
+			current_width += word_width;
+		}
+	}
+	std::cout << std::endl;
+
+	// done
+	return fitted_string;
 }

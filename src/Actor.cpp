@@ -1,6 +1,6 @@
 #include "Actor.h"
 #include "Constants.h" // for window_[width|height]
-#include "PhysicsComponent.h"
+#include "PhysicsComponent.h"         // for ids
 #include "InputComponent.h"
 #include "CollectableComponent.h"
 //unique instance id among actors
@@ -374,8 +374,8 @@ void Actor::update(float time) {
  **/
 void Actor::render(sf::RenderWindow *window, bool minimap) {
 	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
-			(it->second)->render(window, minimap);
-    	if (visible) {
+		(it->second)->render(window, minimap);
+	if (visible) {
 		if (use_vertexarray && renderToGameView) {
 			window->draw(sprite_vertexarray, &(sprite_texture[0]));
 		}
@@ -383,10 +383,10 @@ void Actor::render(sf::RenderWindow *window, bool minimap) {
 			window->draw(sprite_minimap);
 		}
 		else if (!minimap && renderToGameView) {
-        		window->draw(sprite[sprite_idx]);
+			window->draw(sprite[sprite_idx]);
 		}
 	}
-	
+
 }
 
 /** Reset each of the actors components after scoring
@@ -693,10 +693,11 @@ bool Actor::causesDamage(void) {
  **
  **/
 void Actor::setMinimapSpritePosition(sf::Vector2f pos) {
-	if (this->hasComponent(InputComponent::id) || this->hasComponent(CollectableComponent::id)) {
-		pos.x -= size.x/2 / sprite_minimap.getScale().x;
-		pos.y -= size.y/2 / sprite_minimap.getScale().y;
-	}
-
 	sprite_minimap.setPosition(pos);
+	if (this->hasComponent(InputComponent::id) || this->hasComponent(CollectableComponent::id)) {
+		sf::FloatRect bounds = sprite_minimap.getGlobalBounds();
+		float x = bounds.width/2; // sprite_minimap.getScale().x;
+		float y = bounds.height/2; // sprite_minimap.getScale().y;
+		sprite_minimap.move(-x, -y);
+	}
 }

@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
-<Level2 Background = "Level1.png" Flower = "Tulip" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30">
+<Level2 Background = "Level2.png" Flower = "Tulip" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30">
 	<Correct>
-		<Dialogue Speaker = "Narrator" Text = "The other T-Rex fighting for Diana's heart may have had strength and size on their side, but you figure that your small size and speed might actually come in handy in the Wildfire Plains. If there's anyone that's going to outrace the lava and the fire spreading across the grasslands, it'll be you. You hope, at least." Background = ""/>
-		<Dialogue Speaker = "Diana" Text = "" Background = "" />
+	  <Dialogue Speaker = "Narrator" Text = "The other T-Rex fighting for Diana's heart may have had strength and size on their side, but you figure that your small size and speed came in handy in the [air level name]. Those mountains are so hard to navigate, especially at such a high altitude, but the flowers you found up there really paid off. You haven't even left Homer's cave when Diana happens to wander in, and immediately brightens." Background="" />
+	  <Dialogue Speaker = "Diana" Text = "Hey Phil! I was just here to visit Homer. He told me you'd gone out again - you've been awfully busy lately! Were you out finding this new flower? It's beautiful! I really need to go and find some water to keep these alive. It's too bad so much of it's dried up around here now!" Background= "" />
+	  <Dialgoue Speaker = "Homer" Text = "Homer hear there LOTS of water out in [water level name]. Homer not go there cause lots of mean dinos, but maybe Phil can look!" Background= "" />
 	</Correct>
 	<Incorrect>
-		<Dialogue Speaker = "Narrator" Text = "The other T-Rex fighting for Diana's heart may have had strength and size on their side, but you figure that your small size and speed might actually come in handy in the Wildfire Plains. If there's anyone that's going to outrace the lava and the fire spreading across the grasslands, it'll be you. You hope, at least." Background = ""/>
-		<Dialogue Speaker = "Diana" Text = "" Background = "" />
+	  <Dialogue Speaker = "Narrator" Text = "The other T-Rex fighting for Diana's heart may have had strength and size on their side, but you figure that your small size and speed came in handy in the [air level name]. Those mountains are so hard to navigate, especially at such a high altitude, but the flowers you found up there really paid off. You haven't even left Homer's cave when Diana happens to wander in." Background="" />
+	  <Dialogue Speaker = "Diana" Text = "Oh, hey Phil. I was just here to visit Homer. He told me you'd gone out again - you've been awfully busy lately! Were you out finding this new flower? Thanks... I'll put it with the other one you got me. I should go and find some water to keep these alive. It's too bad so much of it's dried up around here now!" Background= "" />
+	  <Dialgoue Speaker = "Homer" Text = "Homer hear there LOTS of water out in [water level name]. Homer not go there cause lots of mean dinos, but maybe Phil can look!" Background= "" />
 	</Incorrect>
 </Level2>
