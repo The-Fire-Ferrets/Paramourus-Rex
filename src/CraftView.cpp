@@ -415,11 +415,8 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	   
 	   // update text box to indicate that you cannot combine flowers
 	   else {
-	     text.setString("Gee Phil, that sure doesn't look too pretty.\n Why don't you try somethin' else?");
-
+	     text.setString(fitStringToDialogueBox("Gee Phil, that sure doesn't look too pretty. Why don't you try somethin' else?"));
 	   }
-
-
 	}
 
 	// Check to see if flowers within the craft box are clicked to return them to player inventory
