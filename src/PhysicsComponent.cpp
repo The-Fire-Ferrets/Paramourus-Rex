@@ -49,7 +49,6 @@ bool PhysicsComponent::Init(pugi::xml_node* elem) {
 	char* temp;
     for (pugi::xml_node tool = elem->first_child(); tool; tool = tool.next_sibling()) {
         for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
-		//std::cout << tool.name() << " " << attr.name() << " " << attr.value() << std::endl;
             if (!strcmp(attr.name(),"Type"))
                 type = attr.value();
 		 else if (!strcmp(tool.name(), "VisionBoundary"), !strcmp(attr.name(),"X")) {
@@ -95,10 +94,10 @@ bool PhysicsComponent::Init(pugi::xml_node* elem) {
 		    }
         }
     }
+	//Sets up vision bo;undary sprite
 	if (use_vision_boundary) {
 		vision_boundary_texture.loadFromFile("./assets/backgrounds/Level0.png");
 		vision_boundary_sprite = sf::Sprite(vision_boundary_texture);
-		//std::cout << "HERE" << std::endl;
 	}
 	
     return true;	
@@ -128,19 +127,18 @@ void PhysicsComponent::update(float time) {
 		vision_boundary_sprite.setPosition(owner->getPosition().x + vision_boundary_position.x, owner->getPosition().y + vision_boundary_position.y);
 		if (LevelView::player->intersects(vision_boundary_sprite.getGlobalBounds()) && !inVision) {
 			inVision = true;
-			//std::cout << "Player Seen" << std::endl;
 			Pathfinder::changeVision(owner->getInitialPosition());
 			vision_timer.restart();
 			LevelView::inVision++;
 		}
 		else if (inVision && vision_timer.getElapsedTime().asSeconds() > 15) {
 			inVision = false;
-			//std::cout << "Player Seen" << std::endl;
 			Pathfinder::changeVision(owner->getInitialPosition());
 			LevelView::inVision--;
 		}
 			 
 	}
+	//Determines collisions
     bool madeContact = false;
     std::vector<StrongActorPtr>::iterator it_all;
     for (it_all =  LevelView::actorList.begin(); it_all !=  LevelView::actorList.end(); it_all++) {
@@ -172,9 +170,7 @@ void PhysicsComponent::update(float time) {
 			madeContactPrev = false;
 			}
 			if (other_actor->hasAttribute("Opaque")) {
-			//if (owner->getId() == "Player")
-			//std::cout << "Added new boundary!" << std::endl;
-			last_boundaries.push_back(std::pair<sf::FloatRect*, int>(bound, setDirectionBit(0, collisionSide(*bound) ) ) );
+				last_boundaries.push_back(std::pair<sf::FloatRect*, int>(bound, setDirectionBit(0, collisionSide(*bound) ) ) );
 			}
                 }
             }
@@ -193,7 +189,7 @@ void PhysicsComponent::update(float time) {
 
 }
 
-
+//CHecks to determine side of collision
 sf::Vector2f PhysicsComponent::collisionSide(sf::FloatRect other_bounds) {
 	sf::FloatRect* owner_bounds = (owner->getBoundary()).back();
 	int owner_left = owner_bounds->left;
@@ -213,7 +209,6 @@ sf::Vector2f PhysicsComponent::collisionSide(sf::FloatRect other_bounds) {
 	int top_diff = abs(owner_top - other_bottom);
 	int bottom_diff = abs(owner_bottom - other_top);
 
-	//std::cout << "Right: " << right_diff << " Left: " << left_diff << " Top: " << top_diff << " Bottom: " << bottom_diff << std::endl;
 	if (dir.x == 1 && right_diff < top_diff && right_diff < bottom_diff )
 		return sf::Vector2f(1,0);
 	if (dir.x == -1 && left_diff < top_diff && left_diff < bottom_diff )
@@ -224,6 +219,7 @@ sf::Vector2f PhysicsComponent::collisionSide(sf::FloatRect other_bounds) {
 		return sf::Vector2f(0,1);
 	return sf::Vector2f(0,0);
 }
+
 /** Receives event when the actor is being contacted by another actor and responds by accordingly
  **
  **/
@@ -251,94 +247,25 @@ void PhysicsComponent::restart(void) {
 
                 }
 
-/** Check for intersections between this compoenent's owner
- ** and other actor's.
+/** Used to determined if movement is allowable
  **/
 bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
 	sf::FloatRect* other_bound;
 	for (auto it = last_boundaries.begin(); it != last_boundaries.end(); it++) {
 		other_bound = it->first;
 		bool val;
-		/*if (owner->getId() == "NPC" && other_bound-> intersects(bound)) {
-			std::cout << bound.left << " " << bound.top << " " << bound.height << " " << bound.width << " " << other_bound->left << " " << other_bound->top << " " << other_bound->width << " " << other_bound->height << std::endl;
-			Pathfinder::removePositionFromPath(owner->getInitialPosition());
-			return false;
-		}*/
-		if (other_bound-> intersects(bound) && (owner->getId() == "NPC" || (val = getDirectionBit(it->second, dir)))) {
-		//	std::cout << "Direction: " << dir.x << " " << dir.y << " val: " << val << std::endl;
-			
+		if (other_bound-> intersects(bound) && (owner->getId() == "NPC" || (val = getDirectionBit(it->second, dir)))) {	
 			return false;
 		}
-		//std::cout << "Direction: " << dir.x << " " << dir.y << " val: " << val << std::endl;
 	}
 	return true;
 }
-/*bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
-    // is the owner currently in another actor's bounding box?
-	int border = 10;
-	//sf::FloatRect boundwborder = sf::FloatRect(bound.left - border, bound.top - border, bound.width + 2*border, bound.height + 2*border);
-	bound = sf::FloatRect(bound.left - border, bound.top - border, bound.width + 2*border, bound.height + 2*border);
-	sf::FloatRect* other_bound;
-    for (auto it = last_boundaries.begin(); it != last_boundaries.end(); it++) {
-	other_bound = it->first;
-	
-        if ((it->first)->intersects(bound)) {
-            setDirectionBit(dir);
-
-		if (first_run == 0) {
-			std::cout << dir.x << " " << dir.y << std::endl;
-			std::cout << "Player Bounds: " << bound.left << " " << bound.top << " " << bound.width << " " << bound.height << std::endl;
-			std::cout << "Wall Bounds: " << other_bound->left << " " << other_bound->top << " " << other_bound->width << " " << other_bound->height << std::endl;
-		}
-		first_run++;
-            //If caused contact but on an edge, ignore it and only return false if a majoriry of the player is making contact
-            //Allows for smoother movement and continued movement
-
-            if (dir.x == 1) {
-                if (other_bound->contains(sf::Vector2f(bound.left + bound.width, bound.top  + bound.height / 4)))
-                    return false;
-                else if (other_bound->contains(sf::Vector2f(bound.left + bound.width, bound.top + bound.height / 2)))      
-                    return false;
-                else if (other_bound->contains(sf::Vector2f(bound.left + bound.width, bound.top + 3* bound.height / 4)))
-                    return false;
-            }	
-            if (dir.x == -1) {
-                if (other_bound->contains(sf::Vector2f(bound.left, bound.top  + bound.height / 4)))    
-                    return false;
-                else if (other_bound->contains(sf::Vector2f(bound.left, bound.top + bound.height / 2)))    
-                    return false;
-                else if (other_bound->contains(sf::Vector2f(bound.left, bound.top + 3*bound.height / 4)))    
-                    return false;
-            }	
-            if (dir.y == 1) {
-                if (other_bound->contains(sf::Vector2f(bound.left  + bound.width / 4, bound.top + bound.height)))     
-                    return false;
-                else if (other_bound->contains(sf::Vector2f(bound.left + bound.width/2, bound.top + bound.height)))     
-                    return false;
-                else if (other_bound->contains(sf::Vector2f(bound.left + 3 * bound.width / 4, bound.top + bound.height)))     
-                    return false;
-            }	
-            if (dir.y == -1) {
-                if (other_bound->contains(sf::Vector2f(bound.left  + bound.width / 4, bound.top)))     
-                    return false;
-                else if (other_bound->contains(sf::Vector2f(bound.left + bound.width/2, bound.top)))     
-                    return false;
-                else if (other_bound->contains(sf::Vector2f(bound.left + 3* bound.width / 4, bound.top)))     
-                    return false;		
-            }
-        }
-    }
-   flipDirectionBit(dir);
-    // if not, it is okay to move in the direction we want
-    return true;
-}*/
 
 /** Renders component
  ** window: current game render window
  **/
 void PhysicsComponent::render(sf::RenderWindow *window, bool minimap) {
-	//if (use_vision_boundary)
-	//	window->draw(vision_boundary_sprite);
+
 }
 
 /** Sets the value of the given bit

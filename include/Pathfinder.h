@@ -122,7 +122,6 @@ class Pathfinder {
 		static GridLocation* findNewTarget(GridLocation pos);
 		static bool isValidTarget(GridLocation* ptr);
 		static bool selectNewPath(GridLocation init_pair, GridLocation* start_pt, GridLocation curr_pair);
-		static int first_run;
 		static bool positionsEqual(GridLocation* pos1, GridLocation* pos2);
 		static std::map<GridLocation*, bool> inVision;
 

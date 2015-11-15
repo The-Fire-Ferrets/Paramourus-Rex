@@ -99,93 +99,70 @@ bool InputComponent::PostInit(void) {
  ** time: current game time
  **/
 void InputComponent::update(float time) {
-    float distance = ((time - last_framerate));
+	//Check the difference in framerate to determine the next movement
+	float distance = ((time - last_framerate));
 	if (distance < 0)
 		distance = Configuration::getFrameRate() + distance;
 	last_framerate = time;
 	distance *= speed;
-    // cast base class to derived so we can use derived class methods
-    std::shared_ptr<PhysicsComponent>   pc;
-    std::shared_ptr<ActorComponent>     ac;
 
-    sf::Vector2f next_direction = owner->getDirection();;
+	sf::Vector2f next_direction = owner->getDirection();;
 
-    if (type == "Artificial") {
-	sf::Vector2f next_pos;
-	sf::Vector2f curr_pos;
-	//if (fake_pos == sf::Vector2f(0,0)) {
+	if (type == "Artificial") {
+		//Uses path finder to determine the next position
+		sf::Vector2f next_pos;
+		sf::Vector2f curr_pos;
+
 		next_pos = owner->getPosition();
 		curr_pos = owner->getPosition();
-	/*}
-	else {
-		next_pos = fake_pos;
-		curr_pos = fake_pos;
-	}*/
 
-	/*if (distance > 0) {
-		std::cout << distance << std::endl;
-		std::cout << next_pos.x << " " << next_pos.y << std::endl;
-	}*/
-	//std::cout << "Input1" << std::endl;
-	bool start_changed = Pathfinder::getNextPosition(distance, owner->getInitialPosition(), owner->getStartPosition(), curr_pos, &next_pos, &next_direction);
+		bool start_changed = Pathfinder::getNextPosition(distance, owner->getInitialPosition(), owner->getStartPosition(), curr_pos, &next_pos, &next_direction);
 
-	if (start_changed)
-		owner->setStartPosition(owner->getPosition());
+		//Changes the palyers start path position if its recalculated a path
+		if (start_changed)
+			owner->setStartPosition(owner->getPosition());
 
-	/*sf::FloatRect bound_after = sf::FloatRect(next_pos, owner->getSize() );
-        std::shared_ptr<ActorComponent>     ac;
-        std::shared_ptr<PhysicsComponent>   pc;
-        ac = owner->components[PhysicsComponent::id];
-        pc = std::dynamic_pointer_cast<PhysicsComponent>(ac);
-	if (pc->query(bound_after, next_direction)) {*/
+		//Moves the player
 		owner->move(next_pos, next_direction);
-		/*fake_pos = sf::Vector2f(0,0);
-		fake_dir = sf::Vector2f(0,0);
+
 	}
-	else {
-		fake_pos = next_pos;
-		fake_dir = next_direction;
-	}*/
-
-    }
-
-    else if (type == "Keyboard") {
+	else if (type == "Keyboard") {
 		// TODO: I'd like to move controls to a configuration file so we could 
 		// choose between up/down/left/right, wasd, and hjkl.
 		//Reads Input and perform actions
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		    next_direction = NORTHEAST;
-		    //distance *= cos(45);
+			next_direction = NORTHEAST;
+			distance *= cos(45);
 		}   
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		    next_direction = NORTHWEST;
-		    //distance *= cos(45);
+			next_direction = NORTHWEST;
+			distance *= cos(45);
 		}      
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		    next_direction = SOUTHEAST;
-		    //distance *= cos(45);
+			next_direction = SOUTHEAST;
+			distance *= cos(45);
 		}    
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		    next_direction = SOUTHWEST;
-		    //distance *= cos(45);
+			next_direction = SOUTHWEST;
+			distance *= cos(45);
 		}        
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		    next_direction = NORTH;
+			next_direction = NORTH;
 		} 
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-		    next_direction = SOUTH;
+			next_direction = SOUTH;
 		} 
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		    next_direction = WEST;
+			next_direction = WEST;
 		} 
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		    next_direction = EAST;
+			next_direction = EAST;
 		}
 		else return; // No input provided.
 		
-		 this ->setDirection(next_direction);
-	    	owner->move(distance, direction);
-    }
+		this ->setDirection(next_direction);
+		owner->move(distance, direction);
+	}
 }
 
 /** Receives event when the actor is being contacted by another actor and responds by accordingly
