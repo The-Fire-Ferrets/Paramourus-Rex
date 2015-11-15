@@ -75,6 +75,8 @@ class CraftView  {
 	static sf::Texture character_tex;
 	static sf::Sprite  character_sprite;
 
+	static std::string fitStringToDialogueBox(std::string str);
+
 	public:
 		static int getNumFlowers(void);
 		static bool pressed;
