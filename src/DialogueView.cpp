@@ -171,7 +171,7 @@ void DialogueView::Create(const char* resource, int* state){
 			if (!strcmp(attr.name(), "Background")){
 
 			}
-		}g
+		}
 	}
 
 	// generatre dialogue boxes
