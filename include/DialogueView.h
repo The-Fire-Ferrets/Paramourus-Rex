@@ -42,6 +42,7 @@ class DialogueView {
 
 		static bool solved;
 		static unsigned num_times_impressed;
+		static int response;
 
 	public:
 		static std::vector<std::pair<std::string, std::string>> boxes;     // what gets displayed on screen

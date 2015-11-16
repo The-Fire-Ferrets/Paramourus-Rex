@@ -48,6 +48,7 @@ sf::Sound DialogueView::sound;
 
 bool DialogueView::solved = false;
 unsigned DialogueView::num_times_impressed = 0;
+int DialogueView::response;
 
 /** Searches for the correct dialogue box the player is on and populates the text with what you want Diana to be saying 
  ** resource: filename for XML  file we are getting the dialogue from. Currently just level0, only level we have.
@@ -118,6 +119,13 @@ void DialogueView::Create(const char* resource, int* state){
 				++num_times_impressed;
 				solved = true;
 			}
+			else{
+				num_times_impressed--;
+				solved = false;
+			}
+		}
+		else if (!strcmp(attr.name(), "Response")){
+			response = atoi(attr.value());
 		}
 	}
 
@@ -163,7 +171,7 @@ void DialogueView::Create(const char* resource, int* state){
 			if (!strcmp(attr.name(), "Background")){
 
 			}
-		}
+		}g
 	}
 
 	// generatre dialogue boxes
@@ -181,6 +189,7 @@ void DialogueView::Create(const char* resource, int* state){
 	sound.setBuffer(buffer);
 	sound.setLoop(true);
 	sound.play();
+	
 }
 
 
@@ -195,16 +204,18 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 		if ((sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) || index == 0){
 			pressed = true;
 			std::cout << index << " " << boxes.size() << std::endl;
-			if (index >= boxes.size()){
-				if (view_state == 1)
-					*state = 0;
-				else if (view_state == 2) {
-					*state = 5;
-				}
-				cleanUp();
+			// if we are at least at one of Diana's two responses to your answer
+			if (index >= boxes.size()-1){
+				// stop displaying text, wait for user response before closing dialogueview
+			      if (view_state == 1)
+				  *state = 0;
+			      else if (view_state == 2)
+				  *state = 5;
+			      cleanUp();
 			}
-			else{
-				if (boxes[index].first == "Narrator") {
+
+			else if (index < boxes.size()-2){
+				if (boxes[index].first == "Narrator" || boxes[index].first == "Phil") {
 					rhs_character_tex = sf::Texture();
 				}
 				else {
@@ -219,12 +230,38 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 				rhs_character_sprite.setPosition(posX+465, posY-rhs_character_tex.getSize().y-5);
 			
 				text.setString(boxes[index].second);
+				index++;
 			}
-			index++;
 		}
 		else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)){
 			pressed = false;
 		}
+	}
+	// wait for player to choose dialogue option 1 or 2 embedded in text
+	// update Diana's opinion, then end dialogueView accordingly
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) && index == boxes.size()-2){
+		if (response == 1){
+			num_times_impressed++;
+		}
+		else{
+			num_times_impressed--;
+		}
+		// skip to Diana's first response, the response to option 1
+		//index++;
+		text.setString(boxes[index].second);
+		index++;
+
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) && index == boxes.size()-2){
+		if (response == 2){
+			num_times_impressed++;
+		}
+		else{
+			num_times_impressed--;
+		}
+		// skip to Diana's second response, the response to option 2
+		index ++;
+		text.setString(boxes[index].second);
 	}
 }
 
