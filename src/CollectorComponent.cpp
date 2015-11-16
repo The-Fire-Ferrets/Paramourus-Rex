@@ -137,7 +137,6 @@ void CollectorComponent::update(EventInterfacePtr e) {
 				}
 				vases--;
 				vase_sprites.erase(vase_sprites.end());
-				std::cout << owner->getId() << "  lost a vase and has " << vases << std::endl;
 			}
 		}
 	}
@@ -147,22 +146,17 @@ void CollectorComponent::update(EventInterfacePtr e) {
 			flowerList.push_back(other_actor);
 			if (other_actor->getId() == "FireFlower") {
 				vase_sprites[flowers++].setTexture(vase_fireflower);
-				//vase_sprites[flowers++].scale(1.0*vase_size/(vase_fireflower.getSize().x), 1.0*vase_size/(vase_fireflower.getSize().y));
 			}
 			else if (other_actor->getId() == "EarthFlower") {
 				vase_sprites[flowers++].setTexture(vase_earthflower);
-				//vase_sprites[flowers++].scale(1.0*vase_size/(vase_earthflower.getSize().x), 1.0*vase_size/(vase_earthflower.getSize().y));
 			}
 			else if (other_actor->getId() == "AirFlower") {
 				vase_sprites[flowers++].setTexture(vase_airflower);
-				//vase_sprites[flowers++].scale(1.0*vase_size/(vase_airflower.getSize().x), 1.0*vase_size/(vase_airflower.getSize().y));
 			}
 			else if (other_actor->getId() == "WaterFlower") {
 				vase_sprites[flowers++].setTexture(vase_waterflower);
-				//vase_sprites[flowers++].scale(1.0*vase_size/(vase_waterflower.getSize().x), 1.0*vase_size/(vase_waterflower.getSize().y));
 			}
 		}
-		std::cout << owner->getId() << "  collecting " << other_actor->getId() << " vase number now " << vases << std::endl;	
 	}	
 }
 
@@ -220,7 +214,7 @@ int CollectorComponent::getVases(void) {
  ** window: current game render window
  **/
 void CollectorComponent::render(sf::RenderWindow *window, bool minimap) {
-	if (owner->getId() == "Player") {
+	if (owner->getId() == "Player" && !minimap) {
 		std::vector<sf::Sprite>::iterator it;
 		int i = 0;
 		int sep = 2;

@@ -122,7 +122,6 @@ class Pathfinder {
 		static GridLocation* findNewTarget(GridLocation pos);
 		static bool isValidTarget(GridLocation* ptr);
 		static bool selectNewPath(GridLocation init_pair, GridLocation* start_pt, GridLocation curr_pair);
-		static int first_run;
 		static bool positionsEqual(GridLocation* pos1, GridLocation* pos2);
 		static std::map<GridLocation*, bool> inVision;
 
@@ -137,7 +136,7 @@ class Pathfinder {
 		static int getCost(sf::Vector2f pos, Grid* target_grid);
 		static int getCost(GridLocation loc, Grid* target_grid);
 		static int addToCost(sf::Vector2f pos, sf::Vector2f dir, int incr, Grid* target_grid);
-		static GridLocation getPositionMapping(sf::Vector2f pos); 
+		static GridLocation getPositionMapping(sf::Vector2f pos, bool non_wall = false); 
 		static float getDistance(sf::Vector2f pos,  sf::Vector2f pos2);
 		static void generatePaths(void);
 		static bool isValidMove(GridLocation loc, Grid* target_grid);
@@ -155,6 +154,7 @@ class Pathfinder {
 		static bool canUpdateStartPath(sf::Vector2f init_pos, sf::Vector2f start_pos);
 		static bool generatingPaths;
 		static void changeVision(sf::Vector2f init_pos);
+		static void removePositionFromPath(sf::Vector2f init_pos);
 };
 
 

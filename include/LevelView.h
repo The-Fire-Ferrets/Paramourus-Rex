@@ -3,6 +3,7 @@
 
 #include "Constants.h"
 #include "ActorFactory.h"
+#include "DialogueView.h"
 
 class LevelView  {
 	friend class CraftView;
@@ -13,7 +14,12 @@ class LevelView  {
 		static const int size;
 		static int num_actors;
 		static sf::Texture background_texture;
+//<<<<<<< HEAD
+		static sf::Texture timeout_texture;
+		static sf::Sprite timeout_sprite;
+//=======
 		static sf::Texture minimap_background_texture;
+//>>>>>>> dd3416c4e8fd42939751c18e1f53a578eefd9e8a
 		static sf::Texture edge_texture;
 		static sf::Sprite background;
 		static sf::Sprite minimap_background;
@@ -39,10 +45,13 @@ class LevelView  {
 		static bool commentary_change;
 		static std::vector<pugi::xml_node> spawn;
 		static pugi::xml_document doc;
-		static sf::Sprite title_sprite;
+		static sf::Sprite back_button;
 		static sf::Texture title_texture;
 		static sf::Vector2f title_size;	
 		static bool pressed;
+		static int flashing;
+		static bool reveal_back_button;
+		static float timer_time;
 
 		static bool paused;
 		static bool pause_key_pressed;
@@ -59,7 +68,8 @@ class LevelView  {
 		static StrongActorPtr getActor(int instance);
 		static void removeActor(int instance);
 		static void cleanUp(void);
-
+		static int flowers_left;
+		static int inVision;
 		static void Create(const char* resource, int* state, int flowers[]);
 		static void update(sf::RenderWindow *window, int* state, float time);
 		static void update(EventInterfacePtr e);

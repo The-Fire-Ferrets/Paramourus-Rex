@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <Player Type = "Player" SpriteUp = "PlayerUp.png" SpriteDown = "PlayerDown.png" SpriteRight = "PlayerRight.png" SpriteLeft = "PlayerLeft.png"  SpriteMinimap = "PlayerSpot.png" Damage = "False" PathType = "-1" TargetType = "0">
-	<InputComponent>
-		<Control Type = "Keyboard" Speed = "50"/>
-	</InputComponent>	
-	<CollectorComponent>
-		<Items Vases = "6" Size = "8" FireFlower = "vase_fireflower.png" AirFlower = "vase_airflower.png" Empty = "vase_empty.png" WaterFlower = "vase_waterflower.png" EarthFlower = "vase_earthflower.png"/>
-	</CollectorComponent>
 	<PhysicsComponent>
 		<Properties Type = "Transparent" />
 		<VisionBoundary Height = "" Width = "" X = "" Y = ""/>
 	</PhysicsComponent>
+	<InputComponent>
+		<Control Type = "Keyboard" Speed = "1"/>
+	</InputComponent>	
+	<CollectorComponent>
+		<Items Vases = "6" Size = "8" FireFlower = "vase_fireflower.png" AirFlower = "vase_airflower.png" Empty = "vase_empty.png" WaterFlower = "vase_waterflower.png" EarthFlower = "vase_earthflower.png"/>
+	</CollectorComponent>
 </Player>

@@ -1,17 +1,19 @@
 #include "Actor.h"
 #include "Constants.h" // for window_[width|height]
-#include "PhysicsComponent.h"
+#include "PhysicsComponent.h"         // for ids
 #include "InputComponent.h"
 #include "CollectableComponent.h"
 //unique instance id among actors
 int Actor::instances = 0;
+
 //Number of directions possible
 const int Actor::num_directions = 4;
+
 /** Gets the current actors ID
  **
  **/
 ActorId Actor::getId(void) const {
-    return id;
+	return id;
 }
 
 /** test for equality: two actors have same id
@@ -30,6 +32,7 @@ Actor::Actor(void) {
 	state = 0;
 	visible = true;
 	renderToGameView = true;
+	direction = sf::Vector2f(0,0);
 }
 
 
@@ -137,28 +140,6 @@ bool Actor::Init(pugi::xml_node* elem) {
 	    addDelegate(ContactEvent::event_type);
 		initial_init = false;
 	}
-	/*if (id =="Player") {
-		path_type = -4;
-	}
-	else if (id == "NPC") {
-		path_type = -3;
-	}
-	else if (id == "FireFlower") {
-		path_type = -2;
-	}
-	else if (id == "EarthFlower") {
-		path_type = -2;
-	}
-	else if (id == "WaterFlower") {
-		path_type = -2;
-	}
-	else if (id == "AirFlower") {
-		path_type = -2;
-	}
-	else {
-		path_type = -1;
-	}*/
-	//std::cout << id << " " << path_type << std::endl;
     return true;
 }
 
@@ -221,6 +202,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		}
 	}
     }
+	//Selects a random position to place the object that is unused
 	if (!use_vertexarray) {
 	    sf::Vector2f pos = position;
 	    sf::FloatRect bound = sf::FloatRect(pos.x, pos.y, size.x, size.y);
@@ -230,7 +212,6 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		while (!new_position) {
 		    pos.x = rand() % (int)(Configuration::getWindowWidth() - size.x * size.x);
 		    pos.y = rand() % (int)(Configuration::getWindowHeight() - size.y * size.y);
-			//std::cout << pos.x << " " << pos.y << std::endl;
 		    bound = sf::FloatRect(pos.x, pos.y, size.x, size.y);
 		    std::vector<StrongActorPtr>::iterator it_all;
 		    for (it_all = LevelView::actorList.begin(); it_all != LevelView::actorList.end(); it_all++) {
@@ -247,8 +228,6 @@ void Actor::PostInit(pugi::xml_node* elem) {
 	    position = pos;
 		start_position = position;
 		initial_position = position;
-		//if (id == "Player")
-		//	std::cout << position.x << " int " << position.y << std::endl;
 		boundary.clear();
 	    boundary.push_back(new sf::FloatRect(position.x, position.y, size.x, size.y));
 		if (renderToGameView) {
@@ -266,7 +245,6 @@ void Actor::PostInit(pugi::xml_node* elem) {
 			spriteMinimap_texture.loadFromFile(("./assets/sprites/" + spriteMinimap_filename).c_str());
 			sprite_minimap = sf::Sprite(spriteMinimap_texture, sf::IntRect(0, 0, (spriteMinimap_texture.getSize()).x, (spriteMinimap_texture.getSize()).y));
 			sprite_minimap.setScale(10.0 * size.x/(spriteMinimap_texture.getSize()).x, 10.0 * size.y/(spriteMinimap_texture.getSize()).y);
-			//sprite_minimap.setPosition(position);
 			setMinimapSpritePosition(position);
 		}
 
@@ -280,33 +258,29 @@ void Actor::PostInit(pugi::xml_node* elem) {
 				sprite_texture[i].loadFromFile(("./assets/backgrounds/" + sprite_filename[0]).c_str());
 			
 	}
-	//if (id == "Player")
-	//	std::cout << position.x << " final " << position.y << std::endl;
-	
 }
 
 void Actor::PostInit(void) {
 	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
 		(it->second)->PostInit();
 }
-/** Moves the actor a certain distance based on the current game time
+/** Moves the actor a certain distance based on the current game time; used by AI
  ** time: current game time
  ** Prevents actors from moving past the top and bottom boundaries
  ** if the obstacle pointer is set (by a physics component o fthe actor or another actor after contact) it prevents the actors from moving into each other
  **/
-    void Actor::move(sf::Vector2f next_pos, sf::Vector2f direction) {
+    void Actor::move(sf::Vector2f next_pos, sf::Vector2f dir) {
        //Move Actor
-	if (direction.x < 0)
+	direction = dir;
+	if (dir.x < 0)
 		sprite_idx = 2;
-	else if (direction.x > 0)
+	else if (dir.x > 0)
 		sprite_idx = 3;
-	else if (direction.y < 0)
+	else if (dir.y < 0)
 		sprite_idx = 0;
-	else if (direction.y > 0)
+	else if (dir.y > 0)
 		sprite_idx = 1;
         sf::Vector2f p = next_pos;
-
-	
         this->setPosition(p);
         
     }
@@ -317,17 +291,17 @@ void Actor::PostInit(void) {
  ** Prevents actors from moving past the top and bottom boundaries
  ** if the obstacle pointer is set (by a physics component o fthe actor or another actor after contact) it prevents the actors from moving into each other
  **/
-    void Actor::move(float distance, sf::Vector2f direction) {
+    void Actor::move(float distance, sf::Vector2f dir) {
         //Move Actor
-        sf::Vector2f p = this->getPosition() + direction * distance;
-
-	if (direction.x < 0)
+        sf::Vector2f p = this->getPosition() + dir * distance;
+	direction = dir;
+	if (dir.x < 0)
 		sprite_idx = 2;
-	else if (direction.x > 0)
+	else if (dir.x > 0)
 		sprite_idx = 3;
-	else if (direction.y < 0)
+	else if (dir.y < 0)
 		sprite_idx = 0;
-	else if (direction.y > 0)
+	else if (dir.y > 0)
 		sprite_idx = 1;
 
 	// disallow movement off the screen
@@ -344,12 +318,12 @@ void Actor::PostInit(void) {
 		p.y = height - size.y;
 
         //Get the bounds after movement and check if the movement is allowed
-        sf::FloatRect bound_after = sf::FloatRect(p, getSize());
+        sf::FloatRect bound_after = sf::FloatRect(p, getSize() );
         std::shared_ptr<ActorComponent>     ac;
         std::shared_ptr<PhysicsComponent>   pc;
         ac = components[PhysicsComponent::id];
         pc = std::dynamic_pointer_cast<PhysicsComponent>(ac);
-        if (pc->query(bound_after, direction)) {
+        if (pc->query(bound_after, dir)) {
             // set the position
             this->setPosition(p);
         }
@@ -368,8 +342,8 @@ void Actor::update(float time) {
  **/
 void Actor::render(sf::RenderWindow *window, bool minimap) {
 	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
-			(it->second)->render(window, minimap);
-    	if (visible) {
+		(it->second)->render(window, minimap);
+	if (visible) {
 		if (use_vertexarray && renderToGameView) {
 			window->draw(sprite_vertexarray, &(sprite_texture[0]));
 		}
@@ -377,10 +351,10 @@ void Actor::render(sf::RenderWindow *window, bool minimap) {
 			window->draw(sprite_minimap);
 		}
 		else if (!minimap && renderToGameView) {
-        		window->draw(sprite[sprite_idx]);
+			window->draw(sprite[sprite_idx]);
 		}
 	}
-	
+
 }
 
 /** Reset each of the actors components after scoring
@@ -423,6 +397,7 @@ void Actor::quit(void) {
  **
  **/
 void Actor::updateBoundary(void) {
+	float minimize = .25;
 	if (use_vertexarray) {
 		boundary.clear();
 		sf::Vector2f pos;
@@ -436,29 +411,37 @@ void Actor::updateBoundary(void) {
 		}
 	}	
 	else {
-		float minimize = .25;
-		*boundary.back() = sf::FloatRect(position.x + size.x * minimize, position.y + size.y * minimize, size.x * (1 - 2*minimize), size.y * (1 - 2*minimize));
+		if (id == "Obstacle")
+			*boundary.back() = sf::FloatRect(position.x + size.x * minimize, position.y + size.y * minimize, size.x * (1 - 2*minimize), size.y * (1 - 2*minimize));
+		else
+			*boundary.back() = sf::FloatRect(position.x, position.y, size.x, size.y);
 	}
 }
 
 
 // Mutators and accesors
+
+//Returns the path type
 int Actor::getPathType(void) {
 	return path_type;
 }
 
+//Returns the target path type
 int Actor::getTargetType(void) {
 	return target_type;
 }
 
+//Returns the current player path start position
 sf::Vector2f Actor::getStartPosition(void) {
 	return start_position;
 }
 
+//Returns the player's initial game position
 sf::Vector2f Actor::getInitialPosition(void) {
 	return initial_position;
 }
 
+//Sets the current player path start position
 void Actor::setStartPosition(sf::Vector2f pos) {
 	start_position = pos;
 }
@@ -571,8 +554,8 @@ void Actor::getEvent(EventInterfacePtr e) {
 	if (other_actor == NULL)
 		return;
 
-	if (event_type == ContactEvent::event_type)
-		std::cout << other_actor->getId() << " made contact with " << id << std::endl;
+	//if (event_type == ContactEvent::event_type)
+	//	std::cout << other_actor->getId() << " made contact with " << id << std::endl;
 	
 	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
 		(it->second)->update(e);
@@ -625,32 +608,54 @@ void Actor::addDelegate(EventType type) {
 /** Checks to see if the Actors intersect
  **
  **/
-sf::FloatRect* Actor::intersects(StrongActorPtr other_actor) {
+sf::FloatRect* Actor::intersects(StrongActorPtr other_actor, bool use_border) {
+	if (!use_border)
+		border = 0;
 	std::vector<sf::FloatRect*> other_boundary = other_actor->getBoundary();
-	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
+	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it) {
+		sf::FloatRect my_border = sf::FloatRect((*it)->left - border, (*it)->top - border, (*it)->width + 2*border, (*it)->height + 2*border);
 		for (std::vector<sf::FloatRect*>::iterator other_it = other_boundary.begin(); other_it != other_boundary.end(); ++other_it)
-			if ((*it)->intersects(**other_it))
-				return *it;
+			if ((my_border).intersects(**other_it))
+				return (*it);
+	}
 	return NULL;
 }
 
 /** Checks to see if the Actor and boundary intersect
  **
  **/
-sf::FloatRect* Actor::intersects(sf::FloatRect bound) {
-	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
-		if ((*it)->intersects(bound))
-			return *it;
+sf::FloatRect* Actor::intersects(sf::FloatRect bound, bool use_border) {
+	if (!use_border)
+		border = 0;
+	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it) {
+		sf::FloatRect my_border = sf::FloatRect((*it)->left - border, (*it)->top - border, (*it)->width + 2*border, (*it)->height + 2*border);
+		if ((my_border).intersects(bound))
+			return (*it);
+	}
 	return NULL;
+}
+
+//Returns the players current direction
+sf::Vector2f Actor::getDirection(void) {
+	return direction;
+}
+
+//Sets the players current direction
+void Actor::setDirection(sf::Vector2f dir) {
+	direction = dir;
 }
 
 /** Checks to see if the Actor contains point
  **
  **/
-sf::FloatRect* Actor::contains(sf::Vector2f pnt) {
-	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it)
-		if ((*it)->contains(pnt))
+sf::FloatRect* Actor::contains(sf::Vector2f pnt, bool use_border) {
+	if (!use_border)
+		border = 0;
+	for (std::vector<sf::FloatRect*>::iterator it = boundary.begin(); it != boundary.end(); ++it) {
+		sf::FloatRect my_border = sf::FloatRect((*it)->left - border, (*it)->top - border, (*it)->width + 2*border, (*it)->height + 2*border);
+		if ((my_border).contains(pnt))
 			return *it;
+	}
 	return NULL;
 }
 
@@ -661,14 +666,15 @@ bool Actor::causesDamage(void) {
     return damage;
 }
 
-/**
+/** Sets the minimap sprite position
  **
  **/
 void Actor::setMinimapSpritePosition(sf::Vector2f pos) {
-	if (this->hasComponent(InputComponent::id) || this->hasComponent(CollectableComponent::id)) {
-		pos.x -= size.x/2 / sprite_minimap.getScale().x;
-		pos.y -= size.y/2 / sprite_minimap.getScale().y;
-	}
-
 	sprite_minimap.setPosition(pos);
+	if (this->hasComponent(InputComponent::id) || this->hasComponent(CollectableComponent::id)) {
+		sf::FloatRect bounds = sprite_minimap.getGlobalBounds();
+		float x = bounds.width/2; // sprite_minimap.getScale().x;
+		float y = bounds.height/2; // sprite_minimap.getScale().y;
+		sprite_minimap.move(-x, -y);
+	}
 }

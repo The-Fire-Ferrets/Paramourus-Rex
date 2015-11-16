@@ -41,10 +41,13 @@ class InputComponent : public ActorComponent {
 
 	private:
 		float speed;
+		int last_framerate;
 		static ActorComponent* create();
 		static int instances;
 		static const bool registered;
 		sf::Vector2f direction;
 		bool first_postinit;
+		sf::Vector2f fake_pos;
+		sf::Vector2f fake_dir;
 };
 #endif

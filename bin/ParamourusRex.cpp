@@ -33,6 +33,7 @@ int main(int argc, char* argv[])
 	const char* title = {"Title"};
 	TitleView::Create(title);
 
+	fr_clock.restart();
 	/**
 	 ** Main Game Loop
 	 ** Uses a set frame rate to control game timing
@@ -43,7 +44,7 @@ int main(int argc, char* argv[])
 		sf::Event Event;
 
 		//Start structure to control frame rate
-		elapsed_ms = fr_clock.restart().asSeconds();
+		elapsed_ms = ((int) (fr_clock.getElapsedTime().asMilliseconds() / Configuration::getFrameRate()) % (int) (Configuration::getFrameRate())) + 1;
 		while(App.pollEvent(Event)) {
 			if(Event.type == sf::Event::Closed) {
 				state = 4;
@@ -149,7 +150,7 @@ bool loadConfiguration(void) {
 	float minimapview_height;
 	float minimapview_width;
 	sf::Texture minimap_border;
-
+	float frame_rate;
 	sf::Texture loading_texture;
 
 	//Load configuration
@@ -173,6 +174,13 @@ bool loadConfiguration(void) {
 			}
 			else if (!strcmp(tool.name(), "Window") && !strcmp(attr.name(), "Width")) {
 				window_width = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+					std::cout << "Main: Failed to load configuration: Error reading attribute for " << attr.name() << std::endl;
+					return false;
+				}
+			}
+			else if (!strcmp(tool.name(), "Time") && !strcmp(attr.name(), "FrameRate")) {
+				frame_rate = std::strtol(attr.value(), &temp, 10);
 				if (*temp != '\0') {
 					std::cout << "Main: Failed to load configuration: Error reading attribute for " << attr.name() << std::endl;
 					return false;
@@ -209,5 +217,6 @@ bool loadConfiguration(void) {
 	Configuration::setMiniMapViewDimensions(minimapview_width*window_width, minimapview_height*window_height);
 	Configuration::setMinimapBorder(minimap_border);
 	Configuration::setLoadingTexture(loading_texture);
+	Configuration::setFrameRate(frame_rate);
 	return true;
 }

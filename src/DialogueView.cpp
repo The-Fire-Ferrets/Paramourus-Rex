@@ -215,8 +215,12 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 			}
 
 			else if (index < boxes.size()-2){
-				if (boxes[index].first == "Narrator" || boxes[index].first == "Phil") {
+				if (boxes[index].first == "Narrator") {
 					rhs_character_tex = sf::Texture();
+				}
+				else if (boxes[index].first == "Phil"){
+				 	rhs_character_tex.loadFromFile("./assets/sprites/Diana.png");
+ 
 				}
 				else {
 					std::cout << "Load ./assets/sprites/" + boxes[index].first + ".png" << std::endl;

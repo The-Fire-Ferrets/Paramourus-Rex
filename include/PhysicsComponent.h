@@ -19,11 +19,17 @@ class PhysicsComponent : public ActorComponent {
 		bool PostInit(void) override;
 
 		void setDirectionBit(int bit_num);
+		int setDirectionBit(int bit, int bit_num);
 		void setDirectionBit(sf::Vector2f dir);
+		int setDirectionBit(int bit, sf::Vector2f dir);
 		bool getDirectionBit(int bit_num);
+		bool getDirectionBit(int bit, int bit_num);
 		bool getDirectionBit(sf::Vector2f dir);
+		bool getDirectionBit(int bit, sf::Vector2f dir);
 		void flipDirectionBit(int bit_num);
+		int flipDirectionBit(int bit, int bit_num);
 		void flipDirectionBit(sf::Vector2f dir);
+		int flipDirectionBit(int bit, sf::Vector2f dir);
 		void resetDirectionBit();
 
 		static ComponentId id;
@@ -36,7 +42,7 @@ class PhysicsComponent : public ActorComponent {
 		void quit(void) override;
 		bool query(sf::FloatRect bound, sf::Vector2f dir);
 		std::vector<StrongActorPtr> last_actors;
-		std::vector<sf::FloatRect*> last_boundaries;
+		std::vector<std::pair<sf::FloatRect*, int>> last_boundaries;
 		ComponentId getId(void) const override;
 
 	private:
@@ -51,6 +57,9 @@ class PhysicsComponent : public ActorComponent {
 		bool inVision;
 		sf::Texture vision_boundary_texture;
 		sf::Sprite vision_boundary_sprite;
+		sf::Clock vision_timer;
+		int first_run;
+		sf::Vector2f collisionSide(sf::FloatRect other_bounds);
 };
 
 #endif

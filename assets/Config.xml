@@ -4,4 +4,5 @@
 	<MiniMapView Width = "1" Height = "1" Border = "MinimapBorder.png"/>
 	<GameView Width = ".2" Height = ".2" Center = "0"/>
 	<LoadingView LoadingScreen = "Loading.png"/>
+	<Time FrameRate = "60" />
 </Config>

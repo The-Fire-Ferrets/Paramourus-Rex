@@ -1,22 +1,32 @@
 #include "TitleView.h"
 
+//Event delegate holder
 EventDelegate TitleView::delegate = NULL;
+//Background
 sf::Sprite TitleView::background;
+//Texture and string
 sf::Texture TitleView::background_texture;
 std::string TitleView::playbutton_string;
+//Button to player game
 int TitleView::playbutton_size;
 sf::Text TitleView::playbutton;
+//Button to enter tutorial
 std::string TitleView::tutorialbutton_string;
 int TitleView::tutorialbutton_size;
 sf::Text TitleView::tutorialbutton;
+std::string TitleView::tutoriallevel;
+//Button to enter introduction
 std::string TitleView::introbutton_string;
 int TitleView::introbutton_size;
-sf::Text TitleView::introbutton;
-sf::Font TitleView::font;
-bool TitleView::pressed = false;
-int TitleView::view_state = 1;
 std::string TitleView::introdialogue;
-std::string TitleView::tutoriallevel;
+sf::Text TitleView::introbutton;
+//Font
+sf::Font TitleView::font;
+//Determiend single button press
+bool TitleView::pressed = false;
+//View state
+int TitleView::view_state = 1;
+
 /** Creates the title from the give configuration file
  **
  **/

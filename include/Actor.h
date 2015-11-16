@@ -26,8 +26,8 @@ class Actor {
 		void PostInit();
 		~Actor(void);
 
-		void move(float distance, sf::Vector2f direction);
-		void move(sf::Vector2f next_pos, sf::Vector2f direction);
+		void move(float distance, sf::Vector2f dir);
+		void move(sf::Vector2f next_pos, sf::Vector2f dir);
 		void update(float time);
 		void render(sf::RenderWindow *window, bool minimap);
 		void reset(void);
@@ -55,9 +55,9 @@ class Actor {
 		void resetVases(void);
 		void addDelegate(EventType type);
 		std::vector<sf::FloatRect*> getBoundary(void);
-		sf::FloatRect* intersects(StrongActorPtr other_actor);
-		sf::FloatRect* intersects(sf::FloatRect bound);
-		sf::FloatRect* contains(sf::Vector2f pnt);
+		sf::FloatRect* intersects(StrongActorPtr other_actor, bool use_border = false);
+		sf::FloatRect* intersects(sf::FloatRect bound, bool use_border = false);
+		sf::FloatRect* contains(sf::Vector2f pnt, bool use_border = false);
 		bool causesDamage(void);
 		sf::Vector2f getStartPosition(void);
 		sf::Vector2f getInitialPosition(void);
@@ -66,12 +66,15 @@ class Actor {
 		const Actor* getCopy(void) const;
 		int getPathType(void);
 		int getTargetType(void);
+		sf::Vector2f getDirection(void);
+		void setDirection(sf::Vector2f dir);
 
 	private:
 		ActorId id;
 		sf::Vector2f start_position;
 		sf::Vector2f initial_position;
 		const static int num_directions;
+		sf::Vector2f direction;
 		std::vector<EventDelegate> delegateFuncList;
 		bool damage = false;
 		std::string sprite_filename[4];
@@ -93,6 +96,7 @@ class Actor {
 		int* game_state;
 		int state;
 		bool visible;
+		int border = 30;
 		sf::FloatRect* obstacle;
 		std::vector<sf::FloatRect*> boundary;
 		bool renderToMinimap;
