@@ -337,7 +337,8 @@ std::vector<std::string> DialogueView::fitStringToDialogueBox(std::string str) {
 		float full_height = temp.getGlobalBounds().height - temp.getGlobalBounds().top;
 
 		// will it go past the horizontal bound?
-		if (current_width + word_width > max_width) {
+		std::size_t newline_loc = word.find("\n");
+		if (current_width + word_width > max_width || newline_loc != std::string::npos) {
 			// will it go past the vertical bound?
 			if (max_height - full_height < word_height) {
 				boxes.push_back(fitted_string);
@@ -345,7 +346,8 @@ std::vector<std::string> DialogueView::fitStringToDialogueBox(std::string str) {
 				current_width = word_width;
 			}
 			else {
-				fitted_string += "\n" + word + " ";
+				std::string newline = (newline_loc != std::string::npos) ? ("") : ("\n");
+				fitted_string += newline + word + " ";
 				current_width = word_width;
 			}
 		}

@@ -177,7 +177,6 @@ bool CraftableComponent::doesCombineWith(const CraftableComponent& other) const 
 				if (have_equivalent_strings(combo, components)) {
 					return true;
 				}
-				else std::cout << "false" << std::endl;
 			}
 		}
 	}
@@ -213,6 +212,7 @@ void CraftableComponent::combineWith(const CraftableComponent& other) {
 			if (!strcmp(attr.name(), "Components")) {
 				std::vector<std::string> components = split(std::string(attr.value()), ' ');
 				if (have_equivalent_strings(elements, components)) {
+					std::cout << "changing type" << std::endl;
 					std::string type = this->getCraftResultValue(recipe, "Type");
 					std::string sprite = this->getCraftResultValue(recipe, "Sprite");
 
@@ -220,7 +220,6 @@ void CraftableComponent::combineWith(const CraftableComponent& other) {
 					this->type = type;
 					owner->sprite_texture[0].loadFromFile("./assets/sprites/" + sprite);
 					owner->sprite[0].setTexture(owner->sprite_texture[0]);
-					std::cout << "reset sprite" << std::endl;
 					return;
 				}
 			}

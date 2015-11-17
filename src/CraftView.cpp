@@ -91,7 +91,7 @@ sf::Sprite  CraftView::character_sprite;
  **/
 void CraftView::Create(const char* resource, int* state) {
     //Reference to current location in Actor population array
-    //Holds referenced to loaded XML file	
+    //Holds referenced to loaded XML file
     totalFlowers = 0;
     pugi::xml_document doc;
 	if (delegate == NULL)
@@ -111,10 +111,10 @@ void CraftView::Create(const char* resource, int* state) {
 
     //Used to iterate over XML file to get attributes for this display -- currently none but background
     pugi::xml_node tools = doc.child(resource);
-    char* temp;	
-    
+    char* temp;
+
     for (pugi::xml_attribute attr = tools.first_attribute(); attr; attr = attr.next_attribute()) {
-        // Background to hold general backdrop image, + static image of "crafting companion" 
+        // Background to hold general backdrop image, + static image of "crafting companion"
         if (!strcmp(attr.name(), "Background")) {
             background_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
             background = sf::Sprite(background_texture, sf::IntRect(0, 0, Configuration::getWindowWidth(),  Configuration::getWindowHeight()));
@@ -151,7 +151,7 @@ void CraftView::Create(const char* resource, int* state) {
                 std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
             }
         }
-        // texture and position of map icon so it can be interacted with 
+        // texture and position of map icon so it can be interacted with
         else if (!strcmp(attr.name(), "Map")) {
             sf::Texture texture;
     	    if (!texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
@@ -177,8 +177,8 @@ void CraftView::Create(const char* resource, int* state) {
 	    	recipeBook.setPosition(Configuration::getWindowWidth()/7,Configuration::getWindowHeight()/15);
 	}
     }
-    
-    //Iterates over XML to get components to add, primarily sprites to populate the screen with 
+
+    //Iterates over XML to get components to add, primarily sprites to populate the screen with
     int i = 0;
     for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling(), i++) {
 	  for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()){
@@ -216,31 +216,31 @@ void CraftView::Create(const char* resource, int* state) {
 	      }
 	  }
     }
-    
+
     // Setting dialogue text position
     text.setPosition(text_pos);
     text.setColor(sf::Color::Blue);
     flower_text.setColor(sf::Color::Black);
-    
+
     // Backlay set off to the side to allow space for item select screens to the left
     backlay.setPosition(Configuration::getWindowWidth()/6.6, Configuration::getWindowHeight()/1.4);
     backlay.setOutlineColor(sf::Color::Black);
     backlay.setFillColor(sf::Color::White);
     backlay.setSize(sf::Vector2f(Configuration::getWindowWidth()/1.3,Configuration::getWindowHeight()/4));
     backlay.setOutlineThickness(5);
-    
+
     // Setting crafting button elements
     button_text.setString("Craft");
     button_text.setPosition(200,170);
     button_text.setFont(font);
     button_text.setColor(sf::Color::Black);
-    
+
     craftButton.setPosition(200, 170);
     craftButton.setFillColor(sf::Color::White);
     craftButton.setOutlineColor(sf::Color::Black);
     craftButton.setOutlineThickness(5);
     craftButton.setSize(sf::Vector2f(Configuration::getWindowWidth()/10, Configuration::getWindowHeight()/15));
-    
+
     // gather data for sprites to be rendered on screen
     for (int count = 0; count < i; count++){
     	  sprites[count] = sf::Sprite(textures[count], sf::IntRect(0,0, textures[count].getSize().x, textures[count].getSize().y));
@@ -249,7 +249,7 @@ void CraftView::Create(const char* resource, int* state) {
 	  std::get<0>(testList[count]).setScale(sizes[count].x/(textures[count].getSize()).x, sizes[count].y/(textures[count].getSize()).y);
 	  std::get<0>(testList[count]).setPosition(positions[count]);
     }
-    
+
     // Checks player for current inventory, updates.
     // Accessing this info from LevelView::Player's CollectorComponent.
     if (LevelView::player != NULL){
@@ -260,10 +260,10 @@ void CraftView::Create(const char* resource, int* state) {
 
       // add flowers to persistent list to make available to other classes
       CraftView::actorList.insert(CraftView::actorList.end(), flowers.begin(), flowers.end());
-      
+
       // iterate through player's inventory to update inventory on screen
       for (int i=0; i < flowers.size() ; i++){
-	// here, flowerList is a vector full of StrongActorPtrs. determine the id of each strongactorptr 
+	// here, flowerList is a vector full of StrongActorPtrs. determine the id of each strongactorptr
 	// to determine if it is a fire flower, water flower, air flower, or earth flower
 	  if (flowers[i]->getId() == "FireFlower"){
 	      fireFlowers++;
@@ -277,7 +277,7 @@ void CraftView::Create(const char* resource, int* state) {
 	  else if (flowers[i]->getId() == "EarthFlower"){
 	      earthFlowers++;
 	  }
-	  
+
 	  //restore player's vases now that it's cleared space in inventory
 	  totalFlowers++;
 	  cc->setVases(cc->getVases()+1);
@@ -292,10 +292,10 @@ void CraftView::Create(const char* resource, int* state) {
 	character_tex.loadFromFile("./assets/sprites/Homer.png");
 	character_sprite = sf::Sprite(character_tex);
 	character_sprite.setPosition(posX+320, posY-character_tex.getSize().y-4);
-			
+
 
 	// set text to initial greeting from Homer
-    std::string str = "Welcome back, Phil! You have " + std::to_string(totalFlowers) + " flowers! To craft them, click on their icons."; 
+    std::string str = "Welcome back, Phil! You have " + std::to_string(totalFlowers) + " flowers! To craft them, click on their icons.";
     text.setString(fitStringToDialogueBox(str));
 
     if (!buffer.loadFromFile("./assets/music/marina-s-rhythm.ogg")) {
@@ -316,7 +316,7 @@ int CraftView::getNumFlowers(void) {
 void CraftView::update(sf::RenderWindow *window, int* state) {
   	EventManagerInterface::setViewDelegate(delegate);
 	EventManagerInterface::setCurrentActorList(&actorList);
-      // Anticipates clicking in different areas of the screen 
+      // Anticipates clicking in different areas of the screen
       if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
@@ -327,17 +327,17 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 
 		  ++total_craft_visits;
         }
-        
+
         bool inList;
-        
+
         // checking to see if flowers clicked on
         for (int i = 0; i <= 3; i++){
 		    // player attempts to use this item for crafting, but only if one of the two boxes are filled
 		    if (sprites[i].getGlobalBounds().contains(pos.x,pos.y)){
-			      // check if this sprite exists within the flowerlist - if so, sets 
+			      // check if this sprite exists within the flowerlist - if so, sets
 			      // selected actor equal to the first flower it finds of that type
 			      for (int j = 0; j < actorList.size(); j++){
-					    if (actorList[j]->getId() == std::get<1>(testList[i])){		
+					    if (actorList[j]->getId() == std::get<1>(testList[i])){
 							if (box1 == false){
 				    			selectedActor1 = actorList[j];
 							break;
@@ -348,9 +348,9 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 				    		}
 				    	}
 			       }
-			      
+
 			      inList = false;
-			      
+
 			      if (i == 0 && fireFlowers != 0 && (box1 == false || box2 == false)){
 					fireFlowers--;
 					inList = true;
@@ -367,9 +367,9 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 					airFlowers--;
 					inList = true;
 			      }
-			      
+
 			      if (box1 == false && inList == true){
-					 // draw sprite in box 1 
+					 // draw sprite in box 1
 					  box1 = true;
 					  box1Sprite = sprites[i];
 					  totalFlowers--;
@@ -379,7 +379,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 					  box1Sprite.setScale(1.0f, 1.0f);
 				  }
 			      else if (box2 == false && inList == true){
-					 // draw sprite in box 2 
+					 // draw sprite in box 2
 					box2 = true;
 					box2Sprite = sprites[i];
 					box2Sprite.setPosition(250, 50);
@@ -389,30 +389,30 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 				  }
 		    }
 	}
-	
+
 	// Check here for the 'Craft' button to have been clicked and two flowers have been selected to be filled
 	if (craftButton.getGlobalBounds().contains(pos.x, pos.y) && box1 == true && box2 == true){
-	    
-	   
+
+
 	   StrongActorComponentPtr actor1AC = selectedActor1->components[CraftableComponent::id];
 	   std::shared_ptr<CraftableComponent> actor1CC = std::dynamic_pointer_cast<CraftableComponent>(actor1AC);
 	   StrongActorComponentPtr actor2AC = selectedActor2->components[CraftableComponent::id];
 	   std::shared_ptr<CraftableComponent> actor2CC = std::dynamic_pointer_cast<CraftableComponent>(actor2AC);
-	  
-	   
+
+
 	   // Clear sprite image, add newly combined sprite to inventory?
 	   if (actor1CC->doesCombineWith(*actor2CC)){
 		   std::cout << "combining" << std::endl;
 		   box1 = false;
 		   box2 = false;
-		   //actor1CC->combineWith(*actor2CC); 
+		   //actor1CC->combineWith(*actor2CC);
 		   if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0, selectedActor1->getInstance(), selectedActor2->getInstance())))
-			   std::cout << "CraftView::update: Unable to queue event" << std::endl;	
+			   std::cout << "CraftView::update: Unable to queue event" << std::endl;
 		   std::cout << "Sent craft event to Flower: " << selectedActor1->getInstance() << " and Flower: " << selectedActor2->getInstance() << std::endl;
 		   selectedActor1 = nullptr;
 		   selectedActor2 = nullptr;
 	   }
-	   
+
 	   // update text box to indicate that you cannot combine flowers
 	   else {
 	     text.setString(fitStringToDialogueBox("Gee Phil, that sure doesn't look too pretty. Why don't you try somethin' else?"));
@@ -456,7 +456,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 			  airFlowers++;
 	    }
 	}
-	
+
 	// Draw recipe book
 	if (bookSprite.getGlobalBounds().contains(pos.x, pos.y)){
 	    if (drawBook == true){
@@ -466,9 +466,9 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	      drawBook = true;
 	    }
 	}
-	
+
      }
-      
+
       // mouse click released
     else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
         pressed = false;
@@ -524,28 +524,28 @@ void CraftView::update(EventInterfacePtr e) {
  **
  **/
 void CraftView::render(sf::RenderWindow *window) {
-    //Update graphics	
+    //Update graphics
     window->draw(background);
     window->draw(backlay);
     window->draw(text);
     window->draw(map);
     window->draw(bookSprite);
 	window->draw(character_sprite);
-    
+
     // draw sprite in the "crafting table" box if there is one in it
     if (box1 == true)
       window->draw(box1Sprite);
     if (box2 == true)
       window->draw(box2Sprite);
-    
+
     // draw recipe book if it's open
     if (drawBook == true)
       window->draw(recipeBook);
-    
+
     // draw craft button and text on it
     window->draw(craftButton);
     window->draw(button_text);
-    
+
     // draw flower sprites on left
     for (int i = 0; i <= 9; i++){
 	window->draw(sprites[i]);
@@ -579,20 +579,20 @@ void CraftView::render(sf::RenderWindow *window) {
 	}
 	else if (i == 7){
 	  flower_str = "x " + std::to_string(violets);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+290); 
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+290);
 	}
 	else if (i == 8){
 	 flower_str = "x " + std::to_string(lilies);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+330); 
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+330);
 	}
 	else if (i == 9){
 	 flower_str = "x " + std::to_string(orchids);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+370); 
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+370);
 	}
 	flower_text.setString(flower_str);
 	window->draw(flower_text);
     }
-    
+
 }
 
 
@@ -640,17 +640,12 @@ StrongActorPtr CraftView::getFlower(std::string type) {
  ** TODO: does not modify counts of WEFA flowers or the flower_list
  **/
 bool CraftView::removeFlower(StrongActorPtr flower) {
-  	static int visits = 0; // two events are being sent
 	for (auto it = CraftView::actorList.begin(); it != CraftView::actorList.end(); it++) {
-		if ( *(*it) == (*flower) && visits == 0) {
+		if ( *(*it) == (*flower)) {
 			CraftView::actorList.erase(it);
-			std::shared_ptr<ActorComponent> ac = (*it)->components[CraftableComponent::id];
-
+			return true;
 		}
 	}
-	
-	++visits;
-	if (visits == 2) visits = 0;
 
 	return false;
 }
