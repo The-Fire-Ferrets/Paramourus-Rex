@@ -5,7 +5,7 @@
 	  <Dialogue Speaker = "Diana" Text = "Hey Phil! I was just here to visit Homer. He told me you'd gone out again - you've been awfully busy lately! Were you out finding this new flower? It's beautiful! I really need to go and find some water to keep these alive. It's too bad so much of it's dried up around here now!" Background= "" />
 	  <Dialgoue Speaker = "Homer" Text = "Homer hear there LOTS of water out in [water level name]. Homer not go there cause lots of mean dinos, but maybe Phil can look!" Background= "" />
 	  <Dialogue Speaker = "Diana" Text = "That sounds like it could be kind of dangerous... Have you ever beeen swimming before, Phil?" Background= "" />
-	  <Dialogue Speaker = "Phil" Text = "&#10;1) It can't be so hard, right? &#10;2) Uhm, aren't our arms a little short for that...?" Background ="" />
+	  <Dialogue Speaker = "Phil" Text = "\n 1) It can't be so hard, right? \n 2) Uhm, aren't our arms a little short for that...?" Background ="" />
 	  <Dialogue Speaker = "Diana" Text = "If you say so... I'd still be careful." Background="" />
 	  <Dialogue Speaker = "Diana" Text = "Haha, you have a good point. Be careful, then!" Background="" />
 	</Correct>
@@ -14,7 +14,7 @@
 	  <Dialogue Speaker = "Diana" Text = "Oh, hey Phil. I was just here to visit Homer. He told me you'd gone out again - you've been awfully busy lately! Were you out finding this new flower? Thanks... I'll put it with the other one you got me. I should go and find some water to keep these alive. It's too bad so much of it's dried up around here now!" Background= "" />
 	  <Dialgoue Speaker = "Homer" Text = "Homer hear there LOTS of water out in [water level name]. Homer not go there cause lots of mean dinos, but maybe Phil can look!" Background= "" />
 	  <Dialogue Speaker = "Diana" Text = "That sounds like it could be kind of dangerous... Have you ever beeen swimming before, Phil?" Background= "" />
-	  <Dialogue Speaker = "Phil" Text = "&#10;1) It can't be so hard, right? &#10;2) Uhm, aren't our arms a little short for that...?" Background ="" />
+	  <Dialogue Speaker = "Phil" Text = "\n 1) It can't be so hard, right? \n 2) Uhm, aren't our arms a little short for that...?" Background ="" />
 	  <Dialogue Speaker = "Diana" Text = "If you say so... I'd still be careful." Background="" />
 	  <Dialogue Speaker = "Diana" Text = "Haha, you have a good point. Be careful, then!" Background="" />
 	</Incorrect>
