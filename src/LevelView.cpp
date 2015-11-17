@@ -331,7 +331,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		}
 		else
 			view_state = 1;
-		std::cout << "Pathfinder Path Generation Success!" << std::endl;
+		//std::cout << "Pathfinder Path Generation Success!" << std::endl;
 	}
 
 	//If still rendering paths return

@@ -3,7 +3,7 @@
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<InputComponent>
-			<Control Type = "Keyboard" Speed = "50"/>
+			<Control Type = "Keyboard" Speed = "4"/>
 		</InputComponent>
 	</Player>
 </LevelPlayer>

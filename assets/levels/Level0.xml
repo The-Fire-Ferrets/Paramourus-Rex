@@ -33,7 +33,7 @@
 			<NPC Generate = "2">
 				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 				<InputComponent>
-					<Control Type = "Keyboard" Speed = "3.5"/>
+					<Control Type = "Artificial" Speed = "3.5"/>
 				</InputComponent>
 				<PhysicsComponent>
 					<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>

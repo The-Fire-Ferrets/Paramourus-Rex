@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level1 Name = "Impact Desert" Background = "Level1.png" MinimapBackground = "minimapbg.png" Edge = "Lava.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "1500000">
+<Level1 Name = "Impact Desert" Background = "Level1.png" MinimapBackground = "minimapbg.png" Edge = "Lava.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "45000">
 
 	<!-- ObsA1-5-->
 	<Obstacle Type = "Wall"  Sprite = "Lava.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 50 50 100 50 50 350 100 350">		

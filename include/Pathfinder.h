@@ -94,6 +94,15 @@ class Pathfinder {
 		};
 		
 	private:
+		static const int size = 50;
+		static int target_num;
+		static int start_num;
+		static std::pair<GridLocation, std::pair<GridLocation, int>>* targets;
+		static std::pair<GridLocation, std::pair<GridLocation, int>>* start_positions;
+		//static std::vector<std::pair<GridLocation, std::pair<GridLocation, int>>> targets;
+		//static std::vector<std::pair<GridLocation, std::pair<GridLocation, int>>> start_positions;
+		
+		static std::map<GridLocation*, GridLocation> initial_positions;
 		static std::map<GridLocation*, Grid> target_grids;
 		static Grid grid;
 		static int rows;
@@ -101,12 +110,9 @@ class Pathfinder {
 		static int level_height;
 		static int level_width;
 		static int player_size;
-		static std::vector<std::pair<GridLocation, std::pair<GridLocation, int>>> targets;
 		static std::map<GridLocation*, bool> target_taken;
 		static std::map<GridLocation*, int> target_values;
 		static std::map<GridLocation*, int> start_targets;
-		static std::vector<std::pair<GridLocation, std::pair<GridLocation, int>>> start_positions;
-		static std::map<GridLocation*, GridLocation> initial_positions;
 		static void updateVertex(std::vector<pathNode*>* open, std::vector<pathNode*>* closed, pathNode* p_node, pathNode* c_node, Grid* target_grid);
 		static void getFullCost(pathNode* p_node, pathNode* c_node, Grid* target_grid);
 		static void removeFrom(std::vector<pathNode*>* l, pathNode* n);
@@ -138,7 +144,8 @@ class Pathfinder {
 		static int addToCost(sf::Vector2f pos, sf::Vector2f dir, int incr, Grid* target_grid);
 		static GridLocation getPositionMapping(sf::Vector2f pos, bool non_wall = false); 
 		static float getDistance(sf::Vector2f pos,  sf::Vector2f pos2);
-		static void generatePaths(void);
+		static void generatePathsFromStart(void);
+		static void generatePathsToTarget(void);
 		static bool isValidMove(GridLocation loc, Grid* target_grid);
 		static bool isValidPlacement(GridLocation loc, Grid* target_grid);
 		static bool getNextPosition(float dist, sf::Vector2f init_pos, sf::Vector2f start_pos, sf::Vector2f curr_pos, sf::Vector2f* next_pos, sf::Vector2f* direction);
