@@ -104,18 +104,10 @@
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<InputComponent>
-			<!-- <Control Type = "Artificial" Speed = "50"/> -->
-			<Control Speed = "8"/>
+			<Control Type = "Artificial" Speed = "4"/> 
 		</InputComponent>
 		<Pathfinder PathType = "-3"  TargetType = "-2"/>
 	</Player>
-	<NPC Generate = "2">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<PhysicsComponent>
-			<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-3" TargetType = "-2"/>
-	</NPC>
 	<EarthFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>

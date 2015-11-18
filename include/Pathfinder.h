@@ -28,35 +28,35 @@ class Pathfinder {
 				std::vector<pathNode*> n;
 				GridLocation next_loc;
 				next_loc = GridLocation(pos.first + 1, pos.second);
-				if (isValidMove(next_loc, target_grid))
+				if (isValidMove(next_loc, target_grid, pos))
 					n.push_back(new pathNode(next_loc, cost + 1));
 
 				next_loc = GridLocation(pos.first - 1, pos.second);
-				if (isValidMove(next_loc, target_grid))
+				if (isValidMove(next_loc, target_grid, pos))
 					n.push_back(new pathNode(next_loc, cost + 1));
 
 				next_loc = GridLocation(pos.first, pos.second + 1);
-				if (isValidMove(next_loc, target_grid))
+				if (isValidMove(next_loc, target_grid, pos))
 					n.push_back(new pathNode(next_loc, cost + 1));
 
 				next_loc = GridLocation(pos.first, pos.second - 1);
-				if (isValidMove(next_loc, target_grid))
+				if (isValidMove(next_loc, target_grid, pos))
 					n.push_back(new pathNode(next_loc, cost + 1));
 
 				next_loc = GridLocation(pos.first + 1, pos.second + 1);
-				if (isValidMove(next_loc, target_grid))
+				if (isValidMove(next_loc, target_grid, pos))
 					n.push_back(new pathNode(next_loc, cost + 1));
 
 				next_loc = GridLocation(pos.first - 1, pos.second + 1);
-				if (isValidMove(next_loc, target_grid))
+				if (isValidMove(next_loc, target_grid, pos))
 					n.push_back(new pathNode(next_loc, cost + 1));
 
 				next_loc = GridLocation(pos.first - 1, pos.second - 1);
-				if (isValidMove(next_loc, target_grid))
+				if (isValidMove(next_loc, target_grid, pos))
 					n.push_back(new pathNode(next_loc, cost + 1));
 
 				next_loc = GridLocation(pos.first + 1, pos.second - 1);
-				if (isValidMove(next_loc, target_grid))
+				if (isValidMove(next_loc, target_grid, pos))
 					n.push_back(new pathNode(next_loc, cost + 1));
 				return n;
 			}
@@ -145,7 +145,7 @@ class Pathfinder {
 		static float getDistance(sf::Vector2f pos,  sf::Vector2f pos2);
 		static void generatePathsFromStart(void);
 		static void generatePathsToTarget(void);
-		static bool isValidMove(GridLocation loc, Grid* target_grid);
+		static bool isValidMove(GridLocation loc, Grid* target_grid, GridLocation prev = GridLocation(-1, -1));
 		static bool isValidPlacement(GridLocation loc, Grid* target_grid);
 		static bool getNextPosition(float dist, sf::Vector2f init_pos, sf::Vector2f start_pos, sf::Vector2f curr_pos, sf::Vector2f* next_pos, sf::Vector2f* direction);
 		static void removeFromPaths(sf::Vector2f pos);

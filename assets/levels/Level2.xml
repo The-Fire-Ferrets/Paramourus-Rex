@@ -61,7 +61,7 @@
 		</InputComponent>
 		<Pathfinder PathType = "-4"/>
 	</Player>
-	<NPC Generate = "2">
+	<NPC Generate = "10">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
 		<InputComponent>

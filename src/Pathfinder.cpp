@@ -272,16 +272,16 @@ bool Pathfinder::lineOfSight(pathNode* p_node, pathNode* c_node, Grid* target_gr
 		while (p_row != c_row) {
 			f += d_col;
 			if (f >= d_row) {
-				if (!isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid)) {
+				if (!isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid, GridLocation(p_row, p_col))) {
 					return false;
 				}
 				p_col += s_col;
 				f -= d_row;
 			}
-			if (f != 0 && !isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid)) {
+			if (f != 0 && !isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid, GridLocation(p_row, p_col))) {
 				return false;
 			}
-			if (d_col == 0 && !isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col), target_grid) && !isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col - 1), target_grid)) {
+			if (d_col == 0 && !isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col), target_grid, GridLocation(p_row, p_col)) && !isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col - 1), target_grid, GridLocation(p_row, p_col))) {
 				return false;
 			}
 			p_row += s_row;
@@ -291,16 +291,16 @@ bool Pathfinder::lineOfSight(pathNode* p_node, pathNode* c_node, Grid* target_gr
 		while (p_col != c_col) {
 			f += d_row;
 			if (f >= d_col) {
-				if (!isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid)) {
+				if (!isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid, GridLocation(p_row, p_col))) {
 					return false;
 				}
 				p_row += s_row;
 				f -= d_col;
 			}
-			if (f != 0 && !isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid)) {
+			if (f != 0 && !isValidMove(GridLocation(p_row + ((s_row - 1)/2), p_col + ((s_col - 1)/2)), target_grid, GridLocation(p_row, p_col))) {
 				return false;
 			}
-			if (d_row == 0 && !isValidMove(GridLocation(p_row, p_col + ((s_col - 1)/2)), target_grid) && !isValidMove(GridLocation(p_row - 1, p_col + ((s_col - 1)/2)), target_grid)) {
+			if (d_row == 0 && !isValidMove(GridLocation(p_row, p_col + ((s_col - 1)/2)), target_grid, GridLocation(p_row, p_col)) && !isValidMove(GridLocation(p_row - 1, p_col + ((s_col - 1)/2)), target_grid, GridLocation(p_row, p_col))) {
 				return false;
 			}
 			p_col += s_col;
@@ -558,7 +558,8 @@ void Pathfinder::changeVision(sf::Vector2f init_pos) {
  **
 **/
 bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2f start_pos, sf::Vector2f curr_pos, sf::Vector2f* next_pos, sf::Vector2f* direction) {
-	//Gets mapping for variables	
+	//Gets mapping for variables
+	//std::cout << "HERE" << std::endl;	
 	sf::Vector2f pos_next = curr_pos;
 	bool start_changed = false;
 	sf::Vector2f dir(0,0);
@@ -623,7 +624,7 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 		dir.y = 1;
 	else if (path_pos.y - curr_pos.y < 0)
 		dir.y = -1;
-
+	//std::cout << "HERE2" << std::endl;	
 	//Checks to see if conflict with wall
 	GridLocation pos_check = getPositionMapping(pos_next);
 	int fix = 0;
@@ -631,7 +632,7 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 		path->pop_back();
 		return start_changed;
 	}	
-
+	//std::cout << "HERE3" << std::endl;	
 	if (p > .99)
 		path->pop_back();
 
@@ -658,8 +659,22 @@ void Pathfinder::removeFrom(std::vector<pathNode*>* l, pathNode* n) {
 /** Returns if the position is valid
  **
 **/
-bool Pathfinder::isValidMove(GridLocation loc, Grid* target_grid) {
-	return (loc.first < rows) && (loc.second < cols) && (loc.first >= 0) && (loc.second >= 0) && ((*target_grid)[loc.first][loc.second] != -1);
+bool Pathfinder::isValidMove(GridLocation loc, Grid* target_grid, GridLocation prev) {
+	if (!((loc.first < rows) && (loc.second < cols) && (loc.first >= 0) && (loc.second >= 0))) 
+		return false;
+
+	if (prev == GridLocation(-1,-1))
+		return ((*target_grid)[loc.first][loc.second] != -1);
+	else {
+		GridLocation dir;
+		dir.first = loc.first - prev.first;
+		dir.second = loc.second - prev.second;
+		if  ((*target_grid)[loc.first][loc.second] == -1)
+			return false;
+		else if (dir.first != 0 && dir.second != 0 && ((*target_grid)[prev.first + dir.first][prev.second] == -1 || (*target_grid)[prev.first][prev.second + dir.second] == -1)) 
+			return false;
+	}
+	return true;
 }
 
 /** Generates costs on the grid

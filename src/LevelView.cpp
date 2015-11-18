@@ -73,7 +73,7 @@ float LevelView::timer_time;
 //Level timeout graphics
 sf::Texture LevelView::timeout_texture;
 sf::Sprite LevelView::timeout_sprite;
-
+int LevelView::last_action;
 int* LevelView::game_state;
 // pause screen medium map
 bool LevelView::pause_key_pressed = false;
@@ -485,8 +485,7 @@ void LevelView::update(EventInterfacePtr e) {
 	//In tutotial, update hints to display based on if event is acheived
 	if (e == NULL)
 		return;
-
-	if (view_state == 2) {
+	if (view_state == 2 && last_action != -1) {
 		EventType event_type = e->getEventType();
 		if (e->getSender() == player->getInstance() && event_type == ContactEvent::event_type) {
 			StrongActorPtr display_actor = getActor(e->getSender());
@@ -503,6 +502,7 @@ void LevelView::update(EventInterfacePtr e) {
 			if (commentary_strings.find(std::pair<ActorId, ActorId>(display_id, contact_id)) != commentary_strings.end() && commentary_occurance[std::pair<ActorId, ActorId>(display_id, contact_id)] > 0) {
 				commentary_occurance[std::pair<ActorId, ActorId>(display_id, contact_id)]--;
 				int action = commentary_actions[std::pair<ActorId, ActorId>(display_id, contact_id)];
+				last_action = action;
 				if (action >= 0) {
 					pugi::xml_node temp = actions[action];
 					generateActor(&(temp), game_state);

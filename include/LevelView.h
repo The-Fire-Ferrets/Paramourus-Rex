@@ -53,6 +53,7 @@ class LevelView  {
 		static float timer_time;
 		static bool pause_key_pressed;
 		static int* game_state;
+		static int last_action;
 
 	public:
 		static void generateActor(pugi::xml_node* elem, int* state, int generate = 1);
