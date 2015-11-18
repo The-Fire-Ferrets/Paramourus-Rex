@@ -125,7 +125,6 @@ class Pathfinder {
 		static void setVertex(std::vector<pathNode*>* closed, pathNode* p_node, Grid* target_grid);
 		static GridLocation* findTarget(GridLocation pos);
 		static GridLocation* findStart(GridLocation init, GridLocation pos);
-		static GridLocation* findNewTarget(GridLocation pos);
 		static bool isValidTarget(GridLocation* ptr);
 		static bool selectNewPath(GridLocation init_pair, GridLocation* start_pt, GridLocation curr_pair);
 		static bool positionsEqual(GridLocation* pos1, GridLocation* pos2);

@@ -88,7 +88,7 @@ void CollectableComponent::update(EventInterfacePtr e) {
     if (event_type == CollectEvent::event_type && owner->getVisible()) {     
 	owner->setVisible(false);
         collector = other_actor;
-	Pathfinder::removeFromPaths(owner->getPosition());
+	Pathfinder::removeFromPaths(owner->getInitialPosition());
         owner->setPosition(sf::Vector2f(-1000, 0));
 	LevelView::flowers_left--;
 	if (!EventManagerInterface::get()->queueEvent(new CollectEvent(e->getTimeStamp(), owner->getInstance(), other_actor->getInstance())))
