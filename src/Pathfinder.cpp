@@ -386,7 +386,7 @@ void Pathfinder::updateTargetGrid(sf::Vector2f start_pos, sf::Vector2f curr_pos)
 	GridLocation* ptr = findTarget(start_pair);
 	inProcessTargets[ptr] = true;
 	generateHCost(ptr, curr_pair);
-
+	
 	for (auto itr = pathUpdates.begin(); itr != pathUpdates.end(); itr++) {
 		if ((itr->first).second == ptr) {
 			itr->second = true;
@@ -427,7 +427,11 @@ void Pathfinder::generatePath(GridLocation init, GridLocation start, GridLocatio
 	}
 
 	GridLocation* target_ptr = findTarget(target);
-		
+	
+	if (target_ptr == NULL) {
+		return;
+	}
+
 	inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, target_ptr)] = true;
 	Grid* target_grid = &(target_grids[target_ptr]);
 	GridLocation pos_pair = new_start;
@@ -480,6 +484,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 	//Select a flower if appropriate
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
 		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] == target_values[itr->first.second] && !itr->second.empty() && target_values[itr->first.second] == -2 && !target_taken[itr->first.second] &&!inVision[start_ptr]) { 
+			//std::cout << "Branch1" << std::endl;			
 			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 				return false;
 			target_taken[itr->first.second] = true;
@@ -498,6 +503,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 	//Select a fake target if appropriate
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
 		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] == target_values[itr->first.second] && target_values[itr->first.second] <= -5 && *itr->first.second != curr_pair  &&!inVision[start_ptr]) {
+			//std::cout << "Branch2" << std::endl;			
 			for(auto itr_tvals = target_values.begin(); itr_tvals != target_values.end(); itr_tvals++) {
 				if (itr_tvals->second == start_targets[start_ptr] && inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, itr_tvals->first)]) {				
 					return false;
@@ -515,9 +521,10 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 	
 	//Select then player if appropriate
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
-		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && target_values[itr->first.second] == -4 && *itr->first.second != curr_pair) {
+		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && target_values[itr->first.second] == -4 && *itr->first.second != curr_pair) {			
 			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 				return false;
+			//std::cout << "Branch3 " << allPaths.size() << std::endl;
 			*start_ptr = curr_pair;
 			itr->second.clear();
 			itr->second.push_back(sf::Vector2f(curr_pair.second * player_size, curr_pair.first * player_size));
@@ -546,9 +553,11 @@ void Pathfinder::changeVision(sf::Vector2f init_pos) {
 	GridLocation init_pair = getPositionMapping(init_pos);
 	for ( auto itr = initial_positions.begin(); itr != initial_positions.end(); itr++) {
 		if (init_pair == itr->second) {
-			target_taken[paths[itr->first].first] = false;
-			inVision[itr->first] = !inVision[itr->first];
-			paths[itr->first].second->clear();
+			if (paths[itr->first].first != NULL) {
+				target_taken[paths[itr->first].first] = false;
+				inVision[itr->first] = !inVision[itr->first];
+				paths[itr->first].second->clear();
+			}
 			break;
 		}
 	}
@@ -627,7 +636,7 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 		dir.y = 1;
 	else if (path_pos.y - curr_pos.y < 0)
 		dir.y = -1;
-	//std::cout << "HERE2" << std::endl;	
+
 	//Checks to see if conflict with wall
 	GridLocation pos_check = getPositionMapping(pos_next);
 	int fix = 0;
@@ -636,11 +645,13 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 		*next_pos = curr_pos;
 		*direction = dir;
 		return start_changed;
-	}	
+	}
 	//std::cout << "HERE3" << std::endl;	
+	
 	if (p > .99)
 		path->pop_back();
-
+	
+	//std::cout << "HERE2 " << "Position: " << pos_next.x << " " << pos_next.y << " Direction: " << dir.x << " " << dir.y << std::endl;	
 	*next_pos = pos_next;
 	*direction = dir;
 	return start_changed;

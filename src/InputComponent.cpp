@@ -116,7 +116,8 @@ void InputComponent::update(float time) {
 		next_pos = owner->getPosition();
 		curr_pos = owner->getPosition();
 
-		bool start_changed = Pathfinder::getNextPosition(distance, owner->getInitialPosition(), owner->getStartPosition(), curr_pos, &next_pos, &next_direction);
+		bool start_changed = false;
+		start_changed = Pathfinder::getNextPosition(distance, owner->getInitialPosition(), owner->getStartPosition(), curr_pos, &next_pos, &next_direction);
 
 		//Changes the palyers start path position if its recalculated a path
 		if (start_changed)
