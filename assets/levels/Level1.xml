@@ -116,6 +116,13 @@
 		</PhysicsComponent>
 		<Pathfinder PathType = "-3" TargetType = "-5"/>
 	</NPC>
+	<Obstacle Generate = "6" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-5"/>
+	</Obstacle>
 	<EarthFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>

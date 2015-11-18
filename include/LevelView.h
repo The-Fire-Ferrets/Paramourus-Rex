@@ -43,7 +43,7 @@ class LevelView  {
 		static std::string fitStringToCommentaryBox(std::string str);
 		static EventDelegate delegate;
 		static bool commentary_change;
-		static std::vector<pugi::xml_node> actions;
+		static std::vector<std::vector<pugi::xml_node>> actions;
 		static pugi::xml_document doc;
 		static sf::Sprite back_button;
 		static sf::Texture title_texture;

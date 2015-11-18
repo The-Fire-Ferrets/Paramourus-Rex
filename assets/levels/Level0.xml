@@ -36,6 +36,13 @@
 					<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
 				</PhysicsComponent>
 			</NPC>
+			<Obstacle Generate = "20" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
+				<PhysicsComponent>
+					<Properties Type = "Transparent"/>
+				</PhysicsComponent>
+				<Pathfinder PathType = "-5"/>
+			</Obstacle>
 		</Spawn4>
 	</Action>
 	<Commentary>
