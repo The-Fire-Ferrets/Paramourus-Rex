@@ -142,7 +142,7 @@ void Pathfinder::generatePathsToTarget() {
 		GridLocation pos_pair = start_positions[start_idx].first;
 		GridLocation* pos_ptr = &(start_positions[start_idx].first);
 		
-		if (start_targets[pos_ptr] == target_values[target_ptr] || target_values[target_ptr] == -4) {
+		if (start_targets[pos_ptr] == target_values[target_ptr] || target_values[target_ptr] == -4 || target_values[target_ptr] == -5) {
 			inProcessPaths.insert(std::pair<std::pair<GridLocation*,GridLocation*>, bool>(std::pair<GridLocation*,GridLocation*>(pos_ptr, target_ptr), false));
 			pathUpdates.insert(std::pair<std::pair<GridLocation*, GridLocation*>, bool>(std::pair<GridLocation*, GridLocation*>(pos_ptr, target_ptr), false));
 			PathList temp;
@@ -167,7 +167,7 @@ void Pathfinder::generatePathsFromStart() {
 		GridLocation pos_pair = start_positions[start_num].first;
 		GridLocation* pos_ptr = &(start_positions[start_num].first);
 		
-		if (start_targets[pos_ptr] == target_values[target_ptr] || target_values[target_ptr] == -4) {
+		if (start_targets[pos_ptr] == target_values[target_ptr] || target_values[target_ptr] == -4 || target_values[target_ptr] == -5) {
 			inProcessPaths.insert(std::pair<std::pair<GridLocation*,GridLocation*>, bool>(std::pair<GridLocation*,GridLocation*>(pos_ptr, target_ptr), false));
 			pathUpdates.insert(std::pair<std::pair<GridLocation*, GridLocation*>, bool>(std::pair<GridLocation*, GridLocation*>(pos_ptr, target_ptr), false));
 			PathList temp;
@@ -422,6 +422,7 @@ void Pathfinder::generatePath(GridLocation init, GridLocation start, GridLocatio
 	std::vector<Pathfinder::pathNode*> open;
 	std::vector<Pathfinder::pathNode*> closed;
 	GridLocation* start_ptr = findStart(init, start);
+	//std::cout << "Path 1" << std::endl;	
 	if (start_ptr == NULL) {
 		return;
 	}
@@ -431,12 +432,20 @@ void Pathfinder::generatePath(GridLocation init, GridLocation start, GridLocatio
 	if (target_ptr == NULL) {
 		return;
 	}
+	//std::cout << "Path 2" << std::endl;	
+	Grid* target_grid = &(target_grids[target_ptr]);
+	
+	if (*target_grid == NULL) {
+		return;
+	}
 
 	inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, target_ptr)] = true;
-	Grid* target_grid = &(target_grids[target_ptr]);
+
 	GridLocation pos_pair = new_start;
+	//std::cout << "Path 3" << std::endl;
 	pathNode* root = new pathNode(pos_pair, 0 + getCost(pos_pair, target_grid)); 
 	bool path_found = false;
+	//std::cout << "Path 4" << std::endl;
 	open.push_back(root);
 	while (!open.empty()) {
 		pathNode* s = open.front();
@@ -476,20 +485,21 @@ void Pathfinder::generatePath(GridLocation init, GridLocation start, GridLocatio
 //Selects a new path depending on targets on grid and objects path type and target type
 bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, GridLocation curr_pair) {
 	//If path is already in process, return	
+	///std::cout << "New path 1" << std::endl;	
 	if (paths[start_ptr].second != NULL && paths[start_ptr].first != NULL) {
 		if (inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, paths[start_ptr].first)])
 				return false;	
 	}
-
+	//std::cout << "New path 2" << std::endl;	
 	//Select a flower if appropriate
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
-		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] == target_values[itr->first.second] && !itr->second.empty() && target_values[itr->first.second] == -2 && !target_taken[itr->first.second] &&!inVision[start_ptr]) { 
-			//std::cout << "Branch1" << std::endl;			
+		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] == target_values[itr->first.second] && !itr->second.empty() && target_values[itr->first.second] == -2 && !target_taken[itr->first.second] &&!inVision[start_ptr]) { 		
 			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 				return false;
 			target_taken[itr->first.second] = true;
 			if (paths[start_ptr].first != NULL)
 				target_taken[paths[start_ptr].first] = false;
+			//std::cout << "Branch1" << std::endl;	
 			*start_ptr = curr_pair;
 			itr->second.clear();
 			itr->second.push_back(sf::Vector2f(curr_pair.second * player_size, curr_pair.first * player_size));
@@ -502,19 +512,23 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 	
 	//Select a fake target if appropriate
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
-		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] == target_values[itr->first.second] && target_values[itr->first.second] <= -5 && *itr->first.second != curr_pair  &&!inVision[start_ptr]) {
-			//std::cout << "Branch2" << std::endl;			
-			for(auto itr_tvals = target_values.begin(); itr_tvals != target_values.end(); itr_tvals++) {
-				if (itr_tvals->second == start_targets[start_ptr] && inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, itr_tvals->first)]) {				
-					return false;
-				}
-			}
+		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && (start_targets[start_ptr] == target_values[itr->first.second] || target_values[itr->first.second] == -5)  && target_values[itr->first.second] <= -5 && *itr->first.second != curr_pair && !target_taken[itr->first.second]  &&!inVision[start_ptr]) {
+			//std::cout << "Branch2 1" << std::endl;		
+			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
+				return false;
+			target_taken[itr->first.second] = true;
+			if (paths[start_ptr].first != NULL)
+				target_taken[paths[start_ptr].first] = false;
+			//std::cout << "Branch2 2" << std::endl;
 			*start_ptr = curr_pair;
 			itr->second.clear();
+			//std::cout << "Branch2 3" << std::endl;
 			itr->second.push_back(sf::Vector2f(curr_pair.second * player_size, curr_pair.first * player_size));
 			paths[start_ptr].first = itr->first.second;
 			paths[start_ptr].second = &(itr->second);
+			//std::cout << "Branch2 4" << std::endl;
 			std::thread(&Pathfinder::generatePath, init_pair, *start_ptr, *(itr->first.second), curr_pair, true).detach();
+			//std::cout << "Branch2 5" << std::endl;
 			return true;
 		}
 	}

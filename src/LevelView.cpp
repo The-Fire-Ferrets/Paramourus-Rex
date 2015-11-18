@@ -55,7 +55,7 @@ std::map<std::pair<ActorId, ActorId>, int> LevelView::commentary_actions;
 std::map<std::pair<ActorId, ActorId>, int> LevelView::commentary_occurance;
 std::map<int, sf::Clock> LevelView::commentary_timer;
 bool LevelView::commentary_change = true;
-std::vector<pugi::xml_node> LevelView::actions;
+std::vector<std::vector<pugi::xml_node>> LevelView::actions;
 pugi::xml_document LevelView::doc;
 //Back Button
 sf::Sprite LevelView::back_button;
@@ -198,7 +198,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			for (pugi::xml_node tool1 = tool.first_child(); tool1; tool1 = tool1.next_sibling()) {
 				ActorId display;
 				ActorId contact;
-				int actions;
+				int actions_val;
 				int occurance;
 				for (pugi::xml_attribute attr = tool1.first_attribute(); attr; attr = attr.next_attribute()) {
 					if (!strcmp(attr.name(), "Actor")) {
@@ -208,7 +208,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 						contact = attr.value();
 					}
 					else if (!strcmp(attr.name(), "Action")) {
-						actions = (std::strtol(attr.value(), &temp, 10));
+						actions_val = (std::strtol(attr.value(), &temp, 10));
 						if (*temp != '\0') {
 							std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
 						}
@@ -221,7 +221,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 					}
 				}
 				commentary_strings.insert(std::pair<std::pair<ActorId, ActorId>, std::vector<std::string>>(std::pair<ActorId, ActorId>(display, contact), std::vector<std::string>()));
-				commentary_actions.insert(std::pair<std::pair<ActorId, ActorId>, int>(std::pair<ActorId, ActorId>(display, contact), actions));	
+				commentary_actions.insert(std::pair<std::pair<ActorId, ActorId>, int>(std::pair<ActorId, ActorId>(display, contact), actions_val));	
 				commentary_occurance.insert(std::pair<std::pair<ActorId, ActorId>, int>(std::pair<ActorId, ActorId>(display, contact), occurance));				
 				for (pugi::xml_node tool2 = tool1.first_child(); tool2; tool2 = tool2.next_sibling()) {
 					for (pugi::xml_attribute attr = tool2.first_attribute(); attr; attr = attr.next_attribute()) {
@@ -232,9 +232,11 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 		}
 		else if (!strcmp(tool.name(), "Action")) {		
 			for (pugi::xml_node tool1 = tool.first_child(); tool1; tool1 = tool1.next_sibling()) {
+				//std::cout << tool1.name() << std::endl;
+				actions.push_back(std::vector<pugi::xml_node>());
 				for (pugi::xml_node tool2 = tool1.first_child(); tool2; tool2 = tool2.next_sibling()) {
 					pugi::xml_node temp = tool2;
-					actions.push_back(temp);
+					actions.back().push_back(temp);
 				}
 			}
 		}
@@ -511,8 +513,10 @@ void LevelView::update(EventInterfacePtr e) {
 				int action = commentary_actions[std::pair<ActorId, ActorId>(display_id, contact_id)];
 				last_action = action;
 				if (action >= 0) {
-					pugi::xml_node temp = actions[action];
-					generateActor(&(temp), game_state);
+					for (auto action_itr = actions[action].begin(); action_itr != actions[action].end(); action_itr++) {
+						pugi::xml_node temp = *action_itr;
+						generateActor(&(temp), game_state);
+					}
 				}
 				else if (action == -1) {
 					reveal_back_button = true;

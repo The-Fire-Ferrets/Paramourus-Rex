@@ -86,7 +86,7 @@ void CraftableComponent::update(float time) {
  **
  **/
 void CraftableComponent::update(EventInterfacePtr e) {
-	std::cout << "got event" << std::endl;
+	//std::cout << "got event" << std::endl;
     EventType event_type = e->getEventType();
     StrongActorPtr sender = CraftView::getFlower(e->getSender());
 	StrongActorPtr receiver = CraftView::getFlower(e->getReceiver());
@@ -94,7 +94,7 @@ void CraftableComponent::update(EventInterfacePtr e) {
 
 	// item crafted
     if (event_type == CraftEvent::event_type && this->owner == receiver) {
-		std::cout << "craft prep" << std::endl;
+		//std::cout << "craft prep" << std::endl;
 		// get a pointer to the sender's colletable component
 		std::shared_ptr<ActorComponent> sender_ac, receiver_ac;
 		std::shared_ptr<CraftableComponent> sender_cc, receiver_cc;
@@ -105,16 +105,16 @@ void CraftableComponent::update(EventInterfacePtr e) {
 		receiver_cc = std::dynamic_pointer_cast<CraftableComponent>(receiver_ac);
 
 		if (receiver_cc->doesCombineWith(*sender_cc)) {
-			std::cout << 1 << std::endl;
+			//std::cout << 1 << std::endl;
 			// do craft
 			receiver_cc->combineWith(*sender_cc);
-			std::cout << "finish combine" << std::endl;
+			//std::cout << "finish combine" << std::endl;
 
 			// sender no longer exists
 			CraftView::removeFlower(sender);
 			sender.reset();
 
-			std::cout << "queue event" << std::endl;
+			//std::cout << "queue event" << std::endl;
 			// let the CraftView the event is finished
 			if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0.f, receiver->getInstance(), -1))) {
 				std::cout << "CraftableComponent::update: unable to send response to CraftView" << std::endl;
