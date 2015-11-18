@@ -410,7 +410,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 				(*it)->update(time);
 				sf::Vector2f start_pos = (*it)->getStartPosition();
 				sf::Vector2f new_pos = (*it)->getPosition();
-				if ((start_pos != new_pos) && (*it)->getVisible() && Pathfinder::canUpdateTargetGrid(start_pos) && view_state != 2) {
+				if ((start_pos != new_pos) && (*it)->getVisible() && Pathfinder::canUpdateTargetGrid(start_pos)) {
 					std::thread(&Pathfinder::updateTargetGrid, start_pos, new_pos).detach();
 					(*it)->setStartPosition(new_pos);
 				}

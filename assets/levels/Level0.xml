@@ -30,7 +30,8 @@
 		</Commentary3>
 		<Commentary4>
 			<Dialogue Text = "Oh, looks like you have some competition. Dont let them touch you or they may steal your vases and/or flowers. Touch one to see." />
-			<NPC Generate = "2">
+			<NPC Generate = "6">
+				<Pathfinder PathType = "-3" TargetType = "-2"/>
 				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 				<InputComponent>
 					<Control Type = "Artificial" Speed = "3.5"/>
@@ -38,7 +39,6 @@
 				<PhysicsComponent>
 					<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
 				</PhysicsComponent>
-				<Pathfinder PathType = "-3" TargetType = "-2"/>
 			</NPC>
 		</Commentary4>
 		<Commentary5>
