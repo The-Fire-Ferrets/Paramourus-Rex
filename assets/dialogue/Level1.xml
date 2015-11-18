@@ -5,7 +5,7 @@
 		<Dialogue Speaker = "Diana" Text = "Oh, hey Phil! Homer stopped by earlier and told me that you're the one that found this Sunflower... I don't know how in the world you found it, but it's incredible! It made me feel all bright and cheerful again. If there weren't so much dust around I'd go find a good sunning rock. I hate all this dust and ash - it was so much nicer when the air was all crisp and clean, huh? I love sunning on a cold day." Background = ""/>
 		<Dialogue Speaker = "Narrator" Text="Unfortunately, Diana wasn't the only dinosaur that noticed all of the effort you were putting into winning her over. The other Tyrannosaurus Rex in the neighborhood thought you had a pretty good idea about all of this flower business, and the next time you went out to look for flowers, you found that you had some company." Background = ""/>
 		<Dialogue Speaker = "Diana" Text="What do you miss most from the Valley, Phil?" Background = "" />
-		<Dialogue Speaker = "Phil" Text ="\n 1) Getting some fresh air and adventuring. \n 2) Relaxing in my cave for some Netflix & Chill." Background="" />
+		<Dialogue Speaker = "Phil" Text ="&#10; 1) Getting some fresh air and adventuring. &#10; 2) Relaxing in my cave for some Netflix & Chill." Background="" />
 		<Dialogue Speaker = "Diana" Text ="Me too! I wish I had a chance to have done some more adventuring!" Background="" />
 		<Dialogue Speaker = "Diana" Text ="That sounds like, uh... fun?" Background= "" />
 	</Correct>
@@ -14,7 +14,7 @@
 		<Dialogue Speaker = "Diana" Text = "Oh, hey there Phil. Homer stopped by earlier. He said you wanted to show me that flower you found or something? I don't know how you found something growing with all this dust and ash in the air. It was so much nicer when the air was all crisp and clean, huh? What I wouldn't do to breathe in some fresh air!" Background = ""/>
 		<Dialogue Speaker = "Narrator" Text="Unfortunately, Diana wasn't the only dinosaur that noticed all of the effort you were putting into winning her over. The other Tyrannosaurus Rex in the neighborhood thought you had a pretty good idea about all of this flower business, and the next time you went out to look for flowers, you found that you had some company..." Background = ""/>
 		<Dialogue Speaker = "Diana" Text="What do you miss most from the Valley, Phil?" Background = "" />
-		<Dialogue Speaker = "Phil" Text ="\n 1) Getting some fresh air and adventuring. \n 2) Relaxing in my cave for some Netflix & Chill." Background="" />
+		<Dialogue Speaker = "Phil" Text ="&#10; 1) Getting some fresh air and adventuring. &#10; 2) Relaxing in my cave for some Netflix & Chill." Background="" />
 		<Dialogue Speaker = "Diana" Text ="Me too! I wish I had a chance to have done some more adventuring!" Background="" />
 		<Dialogue Speaker = "Diana" Text ="That sounds like, uh... fun?" Background= "" />
 	</Incorrect>
