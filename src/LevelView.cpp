@@ -48,11 +48,12 @@ int LevelView::view_state = 1;
 sf::SoundBuffer LevelView::buffer;
 sf::Sound LevelView::sound;
 // Level text
-sf::Text LevelView::commentary;
+std::map<int, sf::Text> LevelView::commentary;
 std::map<std::pair<ActorId, ActorId>, sf::Vector2f> LevelView::commentary_positions;
 std::map<std::pair<ActorId, ActorId>, std::vector<std::string>> LevelView::commentary_strings;
 std::map<std::pair<ActorId, ActorId>, int> LevelView::commentary_actions;
 std::map<std::pair<ActorId, ActorId>, int> LevelView::commentary_occurance;
+std::map<int, sf::Clock> LevelView::commentary_timer;
 bool LevelView::commentary_change = true;
 std::vector<pugi::xml_node> LevelView::actions;
 pugi::xml_document LevelView::doc;
@@ -90,8 +91,15 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	//Reset values
 	num_actors = 0;
 	reveal_back_button = false;
+	pause_key_pressed = false;
 	inVision = 0;
 	flashing = 0;
+	commentary_positions.clear();
+	commentary_strings.clear();
+	commentary_actions.clear();
+	commentary_occurance.clear();
+	commentary_timer.clear();
+	commentary.clear();
 	game_state = state;
 	//Error check to see if file was loaded correctly
 	pugi::xml_parse_result result;
@@ -186,8 +194,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 
 	//Iterates over XML to get components to add
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
-		if (!strcmp(tool.name(), "Commentary")) {
-			commentary.setCharacterSize(5);			
+		if (!strcmp(tool.name(), "Commentary")) {		
 			for (pugi::xml_node tool1 = tool.first_child(); tool1; tool1 = tool1.next_sibling()) {
 				ActorId display;
 				ActorId contact;
@@ -239,6 +246,8 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			actorList.push_back(player);
 			player->PostInit(&tool);
 			Pathfinder::addToGrid(player->getBoundary(), player->getPathType(), player->getTargetType());
+			commentary_timer.insert(std::pair<int, sf::Clock>(player->getInstance(), sf::Clock()));
+			commentary.insert(std::pair<int, sf::Text>(player->getInstance(), sf::Text("", font, 5)));
 			num_actors++;
 		}
 		else {
@@ -316,6 +325,8 @@ void LevelView::generateActor(pugi::xml_node* elem, int* state, int generate) {
 		actorList.push_back(new_actor);
 		num_actors++;
 		Pathfinder::addToGrid(new_actor->getBoundary(), new_actor->getPathType(), new_actor->getTargetType());
+		commentary_timer.insert(std::pair<int, sf::Clock>(new_actor->getInstance(), sf::Clock()));
+		commentary.insert(std::pair<int, sf::Text>(new_actor->getInstance(), sf::Text("", font, 5)));
 	}
 }
 
@@ -420,11 +431,6 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	else if (timer_time/1000 >= 0) {
 		//Resets flashing for timeout
 		flashing = 0;
-			
-		//If in tutorial, sets up hints dialogue
-		if (view_state == 2) {
-			commentary.setPosition(Configuration::getGameViewCenter());
-		}
 		
 		//Updates timer display
 		std::ostringstream out;
@@ -436,6 +442,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		//Updates normally for all other objects
 		std::vector<StrongActorPtr>::iterator it;
 		for (it = actorList.begin(); it != actorList.end(); it++) {
+			commentary[(*it)->getInstance()].setPosition((*it)->getPosition() + (*it)->getSize());
 			if ((*it)->getPathType() == -4) {
 				(*it)->update(time);
 				sf::Vector2f start_pos = (*it)->getStartPosition();
@@ -485,9 +492,9 @@ void LevelView::update(EventInterfacePtr e) {
 	//In tutotial, update hints to display based on if event is acheived
 	if (e == NULL)
 		return;
-	if (view_state == 2 && last_action != -1) {
+	if (last_action != -1) {
 		EventType event_type = e->getEventType();
-		if (e->getSender() == player->getInstance() && event_type == ContactEvent::event_type) {
+		if (event_type == ContactEvent::event_type) {
 			StrongActorPtr display_actor = getActor(e->getSender());
 			ActorId display_id = display_actor->getId();
 			StrongActorPtr contact_actor;
@@ -499,7 +506,7 @@ void LevelView::update(EventInterfacePtr e) {
 				contact_actor = getActor(e->getReceiver());
 				contact_id = contact_actor->getId();
 			}
-			if (commentary_strings.find(std::pair<ActorId, ActorId>(display_id, contact_id)) != commentary_strings.end() && commentary_occurance[std::pair<ActorId, ActorId>(display_id, contact_id)] > 0) {
+			if (commentary_strings.find(std::pair<ActorId, ActorId>(display_id, contact_id)) != commentary_strings.end() && commentary_occurance[std::pair<ActorId, ActorId>(display_id, contact_id)] != 0) {
 				commentary_occurance[std::pair<ActorId, ActorId>(display_id, contact_id)]--;
 				int action = commentary_actions[std::pair<ActorId, ActorId>(display_id, contact_id)];
 				last_action = action;
@@ -511,7 +518,8 @@ void LevelView::update(EventInterfacePtr e) {
 					reveal_back_button = true;
 				}
 				int r = rand() % commentary_strings[std::pair<ActorId, ActorId>(display_id, contact_id)].size();
-				commentary = sf::Text(commentary_strings[std::pair<ActorId, ActorId>(display_id, contact_id)][r], font, 5);
+				commentary[e->getSender()] = sf::Text(commentary_strings[std::pair<ActorId, ActorId>(display_id, contact_id)][r], font, 5);
+				commentary_timer[e->getSender()].restart();
 			}	
 		}
 	}
@@ -549,13 +557,15 @@ void LevelView::render(sf::RenderWindow *window) {
 		window->draw(background);
 		window->draw(minimap_border);
 		std::vector<StrongActorPtr>::iterator it;
-		for (it = actorList.begin(); it != actorList.end(); it++)
+		for (it = actorList.begin(); it != actorList.end(); it++) {
 			(*it)->render(window, false);
+			if ((view_state == -2 && commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 10) || (commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 4))
+				window->draw(commentary[(*it)->getInstance()]);
+		}
 		player->render(window, false);
 		window->draw(timer);
-		if (view_state == 2) {
-			window->draw(commentary);
-		}
+		
+
 		if (reveal_back_button) {
 			window->draw(back_button);
 		}
@@ -676,7 +686,7 @@ std::string LevelView::fitStringToCommentaryBox(std::string str) {
 	// text object used to see how close each word puts us to the bounds
 	sf::Text temp;
 	temp.setFont(font);
-	temp.setCharacterSize(commentary.getCharacterSize());
+	temp.setCharacterSize(commentary.begin()->second.getCharacterSize());
 
 	// current string and width
 	std::vector<std::string> boxes;

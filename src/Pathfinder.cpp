@@ -472,7 +472,7 @@ void Pathfinder::generatePath(GridLocation init, GridLocation start, GridLocatio
 //Selects a new path depending on targets on grid and objects path type and target type
 bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, GridLocation curr_pair) {
 	//If path is already in process, return	
-	if (paths[start_ptr].second != NULL) {
+	if (paths[start_ptr].second != NULL && paths[start_ptr].first != NULL) {
 		if (inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, paths[start_ptr].first)])
 				return false;	
 	}
@@ -584,8 +584,11 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 
 	PathList* path = paths[start_ptr].second;
 
-	if (path == NULL)
+	if (path == NULL) {
+		*next_pos = pos_next;
+		*direction = dir;
 		return start_changed;
+	}
 
 	if (path->empty()) {
 		if(!(start_changed = selectNewPath(init_pair, start_ptr, curr_pair))) {
@@ -630,6 +633,8 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 	int fix = 0;
 	if (grid[pos_check.first][pos_check.second] == -1) {
 		path->pop_back();
+		*next_pos = curr_pos;
+		*direction = dir;
 		return start_changed;
 	}	
 	//std::cout << "HERE3" << std::endl;	

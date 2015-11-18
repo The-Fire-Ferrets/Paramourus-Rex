@@ -34,11 +34,12 @@ class LevelView  {
 		static int duration;
 		static sf::SoundBuffer buffer;
 		static sf::Sound sound;
-		static sf::Text commentary;
+		static std::map<int, sf::Text> commentary;
 		static std::map<std::pair<ActorId, ActorId>, sf::Vector2f> commentary_positions;
 		static std::map<std::pair<ActorId, ActorId>, std::vector<std::string>> commentary_strings;
 		static std::map<std::pair<ActorId, ActorId>, int> commentary_occurance;
 		static std::map<std::pair<ActorId, ActorId>, int> commentary_actions;
+		static std::map<int, sf::Clock> commentary_timer;
 		static std::string fitStringToCommentaryBox(std::string str);
 		static EventDelegate delegate;
 		static bool commentary_change;

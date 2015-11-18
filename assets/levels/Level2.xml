@@ -61,7 +61,7 @@
 		</InputComponent>
 		<Pathfinder PathType = "-4"/>
 	</Player>
-	<NPC Generate = "10">
+	<NPC Generate = "1">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
 		<InputComponent>
@@ -87,6 +87,23 @@
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</FireFlower>
+
+	<Commentary>	
+		<Commentary1  Actor = "Player" Contact = "Obstacle"  Action = "-2" Occurance = "-1">
+			<Dialogue1  Text = "Ouch! That hurt." />
+			<Dialogue2  Text = "I'll try to avoid that next time." />
+			<Dialogue3  Text = "Lost another flower." />
+			<Dialogue4  Text = "That was a mistake." />
+			<Dialogue5  Text = "Prickly, Prickly, Prickly." />
+		</Commentary1>	
+		<Commentary2  Actor = "NPC" Contact = "Player"  Action = "-2" Occurance = "-1">
+			<Dialogue1  Text = "Thank You!" />
+			<Dialogue2  Text = "Don't mind if I take one of these!" />
+			<Dialogue3  Text = "Diana is going to love this." />
+			<Dialogue4  Text = "You didn't run fast enough" />
+			<Dialogue5  Text = "You can run and you can hide, oh wait..." />
+		</Commentary2>		
+	</Commentary>
 
 </Level2>
 

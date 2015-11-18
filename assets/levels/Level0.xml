@@ -26,7 +26,7 @@
 			</Obstacle>
 		</Spawn3>
 		<Spawn4>
-			<NPC Generate = "3">
+			<NPC Generate = "10">
 				<Pathfinder PathType = "-3" TargetType = "-2"/>
 				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 				<InputComponent>
@@ -39,7 +39,7 @@
 		</Spawn4>
 	</Action>
 	<Commentary>
-		<Commentary1 Actor = "Player" Contact = "" Action = "0" Occurance = "1">
+		<Commentary1 Actor = "Player" Contact = "" Action = "2" Occurance = "1">
 			<Dialogue1 Text = "Hey Phil! I'm going to try to help you win Dianna's heart. First, you'll need to collect some elemental flowers. Try to find one.. ps. top right corner may help!" />
 		</Commentary1>
 		<Commentary2  Actor = "Player" Contact = "FireFlower"  Action = "1" Occurance = "1">
