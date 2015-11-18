@@ -68,6 +68,11 @@ sf::RectangleShape CraftView::backlay;
 sf::RectangleShape CraftView::craftButton;
 sf::Text CraftView::button_text;
 
+// Ways to exit the crafting table
+sf::RectangleShape CraftView::map_button;
+sf::RectangleShape CraftView::dialogue_button;
+bool CraftView::has_crafted = false;
+
 bool CraftView::pressed;
 // Used to determine if there is an item in both boxes of crafting table
 bool CraftView::box1;
@@ -93,6 +98,7 @@ void CraftView::Create(const char* resource, int* state) {
     //Reference to current location in Actor population array
     //Holds referenced to loaded XML file
     totalFlowers = 0;
+	has_crafted = false;
     pugi::xml_document doc;
 	if (delegate == NULL)
 		delegate.bind(&CraftView::update);
@@ -235,6 +241,18 @@ void CraftView::Create(const char* resource, int* state) {
     button_text.setFont(font);
     button_text.setColor(sf::Color::Black);
 
+	map_button.setPosition(Configuration::getWindowWidth() - 110, 10);
+	map_button.setSize(sf::Vector2f(100, 40));
+	map_button.setFillColor(sf::Color::White);
+	map_button.setOutlineColor(sf::Color::Black);
+	map_button.setOutlineThickness(5.f);
+
+	dialogue_button.setPosition(Configuration::getWindowWidth() - 110, 70);
+	dialogue_button.setSize(sf::Vector2f(100, 40));
+	dialogue_button.setFillColor(sf::Color::White);
+	dialogue_button.setOutlineColor(sf::Color::Black);
+	dialogue_button.setOutlineThickness(5.f);
+
     craftButton.setPosition(200, 170);
     craftButton.setFillColor(sf::Color::White);
     craftButton.setOutlineColor(sf::Color::Black);
@@ -320,13 +338,18 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
       if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
-        if (map.getGlobalBounds().contains(pos.x, pos.y)) {
+        if (has_crafted && dialogue_button.getGlobalBounds().contains(pos.x, pos.y)) {
 		LevelView::player->reset();
 		  *state = 2;
 		   DialogueView::Create(("Level" + std::to_string(total_craft_visits)).c_str(), state);
 
 		  ++total_craft_visits;
+		  cleanUp();
         }
+		else if (map_button.getGlobalBounds().contains(pos.x, pos.y)) {
+			*state = 0;
+			cleanUp();
+		}
 
         bool inList;
 
@@ -513,6 +536,7 @@ void CraftView::update(EventInterfacePtr e) {
 				magnolias++;
 			}
 			std::cout << "updated flower count" << std::endl;
+			has_crafted = true;
 		}
 	}
 	++visits;
@@ -524,13 +548,41 @@ void CraftView::update(EventInterfacePtr e) {
  **
  **/
 void CraftView::render(sf::RenderWindow *window) {
+	float button_width, text_width;
+	sf::Vector2f pos;
+
     //Update graphics
     window->draw(background);
     window->draw(backlay);
     window->draw(text);
-    window->draw(map);
+    //window->draw(map);
     window->draw(bookSprite);
 	window->draw(character_sprite);
+	window->draw(map_button);
+
+	sf::Text map_text("Map", font);
+	map_text.setColor(sf::Color::Black);
+	button_width = map_button.getSize().x;
+	text_width   = map_text.getGlobalBounds().width;
+
+	pos = map_button.getPosition();
+	pos.x += (button_width-text_width) / 2.f;
+	map_text.setPosition(pos);
+	window->draw(map_text);
+
+	if (has_crafted) {
+		sf::Text dialogue_text("Diana", font);
+		dialogue_text.setColor(sf::Color::Black);
+		button_width = dialogue_button.getSize().x;
+		text_width   = dialogue_text.getGlobalBounds().width;
+
+		pos = dialogue_button.getPosition();
+		pos.x += (button_width-text_width) / 2.f;
+		dialogue_text.setPosition(pos);
+
+		window->draw(dialogue_button);
+		window->draw(dialogue_text);
+	}
 
     // draw sprite in the "crafting table" box if there is one in it
     if (box1 == true)
@@ -694,14 +746,12 @@ std::string CraftView::fitStringToDialogueBox(std::string str) {
 
 	// for each word...
 	for (std::string word : words) {
-		std::cout << word << " ";
 		// get the bounding box
 		temp.setString(word + " ");
 		word_width = temp.findCharacterPos(temp.getString().getSize()).x;
 
 		// will it go past the horizontal bound?
 		if (current_width + word_width > max_width) {
-			std::cout << "\n" << word << " ";
 			fitted_string += "\n" + word + " ";
 			current_width = word_width;
 		}
@@ -711,7 +761,6 @@ std::string CraftView::fitStringToDialogueBox(std::string str) {
 			current_width += word_width;
 		}
 	}
-	std::cout << std::endl;
 
 	// done
 	return fitted_string;

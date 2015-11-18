@@ -208,9 +208,9 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 			if (index >= boxes.size()-1){
 				// stop displaying text, wait for user response before closing dialogueview
 			      if (view_state == 1)
-				  *state = 0;
+				  	*state = 0;
 			      else if (view_state == 2)
-				  *state = 5;
+				  	*state = 5;
 			      cleanUp();
 			}
 

@@ -53,6 +53,10 @@ class CraftView  {
 	static sf::Texture textures[];
         static sf::RectangleShape backlay;
 	static sf::RectangleShape craftButton;
+
+	// exit buttons
+	static sf::RectangleShape map_button, dialogue_button;
+	static bool has_crafted;
 	
 	// Determining occupation of craftTable
 	static bool box1;
