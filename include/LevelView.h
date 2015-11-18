@@ -14,12 +14,9 @@ class LevelView  {
 		static const int size;
 		static int num_actors;
 		static sf::Texture background_texture;
-//<<<<<<< HEAD
 		static sf::Texture timeout_texture;
 		static sf::Sprite timeout_sprite;
-//=======
 		static sf::Texture minimap_background_texture;
-//>>>>>>> dd3416c4e8fd42939751c18e1f53a578eefd9e8a
 		static sf::Texture edge_texture;
 		static sf::Sprite background;
 		static sf::Sprite minimap_background;
@@ -38,12 +35,14 @@ class LevelView  {
 		static sf::SoundBuffer buffer;
 		static sf::Sound sound;
 		static sf::Text commentary;
-		static std::vector<sf::Vector2f> commentary_positions;
-		static std::vector<std::string> commentary_strings;
+		static std::map<std::pair<ActorId, ActorId>, sf::Vector2f> commentary_positions;
+		static std::map<std::pair<ActorId, ActorId>, std::vector<std::string>> commentary_strings;
+		static std::map<std::pair<ActorId, ActorId>, int> commentary_occurance;
+		static std::map<std::pair<ActorId, ActorId>, int> commentary_actions;
 		static std::string fitStringToCommentaryBox(std::string str);
 		static EventDelegate delegate;
 		static bool commentary_change;
-		static std::vector<pugi::xml_node> spawn;
+		static std::vector<pugi::xml_node> actions;
 		static pugi::xml_document doc;
 		static sf::Sprite back_button;
 		static sf::Texture title_texture;
@@ -52,9 +51,8 @@ class LevelView  {
 		static int flashing;
 		static bool reveal_back_button;
 		static float timer_time;
-
-		static bool paused;
 		static bool pause_key_pressed;
+		static int* game_state;
 
 	public:
 		static void generateActor(pugi::xml_node* elem, int* state, int generate = 1);

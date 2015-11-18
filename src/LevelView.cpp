@@ -49,10 +49,12 @@ sf::SoundBuffer LevelView::buffer;
 sf::Sound LevelView::sound;
 // Level text
 sf::Text LevelView::commentary;
-std::vector<sf::Vector2f> LevelView::commentary_positions;
-std::vector<std::string> LevelView::commentary_strings;
+std::map<std::pair<ActorId, ActorId>, sf::Vector2f> LevelView::commentary_positions;
+std::map<std::pair<ActorId, ActorId>, std::vector<std::string>> LevelView::commentary_strings;
+std::map<std::pair<ActorId, ActorId>, int> LevelView::commentary_actions;
+std::map<std::pair<ActorId, ActorId>, int> LevelView::commentary_occurance;
 bool LevelView::commentary_change = true;
-std::vector<pugi::xml_node> LevelView::spawn;
+std::vector<pugi::xml_node> LevelView::actions;
 pugi::xml_document LevelView::doc;
 //Back Button
 sf::Sprite LevelView::back_button;
@@ -72,8 +74,8 @@ float LevelView::timer_time;
 sf::Texture LevelView::timeout_texture;
 sf::Sprite LevelView::timeout_sprite;
 
+int* LevelView::game_state;
 // pause screen medium map
-bool LevelView::paused = false;
 bool LevelView::pause_key_pressed = false;
 
 /** Creates and populates a level and all its components based on XML configuration
@@ -90,6 +92,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	reveal_back_button = false;
 	inVision = 0;
 	flashing = 0;
+	game_state = state;
 	//Error check to see if file was loaded correctly
 	pugi::xml_parse_result result;
 	std::string resource_str(resource);
@@ -186,19 +189,47 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 		if (!strcmp(tool.name(), "Commentary")) {
 			commentary.setCharacterSize(5);			
 			for (pugi::xml_node tool1 = tool.first_child(); tool1; tool1 = tool1.next_sibling()) {
-				for (pugi::xml_node tool2 = tool1.first_child(); tool2; tool2 = tool2.next_sibling()) {
-					if (!strcmp(tool2.name(), "Dialogue")) {
-						for (pugi::xml_attribute attr = tool2.first_attribute(); attr; attr = attr.next_attribute()) {
-							commentary_strings.push_back(fitStringToCommentaryBox(attr.value()));
+				ActorId display;
+				ActorId contact;
+				int actions;
+				int occurance;
+				for (pugi::xml_attribute attr = tool1.first_attribute(); attr; attr = attr.next_attribute()) {
+					if (!strcmp(attr.name(), "Actor")) {
+						display = attr.value();
+					}
+					else if (!strcmp(attr.name(), "Contact")) {
+						contact = attr.value();
+					}
+					else if (!strcmp(attr.name(), "Action")) {
+						actions = (std::strtol(attr.value(), &temp, 10));
+						if (*temp != '\0') {
+							std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
 						}
 					}
-					else {
-						pugi::xml_node temp = tool2;
-						spawn.push_back(temp);
+					else if (!strcmp(attr.name(), "Occurance")) {
+						occurance = (std::strtol(attr.value(), &temp, 10));
+						if (*temp != '\0') {
+							std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
+						}
+					}
+				}
+				commentary_strings.insert(std::pair<std::pair<ActorId, ActorId>, std::vector<std::string>>(std::pair<ActorId, ActorId>(display, contact), std::vector<std::string>()));
+				commentary_actions.insert(std::pair<std::pair<ActorId, ActorId>, int>(std::pair<ActorId, ActorId>(display, contact), actions));	
+				commentary_occurance.insert(std::pair<std::pair<ActorId, ActorId>, int>(std::pair<ActorId, ActorId>(display, contact), occurance));				
+				for (pugi::xml_node tool2 = tool1.first_child(); tool2; tool2 = tool2.next_sibling()) {
+					for (pugi::xml_attribute attr = tool2.first_attribute(); attr; attr = attr.next_attribute()) {
+						commentary_strings[std::pair<ActorId, ActorId>(display, contact)].push_back(fitStringToCommentaryBox(attr.value()));
 					}
 				}
 			}
-			commentary = sf::Text(commentary_strings.front(), font, 5);
+		}
+		else if (!strcmp(tool.name(), "Action")) {		
+			for (pugi::xml_node tool1 = tool.first_child(); tool1; tool1 = tool1.next_sibling()) {
+				for (pugi::xml_node tool2 = tool1.first_child(); tool2; tool2 = tool2.next_sibling()) {
+					pugi::xml_node temp = tool2;
+					actions.push_back(temp);
+				}
+			}
 		}
 		else if (!strcmp(tool.name(), "Player") && player == NULL) {		
 			generateActor(&tool, state);
@@ -266,7 +297,6 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	view_state = 0;
 	Pathfinder::generatingPaths = true;
 	std::thread(Pathfinder::generateHCosts).detach();
-
 }
 
 //Helper function to generate actors
@@ -305,6 +335,9 @@ int LevelView::getNumActors(void) {
 void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	//Handle near-end game flashing
 	flashing = 1;
+	game_state = state;
+	//Gets the time left in level
+	timer_time = (duration - level_clock.getElapsedTime().asMilliseconds());
 
 	//Switch actorlist to current view
 	EventManagerInterface::setCurrentActorList(&actorList);
@@ -314,20 +347,29 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		pause_key_pressed = false;
 	}
 
-	if (paused) {
+	if (view_state == 3) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !pause_key_pressed) {
-			paused = false;
+			view_state = 1;
 			pause_key_pressed = true;
-			level_clock.restart();    // don't count the time level was paused toward the timer
 		}
-		
+		level_clock.restart();
 		return;
+	}
+	
+	// should we pause the screen?
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !pause_key_pressed) {
+		view_state = 3;
+		pause_key_pressed = true;
+		duration = timer_time;
 	}
 
 	//Checks to see if done generating paths
 	if (!Pathfinder::generatingPaths && view_state == 0) {
 		if (name == "Introduction") {
 			view_state = 2;
+			EventInterfacePtr event;
+			event.reset(new ContactEvent(0.f, player->getInstance(), -1));
+			update(event);
 		}
 		else
 			view_state = 1;
@@ -359,8 +401,6 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		pressed = false;
 	} 
 	
-	//Gets the time left in level
-	timer_time = (duration - level_clock.getElapsedTime().asMilliseconds());
 
 	//Ends the level after timeout
 	if (timer_time/1000 <= -3) {
@@ -382,18 +422,8 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		flashing = 0;
 			
 		//If in tutorial, sets up hints dialogue
-		if (view_state == 2 && !commentary_strings.empty()) {
-			if (commentary_change && !spawn.empty()) {
-				pugi::xml_node temp = spawn.front();
-				generateActor(&(temp), state);
-				spawn.erase(spawn.begin());
-				commentary_change = false;
-			}
-			commentary.setString(commentary_strings.front());
+		if (view_state == 2) {
 			commentary.setPosition(Configuration::getGameViewCenter());
-		}
-		else if (view_state == 2) {
-			reveal_back_button = true;
 		}
 		
 		//Updates timer display
@@ -440,18 +470,12 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	timeout_sprite.setPosition(sf::Vector2f(Configuration::getGameViewPosition().x, Configuration::getGameViewPosition().y));
 	
 	//Determines when to flash the screen when nearing timeout
-	if (!paused && view_state == 1) {
+	if (view_state == 1) {
 		if ( (timer_time/1000 > 9.9 && timer_time/1000 <= 10) || (timer_time/1000 > 5.9 && timer_time/1000 <= 6) || (timer_time/1000 > 3.9 && timer_time/1000 <= 4) || (timer_time/1000 > 2.9 && timer_time/1000 <= 3) || (timer_time/1000 > 1.9 && timer_time/1000 <= 2) || (timer_time/1000 > .9 && timer_time/1000 <= 1) || (timer_time/1000 <= 0)) {
 			flashing = 1;
 		}
 	}
-
-	// should we pause the screen?
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !pause_key_pressed) {
-		paused = true;
-		pause_key_pressed = true;
-		duration = timer_time;
-	}
+	
 }
 
 /** Checks for events and update accordingly
@@ -459,12 +483,36 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
  */
 void LevelView::update(EventInterfacePtr e) {
 	//In tutotial, update hints to display based on if event is acheived
+	if (e == NULL)
+		return;
+
 	if (view_state == 2) {
 		EventType event_type = e->getEventType();
-		if (e->getSender() == LevelView::player->getInstance() && event_type == ContactEvent::event_type) {
-			if (!commentary_strings.empty())
-				commentary_strings.erase(commentary_strings.begin());	
-			commentary_change = true;	
+		if (e->getSender() == player->getInstance() && event_type == ContactEvent::event_type) {
+			StrongActorPtr display_actor = getActor(e->getSender());
+			ActorId display_id = display_actor->getId();
+			StrongActorPtr contact_actor;
+			ActorId contact_id;
+			if ( (int) e->getReceiver() < 0) {
+				contact_id = "";
+			}
+			else {
+				contact_actor = getActor(e->getReceiver());
+				contact_id = contact_actor->getId();
+			}
+			if (commentary_strings.find(std::pair<ActorId, ActorId>(display_id, contact_id)) != commentary_strings.end() && commentary_occurance[std::pair<ActorId, ActorId>(display_id, contact_id)] > 0) {
+				commentary_occurance[std::pair<ActorId, ActorId>(display_id, contact_id)]--;
+				int action = commentary_actions[std::pair<ActorId, ActorId>(display_id, contact_id)];
+				if (action >= 0) {
+					pugi::xml_node temp = actions[action];
+					generateActor(&(temp), game_state);
+				}
+				else if (action == -1) {
+					reveal_back_button = true;
+				}
+				int r = rand() % commentary_strings[std::pair<ActorId, ActorId>(display_id, contact_id)].size();
+				commentary = sf::Text(commentary_strings[std::pair<ActorId, ActorId>(display_id, contact_id)][r], font, 5);
+			}	
 		}
 	}
 }
@@ -484,7 +532,7 @@ void LevelView::render(sf::RenderWindow *window) {
 
 	//Game display	
 	if (timer_time/1000 >= 0) {
-		if (!paused && flashing && view_state == 1) {
+		if (flashing && view_state == 1) {
 			window->clear(sf::Color::Black);
 			window->display();
 		}
@@ -524,7 +572,7 @@ void LevelView::render(sf::RenderWindow *window) {
 		player->render(window, true);
 		//window->draw(minimap_border);
 
-		if (paused) {
+		if (view_state == 3) {
 			// reset the view to the pause map
 			pauseView.setViewport(sf::FloatRect(0.2, 0.2, 0.8, 0.8));
 			window->setView(pauseView);
@@ -618,7 +666,7 @@ std::string LevelView::fitStringToCommentaryBox(std::string str) {
 	int height = Configuration::getGameViewHeight() / 2;
 	int beginX = 0;
 	int beginY = 0;
-	commentary_positions.push_back(sf::Vector2f(beginX, beginY));
+	//commentary_positions.push_back(sf::Vector2f(beginX, beginY));
 	int endX = beginX+width;
 	int max_width = endX-beginX;
 
