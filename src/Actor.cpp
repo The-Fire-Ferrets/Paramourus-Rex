@@ -228,6 +228,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 	    }
 	    position = pos;
 		if (isOfType("Player")) {
+			std::cout << "HERE " << position.x << " " << position.y << " " << size.x << " " << size.y << std::endl;
 			Configuration::setGameViewCenter(sf::Vector2f((position.x + size.x/2.0), (position.y + size.y/2.0)));
 		}
 		start_position = position;

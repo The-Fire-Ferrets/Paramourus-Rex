@@ -86,32 +86,22 @@ int main(int argc, char* argv[])
 		App.clear(sf::Color::Black);
 
 		switch(last_state) {
-			case 0: 
-				App.setView(defaultView);
-				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));		
+			case 0: 		
 				MapView::render(&App);
 				break;
 			case 1: 
 				LevelView::render(&App); 
 				break;
 			case 2:
-				App.setView(defaultView);			
-				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));
 				DialogueView::render(&App);
 				break;
 			case 3:
-				App.setView(defaultView);
-				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));
 				CraftView::render(&App);
 				break;
 			case 4:
-				App.setView(defaultView);
-				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));	
 				//ExitView::render(&App);
 				break;
-			case 5:
-				App.setView(defaultView);
-				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));	
+			case 5:	
 				TitleView::render(&App);
 				break;
 			default: 
