@@ -354,28 +354,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 
 	//Switch actorlist to current view
 	EventManagerInterface::setCurrentActorList(&actorList);
-
-	// handle paused screen
-	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
-		pause_key_pressed = false;
-	}
-
-	if (view_state == 3) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !pause_key_pressed) {
-			view_state = 1;
-			pause_key_pressed = true;
-		}
-		level_clock.restart();
-		return;
-	}
 	
-	// should we pause the screen?
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !pause_key_pressed) {
-		view_state = 3;
-		pause_key_pressed = true;
-		duration = timer_time;
-	}
-
 	//Checks to see if done generating paths
 	if (!Pathfinder::generatingPaths && view_state == 0) {
 		if (name == "Introduction") {
@@ -392,6 +371,27 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	//If still rendering paths return
 	if (view_state == 0)
 		return;
+
+	// should we pause the screen?
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !pause_key_pressed) {
+		if (view_state == 3) {
+			view_state = 1;
+			pause_key_pressed = true;
+		}
+		else {
+			view_state = 3;
+			pause_key_pressed = true;
+			duration = timer_time;
+		}
+	}
+	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+		pause_key_pressed = false;
+	}
+
+	if (view_state == 3) {
+		level_clock.restart();
+		return;
+	}
 
 	//Checks to see if back button has been selected
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && reveal_back_button) {
