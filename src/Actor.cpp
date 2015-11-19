@@ -227,6 +227,9 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		}
 	    }
 	    position = pos;
+		if (isOfType("Player")) {
+			Configuration::setGameViewCenter(sf::Vector2f((position.x + size.x/2.0), (position.y + size.y/2.0)));
+		}
 		start_position = position;
 		initial_position = position;
 		boundary.clear();
@@ -283,6 +286,8 @@ void Actor::PostInit(void) {
 		sprite_idx = 1;
         sf::Vector2f p = next_pos;
         this->setPosition(p);
+	if (isOfType("Player"))
+		Configuration::setGameViewCenter(sf::Vector2f((position.x + size.x/2.0), (position.y + size.y/2.0)));
         
     }
 
@@ -327,6 +332,7 @@ void Actor::PostInit(void) {
         if (pc->query(bound_after, dir)) {
             // set the position
             this->setPosition(p);
+		Configuration::setGameViewCenter(sf::Vector2f((position.x + size.x/2.0), (position.y + size.y/2.0)));
         }
     }
 
@@ -523,7 +529,6 @@ void Actor::setPosition(sf::Vector2f pos) {
 		}
 	}
 	if (renderToMinimap)
-		//sprite_minimap.setPosition(position);
 		setMinimapSpritePosition(position);
 }
 

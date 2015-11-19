@@ -249,10 +249,12 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 		else if (!strcmp(tool.name(), "Player") && player == NULL) {		
 			generateActor(&tool, state);
 			player = (actorList.back());
+			gameView.setCenter(Configuration::getGameViewCenter());
 		}
 		else if (!strcmp(tool.name(), "Player")) {
 			actorList.push_back(player);
 			player->PostInit(&tool);
+			gameView.setCenter(Configuration::getGameViewCenter());
 			Pathfinder::addToGrid(player->getBoundary(), player->getPathType(), player->getTargetType());
 			commentary_timer.insert(std::pair<int, sf::Clock>(player->getInstance(), sf::Clock()));
 			commentary.insert(std::pair<int, sf::Text>(player->getInstance(), sf::Text("", font, 5)));
@@ -360,7 +362,8 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 
 	//Switch actorlist to current view
 	EventManagerInterface::setCurrentActorList(&actorList);
-	
+	Configuration::setGameViewDimensions(gameView.getSize().x, gameView.getSize().y);
+
 	//Checks to see if done generating paths
 	if (!Pathfinder::generatingPaths && view_state == 0) {
 		if (name == "Introduction") {
@@ -452,7 +455,6 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	
 
 		for (it = actorList.begin(); it != actorList.end(); it++) {
-			commentary[(*it)->getInstance()].setPosition((*it)->getPosition() + (*it)->getSize());
 			if ((*it)->getPathType() == -4) {
 				(*it)->update(time);
 				sf::Vector2f start_pos = (*it)->getStartPosition();
@@ -465,9 +467,11 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 			else {
 				(*it)->update(time);
 			}
+			commentary[(*it)->getInstance()].setPosition((*it)->getPosition() + (*it)->getSize());
 		}
 		sf::Vector2f homer_commentary_pos(Configuration::getGameViewPosition().x, Configuration::getGameViewPosition().y + 10);	
 		commentary[-1].setPosition(homer_commentary_pos);
+		gameView.setCenter(Configuration::getGameViewCenter());
 
 		//Check to see if conditions met to display back button
 		if (flowers_left == 0 && inVision == 0) {
@@ -586,11 +590,6 @@ void LevelView::render(sf::RenderWindow *window) {
 			window->display();
 		}
 		//Get the player location and center gameView to it
-		sf::Vector2f player_pos = player->getPosition();
-		sf::Vector2f player_size = player->getSize();
-		gameView.setCenter(player_pos.x + player_size.x/2, player_pos.y + player_size.y/2);
-		Configuration::setGameViewDimensions(gameView.getSize().x, gameView.getSize().y);
-		Configuration::setGameViewCenter(gameView.getCenter());
 		gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
 		window->setView(gameView);
 		//Update graphics	
@@ -642,11 +641,6 @@ void LevelView::render(sf::RenderWindow *window) {
 	}
 	else {
 		//Timeout display
-		sf::Vector2f player_pos = player->getPosition();
-		sf::Vector2f player_size = player->getSize();
-		gameView.setCenter(player_pos.x + player_size.x/2, player_pos.y + player_size.y/2);
-		Configuration::setGameViewDimensions(gameView.getSize().x, gameView.getSize().y);
-		Configuration::setGameViewCenter(gameView.getCenter());
 		gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
 		window->setView(gameView);
 		player->render(window, false);
