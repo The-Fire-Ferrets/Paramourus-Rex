@@ -156,14 +156,14 @@
 	</FireFlower>
 
 	<Commentary>	
-		<Commentary1  Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
+		<Commentary1  Display = "Player" Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Ouch! That hurt." />
 			<Dialogue2  Text = "I'll try to avoid that next time." />
 			<Dialogue3  Text = "Lost another flower." />
 			<Dialogue4  Text = "That was a mistake." />
 			<Dialogue5  Text = "Prickly, Prickly, Prickly." />
 		</Commentary1>	
-		<Commentary2  Actor = "NPC" Contact = "Player"  Action = "-2" Occurance = "-1">
+		<Commentary2  Display = "Player" Actor = "NPC" Contact = "Player"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Thank You!" />
 			<Dialogue2  Text = "Don't mind if I take one of these!" />
 			<Dialogue3  Text = "Diana is going to love this." />
