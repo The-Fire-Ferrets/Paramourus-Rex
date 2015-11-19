@@ -2,49 +2,49 @@
 <Level2 Name = "Hello World!" Background = "Level2.png" MinimapBackground = "minimapbg.png" Edge = "Water.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "30000">
 
 	<!-- ObsA 50x150-->
-	<Obstacle Type = "Wall"  Sprite = "Water.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 100 0 150 0 100 150 150 150">		
+	<Obstacle Type = "Wall"  Sprite = "Level2.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 100 0 150 0 100 150 150 150">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
 	<!-- ObsB 200x200 -->
-	<Obstacle Type = "Wall"  Sprite = "Water.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 100 300 300 300 100 500 300 500">		
+	<Obstacle Type = "Wall"  Sprite = "Level2.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 100 300 300 300 100 500 300 500">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
 	<!-- ObsC 200x100 -->
-	<Obstacle Type = "Wall"  Sprite = "Water.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 300 300 500 300 300 400 500 400">		
+	<Obstacle Type = "Wall"  Sprite = "Level2.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 300 300 500 300 300 400 500 400">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
 	<!-- ObsD 200x100 -->
-	<Obstacle Type = "Wall"  Sprite = "Water.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 300 50 500 50 300 150 500 150">		
+	<Obstacle Type = "Wall"  Sprite = "Level2.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 300 50 500 50 300 150 500 150">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
 	<!-- ObsE 100x200 -->
-	<Obstacle Type = "Wall"  Sprite = "Water.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 500 50 600 50 500 250 600 250">		
+	<Obstacle Type = "Wall"  Sprite = "Level2.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 500 50 600 50 500 250 600 250">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
 	<!-- ObsF 350x100 -->
-	<Obstacle Type = "Wall"  Sprite = "Water.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 450 700 450 350 550 700 550">		
+	<Obstacle Type = "Wall"  Sprite = "Level2.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 450 700 450 350 550 700 550">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
 	<!-- ObsG 100x100 -->
-	<Obstacle Type = "Wall"  Sprite = "Water.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 600 350 700 350 600 450 700 450">		
+	<Obstacle Type = "Wall"  Sprite = "Level2.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 600 350 700 350 600 450 700 450">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
 	<!-- ObsH 100x200 -->
-	<Obstacle Type = "Wall"  Sprite = "Water.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 650 50 750 50 650 250 750 250">		
+	<Obstacle Type = "Wall"  Sprite = "Level2.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 650 50 750 50 650 250 750 250">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
