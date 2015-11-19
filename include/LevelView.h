@@ -5,6 +5,9 @@
 #include "ActorFactory.h"
 #include "DialogueView.h"
 
+typedef std::pair<ActorId, ActorId> ContactPair;
+typedef std::pair<ActorId, ContactPair> DisplayContactPair;
+
 class LevelView  {
 	friend class CraftView;
 	friend class Pathfinder;
@@ -35,10 +38,10 @@ class LevelView  {
 		static sf::SoundBuffer buffer;
 		static sf::Sound sound;
 		static std::map<int, sf::Text> commentary;
-		static std::map<std::pair<ActorId, ActorId>, sf::Vector2f> commentary_positions;
-		static std::map<std::pair<ActorId, ActorId>, std::vector<std::string>> commentary_strings;
-		static std::map<std::pair<ActorId, ActorId>, int> commentary_occurance;
-		static std::map<std::pair<ActorId, ActorId>, int> commentary_actions;
+		static std::map<DisplayContactPair, sf::Vector2f> commentary_positions;
+		static std::map<DisplayContactPair, std::vector<std::string>> commentary_strings;
+		static std::map<DisplayContactPair, int> commentary_occurance;
+		static std::map<DisplayContactPair, int> commentary_actions;
 		static std::map<int, sf::Clock> commentary_timer;
 		static std::string fitStringToCommentaryBox(std::string str);
 		static EventDelegate delegate;

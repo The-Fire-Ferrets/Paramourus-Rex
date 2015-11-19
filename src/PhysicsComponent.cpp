@@ -131,7 +131,7 @@ void PhysicsComponent::update(float time) {
 			vision_timer.restart();
 			LevelView::inVision++;
 		}
-		else if (inVision && vision_timer.getElapsedTime().asSeconds() > 15) {
+		else if (inVision && vision_timer.getElapsedTime().asSeconds() > 5) {
 			inVision = false;
 			Pathfinder::changeVision(owner->getInitialPosition());
 			LevelView::inVision--;

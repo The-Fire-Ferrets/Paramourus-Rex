@@ -49,10 +49,10 @@ sf::SoundBuffer LevelView::buffer;
 sf::Sound LevelView::sound;
 // Level text
 std::map<int, sf::Text> LevelView::commentary;
-std::map<std::pair<ActorId, ActorId>, sf::Vector2f> LevelView::commentary_positions;
-std::map<std::pair<ActorId, ActorId>, std::vector<std::string>> LevelView::commentary_strings;
-std::map<std::pair<ActorId, ActorId>, int> LevelView::commentary_actions;
-std::map<std::pair<ActorId, ActorId>, int> LevelView::commentary_occurance;
+std::map<DisplayContactPair, sf::Vector2f> LevelView::commentary_positions;
+std::map<DisplayContactPair, std::vector<std::string>> LevelView::commentary_strings;
+std::map<DisplayContactPair, int> LevelView::commentary_actions;
+std::map<DisplayContactPair , int> LevelView::commentary_occurance;
 std::map<int, sf::Clock> LevelView::commentary_timer;
 bool LevelView::commentary_change = true;
 std::vector<std::vector<pugi::xml_node>> LevelView::actions;
@@ -192,16 +192,22 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	timeout_sprite.setScale(1.0 * Configuration::getGameViewWidth()/(timeout_texture.getSize()).x, 1.0 * Configuration::getGameViewHeight()/(timeout_texture.getSize()).y);
 	timer.setPosition(timer_position);
 
+	commentary_timer.insert(std::pair<int, sf::Clock>(-1, sf::Clock()));
+	commentary.insert(std::pair<int, sf::Text>(-1, sf::Text("", font, 5)));
 	//Iterates over XML to get components to add
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
 		if (!strcmp(tool.name(), "Commentary")) {		
 			for (pugi::xml_node tool1 = tool.first_child(); tool1; tool1 = tool1.next_sibling()) {
 				ActorId display;
+				ActorId actor_id;
 				ActorId contact;
 				int actions_val;
 				int occurance;
 				for (pugi::xml_attribute attr = tool1.first_attribute(); attr; attr = attr.next_attribute()) {
 					if (!strcmp(attr.name(), "Actor")) {
+						actor_id = attr.value();
+					}
+					else if (!strcmp(attr.name(), "Display")) {
 						display = attr.value();
 					}
 					else if (!strcmp(attr.name(), "Contact")) {
@@ -220,12 +226,12 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 						}
 					}
 				}
-				commentary_strings.insert(std::pair<std::pair<ActorId, ActorId>, std::vector<std::string>>(std::pair<ActorId, ActorId>(display, contact), std::vector<std::string>()));
-				commentary_actions.insert(std::pair<std::pair<ActorId, ActorId>, int>(std::pair<ActorId, ActorId>(display, contact), actions_val));	
-				commentary_occurance.insert(std::pair<std::pair<ActorId, ActorId>, int>(std::pair<ActorId, ActorId>(display, contact), occurance));				
+				commentary_strings.insert(std::pair<DisplayContactPair, std::vector<std::string>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<std::string>()));
+				commentary_actions.insert(std::pair<DisplayContactPair, int>(DisplayContactPair(display, ContactPair(actor_id, contact)), actions_val));	
+				commentary_occurance.insert(std::pair<DisplayContactPair, int>(DisplayContactPair(display, ContactPair(actor_id, contact)), occurance));				
 				for (pugi::xml_node tool2 = tool1.first_child(); tool2; tool2 = tool2.next_sibling()) {
 					for (pugi::xml_attribute attr = tool2.first_attribute(); attr; attr = attr.next_attribute()) {
-						commentary_strings[std::pair<ActorId, ActorId>(display, contact)].push_back(fitStringToCommentaryBox(attr.value()));
+						commentary_strings[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(fitStringToCommentaryBox(attr.value()));
 					}
 				}
 			}
@@ -360,7 +366,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		if (name == "Introduction") {
 			view_state = 2;
 			EventInterfacePtr event;
-			event.reset(new ContactEvent(0.f, player->getInstance(), -1));
+			event.reset(new ContactEvent(0.f, -1, -1));
 			update(event);
 		}
 		else
@@ -443,6 +449,8 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		//Updates target grids for moving targets such as the player in pathfinder
 		//Updates normally for all other objects
 		std::vector<StrongActorPtr>::iterator it;
+	
+
 		for (it = actorList.begin(); it != actorList.end(); it++) {
 			commentary[(*it)->getInstance()].setPosition((*it)->getPosition() + (*it)->getSize());
 			if ((*it)->getPathType() == -4) {
@@ -458,6 +466,8 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 				(*it)->update(time);
 			}
 		}
+		sf::Vector2f homer_commentary_pos(Configuration::getGameViewPosition().x, Configuration::getGameViewPosition().y + 10);	
+		commentary[-1].setPosition(homer_commentary_pos);
 
 		//Check to see if conditions met to display back button
 		if (flowers_left == 0 && inVision == 0) {
@@ -497,37 +507,59 @@ void LevelView::update(EventInterfacePtr e) {
 	if (last_action != -1) {
 		EventType event_type = e->getEventType();
 		if (event_type == ContactEvent::event_type) {
-			StrongActorPtr display_actor = getActor(e->getSender());
-			StrongActorPtr contact_actor = NULL;
-			std::vector<ActorId> contact_id;
+			StrongActorPtr actor_ptr = NULL;
+			if ( (int) e->getSender() >= 0) {
+				actor_ptr = getActor(e->getSender());
+			}
+			StrongActorPtr contact_ptr = NULL;
 			if ( (int) e->getReceiver() >= 0) {
-				contact_actor = getActor(e->getReceiver());
-				contact_id = contact_actor->getId();
+				contact_ptr = getActor(e->getReceiver());
 			}
 			for (auto itr_cs = commentary_strings.begin(); itr_cs != commentary_strings.end(); itr_cs++) {
 				bool found = false;
-				if (contact_actor == NULL && display_actor->isOfType(itr_cs->first.first) && itr_cs->first.second == "" && commentary_occurance[std::pair<ActorId, ActorId>(itr_cs->first.first, itr_cs->first.second)] != 0)
-					found = true;
-				else if (display_actor->isOfType(itr_cs->first.first) && contact_actor->isOfType(itr_cs->first.second) && commentary_occurance[std::pair<ActorId, ActorId>(itr_cs->first.first, itr_cs->first.second)] != 0) {
+				ActorId display_id = itr_cs->first.first;
+				ActorId actor_id = itr_cs->first.second.first;
+				ActorId contact_id = itr_cs->first.second.second;
+
+				if (actor_ptr == NULL && contact_ptr == NULL && display_id == "Homer" && contact_id == "") {
+					found  = true;
+				}
+				else if (actor_ptr == NULL && display_id == "Homer") {
+					if (contact_ptr->isOfType(contact_id))
+						found = true;
+				}
+				else if (contact_ptr == NULL && contact_id == "") {
+					if (actor_ptr->isOfType(actor_id))
+						found = true;
+				}
+				else if (actor_ptr->isOfType(actor_id) && contact_ptr->isOfType(contact_id)) {
 					found = true;
 				}
 				if (found) {
-					commentary_occurance[std::pair<ActorId, ActorId>(itr_cs->first.first, itr_cs->first.second)]--;
-					int action = commentary_actions[std::pair<ActorId, ActorId>(itr_cs->first.first, itr_cs->first.second)];
-					last_action = action;
-					if (action >= 0) {
-						for (auto action_itr = actions[action].begin(); action_itr != actions[action].end(); action_itr++) {
-							pugi::xml_node temp = *action_itr;
-							generateActor(&(temp), game_state);
+					if (commentary_occurance[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))] != 0) {
+						commentary_occurance[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))]--;
+						int action = commentary_actions[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))];
+						last_action = action;
+						if (action >= 0) {
+							for (auto action_itr = actions[action].begin(); action_itr != actions[action].end(); action_itr++) {
+								pugi::xml_node temp = *action_itr;
+								generateActor(&(temp), game_state);
+							}
 						}
+						else if (action == -1) {
+							reveal_back_button = true;
+						}
+						int r = rand() % itr_cs->second.size();
+						if (display_id == "Homer") {
+							commentary[-1] = sf::Text((itr_cs->second)[r], font, 5);
+							commentary_timer[-1].restart();
+						}
+						else {
+							commentary[e->getSender()] = sf::Text((itr_cs->second)[r], font, 5);
+							commentary_timer[e->getSender()].restart();
+						}
+						break;
 					}
-					else if (action == -1) {
-						reveal_back_button = true;
-					}
-					int r = rand() % itr_cs->second.size();
-					commentary[e->getSender()] = sf::Text((itr_cs->second)[r], font, 5);
-					commentary_timer[e->getSender()].restart();
-					break;
 				}	
 			}
 		}
@@ -571,6 +603,8 @@ void LevelView::render(sf::RenderWindow *window) {
 			if ((view_state == -2 && commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 10) || (commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 4))
 				window->draw(commentary[(*it)->getInstance()]);
 		}
+		if ((view_state == -2 && commentary_timer[-1].getElapsedTime().asSeconds() < 10) || (commentary_timer[-1].getElapsedTime().asSeconds() < 4))
+			window->draw(commentary[-1]);
 		player->render(window, false);
 		window->draw(timer);
 		

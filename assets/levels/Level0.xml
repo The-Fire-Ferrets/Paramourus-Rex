@@ -32,7 +32,7 @@
 				<PhysicsComponent>
 					<Properties Type = "Opaque" />
 				</PhysicsComponent>
-	</Obstacle>
+			</Obstacle>
 		</Spawn3>
 		<Spawn4>
 			<NPC Generate = "10">
@@ -55,20 +55,34 @@
 		</Spawn4>
 	</Action>
 	<Commentary>
-		<Commentary1 Actor = "Player" Contact = "" Action = "0" Occurance = "1">
+		<Commentary1 Display = "Homer" Actor = "Player" Contact = "" Action = "0" Occurance = "1">
 			<Dialogue1 Text = "Hey Phil! I'm going to try to help you win Dianna's heart. First, you'll need to collect some elemental flowers. Try to find one.. ps. top right corner may help!" />
 		</Commentary1>
-		<Commentary2  Actor = "Player" Contact = "FireFlower"  Action = "1" Occurance = "1">
+		<Commentary2  Display = "Homer" Actor = "Player" Contact = "FireFlower"  Action = "1" Occurance = "1">
 			<Dialogue1  Text = "Great! See what happened there, you filled one of your vases, displayed at the top left corner. Do it again so you see what I mean." />
 		</Commentary2>		
-		<Commentary3  Actor = "Player" Contact = "EarthFlower"  Action = "2" Occurance = "1">
+		<Commentary3  Display = "Homer" Actor = "Player" Contact = "EarthFlower"  Action = "2" Occurance = "1">
 			<Dialogue1  Text = "Now, you should watch out for these obstacles. They'll cause you to drop a vase and/or flower. Touch one to see." />
 		</Commentary3>		
-		<Commentary4  Actor = "Player" Contact = "Obstacle"  Action = "3" Occurance = "1">
+		<Commentary4   Display = "Homer" Actor = "Player" Contact = "Obstacle"  Action = "3" Occurance = "1">
 			<Dialogue1  Text = "Oh, looks like you have some competition. Dont let them touch you or they may steal your vases and/or flowers. Touch one to see." />
 		</Commentary4>		
-		<Commentary5  Actor = "Player" Contact = "NPC"  Action = "-1" Occurance = "1">
+		<Commentary5   Display = "Homer" Actor = "Player" Contact = "NPC"  Action = "-1" Occurance = "1">
 			<Dialogue1  Text = "That's all for now. But I'll be around to help more. Back button on bottom left what you're done. May have to touch something else." />
 		</Commentary5>
+		<Commentary6  Display = "Player" Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
+			<Dialogue1  Text = "Ouch! That hurt." />
+			<Dialogue2  Text = "I'll try to avoid that next time." />
+			<Dialogue3  Text = "Lost another flower." />
+			<Dialogue4  Text = "That was a mistake." />
+			<Dialogue5  Text = "Prickly, Prickly, Prickly." />
+		</Commentary6>	
+		<Commentary7  Display = "Player" Actor = "NPC" Contact = "Player"  Action = "-2" Occurance = "-1">
+			<Dialogue1  Text = "Thank You!" />
+			<Dialogue2  Text = "Don't mind if I take one of these!" />
+			<Dialogue3  Text = "Diana is going to love this." />
+			<Dialogue4  Text = "You didn't run fast enough" />
+			<Dialogue5  Text = "You can run and you can hide, oh wait..." />
+		</Commentary7>	
 	</Commentary>
 </Level0>
