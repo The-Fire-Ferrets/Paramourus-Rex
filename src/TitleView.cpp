@@ -49,7 +49,8 @@ void TitleView::Create(const char* resource) {
     for (pugi::xml_attribute attr = tools.first_attribute(); attr; attr = attr.next_attribute()) {
         if (!strcmp(attr.name(), "Background")) {
             background_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
-            background = sf::Sprite(background_texture, sf::IntRect(0, 0, Configuration::getWindowWidth(), Configuration::getWindowHeight()));
+            background = sf::Sprite(background_texture, sf::IntRect(0, 0, background_texture.getSize().x, background_texture.getSize().y));
+		background.setScale(1.0*Configuration::getWindowWidth()/background_texture.getSize().x, 1.0*Configuration::getWindowHeight()/background_texture.getSize().y);	
             background.setPosition(sf::Vector2f(0,0));
         }
 	 else if (!strcmp(attr.name(), "Font")) {
