@@ -254,7 +254,7 @@ bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
 	for (auto it = last_boundaries.begin(); it != last_boundaries.end(); it++) {
 		other_bound = it->first;
 		bool val;
-		if (other_bound-> intersects(bound) && (owner->getId() == "NPC" || (val = getDirectionBit(it->second, dir)))) {	
+		if (other_bound-> intersects(bound) && (owner->isOfType("NPC") || (val = getDirectionBit(it->second, dir)))) {	
 			return false;
 		}
 	}

@@ -89,7 +89,7 @@ bool CollectorComponent::Init(pugi::xml_node* elem) {
 bool CollectorComponent::PostInit(pugi::xml_node* elem) {
 	if (elem != NULL)
 	Init(elem);
-	if (owner->getId() == "Player") {
+	if (owner->isOfType("Player")) {
 		for (int i = 0; i < vases; i++) {
 			vase_sprites.push_back(sf::Sprite(vase_empty, sf::IntRect(0, 0, vase_empty.getSize().x, vase_empty.getSize().y)));
 			vase_sprites.back().scale(1.0*vase_size/(vase_empty.getSize().x), 1.0*vase_size/(vase_empty.getSize().y));
@@ -129,7 +129,7 @@ void CollectorComponent::update(EventInterfacePtr e) {
 					std::cout << "CollectableComponent::update: Unable to queue event" << std::endl;		
 			}		
 		}
-		else if (owner->getId() == "Player") {
+		else if (owner->isOfType("Player")) {
 			if (vases > 0 && other_actor->causesDamage()) {
 				if (vases == flowers) {
 					flowers--;
@@ -142,18 +142,18 @@ void CollectorComponent::update(EventInterfacePtr e) {
 	}
 	else if (event_type == CollectEvent::event_type) {	
 		LevelView::removeActor(other_actor->getInstance());		
-		if (owner->getId() == "Player") {				
+		if (owner->isOfType("Player")) {				
 			flowerList.push_back(other_actor);
-			if (other_actor->getId() == "FireFlower") {
+			if (other_actor->isOfType("FireFlower")) {
 				vase_sprites[flowers++].setTexture(vase_fireflower);
 			}
-			else if (other_actor->getId() == "EarthFlower") {
+			else if (other_actor->isOfType("EarthFlower")) {
 				vase_sprites[flowers++].setTexture(vase_earthflower);
 			}
-			else if (other_actor->getId() == "AirFlower") {
+			else if (other_actor->isOfType("AirFlower")) {
 				vase_sprites[flowers++].setTexture(vase_airflower);
 			}
-			else if (other_actor->getId() == "WaterFlower") {
+			else if (other_actor->isOfType("WaterFlower")) {
 				vase_sprites[flowers++].setTexture(vase_waterflower);
 			}
 		}
@@ -214,7 +214,7 @@ int CollectorComponent::getVases(void) {
  ** window: current game render window
  **/
 void CollectorComponent::render(sf::RenderWindow *window, bool minimap) {
-	if (owner->getId() == "Player" && !minimap) {
+	if (owner->isOfType("Player") && !minimap) {
 		std::vector<sf::Sprite>::iterator it;
 		int i = 0;
 		int sep = 2;

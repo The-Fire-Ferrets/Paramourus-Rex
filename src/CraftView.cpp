@@ -283,16 +283,16 @@ void CraftView::Create(const char* resource, int* state) {
       for (int i=0; i < flowers.size() ; i++){
 	// here, flowerList is a vector full of StrongActorPtrs. determine the id of each strongactorptr
 	// to determine if it is a fire flower, water flower, air flower, or earth flower
-	  if (flowers[i]->getId() == "FireFlower"){
+	  if (flowers[i]->isOfType("FireFlower")){
 	      fireFlowers++;
 	  }
-	  else if (flowers[i]->getId() == "WaterFlower"){
+	  else if (flowers[i]->isOfType("WaterFlower")){
 	      waterFlowers++;
 	  }
-	  else if (flowers[i]->getId() == "AirFlower"){
+	  else if (flowers[i]->isOfType("AirFlower")){
 	      airFlowers++;
 	  }
-	  else if (flowers[i]->getId() == "EarthFlower"){
+	  else if (flowers[i]->isOfType("EarthFlower")){
 	      earthFlowers++;
 	  }
 
@@ -360,7 +360,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 			      // check if this sprite exists within the flowerlist - if so, sets
 			      // selected actor equal to the first flower it finds of that type
 			      for (int j = 0; j < actorList.size(); j++){
-					    if (actorList[j]->getId() == std::get<1>(testList[i])){
+					    if (actorList[j]->isOfType(std::get<1>(testList[i]))){
 							if (box1 == false){
 				    			selectedActor1 = actorList[j];
 							break;
@@ -444,38 +444,38 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 
 	// Check to see if flowers within the craft box are clicked to return them to player inventory
 	if (box1Sprite.getGlobalBounds().contains(pos.x,pos.y)){
-	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor1->getId();
+	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor1->getId().back();
 	    box1 = false;
 	    totalFlowers++;
-	    if (selectedActor1->getId() == "FireFlower"){
+	    if (selectedActor1->isOfType("FireFlower")){
 			  fireFlowers++;
 	    }
-	    else if (selectedActor1->getId() == "WaterFlower"){
+	    else if (selectedActor1->isOfType("WaterFlower")){
 			  waterFlowers++;
 	    }
-	    else if (selectedActor1->getId() == "EarthFlower"){
+	    else if (selectedActor1->isOfType("EarthFlower")){
 			  earthFlowers++;
 	    }
-	    else if (selectedActor1->getId() == "AirFlower"){
+	    else if (selectedActor1->isOfType("AirFlower")){
 			  airFlowers++;
 	    }
 	}
 
 	// Attempting to remove flower from box2 of craft table and return them to player inventory
 	if (box2Sprite.getGlobalBounds().contains(pos.x,pos.y)){
-	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor2->getId();
+	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor2->getId().back();
 	    box2 = false;
 	    totalFlowers++;
-	    if (selectedActor2->getId() == "FireFlower"){
+	    if (selectedActor2->isOfType("FireFlower")){
 			  fireFlowers++;
 	    }
-	    else if (selectedActor2->getId() == "WaterFlower"){
+	    else if (selectedActor2->isOfType("WaterFlower")){
 			  waterFlowers++;
 	    }
-	    else if (selectedActor2->getId() == "EarthFlower"){
+	    else if (selectedActor2->isOfType("EarthFlower")){
 			  earthFlowers++;
 	    }
-	    else if (selectedActor2->getId() == "AirFlower"){
+	    else if (selectedActor2->isOfType("AirFlower")){
 			  airFlowers++;
 	    }
 	}

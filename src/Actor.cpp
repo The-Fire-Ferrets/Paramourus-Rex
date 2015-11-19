@@ -12,7 +12,7 @@ const int Actor::num_directions = 4;
 /** Gets the current actors ID
  **
  **/
-ActorId Actor::getId(void) const {
+std::vector<ActorId> Actor::getId(void) const {
 	return id;
 }
 
@@ -20,7 +20,7 @@ ActorId Actor::getId(void) const {
  **
  **/
 bool Actor::operator==(const Actor& rhs) const {
-	return this->getId() == rhs.getId();
+	return this->getId().back() == rhs.getId().back();
 }
 
 /** Constructor
@@ -33,6 +33,7 @@ Actor::Actor(void) {
 	visible = true;
 	renderToGameView = true;
 	direction = sf::Vector2f(0,0);
+	id.clear();
 }
 
 
@@ -58,7 +59,7 @@ bool Actor::Init(pugi::xml_node* elem) {
 	char* temp;
     for (pugi::xml_attribute attr = elem->first_attribute(); attr; attr = attr.next_attribute()) {
         if (!strcmp(attr.name(),"Type"))
-            id = attr.value();
+            id.push_back(attr.value());
 	 else if (!strcmp(attr.name(),"PathType")) {
 		path_type  = std::strtol(attr.value(), &temp, 10);
 		if (*temp != '\0') {
@@ -411,7 +412,7 @@ void Actor::updateBoundary(void) {
 		}
 	}	
 	else {
-		if (id == "Obstacle")
+		if (isOfType("Obstacle"))
 			*boundary.back() = sf::FloatRect(position.x + size.x * minimize, position.y + size.y * minimize, size.x * (1 - 2*minimize), size.y * (1 - 2*minimize));
 		else
 			*boundary.back() = sf::FloatRect(position.x, position.y, size.x, size.y);
@@ -677,4 +678,13 @@ void Actor::setMinimapSpritePosition(sf::Vector2f pos) {
 		float y = bounds.height/2; // sprite_minimap.getScale().y;
 		sprite_minimap.move(-x, -y);
 	}
+}
+
+//CHeck if actor is of given type
+bool Actor::isOfType(ActorId type) {
+	for (auto itr = id.begin(); itr != id.end(); itr++) {
+		if (*itr == type)
+			return true;
+	}
+	return false;
 }

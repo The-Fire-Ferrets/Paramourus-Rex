@@ -498,33 +498,38 @@ void LevelView::update(EventInterfacePtr e) {
 		EventType event_type = e->getEventType();
 		if (event_type == ContactEvent::event_type) {
 			StrongActorPtr display_actor = getActor(e->getSender());
-			ActorId display_id = display_actor->getId();
-			StrongActorPtr contact_actor;
-			ActorId contact_id;
-			if ( (int) e->getReceiver() < 0) {
-				contact_id = "";
-			}
-			else {
+			StrongActorPtr contact_actor = NULL;
+			std::vector<ActorId> contact_id;
+			if ( (int) e->getReceiver() >= 0) {
 				contact_actor = getActor(e->getReceiver());
 				contact_id = contact_actor->getId();
 			}
-			if (commentary_strings.find(std::pair<ActorId, ActorId>(display_id, contact_id)) != commentary_strings.end() && commentary_occurance[std::pair<ActorId, ActorId>(display_id, contact_id)] != 0) {
-				commentary_occurance[std::pair<ActorId, ActorId>(display_id, contact_id)]--;
-				int action = commentary_actions[std::pair<ActorId, ActorId>(display_id, contact_id)];
-				last_action = action;
-				if (action >= 0) {
-					for (auto action_itr = actions[action].begin(); action_itr != actions[action].end(); action_itr++) {
-						pugi::xml_node temp = *action_itr;
-						generateActor(&(temp), game_state);
+			for (auto itr_cs = commentary_strings.begin(); itr_cs != commentary_strings.end(); itr_cs++) {
+				bool found = false;
+				if (contact_actor == NULL && display_actor->isOfType(itr_cs->first.first) && itr_cs->first.second == "" && commentary_occurance[std::pair<ActorId, ActorId>(itr_cs->first.first, itr_cs->first.second)] != 0)
+					found = true;
+				else if (display_actor->isOfType(itr_cs->first.first) && contact_actor->isOfType(itr_cs->first.second) && commentary_occurance[std::pair<ActorId, ActorId>(itr_cs->first.first, itr_cs->first.second)] != 0) {
+					found = true;
+				}
+				if (found) {
+					commentary_occurance[std::pair<ActorId, ActorId>(itr_cs->first.first, itr_cs->first.second)]--;
+					int action = commentary_actions[std::pair<ActorId, ActorId>(itr_cs->first.first, itr_cs->first.second)];
+					last_action = action;
+					if (action >= 0) {
+						for (auto action_itr = actions[action].begin(); action_itr != actions[action].end(); action_itr++) {
+							pugi::xml_node temp = *action_itr;
+							generateActor(&(temp), game_state);
+						}
 					}
-				}
-				else if (action == -1) {
-					reveal_back_button = true;
-				}
-				int r = rand() % commentary_strings[std::pair<ActorId, ActorId>(display_id, contact_id)].size();
-				commentary[e->getSender()] = sf::Text(commentary_strings[std::pair<ActorId, ActorId>(display_id, contact_id)][r], font, 5);
-				commentary_timer[e->getSender()].restart();
-			}	
+					else if (action == -1) {
+						reveal_back_button = true;
+					}
+					int r = rand() % itr_cs->second.size();
+					commentary[e->getSender()] = sf::Text((itr_cs->second)[r], font, 5);
+					commentary_timer[e->getSender()].restart();
+					break;
+				}	
+			}
 		}
 	}
 }
@@ -579,10 +584,13 @@ void LevelView::render(sf::RenderWindow *window) {
 		window->setView(minimapView);
 
 		//Update graphics
-		window->draw(background);
-		window->draw(timer);
-		for (it = actorList.begin(); it != actorList.end(); it++)
-			(*it)->render(window, true);
+		window->draw(minimap_background);
+		//window->draw(timer);
+		for (it = actorList.begin(); it != actorList.end(); it++) {
+			if (!(*it)->isOfType("Obstacle") && !(*it)->isOfType("Wall")) {
+				(*it)->render(window, true);
+			}
+		}
 		player->render(window, true);
 		//window->draw(minimap_border);
 

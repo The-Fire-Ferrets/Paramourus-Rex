@@ -98,9 +98,19 @@
 		</PhysicsComponent>
 	</Obstacle>
 
-	<Obstacle Generate = "50">
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+	<Obstacle Generate = "50" Type = "Cactus"  Sprite = "Cactus.png"  Damage = "True">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<PhysicsComponent>
+			<Properties Type = "Opaque" />
+		</PhysicsComponent>
 	</Obstacle>
+	<Obstacle Generate = "50" Type = "Rock"  Sprite = "Rock.png"  Damage = "False">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<PhysicsComponent>
+			<Properties Type = "Opaque" />
+		</PhysicsComponent>
+	</Obstacle>
+
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<InputComponent>
@@ -146,7 +156,7 @@
 	</FireFlower>
 
 	<Commentary>	
-		<Commentary1  Actor = "Player" Contact = "Obstacle"  Action = "-2" Occurance = "-1">
+		<Commentary1  Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Ouch! That hurt." />
 			<Dialogue2  Text = "I'll try to avoid that next time." />
 			<Dialogue3  Text = "Lost another flower." />

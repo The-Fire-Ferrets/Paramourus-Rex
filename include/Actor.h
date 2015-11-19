@@ -17,7 +17,7 @@ class Actor {
 		int getInstance(void);
 
 		ActorComponents components;
-		ActorId getId(void) const;
+		std::vector<ActorId> getId(void) const;
 		bool operator==(const Actor& rhs) const;
 
 		explicit Actor(void);
@@ -47,6 +47,7 @@ class Actor {
 		void setVisible(bool v);
 		bool getVisible(void);
 
+		bool isOfType(ActorId type);
 		int getState(void);
 		void setState(int actorState);
 		int* getGameState(void);
@@ -70,7 +71,7 @@ class Actor {
 		void setDirection(sf::Vector2f dir);
 
 	private:
-		ActorId id;
+		std::vector<ActorId> id;
 		sf::Vector2f start_position;
 		sf::Vector2f initial_position;
 		const static int num_directions;

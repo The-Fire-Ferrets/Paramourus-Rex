@@ -92,18 +92,31 @@
 	</Obstacle>
 
 
-	<Obstacle Generate = "50">
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+	<Obstacle Generate = "50" Type = "Cactus"  Sprite = "Cactus.png"  Damage = "True">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<PhysicsComponent>
+			<Properties Type = "Opaque" />
+		</PhysicsComponent>
 	</Obstacle>
+	<Obstacle Generate = "50" Type = "Rock"  Sprite = "Rock.png"  Damage = "False">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<PhysicsComponent>
+			<Properties Type = "Opaque" />
+		</PhysicsComponent>
+	</Obstacle>
+
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<InputComponent>
-			<Control Type = "Keyboard" Speed = "8"/>
+			<Control Speed = "4"/>
 		</InputComponent>
 		<Pathfinder PathType = "-4"/>
 	</Player>
 	<NPC Generate = "2">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<InputComponent>
+			<Control Speed = "3.5"/>
+		</InputComponent>
 		<PhysicsComponent>
 			<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
 		</PhysicsComponent>
@@ -125,4 +138,21 @@
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</FireFlower>
+
+	<Commentary>	
+		<Commentary1  Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
+			<Dialogue1  Text = "Ouch! That hurt." />
+			<Dialogue2  Text = "I'll try to avoid that next time." />
+			<Dialogue3  Text = "Lost another flower." />
+			<Dialogue4  Text = "That was a mistake." />
+			<Dialogue5  Text = "Prickly, Prickly, Prickly." />
+		</Commentary1>	
+		<Commentary2  Actor = "NPC" Contact = "Player"  Action = "-2" Occurance = "-1">
+			<Dialogue1  Text = "Thank You!" />
+			<Dialogue2  Text = "Don't mind if I take one of these!" />
+			<Dialogue3  Text = "Diana is going to love this." />
+			<Dialogue4  Text = "You didn't run fast enough" />
+			<Dialogue5  Text = "You can run and you can hide, oh wait..." />
+		</Commentary2>		
+	</Commentary>
 </Level3>
