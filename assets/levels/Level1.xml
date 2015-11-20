@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level1 Name = "Impact Desert" Background = "Level1.png" MinimapBackground = "minimapbg.png" Edge = "Lava.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "45000">
+<Level1 Name = "Impact Desert" Background = "Level1.png" MinimapBackground = "minimapbg.png" Edge = "Lava.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "60000">
 
 	<!-- Outer Boundaries -->
 	<Obstacle Type = "Wall"  Sprite = "Level1.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 0 0 400 0 0 25 400 25">		
@@ -151,19 +151,21 @@
 		</PhysicsComponent>
 		<Pathfinder PathType = "-5"/>
 	</Obstacle>
-	<EarthFlower>
+	<EarthFlower Generate = "4">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</EarthFlower>
-	<AirFlower>
+	<AirFlower Generate = "1">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</AirFlower>
+	<!--
 	<WaterFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</WaterFlower>
-	<FireFlower>
+	-->
+	<FireFlower Generate = "1">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</FireFlower>
