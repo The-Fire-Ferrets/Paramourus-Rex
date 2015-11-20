@@ -237,23 +237,23 @@ void CraftView::Create(const char* resource, int* state) {
 
     // Setting crafting button elements
     button_text.setString("Craft");
-    button_text.setPosition(200,170);
+    button_text.setPosition(Configuration::getWindowWidth()/3,Configuration::getWindowHeight()/3.53);
     button_text.setFont(font);
     button_text.setColor(sf::Color::Black);
 
 	map_button.setPosition(Configuration::getWindowWidth() - 110, 10);
-	map_button.setSize(sf::Vector2f(100, 40));
+	map_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/15));
 	map_button.setFillColor(sf::Color::White);
 	map_button.setOutlineColor(sf::Color::Black);
 	map_button.setOutlineThickness(5.f);
 
 	dialogue_button.setPosition(Configuration::getWindowWidth() - 110, 70);
-	dialogue_button.setSize(sf::Vector2f(100, 40));
+	dialogue_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/15));
 	dialogue_button.setFillColor(sf::Color::White);
 	dialogue_button.setOutlineColor(sf::Color::Black);
 	dialogue_button.setOutlineThickness(5.f);
 
-    craftButton.setPosition(200, 170);
+    craftButton.setPosition(Configuration::getWindowWidth()/3, Configuration::getWindowHeight()/3.53);
     craftButton.setFillColor(sf::Color::White);
     craftButton.setOutlineColor(sf::Color::Black);
     craftButton.setOutlineThickness(5);
@@ -476,6 +476,8 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	    box1 = false;
 	    totalFlowers++;
 	    returnFlower(selectedActor1);
+	    std::cout << "Returned flower\n";
+
 	}
 
 	// Attempting to remove flower from box2 of craft table and return them to player inventory
@@ -484,6 +486,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	    box2 = false;
 	    totalFlowers++;
 	    returnFlower(selectedActor2);
+	    std::cout << "Returned flower\n";
 	}
 
 	// Draw recipe book
@@ -645,7 +648,6 @@ void CraftView::render(sf::RenderWindow *window) {
     window->draw(craftButton);
     window->draw(button_text);
     
-    int height = Configuration::getWindowHeight()/4;
     int width = Configuration::getWindowWidth()/13.3;
 
     // draw flower sprites on left
@@ -653,47 +655,47 @@ void CraftView::render(sf::RenderWindow *window) {
 	window->draw(sprites[i]);
 	if (i == 0){
 	  flower_str = "x " + std::to_string(fireFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+10);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/60);
 	}
 	else if (i ==1){
 	  flower_str = "x " + std::to_string(waterFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+50);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/12);
 	}
 	else if (i == 2){
 	  flower_str = "x " + std::to_string(earthFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+90);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/6.67);
 	}
 	else if (i == 3){
 	  flower_str = "x " + std::to_string(airFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+130);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/4.62);
 	}
 	else if (i == 4){
 	  flower_str = "x " + std::to_string(sunFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+170);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/3.53);
 	}
 	else if (i == 5){
 	  flower_str = "x " + std::to_string(tulips);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+210);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/2.86);
 	}
 	else if (i == 6){
 	  flower_str = "x " + std::to_string(roses);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+250);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/2.4);
 	}
 	else if (i == 7){
 	  flower_str = "x " + std::to_string(violets);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+290);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/2.06);
 	}
 	else if (i == 8){
 	 flower_str = "x " + std::to_string(lilies);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+330);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/1.81);
 	}
 	else if (i == 9){
 	 flower_str = "x " + std::to_string(orchids);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+370);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/1.61);
 	}
 	else if (i == 10){
 	  flower_str = "x " + std::to_string(magnolias);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+410);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/1.46);
 	}
 	flower_text.setString(flower_str);
 	window->draw(flower_text);
