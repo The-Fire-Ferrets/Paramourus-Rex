@@ -43,7 +43,8 @@ int MapView::view_state = 1;
 sf::Sprite MapView::title_sprite;
 sf::Texture MapView::title_texture;
 sf::Vector2f MapView::title_size;
-
+int MapView::min_flowers;
+int MapView::max_flowers;
 /** Creates the map from the give configuration file
  **
  **/
@@ -114,25 +115,37 @@ void MapView::Create(const char* resource) {
             else if (!strcmp(attr.name(),"Width")) {
                 sizes[num_levels].x = std::strtol(attr.value(), &temp, 10);
                 if (*temp != '\0') {
-                    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+                    std::cout << "MapView::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
                 }
             }
             else if (!strcmp(attr.name(),"Height")) {
                 sizes[num_levels].y = std::strtol(attr.value(), &temp, 10);
                 if (*temp != '\0') {
-                    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+                    std::cout << "MapView::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
                 }
             }
 	    else if (!strcmp(attr.name(),"Height")) {
                 sizes[num_levels].y = std::strtol(attr.value(), &temp, 10);
                 if (*temp != '\0') {
-                    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+                    std::cout << "MapView::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
                 }
             }
 	    else if (!strcmp(attr.name(),"Height")) {
                 sizes[num_levels].y = std::strtol(attr.value(), &temp, 10);
                 if (*temp != '\0') {
-                    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+                    std::cout << "MapView::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+                }
+            }
+		else if (!strcmp(attr.name(),"MinFlowers")) {
+                min_flowers = std::strtol(attr.value(), &temp, 10);
+                if (*temp != '\0') {
+                    std::cout << "MapView::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+                }
+            }
+	else if (!strcmp(attr.name(),"MaxFlowers")) {
+                max_flowers = std::strtol(attr.value(), &temp, 10);
+                if (*temp != '\0') {
+                    std::cout << "MapView::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
                 }
             }
 	    else if (!strcmp(attr.name(),"FireFlower")) {
@@ -220,7 +233,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
  **
 **/
 void MapView::resetPopulationValues(void) {
-	flowers = rand() % 5 + 5;
+	flowers = rand() % (max_flowers - min_flowers) + min_flowers;
 	for (int i = 0; i < num_levels; i++) {
 		if (i > 1) {
 			fireflowers_count[i] = (int)(flowers * fireflowers[i]);
