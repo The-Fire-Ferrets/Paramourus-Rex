@@ -30,7 +30,7 @@ std::string MapView::flowers_string[size];
 sf::Text MapView::flowers_text[size];
 sf::Font MapView::font;
 //Number flowers
-int MapView::flowers;
+int MapView::flowers[size];
 //Map Background texture
 sf::Texture MapView::background_texture;
 //Make sure to respond to only 1 click
@@ -43,8 +43,8 @@ int MapView::view_state = 1;
 sf::Sprite MapView::title_sprite;
 sf::Texture MapView::title_texture;
 sf::Vector2f MapView::title_size;
-int MapView::min_flowers;
-int MapView::max_flowers;
+int MapView::min_flowers[size];
+int MapView::max_flowers[size];
 /** Creates the map from the give configuration file
  **
  **/
@@ -137,13 +137,13 @@ void MapView::Create(const char* resource) {
                 }
             }
 		else if (!strcmp(attr.name(),"MinFlowers")) {
-                min_flowers = std::strtol(attr.value(), &temp, 10);
+                min_flowers[num_levels] = std::strtol(attr.value(), &temp, 10);
                 if (*temp != '\0') {
                     std::cout << "MapView::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
                 }
             }
 	else if (!strcmp(attr.name(),"MaxFlowers")) {
-                max_flowers = std::strtol(attr.value(), &temp, 10);
+                max_flowers[num_levels] = std::strtol(attr.value(), &temp, 10);
                 if (*temp != '\0') {
                     std::cout << "MapView::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
                 }
@@ -233,13 +233,16 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
  **
 **/
 void MapView::resetPopulationValues(void) {
-	flowers = rand() % (max_flowers - min_flowers) + min_flowers;
 	for (int i = 0; i < num_levels; i++) {
 		if (i > 1) {
-			fireflowers_count[i] = (int)(flowers * fireflowers[i]);
-			earthflowers_count[i] = (int)(flowers * earthflowers[i]);
-			waterflowers_count[i] = (int)(flowers * waterflowers[i]);
-			airflowers_count[i] = (int)(flowers * airflowers[i]);
+			if (min_flowers[i] == max_flowers[i])
+				flowers[i] = max_flowers[i];
+			else
+				flowers[i] = rand() % (max_flowers[i] - min_flowers[i]) + min_flowers[i];
+			fireflowers_count[i] = (int)(flowers[i] * fireflowers[i]);
+			earthflowers_count[i] = (int)(flowers[i] * earthflowers[i]);
+			waterflowers_count[i] = (int)(flowers[i] * waterflowers[i]);
+			airflowers_count[i] = (int)(flowers[i] * airflowers[i]);
 			flowers_string[i] = "F:" + std::to_string(fireflowers_count[i]) + " E:" + std::to_string(earthflowers_count[i]) + " A:" + std::to_string(airflowers_count[i]) + " W:" + std::to_string(waterflowers_count[i]);
 			flowers_text[i] = sf::Text(flowers_string[i], font);
 			flowers_text[i].setCharacterSize(15);

@@ -77,6 +77,7 @@ class LevelView  {
 		static void update(sf::RenderWindow *window, int* state, float time);
 		static void update(EventInterfacePtr e);
 		static void render(sf::RenderWindow *window);
+		static bool vases_full;
 };
 
 #endif
