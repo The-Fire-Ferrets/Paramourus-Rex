@@ -41,7 +41,6 @@ class CraftView  {
 	static sf::Font font;
 	static std::string flower_str;
 	static sf::Text flower_text;
-	static sf::Text button_text;
 	
 	// Position variables
 	static sf::Vector2f sizes[];
