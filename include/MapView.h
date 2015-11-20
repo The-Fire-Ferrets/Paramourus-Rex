@@ -32,14 +32,14 @@ class MapView {
 		static std::string flowers_string[];
 		static sf::Text flowers_text[];
 		static sf::Font font;
-		static int flowers;
+		static int flowers[];
 		static bool pressed;
 		static bool reset;
 		static void resetPopulationValues(void);
 		static int view_state;
 		static EventDelegate delegate;
-		static int min_flowers;
-		static int max_flowers;
+		static int min_flowers[];
+		static int max_flowers[];
 	public:
 		static void Create(const char* resource);
 
