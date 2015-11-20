@@ -111,13 +111,13 @@
 	</Obstacle>
 
 
-	<Obstacle Generate = "50" Type = "Cactus"  Sprite = "Cactus.png"  Damage = "True">
+	<Obstacle Generate = "20" Type = "Cactus"  Sprite = "Cactus.png"  Damage = "True">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<PhysicsComponent>
 			<Properties Type = "Opaque" />
 		</PhysicsComponent>
 	</Obstacle>
-	<Obstacle Generate = "50" Type = "Rock"  Sprite = "Rock.png"  Damage = "False">
+	<Obstacle Generate = "20" Type = "Rock"  Sprite = "Rock.png"  Damage = "False">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<PhysicsComponent>
 			<Properties Type = "Opaque" />
@@ -131,8 +131,18 @@
 		</InputComponent>
 		<Pathfinder PathType = "-4"/>
 	</Player>
-	<NPC Generate = "2">
+	<NPC Generate = "1">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<InputComponent>
+			<Control Speed = "3.5"/>
+		</InputComponent>
+		<PhysicsComponent>
+			<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-3" TargetType = "-2"/>
+	</NPC>
+	<NPC Generate = "1">
+		<Location X = "750" Y = "550" Width = "10" Height = "10"/>
 		<InputComponent>
 			<Control Speed = "3.5"/>
 		</InputComponent>

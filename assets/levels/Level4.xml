@@ -182,6 +182,10 @@
     	<Location X = "630" Y = "558" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</AirFlower>
+	<AirFlower Generate = "1">
+    	<Location X = "47" Y = "477" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-2"/>
+	</AirFlower>
 	<WaterFlower Generate = "1">
     	<Location X = "32" Y = "30" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
