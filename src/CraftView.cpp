@@ -347,6 +347,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 		  cleanUp();
         }
 		else if (map_button.getGlobalBounds().contains(pos.x, pos.y)) {
+			LevelView::player->reset();
 			*state = 0;
 			cleanUp();
 		}
