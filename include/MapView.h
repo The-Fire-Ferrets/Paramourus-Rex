@@ -38,6 +38,8 @@ class MapView {
 		static void resetPopulationValues(void);
 		static int view_state;
 		static EventDelegate delegate;
+		static int min_flowers;
+		static int max_flowers;
 	public:
 		static void Create(const char* resource);
 
