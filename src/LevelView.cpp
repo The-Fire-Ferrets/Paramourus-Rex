@@ -474,11 +474,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		gameView.setCenter(Configuration::getGameViewCenter());
 
 		//Check to see if conditions met to display back button
-		std::shared_ptr<ActorComponent> ac = player->components[CollectorComponent::id];
-		std::shared_ptr<CollectorComponent> cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
-		bool flowers_collectable = cc->getFlowers().size() < cc->getVases();
-
-		if ((flowers_left == 0 || !flowers_collectable) && inVision == 0) {
+		if (flowers_left == 0 && inVision == 0) {
 			reveal_back_button = true;
 		}
 		else if (inVision) {
