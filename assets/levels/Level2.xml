@@ -112,22 +112,20 @@
 		</PhysicsComponent>
 		<Pathfinder PathType = "-5"/>
 	</Obstacle>
-	<EarthFlower Generate = "2">
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+	<EarthFlower>
+    	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</EarthFlower>
-	<!--
 	<AirFlower>
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+    	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</AirFlower>
 	<WaterFlower>
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+    	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</WaterFlower>
-	-->
-	<FireFlower Generate = "3">
-    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+	<FireFlower>
+    	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</FireFlower>
 
