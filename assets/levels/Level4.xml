@@ -125,26 +125,10 @@
 		</PhysicsComponent>
 	</Obstacle>
 	-->
-	<Obstacle Generate = "50" Type = "Rock"  Sprite = "Rock.png"  Damage = "False">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<PhysicsComponent>
-			<Properties Type = "Opaque" />
-		</PhysicsComponent>
-	</Obstacle>
 
-	<Player>
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<InputComponent>
-			<Control Speed = "4"/> 
-		</InputComponent>
-		<Pathfinder PathType = "-3"  TargetType = "-5"/>
-		<CollectorComponent>
-			<Items Vases = "6" />
-		</CollectorComponent>
-	</Player>
 	<NPC Generate = "1">
 		<Location X = "174" Y = "284" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-3" TargetType = "-6" TargetType = "-7"/>
+		<Pathfinder PathType = "-3" TargetType = "-6"/>
 		<InputComponent>
 			<Control Speed = "3.5"/>
 		</InputComponent>
@@ -164,7 +148,7 @@
 		<PhysicsComponent>
 			<Properties Type = "Transparent"/>
 		</PhysicsComponent>
-		<Pathfinder PathType = "-7"/>
+		<Pathfinder PathType = "-6"/>
 	</Obstacle>
 	<AirFlower Generate = "1">
     	<Location X = "738" Y = "48" Width = "10" Height = "10"/>
@@ -179,8 +163,22 @@
 		<Pathfinder PathType = "-2"/>
 	</WaterFlower>
 
+	<Obstacle Generate = "50" Type = "Rock"  Sprite = "Rock.png"  Damage = "False">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<PhysicsComponent>
+			<Properties Type = "Opaque" />
+		</PhysicsComponent>
+	</Obstacle>
+
+	<Player>
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<InputComponent>
+			<Control Speed = "4"/> 
+		</InputComponent>
+		<Pathfinder PathType = "-4"/>
+	</Player>
+
 	<Commentary>	
-		<!--
 		<Commentary1  Display = "Player" Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Ouch! That hurt." />
 			<Dialogue2  Text = "I'll try to avoid that next time." />
@@ -188,7 +186,6 @@
 			<Dialogue4  Text = "That was a mistake." />
 			<Dialogue5  Text = "Prickly, Prickly, Prickly." />
 		</Commentary1>	
-		-->
 		<Commentary1  Display = "Player" Actor = "NPC" Contact = "Player"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Thank You!" />
 			<Dialogue2  Text = "Don't mind if I take one of these!" />

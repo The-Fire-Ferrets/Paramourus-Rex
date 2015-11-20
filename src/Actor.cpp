@@ -256,10 +256,12 @@ void Actor::PostInit(pugi::xml_node* elem) {
 	}
 	else {
 		for (int i = 0; i < num_directions; i++)
-			if (!sprite_filename[i].empty())
-				sprite_texture[i].loadFromFile(("./assets/backgrounds/" + sprite_filename[i]).c_str());
-			else
-				sprite_texture[i].loadFromFile(("./assets/backgrounds/" + sprite_filename[0]).c_str());
+			if (!sprite_filename[i].empty()) {
+				//sprite_texture[i].loadFromFile(("./assets/backgrounds/" + sprite_filename[i]).c_str());
+			}
+			else if (!sprite_filename[0].empty()) {
+				//sprite_texture[i].loadFromFile(("./assets/backgrounds/" + sprite_filename[0]).c_str());
+			}
 			
 	}
 }
