@@ -66,7 +66,6 @@ sf::Sprite CraftView::recipeBook;
 
 sf::RectangleShape CraftView::backlay;
 sf::RectangleShape CraftView::craftButton;
-sf::Text CraftView::button_text;
 
 // Ways to exit the crafting table
 sf::RectangleShape CraftView::map_button;
@@ -131,13 +130,11 @@ void CraftView::Create(const char* resource, int* state) {
             font.loadFromFile(("./assets/" + (std::string)attr.value()).c_str());
             text.setFont(font);
 	    flower_text.setFont(font);
-	    button_text.setFont(font);
         }
         // Size of dialogue text
         else if (!strcmp(attr.name(), "Text_Size")) {
             text.setCharacterSize(std::strtol(attr.value(), &temp, 10));
 	    flower_text.setCharacterSize(25);
-	    button_text.setCharacterSize(std::strtol(attr.value(), &temp, 10));
 
             if (*temp != '\0') {
                 std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
@@ -234,12 +231,6 @@ void CraftView::Create(const char* resource, int* state) {
     backlay.setFillColor(sf::Color::White);
     backlay.setSize(sf::Vector2f(Configuration::getWindowWidth()/1.3,Configuration::getWindowHeight()/4));
     backlay.setOutlineThickness(5);
-
-    // Setting crafting button elements
-    button_text.setString("Craft");
-    button_text.setPosition(200,170);
-    button_text.setFont(font);
-    button_text.setColor(sf::Color::Black);
 
 	map_button.setPosition(Configuration::getWindowWidth() - 110, 10);
 	map_button.setSize(sf::Vector2f(100, 40));
@@ -561,6 +552,12 @@ void CraftView::render(sf::RenderWindow *window) {
 	window->draw(character_sprite);
 	window->draw(map_button);
 
+    // Setting crafting button elements
+	sf::Text button_text("Craft", font);
+    button_text.setPosition(200,170);
+    button_text.setColor(sf::Color::Black);
+	window->draw(button_text);
+
 	sf::Text map_text("Map", font);
 	map_text.setColor(sf::Color::Black);
 	button_width = map_button.getSize().x;
@@ -597,7 +594,6 @@ void CraftView::render(sf::RenderWindow *window) {
 
     // draw craft button and text on it
     window->draw(craftButton);
-    window->draw(button_text);
 
     // draw flower sprites on left
     for (int i = 0; i <= 9; i++){
