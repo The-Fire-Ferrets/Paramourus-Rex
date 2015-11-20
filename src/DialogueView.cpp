@@ -205,7 +205,7 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 			pressed = true;
 			std::cout << index << " " << boxes.size() << std::endl;
 			// if we are at least at one of Diana's two responses to your answer
-			if (index >= boxes.size()-1){
+			if (index >= boxes.size()-1 || (index >= boxes.size() && name == "Level0")){
 				// stop displaying text, wait for user response before closing dialogueview
 			      if (view_state == 1)
 				  	*state = 0;
@@ -213,8 +213,9 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 				  	*state = 5;
 			      cleanUp();
 			}
-
-			else if (index < boxes.size()-2){
+    
+			// If it's two dialogues away from the end, we know it's at Phil's dialogue (except in case of Level0)
+			else if (index < boxes.size()-2 || (name == "Level0" && index < boxes.size())){
 				if (boxes[index].first == "Narrator") {
 					rhs_character_tex = sf::Texture();
 				}
@@ -243,29 +244,31 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 	}
 	// wait for player to choose dialogue option 1 or 2 embedded in text
 	// update Diana's opinion, then end dialogueView accordingly
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) && index == boxes.size()-2){
-		if (response == 1){
-			num_times_impressed++;
-		}
-		else{
-			num_times_impressed--;
-		}
-		// skip to Diana's first response, the response to option 1
-		//index++;
-		text.setString(boxes[index].second);
-		index++;
+	if (name != "Level0"){
+	    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) && index == boxes.size()-2){
+		    if (response == 1){
+			    num_times_impressed++;
+		    }
+		    else{
+			    num_times_impressed--;
+		    }
+		    // skip to Diana's first response, the response to option 1
+		    //index++;
+		    text.setString(boxes[index].second);
+		    index++;
 
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) && index == boxes.size()-2){
-		if (response == 2){
-			num_times_impressed++;
-		}
-		else{
-			num_times_impressed--;
-		}
-		// skip to Diana's second response, the response to option 2
-		index ++;
-		text.setString(boxes[index].second);
+	    }
+	    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) && index == boxes.size()-2){
+		    if (response == 2){
+			    num_times_impressed++;
+		    }
+		    else{
+			    num_times_impressed--;
+		    }
+		    // skip to Diana's second response, the response to option 2
+		    index ++;
+		    text.setString(boxes[index].second);
+	    }
 	}
 }
 
