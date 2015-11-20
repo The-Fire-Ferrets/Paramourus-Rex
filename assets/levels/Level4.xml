@@ -136,6 +136,16 @@
 			<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
 		</PhysicsComponent>
 	</NPC>
+	<NPC Generate = "1">
+		<Location X = "650" Y = "423" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-3" TargetType = "-7"/>
+		<InputComponent>
+			<Control Speed = "3.5"/>
+		</InputComponent>
+		<PhysicsComponent>
+			<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
+		</PhysicsComponent>
+	</NPC>
 	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
 		<Location X = "170" Y = "174" Width = "10" Height = "10"/>		
 		<PhysicsComponent>
@@ -150,6 +160,20 @@
 		</PhysicsComponent>
 		<Pathfinder PathType = "-6"/>
 	</Obstacle>
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "755" Y = "375" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-7"/>
+	</Obstacle>
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "755" Y = "475" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-7"/>
+	</Obstacle>
 	<AirFlower Generate = "1">
     	<Location X = "738" Y = "48" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
@@ -163,7 +187,7 @@
 		<Pathfinder PathType = "-2"/>
 	</WaterFlower>
 
-	<Obstacle Generate = "50" Type = "Rock"  Sprite = "Rock.png"  Damage = "False">
+	<Obstacle Generate = "30" Type = "Rock"  Sprite = "Rock.png"  Damage = "False">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<PhysicsComponent>
 			<Properties Type = "Opaque" />
@@ -171,7 +195,7 @@
 	</Obstacle>
 
 	<Player>
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Location X = "32" Y = "560" Width = "10" Height = "10"/>
 		<InputComponent>
 			<Control Speed = "4"/> 
 		</InputComponent>
