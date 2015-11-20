@@ -95,11 +95,11 @@
 		</InputComponent>
 		<Pathfinder PathType = "-4"/>
 	</Player>
-	<NPC Generate = "3">
+	<NPC Generate = "2">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
 		<InputComponent>
-			<Control Speed = "3.5"/>
+			<Control Speed = "3"/>
 		</InputComponent>
 		<PhysicsComponent>
 			<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
@@ -112,10 +112,11 @@
 		</PhysicsComponent>
 		<Pathfinder PathType = "-5"/>
 	</Obstacle>
-	<EarthFlower>
+	<EarthFlower Generate = "2">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</EarthFlower>
+	<!--
 	<AirFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
@@ -124,7 +125,8 @@
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</WaterFlower>
-	<FireFlower>
+	-->
+	<FireFlower Generate = "3">
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</FireFlower>
