@@ -78,7 +78,7 @@ int LevelView::last_action;
 int* LevelView::game_state;
 // pause screen medium map
 bool LevelView::pause_key_pressed = false;
-
+bool LevelView::vases_full = false;
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -92,6 +92,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	num_actors = 0;
 	reveal_back_button = false;
 	pause_key_pressed = false;
+	vases_full = false;
 	inVision = 0;
 	flashing = 0;
 	commentary_positions.clear();
@@ -323,7 +324,11 @@ void LevelView::generateActor(pugi::xml_node* elem, int* state, int generate) {
 	char* temp;
 	for (pugi::xml_attribute attr = elem->first_attribute(); attr; attr = attr.next_attribute()) {
 		if (!strcmp(attr.name(), "Generate")) {
+			if (!strcmp(elem->name(), "WaterFlower") || !strcmp(elem->name(), "EarthFlower") || !strcmp(elem->name(), "FireFlower") || !strcmp(elem->name(), "AirFlower")) 
+				flowers_left -= generate;
 			generate = (std::strtol(attr.value(), &temp, 10));
+			if (!strcmp(elem->name(), "WaterFlower") || !strcmp(elem->name(), "EarthFlower") || !strcmp(elem->name(), "FireFlower") || !strcmp(elem->name(), "AirFlower")) 
+				flowers_left += generate;
 			if (*temp != '\0') {
 				std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
 			}
@@ -474,10 +479,11 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		gameView.setCenter(Configuration::getGameViewCenter());
 
 		//Check to see if conditions met to display back button
-		if (flowers_left == 0 && inVision == 0) {
+		std::cout << flowers_left << " " << inVision << std::endl;
+		if ((flowers_left == 0 || vases_full) && inVision == 0) {
 			reveal_back_button = true;
 		}
-		else if (inVision) {
+		else if (inVision > 0) {
 			reveal_back_button = false;
 		}
 

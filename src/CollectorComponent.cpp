@@ -108,7 +108,8 @@ bool CollectorComponent::PostInit(void) {
  ** time: current game time
  **/
 void CollectorComponent::update(float time) {
-
+	if (vases == flowers)
+		LevelView::vases_full = true;
 }
 
 /** Receives event when the actor has collected something
