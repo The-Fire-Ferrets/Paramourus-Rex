@@ -97,6 +97,7 @@ class CraftView  {
 		static StrongActorPtr getFlower(std::string type);
 		static bool removeFlower(StrongActorPtr flower);
 		static void addDelegate(EventType type);
+		static void returnFlower(StrongActorPtr flower);
 
 		static std::vector<std::tuple<sf::Sprite, std::string>> testList;
 

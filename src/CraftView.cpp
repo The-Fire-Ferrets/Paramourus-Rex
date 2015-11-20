@@ -355,7 +355,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
         bool inList;
 
         // checking to see if flowers clicked on
-        for (int i = 0; i <= 3; i++){
+        for (int i = 0; i <= 10; i++){
 		    // player attempts to use this item for crafting, but only if one of the two boxes are filled
 		    if (sprites[i].getGlobalBounds().contains(pos.x,pos.y)){
 			      // check if this sprite exists within the flowerlist - if so, sets
@@ -375,20 +375,48 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 
 			      inList = false;
 
-			      if (i == 0 && fireFlowers != 0 && (box1 == false || box2 == false)){
+			      if (i == 0 && fireFlowers > 0 && (box1 == false || box2 == false)){
 					fireFlowers--;
 					inList = true;
 			      }
-			      else if (i == 1 && waterFlowers !=0 && (box1 == false || box2 == false)){
+			      else if (i == 1 && waterFlowers > 0 && (box1 == false || box2 == false)){
 					waterFlowers--;
 					inList = true;
 			      }
-			      else if (i == 2 && earthFlowers != 0 && (box1 == false || box2 == false)){
+			      else if (i == 2 && earthFlowers > 0 && (box1 == false || box2 == false)){
 					earthFlowers--;
 					inList = true;
 			      }
-			      else if (i == 3 && airFlowers != 0 && (box1 == false || box2 == false)){
+			      else if (i == 3 && airFlowers > 0 && (box1 == false || box2 == false)){
 					airFlowers--;
+					inList = true;
+			      }
+			      if (i == 4 && sunFlowers > 0 && (box1 == false || box2 == false)){
+					sunFlowers--;
+					inList = true;
+			      }
+			      else if (i == 5 && tulips > 0 && (box1 == false || box2 == false)){
+					tulips--;
+					inList = true;
+			      }
+			      else if (i == 6 && roses > 0 && (box1 == false || box2 == false)){
+					roses--;
+					inList = true;
+			      }
+			      else if (i == 7 && violets > 0 && (box1 == false || box2 == false)){
+					violets--;
+					inList = true;
+			      }
+			      else if (i == 8 && lilies > 0 && (box1 == false || box2 == false)){
+					lilies--;
+					inList = true;
+			      }
+			      else if (i == 9 && orchids > 0 && (box1 == false || box2 == false)){
+					violets--;
+					inList = true;
+			      }
+			      else if (i == 10 && magnolias > 0 && (box1 == false || box2 == false)){
+					magnolias--;
 					inList = true;
 			      }
 
@@ -399,16 +427,15 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 					  totalFlowers--;
 					  // scale the sprite up in size?
 					  //box1Sprite.setScale(sprites[i].width*4, sprites[i].height*4);
-					  box1Sprite.setPosition(140,50);
+					  box1Sprite.setPosition(Configuration::getWindowWidth()/5.71,Configuration::getWindowHeight()/12);
 					  box1Sprite.setScale(1.0f, 1.0f);
 				  }
 			      else if (box2 == false && inList == true){
 					 // draw sprite in box 2
 					box2 = true;
 					box2Sprite = sprites[i];
-					box2Sprite.setPosition(250, 50);
+					box2Sprite.setPosition(Configuration::getWindowWidth()/3.2,Configuration::getWindowHeight()/12);
 					box2Sprite.setScale(1.0f, 1.0f);
-
 					totalFlowers--;
 				  }
 		    }
@@ -448,18 +475,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor1->getId().back();
 	    box1 = false;
 	    totalFlowers++;
-	    if (selectedActor1->isOfType("FireFlower")){
-			  fireFlowers++;
-	    }
-	    else if (selectedActor1->isOfType("WaterFlower")){
-			  waterFlowers++;
-	    }
-	    else if (selectedActor1->isOfType("EarthFlower")){
-			  earthFlowers++;
-	    }
-	    else if (selectedActor1->isOfType("AirFlower")){
-			  airFlowers++;
-	    }
+	    returnFlower(selectedActor1);
 	}
 
 	// Attempting to remove flower from box2 of craft table and return them to player inventory
@@ -467,18 +483,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor2->getId().back();
 	    box2 = false;
 	    totalFlowers++;
-	    if (selectedActor2->isOfType("FireFlower")){
-			  fireFlowers++;
-	    }
-	    else if (selectedActor2->isOfType("WaterFlower")){
-			  waterFlowers++;
-	    }
-	    else if (selectedActor2->isOfType("EarthFlower")){
-			  earthFlowers++;
-	    }
-	    else if (selectedActor2->isOfType("AirFlower")){
-			  airFlowers++;
-	    }
+	    returnFlower(selectedActor2);
 	}
 
 	// Draw recipe book
@@ -501,6 +506,47 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 }
 
 
+/**
+ *  Returns the given flower to the player's inventory rather than crafting it
+ */
+void CraftView::returnFlower(StrongActorPtr flower){
+  
+      if (flower->isOfType("FireFlower")){
+	fireFlowers++;
+      }
+      else if (flower->isOfType("WaterFlower")){
+	waterFlowers++;
+      }
+      else if (flower->isOfType("EarthFlower")){
+	earthFlowers++;
+      }
+      else if (flower->isOfType("AirFlower")){
+	airFlowers++;
+      }
+      else if (flower->isOfType("SunFlower")){
+	sunFlowers++;
+      }
+      else if (flower->isOfType("Tulip")){
+	tulips++;
+      }
+      else if (flower->isOfType("Rose")){
+	roses++;
+      }
+      else if (flower->isOfType("Violet")){
+	violets++;
+      }
+      else if (flower->isOfType("Lily")){
+	lilies++;
+      }
+      else if (flower->isOfType("Orchid")){
+	orchids++;
+      }
+      else if (flower->isOfType("Magnolia")){
+	magnolias++;
+      }
+}
+
+
 /** Checks for events and update accordingly
  **
  **/
@@ -514,7 +560,7 @@ void CraftView::update(EventInterfacePtr e) {
 		if (sender->hasComponent(CraftableComponent::id)) {
 			// item crafting completed
 			StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
-			text.setString(fitStringToDialogueBox("Diana's sure to love this new " + ac->getType() + ", Phil!"));
+			text.setString(fitStringToDialogueBox("Diana's sure to love this new " + ac->getType() + ", Phil!\nYou should try talking to her!"));
 			if (ac->getType() == "SunFlower"){
 				sunFlowers++;
 			}
@@ -598,49 +644,56 @@ void CraftView::render(sf::RenderWindow *window) {
     // draw craft button and text on it
     window->draw(craftButton);
     window->draw(button_text);
+    
+    int height = Configuration::getWindowHeight()/4;
+    int width = Configuration::getWindowWidth()/13.3;
 
     // draw flower sprites on left
-    for (int i = 0; i <= 9; i++){
+    for (int i = 0; i <= 10; i++){
 	window->draw(sprites[i]);
 	if (i == 0){
 	  flower_str = "x " + std::to_string(fireFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+10);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+10);
 	}
 	else if (i ==1){
 	  flower_str = "x " + std::to_string(waterFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+50);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+50);
 	}
 	else if (i == 2){
 	  flower_str = "x " + std::to_string(earthFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+90);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+90);
 	}
 	else if (i == 3){
 	  flower_str = "x " + std::to_string(airFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+130);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+130);
 	}
 	else if (i == 4){
 	  flower_str = "x " + std::to_string(sunFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+170);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+170);
 	}
 	else if (i == 5){
 	  flower_str = "x " + std::to_string(tulips);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+210);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+210);
 	}
 	else if (i == 6){
 	  flower_str = "x " + std::to_string(roses);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+250);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+250);
 	}
 	else if (i == 7){
 	  flower_str = "x " + std::to_string(violets);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+290);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+290);
 	}
 	else if (i == 8){
 	 flower_str = "x " + std::to_string(lilies);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+330);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+330);
 	}
 	else if (i == 9){
 	 flower_str = "x " + std::to_string(orchids);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+60, sprites[i].getLocalBounds().top+370);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+370);
+	}
+	else if (i == 10){
+	  flower_str = "x " + std::to_string(magnolias);
+	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+410);
 	}
 	flower_text.setString(flower_str);
 	window->draw(flower_text);
