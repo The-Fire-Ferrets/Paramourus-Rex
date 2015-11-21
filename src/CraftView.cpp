@@ -352,10 +352,8 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 		    if (sprites[i].getGlobalBounds().contains(pos.x,pos.y)){
 			      // check if this sprite exists within the flowerlist - if so, sets
 			      // selected actor equal to the first flower it finds of that type
-			      std::cout<< "Looking for segfault";
 			      for (int j = 0; j < actorList.size(); j++){
 					    // here, element 1 of testList[i]
-					    std::cout << "CraftView::Update: checking actorList[" << std::to_string(j) << "].";
 					    if (actorList[j]->isOfType(std::get<1>(testList[i]))){
 						if (box1 == false){
 				    			selectedActor1 = actorList[j];
@@ -462,7 +460,8 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 
 	   // update text box to indicate that you cannot combine flowers
 	   else {
-	     text.setString(fitStringToDialogueBox("Gee Phil, that sure doesn't look too pretty. Why don't you try somethin' else?"));
+	     std::cout << "CraftView::Update: Unable to craft " << selectedActor1->getInstance() << " and Flower: " << selectedActor2->getInstance() << std::endl;
+	     text.setString(fitStringToDialogueBox("Homer not think Diana-lady like those flowers, Phil. Phil try something else."));
 	   }
 	}
 
@@ -471,16 +470,13 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor1->getId().back();
 	    box1 = false;
 	    returnFlower(selectedActor1);
-	    std::cout << "Returned flower\n";
-
 	}
 
 	// Attempting to remove flower from box2 of craft table and return them to player inventory
 	if (box2Sprite.getGlobalBounds().contains(pos.x,pos.y)){
-	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor2->getId().back();
+	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor2->getId().back() << std::endl;
 	    box2 = false;
 	    returnFlower(selectedActor2);
-	    std::cout << "Returned flower";
 	}
 
 	// Draw recipe book
@@ -551,9 +547,7 @@ void CraftView::returnFlower(StrongActorPtr flower){
  *  Removes the given flower from the flower count upon visiting Diana
  */
 void CraftView::updateFlowerCount(std::string flower){
-  
-      std::cout << "Flower is of type " << flower;
-  
+    
       if (flower == "SunFlower"){
 	sunFlowers--;
       }
@@ -592,7 +586,7 @@ void CraftView::update(EventInterfacePtr e) {
 		if (sender->hasComponent(CraftableComponent::id)) {
 			// item crafting completed
 			StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
-			text.setString(fitStringToDialogueBox("Diana's sure to love this new " + ac->getType() + ", Phil!\nYou should try talking to her!"));
+			text.setString(fitStringToDialogueBox("Homer make Phil new " + ac->getType() + "! Phil go talk to nice Diana-lady now?"));
 			if (ac->getType() == "SunFlower"){
 				sunFlowers++;
 			}
@@ -614,7 +608,6 @@ void CraftView::update(EventInterfacePtr e) {
 			else if (ac->getType() == "Magnolia"){
 				magnolias++;
 			}
-			std::cout << "updated flower count" << std::endl;
 			has_crafted = true;
 		}
 	}
