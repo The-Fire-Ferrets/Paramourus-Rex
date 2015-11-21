@@ -547,6 +547,37 @@ void CraftView::returnFlower(StrongActorPtr flower){
 	//std::cout << "end of the returnFlower function";
 }
 
+/**
+ *  Removes the given flower from the flower count upon visiting Diana
+ */
+void CraftView::updateFlowerCount(std::string flower){
+  
+      std::cout << "Flower is of type " << flower;
+  
+      if (flower == "SunFlower"){
+	sunFlowers--;
+      }
+      else if (flower == "Tulip"){
+	tulips--;
+      }
+      else if (flower == "Rose"){
+	roses--;
+      }
+      else if (flower == "Violet"){
+	violets--;
+      }
+      else if (flower =="Lily"){
+	lilies--;
+      }
+      else if (flower == "Orchid"){
+	orchids--;
+      }
+      else if (flower == "Magnolia"){
+	magnolias--;
+      }
+      totalFlowers--;
+}
+
 
 /** Checks for events and update accordingly
  **
