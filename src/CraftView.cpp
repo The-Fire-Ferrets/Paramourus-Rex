@@ -467,18 +467,20 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	}
 
 	// Check to see if flowers within the craft box are clicked to return them to player inventory
-	if (box1Sprite.getGlobalBounds().contains(pos.x,pos.y)){
+	if (box1 == true && box1Sprite.getGlobalBounds().contains(pos.x,pos.y)){
 	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor1->getId().back();
 	    box1 = false;
+		selectedActor1 == nullptr;
 	    returnFlower(selectedActor1);
 	    std::cout << "Returned flower\n";
 
 	}
 
 	// Attempting to remove flower from box2 of craft table and return them to player inventory
-	if (box2Sprite.getGlobalBounds().contains(pos.x,pos.y)){
+	if (box2 == true && box2Sprite.getGlobalBounds().contains(pos.x,pos.y)){
 	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor2->getId().back();
 	    box2 = false;
+		selectedActor2 == nullptr;
 	    returnFlower(selectedActor2);
 	    std::cout << "Returned flower";
 	}
