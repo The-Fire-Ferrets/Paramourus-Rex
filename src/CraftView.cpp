@@ -177,7 +177,7 @@ void CraftView::Create(const char* resource, int* state) {
     		  std::cout << "CraftView::Create: Failed to load " << attr.value();
     	    }
     	    recipeBook= sf::Sprite(texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/1.33, Configuration::getWindowHeight()/1.33));
-	    	recipeBook.setPosition(Configuration::getWindowWidth()/7,Configuration::getWindowHeight()/15);
+	    recipeBook.setPosition(Configuration::getWindowWidth()/7,Configuration::getWindowHeight()/15);
 	}
     }
 
@@ -348,13 +348,16 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 
         // checking to see if flowers clicked on
         for (int i = 0; i <= 10; i++){
-		    // player attempts to use this item for crafting, but only if one of the two boxes are filled
+		    // player attempts to use this item for crafting by clicking on them, but only if one of the two boxes are filled
 		    if (sprites[i].getGlobalBounds().contains(pos.x,pos.y)){
 			      // check if this sprite exists within the flowerlist - if so, sets
 			      // selected actor equal to the first flower it finds of that type
+			      std::cout<< "Looking for segfault";
 			      for (int j = 0; j < actorList.size(); j++){
+					    // here, element 1 of testList[i]
+					    std::cout << "CraftView::Update: checking actorList[" << std::to_string(j) << "].";
 					    if (actorList[j]->isOfType(std::get<1>(testList[i]))){
-							if (box1 == false){
+						if (box1 == false){
 				    			selectedActor1 = actorList[j];
 							break;
 				    		}
@@ -420,6 +423,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 					  // scale the sprite up in size?
 					  //box1Sprite.setScale(sprites[i].width*4, sprites[i].height*4);
 					  box1Sprite.setPosition(Configuration::getWindowWidth()/5.71,Configuration::getWindowHeight()/12);
+					  // do some sort of check here for if it's a base flower -- if it's a tier flower, needs to be scaled differently
 					  box1Sprite.setScale(1.0f, 1.0f);
 				  }
 			      else if (box2 == false && inList == true){
@@ -466,7 +470,6 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	if (box1Sprite.getGlobalBounds().contains(pos.x,pos.y)){
 	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor1->getId().back();
 	    box1 = false;
-	    totalFlowers++;
 	    returnFlower(selectedActor1);
 	    std::cout << "Returned flower\n";
 
@@ -476,9 +479,8 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	if (box2Sprite.getGlobalBounds().contains(pos.x,pos.y)){
 	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor2->getId().back();
 	    box2 = false;
-	    totalFlowers++;
 	    returnFlower(selectedActor2);
-	    std::cout << "Returned flower\n";
+	    std::cout << "Returned flower";
 	}
 
 	// Draw recipe book
@@ -505,6 +507,8 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
  *  Returns the given flower to the player's inventory rather than crafting it
  */
 void CraftView::returnFlower(StrongActorPtr flower){
+
+	//std::cout << "are we segfaulting here";
   
       if (flower->isOfType("FireFlower")){
 	fireFlowers++;
@@ -539,6 +543,8 @@ void CraftView::returnFlower(StrongActorPtr flower){
       else if (flower->isOfType("Magnolia")){
 	magnolias++;
       }
+      totalFlowers++;
+	//std::cout << "end of the returnFlower function";
 }
 
 
@@ -638,8 +644,9 @@ void CraftView::render(sf::RenderWindow *window) {
       window->draw(box2Sprite);
 
     // draw recipe book if it's open
-    if (drawBook == true)
+    if (drawBook == true){
       window->draw(recipeBook);
+    }
 
     // draw craft button and text on it
     window->draw(craftButton);
@@ -650,53 +657,58 @@ void CraftView::render(sf::RenderWindow *window) {
 
 
     // draw flower sprites on left
-    for (int i = 0; i <= 10; i++){
+    for (int i = 0; i < 10; i++){
 	window->draw(sprites[i]);
+	int height;
 	if (i == 0){
 	  flower_str = "x " + std::to_string(fireFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/60);
+	  height = Configuration::getWindowHeight()/60;
 	}
 	else if (i ==1){
 	  flower_str = "x " + std::to_string(waterFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/12);
+	  height = Configuration::getWindowHeight()/12;
 	}
 	else if (i == 2){
 	  flower_str = "x " + std::to_string(earthFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/6.67);
+	  height = Configuration::getWindowHeight()/6.67;
+	  
 	}
 	else if (i == 3){
 	  flower_str = "x " + std::to_string(airFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/4.62);
+	  height = Configuration::getWindowHeight()/4.62;
 	}
 	else if (i == 4){
 	  flower_str = "x " + std::to_string(sunFlowers);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/3.53);
+	  height = Configuration::getWindowHeight()/3.53;
+	  
 	}
 	else if (i == 5){
 	  flower_str = "x " + std::to_string(tulips);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/2.86);
+	  height = Configuration::getWindowHeight()/2.86;
 	}
 	else if (i == 6){
 	  flower_str = "x " + std::to_string(roses);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/2.4);
+	  height = Configuration::getWindowHeight()/2.4;
 	}
 	else if (i == 7){
 	  flower_str = "x " + std::to_string(violets);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/2.06);
+	  height = Configuration::getWindowHeight()/2.06;
 	}
 	else if (i == 8){
 	 flower_str = "x " + std::to_string(lilies);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/1.81);
+	  height = Configuration::getWindowHeight()/1.81;
 	}
 	else if (i == 9){
 	 flower_str = "x " + std::to_string(orchids);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/1.61);
+	  height = Configuration::getWindowHeight()/1.61;
 	}
 	else if (i == 10){
 	  flower_str = "x " + std::to_string(magnolias);
-	  flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+Configuration::getWindowHeight()/1.46);
+	  height = Configuration::getWindowHeight()/1.46;
 	}
-	flower_text.setString(flower_str);
+	sf::Text flower_text(flower_str, font);
+	flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+height);
+	flower_text.setColor(sf::Color::Black);
 	window->draw(flower_text);
     }
 
