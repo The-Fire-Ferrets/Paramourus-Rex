@@ -482,7 +482,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		gameView.setCenter(Configuration::getGameViewCenter());
 
 		//Check to see if conditions met to display back button
-		std::cout << flowers_left << " " << vases_full << " " << inVision << std::endl; 
+		//std::cout << flowers_left << " " << vases_full << " " << inVision << std::endl; 
 		if ((flowers_left <= 0 || vases_full) && inVision <= 0) {
 			reveal_back_button = true;
 		}
