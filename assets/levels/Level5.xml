@@ -1,79 +1,105 @@
 <?xml version="1.0"?>
 <Level5 Name = "Deep Cave" Background = "Level5.png" MinimapBackground = "minimapbg.png" Edge = "Rocks.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "120000">
-	<Obstacle Type = "Wall"  Sprite = "Level5-0x300-250x50.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 0 300 250 300 0 350 250 350">
+
+	<!-- Top Boundary -->
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 0 775 0 25 25 775 25">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
-	<Obstacle Type = "Wall"  Sprite = "Level5-50x50-50x100.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 50 50 100 50 50 150 100 150">
+	<!-- Bottom Boundary -->
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 575 775 575 25 600 775 600">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
-	<Obstacle Type = "Wall"  Sprite = "Level5-100x100-50x50.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 100 100 150 100 100 150 150 150">
+	<!-- Left Boundary -->
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 0 0 25 0 0 600 25 600">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
-	<Obstacle Type = "Wall"  Sprite = "Level5-150x50-50x100.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 150 50 200 50 150 150 200 150">
+	<!-- Right Boundary -->
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 775 0 800 0 775 600 800 600">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
 
-	<Obstacle Type = "Wall"  Sprite = "Level5-200x400-50x200.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 200 400 250 400 200 600 250 600">
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 300 250 300 25 350 250 350">
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
-	<Obstacle Type = "Wall"  Sprite = "Level5-250x500-200x50.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 250 500 450 500 250 550 450 550">
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 50 50 100 50 50 150 100 150">
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
-	<Obstacle Type = "Wall"  Sprite = "Level5-300x0-50x200.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 300 0 350 0 300 200 350 200">
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 100 100 150 100 100 150 150 150">
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
-	<Obstacle Type = "Wall"  Sprite = "Level5-350x100-100x50.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 100 450 100 350 150 450 150">
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-
-	<Obstacle Type = "Wall"  Sprite = "Level5-350x250-100x100.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 250 450 250 350 350 450 350">
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<Obstacle Type = "Wall"  Sprite = "Level5-400x400-50x100.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 400 400 450 400 400 500 450 500">
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<Obstacle Type = "Wall"  Sprite = "Level5-450x450-100x50.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 450 450 550 450 450 500 550 500">
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<Obstacle Type = "Wall"  Sprite = "Level5-550x0-50x200.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 550 0 600 0 550 200 600 200">
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 150 50 200 50 150 150 200 150">
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
 
-	<Obstacle Type = "Wall"  Sprite = "Level5-550x300-250x50.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 550 300 800 300 550 350 800 350">
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 200 400 250 400 200 575 250 575">
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
-	<Obstacle Type = "Wall"  Sprite = "Level5-600x400-150x50.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 600 400 750 400 600 450 750 450">
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 250 500 450 500 250 550 450 550">
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
-	<Obstacle Type = "Wall"  Sprite = "Level5-700x0-50x100.png"  SpriteMinimap = "" Damage = "False" VertexArray = "4 700 0 750 0 700 100 750 100">
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 300 25 350 25 300 200 350 200">
+		<PhysicsComponent>
+			<Properties Type = "Opaque"/>
+		</PhysicsComponent>
+	</Obstacle>
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 100 450 100 350 150 450 150">
+		<PhysicsComponent>
+			<Properties Type = "Opaque"/>
+		</PhysicsComponent>
+	</Obstacle>
+
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 250 450 250 350 350 450 350">
+		<PhysicsComponent>
+			<Properties Type = "Opaque"/>
+		</PhysicsComponent>
+	</Obstacle>
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 400 400 450 400 400 500 450 500">
+		<PhysicsComponent>
+			<Properties Type = "Opaque"/>
+		</PhysicsComponent>
+	</Obstacle>
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 450 450 550 450 450 500 550 500">
+		<PhysicsComponent>
+			<Properties Type = "Opaque"/>
+		</PhysicsComponent>
+	</Obstacle>
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 550 25 600 25 550 200 600 200">
+		<PhysicsComponent>
+			<Properties Type = "Opaque"/>
+		</PhysicsComponent>
+	</Obstacle>
+
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 550 300 775 300 550 350 775 350">
+		<PhysicsComponent>
+			<Properties Type = "Opaque"/>
+		</PhysicsComponent>
+	</Obstacle>
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 600 400 750 400 600 450 750 450">
+		<PhysicsComponent>
+			<Properties Type = "Opaque"/>
+		</PhysicsComponent>
+	</Obstacle>
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 700 25 750 25 700 100 750 100">
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
