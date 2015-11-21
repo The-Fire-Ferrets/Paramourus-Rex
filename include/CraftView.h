@@ -52,6 +52,11 @@ class CraftView  {
 	static sf::Texture textures[];
         static sf::RectangleShape backlay;
 	static sf::RectangleShape craftButton;
+	static sf::Texture scroll_texture;
+	static sf::Texture map_icon;
+	static sf::Texture diana_icon;
+	static sf::Texture recipe_icon;
+
 
 	// exit buttons
 	static sf::RectangleShape map_button, dialogue_button;
