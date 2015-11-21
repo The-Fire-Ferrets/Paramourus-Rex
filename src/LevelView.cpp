@@ -147,10 +147,12 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 		        }
 		}
 		else if (!strcmp(attr.name(), "Edge")) {
-			edge_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
-			edge = sf::Sprite(edge_texture, sf::IntRect(0, 0, edge_texture.getSize().x, edge_texture.getSize().y));
-			edge.scale((1.5*Configuration::getWindowWidth())/(edge_texture.getSize().x), (1.5*Configuration::getWindowHeight())/(edge_texture.getSize().y));
-			edge.setPosition(sf::Vector2f(-100,-100));
+			if (strcmp(attr.value(), "")) {
+				edge_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
+				edge = sf::Sprite(edge_texture, sf::IntRect(0, 0, edge_texture.getSize().x, edge_texture.getSize().y));
+				edge.scale((1.5*Configuration::getWindowWidth())/(edge_texture.getSize().x), (1.5*Configuration::getWindowHeight())/(edge_texture.getSize().y));
+				edge.setPosition(sf::Vector2f(-100,-100));
+			}
 		}
 		else if (!strcmp(attr.name(), "Font")) {
 			font.loadFromFile(("./assets/" + (std::string)attr.value()).c_str());
@@ -479,7 +481,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		gameView.setCenter(Configuration::getGameViewCenter());
 
 		//Check to see if conditions met to display back button
-		if ((flowers_left == 0 || vases_full) && inVision == 0) {
+		if ((flowers_left <= 0 || vases_full) && inVision <= 0) {
 			reveal_back_button = true;
 		}
 		else if (inVision > 0) {
@@ -598,7 +600,7 @@ void LevelView::render(sf::RenderWindow *window) {
 		gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
 		window->setView(gameView);
 		//Update graphics	
-		window->draw(edge);
+		//window->draw(edge);
 		window->draw(background);
 		window->draw(minimap_border);
 		std::vector<StrongActorPtr>::iterator it;
