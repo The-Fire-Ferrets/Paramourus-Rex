@@ -90,6 +90,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	Pathfinder::Create(Configuration::getWindowWidth(), Configuration::getWindowHeight(), 10);
 	//Reset values
 	num_actors = 0;
+	flowers_left = 0;
 	reveal_back_button = false;
 	pause_key_pressed = false;
 	vases_full = false;
@@ -481,6 +482,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		gameView.setCenter(Configuration::getGameViewCenter());
 
 		//Check to see if conditions met to display back button
+		std::cout << flowers_left << " " << vases_full << " " << inVision << std::endl; 
 		if ((flowers_left <= 0 || vases_full) && inVision <= 0) {
 			reveal_back_button = true;
 		}
