@@ -174,6 +174,10 @@ bool CraftableComponent::doesCombineWith(const CraftableComponent& other) const 
 			if (!strcmp(attr.name(), "Components")) {
 				// are the component lists equivalent?
 				std::vector<std::string> components = split(std::string(attr.value()), ' ');
+				//std::cout << "CraftableComponent: Flower's components are: " << std::endl;
+				//for (int i = 0; i < combo.size(); i++){
+				//    std::cout << combo[i] << std::endl;
+				//}
 				if (have_equivalent_strings(combo, components)) {
 					return true;
 				}
