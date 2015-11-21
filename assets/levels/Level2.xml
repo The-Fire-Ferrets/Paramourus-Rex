@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level2 Name = "Volcano Mania" Background = "Level2.png" MinimapBackground = "minimapbg.png" Edge = "Water.png" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "30000">
+<Level2 Name = "Volcano Mania" Background = "Level2.png" MinimapBackground = "minimapbg.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "30000">
 
 		<!-- Top Boundary -->
 	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 0 775 0 25 25 775 25">		
