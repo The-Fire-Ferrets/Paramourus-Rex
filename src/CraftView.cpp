@@ -63,6 +63,13 @@ sf::Vector2f CraftView::text_pos;
 
 // Holds actual recipe pages that will be displayed when player clicks on book
 sf::Sprite CraftView::recipeBook;
+// texture for recipe scroll/book
+sf::Texture CraftView::scroll_texture;
+
+sf::Texture CraftView::map_icon;
+sf::Texture CraftView::diana_icon;
+sf::Texture CraftView::recipe_icon;
+
 
 sf::RectangleShape CraftView::backlay;
 sf::RectangleShape CraftView::craftButton;
@@ -156,28 +163,28 @@ void CraftView::Create(const char* resource, int* state) {
         }
         // texture and position of map icon so it can be interacted with
         else if (!strcmp(attr.name(), "Map")) {
-            sf::Texture texture;
-    	    if (!texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+    	    if (!map_icon.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
     		  std::cout << "CraftView::Create: Failed to load " << attr.value();
     	    }
-    	    map = sf::Sprite(texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/26.6, Configuration::getWindowHeight()/26.6));
+    	    map = sf::Sprite(map_icon, sf::IntRect(0, 0, Configuration::getWindowWidth()/26.6, Configuration::getWindowHeight()/26.6));
     	    map.setPosition(Configuration::getWindowWidth()/1.05,Configuration::getWindowHeight()/40);
         }
         else if(!strcmp(attr.name(), "Book")) {
-	    sf::Texture texture;
-	    if (!texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+	    if (!recipe_icon.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
     		  std::cout << "CraftView::Create: Failed to load " << attr.value();
     	    }
-    	    bookSprite = sf::Sprite(texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/26.6, Configuration::getWindowHeight()/26.6));
+    	    bookSprite = sf::Sprite(recipe_icon, sf::IntRect(0, 0, Configuration::getWindowWidth()/26.6, Configuration::getWindowHeight()/26.6));
 	    bookSprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.06);
 	}
 		else if(!strcmp(attr.name(), "Recipes")) {
-	    sf::Texture texture;
-	    if (!texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+	    if (!scroll_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
     		  std::cout << "CraftView::Create: Failed to load " << attr.value();
     	    }
-    	    recipeBook= sf::Sprite(texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/1.33, Configuration::getWindowHeight()/1.33));
-	    recipeBook.setPosition(Configuration::getWindowWidth()/7,Configuration::getWindowHeight()/15);
+    	    //recipeBook= sf::Sprite(texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/1.33, Configuration::getWindowHeight()/1.33));
+    	    recipeBook= sf::Sprite(scroll_texture, sf::IntRect(0, 0, 700,200));
+	    recipeBook.setPosition(60, 150);
+
+	    //recipeBook.setPosition(Configuration::getWindowWidth()/7,Configuration::getWindowHeight()/15);
 	}
     }
 
@@ -352,17 +359,18 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 		    if (sprites[i].getGlobalBounds().contains(pos.x,pos.y)){
 			      // check if this sprite exists within the flowerlist - if so, sets
 			      // selected actor equal to the first flower it finds of that type
-			      std::cout<< "Looking for segfault";
 			      for (int j = 0; j < actorList.size(); j++){
-					    // here, element 1 of testList[i]
-					    std::cout << "CraftView::Update: checking actorList[" << std::to_string(j) << "].";
+					    // here, element 1 of testList[i] is a string indicating what type it is (i.e., SunFlower, FireFlower, etc.)
 					    if (actorList[j]->isOfType(std::get<1>(testList[i]))){
 						if (box1 == false){
 				    			selectedActor1 = actorList[j];
+							std::cout << "New flower selected" << std::endl;
 							break;
 				    		}
 				    		else if (box2 == false && actorList[j] != selectedActor1){
 				    			selectedActor2 = actorList[j];
+							std::cout << "New flower selected" << std::endl;
+
 							break;
 				    		}
 				    	}
@@ -462,7 +470,8 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 
 	   // update text box to indicate that you cannot combine flowers
 	   else {
-	     text.setString(fitStringToDialogueBox("Gee Phil, that sure doesn't look too pretty. Why don't you try somethin' else?"));
+	     std::cout << "CraftView::Update: Unable to craft " << selectedActor1->getId().back() << " and Flower: " << selectedActor2->getId().back() << std::endl;
+	     text.setString(fitStringToDialogueBox("Homer not think Diana-lady like those flowers, Phil. Phil try something else."));
 	   }
 	}
 
@@ -470,19 +479,16 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	if (box1 == true && box1Sprite.getGlobalBounds().contains(pos.x,pos.y)){
 	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor1->getId().back();
 	    box1 = false;
-		selectedActor1 == nullptr;
 	    returnFlower(selectedActor1);
-	    std::cout << "Returned flower\n";
-
+	    selectedActor1 = nullptr;
 	}
 
 	// Attempting to remove flower from box2 of craft table and return them to player inventory
 	if (box2 == true && box2Sprite.getGlobalBounds().contains(pos.x,pos.y)){
 	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor2->getId().back();
 	    box2 = false;
-		selectedActor2 == nullptr;
 	    returnFlower(selectedActor2);
-	    std::cout << "Returned flower";
+	    selectedActor2 = nullptr;
 	}
 
 	// Draw recipe book
@@ -553,9 +559,7 @@ void CraftView::returnFlower(StrongActorPtr flower){
  *  Removes the given flower from the flower count upon visiting Diana
  */
 void CraftView::updateFlowerCount(std::string flower){
-  
-      std::cout << "Flower is of type " << flower;
-  
+    
       if (flower == "SunFlower"){
 	sunFlowers--;
       }
@@ -594,7 +598,7 @@ void CraftView::update(EventInterfacePtr e) {
 		if (sender->hasComponent(CraftableComponent::id)) {
 			// item crafting completed
 			StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
-			text.setString(fitStringToDialogueBox("Diana's sure to love this new " + ac->getType() + ", Phil!\nYou should try talking to her!"));
+			text.setString(fitStringToDialogueBox("Homer make Phil new " + ac->getType() + "! Phil go talk to nice Diana-lady now?"));
 			if (ac->getType() == "SunFlower"){
 				sunFlowers++;
 			}
@@ -616,7 +620,6 @@ void CraftView::update(EventInterfacePtr e) {
 			else if (ac->getType() == "Magnolia"){
 				magnolias++;
 			}
-			std::cout << "updated flower count" << std::endl;
 			has_crafted = true;
 		}
 	}
@@ -675,11 +678,6 @@ void CraftView::render(sf::RenderWindow *window) {
       window->draw(box1Sprite);
     if (box2 == true)
       window->draw(box2Sprite);
-
-    // draw recipe book if it's open
-    if (drawBook == true){
-      window->draw(recipeBook);
-    }
 
     // draw craft button and text on it
     window->draw(craftButton);
@@ -743,6 +741,11 @@ void CraftView::render(sf::RenderWindow *window) {
 	flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+height);
 	flower_text.setColor(sf::Color::Black);
 	window->draw(flower_text);
+    }
+    
+    // draw recipe book over top everything if it's open
+    if (drawBook == true){
+      window->draw(recipeBook);
     }
 
 }

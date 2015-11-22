@@ -115,7 +115,6 @@ void DialogueView::Create(const char* resource, int* state){
 		else if (!strcmp(attr.name(), "Flower")) {
 			StrongActorPtr flower = CraftView::getFlower(attr.value());
 			if (flower) {
-				std::cout << "DialogueView::Create: Removing correct flower from inventory";
 				CraftView::removeFlower(flower);
 				CraftView::updateFlowerCount(attr.value());
 				++num_times_impressed;
