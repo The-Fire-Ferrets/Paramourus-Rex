@@ -346,6 +346,12 @@ void Actor::move(float distance, sf::Vector2f dir) {
 		this->animate();
 		sprite_clock.restart();
 	}
+	else if (direction != dir) {
+		frame_no = 0;
+
+		this->animate();
+		sprite_clock.restart();
+	}
 
 	//Move Actor
 	sf::Vector2f p = this->getPosition() + dir * distance;
