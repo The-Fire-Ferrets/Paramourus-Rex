@@ -105,7 +105,7 @@ class CraftView  {
 		static void returnFlower(StrongActorPtr flower);
 		static void updateFlowerCount(std::string flower);
 
-		static std::vector<std::tuple<sf::Sprite, std::string>> testList;
+		static std::vector<std::tuple<sf::Sprite, std::string>> flowerStrList;
 
 
 

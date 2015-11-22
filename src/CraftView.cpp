@@ -35,7 +35,7 @@ StrongActorPtr CraftView::selectedActor2 = nullptr;
 
 // Holds all of sprites to be drawn
 sf::Sprite CraftView::sprites[size];
-std::vector<std::tuple<sf::Sprite, std::string>> CraftView::testList;
+std::vector<std::tuple<sf::Sprite, std::string>> CraftView::flowerStrList;
 
 // Holds positions of said sprites
 sf::Vector2f CraftView::positions[size];
@@ -198,7 +198,7 @@ void CraftView::Create(const char* resource, int* state) {
 			std::cout << "CraftView::Create: Failed to load " << attr.value();
 		  }
 		  // create sprite w/texture, push it to stack w/associated string it was made with
-		  testList.push_back(std::make_tuple(sf::Sprite(textures[i], sf::IntRect(0,0, textures[i].getSize().x, textures[i].getSize().y)), (std::string)attr.value()));
+		  flowerStrList.push_back(std::make_tuple(sf::Sprite(textures[i], sf::IntRect(0,0, textures[i].getSize().x, textures[i].getSize().y)), (std::string)attr.value()));
 	      }
 	      // pos of sprite
 	      else if (!strcmp(attr.name(), "X")){
@@ -264,8 +264,8 @@ void CraftView::Create(const char* resource, int* state) {
     	  sprites[count] = sf::Sprite(textures[count], sf::IntRect(0,0, textures[count].getSize().x, textures[count].getSize().y));
 	  sprites[count].setScale(sizes[count].x/(textures[count].getSize()).x, sizes[count].y/(textures[count].getSize()).y);
 	  sprites[count].setPosition(positions[count]);
-	  std::get<0>(testList[count]).setScale(sizes[count].x/(textures[count].getSize()).x, sizes[count].y/(textures[count].getSize()).y);
-	  std::get<0>(testList[count]).setPosition(positions[count]);
+	  std::get<0>(flowerStrList[count]).setScale(sizes[count].x/(textures[count].getSize()).x, sizes[count].y/(textures[count].getSize()).y);
+	  std::get<0>(flowerStrList[count]).setPosition(positions[count]);
     }
 
     // Checks player for current inventory, updates.
@@ -361,8 +361,8 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 			      // check if this sprite exists within the flowerlist - if so, sets
 			      // selected actor equal to the first flower it finds of that type
 			      for (int j = 0; j < actorList.size(); j++){
-					    // here, element 1 of testList[i] is a string indicating what type it is (i.e., SunFlower, FireFlower, etc.)
-					    if (actorList[j]->isOfType(std::get<1>(testList[i]))){
+					    // here, element 1 of flowerStrList[i] is a string indicating what type it is (i.e., SunFlower, FireFlower, etc.)
+					    if (actorList[j]->isOfType(std::get<1>(flowerStrList[i]))){
 						if (box1 == false){
 				    			selectedActor1 = actorList[j];
 							std::cout << "New flower selected" << std::endl;
@@ -429,18 +429,33 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 					  box1 = true;
 					  box1Sprite = sprites[i];
 					  totalFlowers--;
-					  // scale the sprite up in size?
-					  //box1Sprite.setScale(sprites[i].width*4, sprites[i].height*4);
-					  box1Sprite.setPosition(Configuration::getWindowWidth()/5.71,Configuration::getWindowHeight()/12);
-					  // do some sort of check here for if it's a base flower -- if it's a tier flower, needs to be scaled differently
-					  box1Sprite.setScale(1.0f, 1.0f);
+					  // check here for if it's a base flower -- if it's a tier flower, needs to be scaled differently
+					  if (std::get<1>(flowerStrList[i]) == "FireFlower" || std::get<1>(flowerStrList[i]) == "WaterFlower" || std::get<1>(flowerStrList[i]) == "AirFlower" \
+					    || std::get<1>(flowerStrList[i]) == "EarthFlower"){
+					      box1Sprite.setScale(1.0f, 1.0f);
+					      box1Sprite.setPosition(Configuration::getWindowWidth()/5.71,Configuration::getWindowHeight()/12);
+					  }
+					  else{
+					    box1Sprite.setScale(0.4f, 0.4f);
+					    box1Sprite.setPosition(Configuration::getWindowWidth()/5.71,Configuration::getWindowHeight()/9);
+					  }
+
 				  }
 			      else if (box2 == false && inList == true){
 					 // draw sprite in box 2
 					box2 = true;
 					box2Sprite = sprites[i];
-					box2Sprite.setPosition(Configuration::getWindowWidth()/3.2,Configuration::getWindowHeight()/12);
-					box2Sprite.setScale(1.0f, 1.0f);
+					if (std::get<1>(flowerStrList[i]) == "FireFlower" || std::get<1>(flowerStrList[i]) == "WaterFlower" || std::get<1>(flowerStrList[i]) == "AirFlower" \
+					    || std::get<1>(flowerStrList[i]) == "EarthFlower"){
+					      box2Sprite.setScale(1.0f, 1.0f);
+					      box2Sprite.setPosition(Configuration::getWindowWidth()/3.2,Configuration::getWindowHeight()/12);
+
+					}
+					else{
+					    box2Sprite.setScale(0.4f, 0.4f);
+					    box2Sprite.setPosition(Configuration::getWindowWidth()/3.2,Configuration::getWindowHeight()/9);
+
+					}
 					totalFlowers--;
 				  }
 		    }
@@ -478,7 +493,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 
 	// Check to see if flowers within the craft box are clicked to return them to player inventory
 	if (box1 == true && box1Sprite.getGlobalBounds().contains(pos.x,pos.y)){
-	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor1->getId().back();
+	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor1->getId().back() << std::endl;
 	    box1 = false;
 	    returnFlower(selectedActor1);
 	    selectedActor1 = nullptr;
@@ -486,7 +501,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 
 	// Attempting to remove flower from box2 of craft table and return them to player inventory
 	if (box2 == true && box2Sprite.getGlobalBounds().contains(pos.x,pos.y)){
-	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor2->getId().back();
+	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor2->getId().back() << std::endl;
 	    box2 = false;
 	    returnFlower(selectedActor2);
 	    selectedActor2 = nullptr;
