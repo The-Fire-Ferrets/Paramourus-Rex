@@ -168,11 +168,6 @@ void DialogueView::Create(const char* resource, int* state){
 				dialogue += attr.value();
 				dialogues.push_back(std::pair<std::string, std::string>(speaker, dialogue));
 			}
-			// store values in seperate array, if it's even necessary to change background -- may just take this out
-			// if background remains static?
-			if (!strcmp(attr.name(), "Background")){
-
-			}
 		}
 	}
 

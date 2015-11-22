@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <Level4 Background = "Level4.png" Response = "2" Flower = "Magnolia" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30">
 	<Correct>
-	  <Dialogue Speaker = "Narrator" Text = "You and Homer head to the watering hole together after you're done making your latest bouquet. When you find Diana there, Homer ushers you on, encouraging you to give her your new flowers yourself for once." Background="" />
-	  <Dialogue Speaker = "Diana" Text = "Phil, is this Magnolia for me? I love it! Thank you so much for all of these flowers. They've been so nice, and it's been nice to be able to talk to you again." Background= "" />
-	  <Dialgoue Speaker = "Homer" Text = "*from across the watering hole* PHIL DO GOOD JOB!" Background= "" />
-	  <Dialogue Speaker = "Diana" Text = "Hehe... And it sounds like you've gotten to spend some time with Homer, too. That's great that you guys are friends. Most people don't hang out with Homer. Are you guys close?" Background="" />
-	  <Dialogue Speaker = "Phil" Text= "&#10; 1) He's a little dumb, but he's pretty helpful. &#10; 2) He's my best friend." Background = "" />
-	  <Dialogue Speaker = "Diana" Text= "Oh... I thought you guys were friends. Homer actually said you should stop by, by the way. Something about finding something way back in his cave? You should try looking there." Background= "" />
-	  <Dialogue Speaker = "Diana" Text = "That's so cute. Oh, speaking of Homer - he told me to tell you that you should stop by later... something about finding something way back in his cave? You should try looking there." Background ="" />
+	  <Dialogue Speaker = "Narrator" Text = "You and Homer head to the watering hole together after you're done making your latest bouquet. When you find Diana there, Homer ushers you on, encouraging you to give her your new flowers yourself for once."/>
+	  <Dialogue Speaker = "Diana" Text = "Phil, is this Magnolia for me? I love it! Thank you so much for all of these flowers. They've been so nice, and it's been nice to be able to talk to you again."/>
+	  <Dialgoue Speaker = "Homer" Text = "*from across the watering hole* PHIL DO GOOD JOB!"/>
+	  <Dialogue Speaker = "Diana" Text = "Hehe... And it sounds like you've gotten to spend some time with Homer, too. That's great that you guys are friends. Most people don't hang out with Homer. Are you guys close?"/>
+	  <Dialogue Speaker = "Phil" Text= "&#10; 1) He's a little dumb, but he's pretty helpful. &#10; 2) He's my best friend." />
+	  <Dialogue Speaker = "Diana" Text= "Oh... I thought you guys were friends. Homer actually said you should stop by, by the way. Something about finding something way back in his cave? You should try looking there."/>
+	  <Dialogue Speaker = "Diana" Text = "That's so cute. Oh, speaking of Homer - he told me to tell you that you should stop by later... something about finding something way back in his cave? You should try looking there."/>
 	</Correct>
 	<Incorrect>
-	  <Dialogue Speaker = "Narrator" Text = "You and Homer head to the watering hole together after you're done making your latest bouquet. When you find Diana there, Homer ushers you on, encouraging you to give her your new flowers yourself for once." Background="" />
-	  <Dialogue Speaker = "Diana" Text = "Oh -- is this also for me? You really don't have to keep getting me all of these... But thanks, though. I feel like I've been seeing you and Homer around all the time, lately." Background= "" />
-	  <Dialgoue Speaker = "Homer" Text = "*from across the watering hole* PHIL DO GOOD JOB!" Background= "" />
-	  <Dialogue Speaker = "Diana" Text = "Uhh... okay, Homer. I take it you guys have been hanging out a lot, lately? That's nice that you guys are friends. Most people don't hang out with Homer. Are you guys close?" Background="" />
-	  <Dialogue Speaker = "Phil" Text= "&#10; 1) He's a little dumb, but he's pretty helpful.&#10; 2) He's my best friend." Background = "" />
-	  <Dialogue Speaker = "Diana" Text= "Oh... I thought you guys were friends. Homer actually said you should stop by, by the way. Something about finding something way back in his cave? You should try looking there." Background= "" />
-	  <Dialogue Speaker = "Diana" Text = "That's so cute. Oh, speaking of Homer - he said you should stop by... something about finding something way back in his cave? You should try looking there." Background ="" />
+	  <Dialogue Speaker = "Narrator" Text = "You and Homer head to the watering hole together after you're done making your latest bouquet. When you find Diana there, Homer ushers you on, encouraging you to give her your new flowers yourself for once."/>
+	  <Dialogue Speaker = "Diana" Text = "Oh -- is this also for me? You really don't have to keep getting me all of these... But thanks, though. I feel like I've been seeing you and Homer around all the time, lately."/>
+	  <Dialgoue Speaker = "Homer" Text = "*from across the watering hole* PHIL DO GOOD JOB!"/>
+	  <Dialogue Speaker = "Diana" Text = "Uhh... okay, Homer. I take it you guys have been hanging out a lot, lately? That's nice that you guys are friends. Most people don't hang out with Homer. Are you guys close?"/>
+	  <Dialogue Speaker = "Phil" Text= "&#10; 1) He's a little dumb, but he's pretty helpful.&#10; 2) He's my best friend."/>
+	  <Dialogue Speaker = "Diana" Text= "Oh... I thought you guys were friends. Homer actually said you should stop by, by the way. Something about finding something way back in his cave? You should try looking there."/>
+	  <Dialogue Speaker = "Diana" Text = "That's so cute. Oh, speaking of Homer - he said you should stop by... something about finding something way back in his cave? You should try looking there."/>
 	</Incorrect>
 </Level4>
