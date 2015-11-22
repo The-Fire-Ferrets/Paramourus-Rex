@@ -1,17 +1,21 @@
 <?xml version="1.0"?>
 <Level5 Background = "Dialogue5.png" Response="2" Flower = "Violet" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30">
 	<Correct>
-	  <Dialogue Speaker = "Narrator" Text = "Later that night, when you're getting ready for bed, you're surprised to find Diana stopping by your nest to visit." Background="" />
-	  <Dialogue Speaker = "Diana" Text = "Hey, Phil. Homer gave me that Violet you made me, and I just... wanted to say thanks for spending so much time with me lately, and being so nice. I've been thinking a lot about the future, and I had a question. A lot of herds are heading out lately... What are your thoughts about leaving the valley?" Background= "" />
-	  <Dialgoue Speaker = "Phil" Text = "&#10; 1) Well... it is pretty messed up around here. I don't blame them.&#10; 2) I'm tired of travelling. I think we could make it work here." Background= "" />
-	  <Dialogue Speaker = "Diana" Text = "Yeah, you make a pretty good point... I'm sure all these other T-Rex around here have been bothering you as much as they've been bothering me. And with everything all burnt down... Maybe you're right. Anyway, I don't mean to keep you up... I was just wondering what you thought about it. Thanks for listening, Phil." Background ="" />
-	  <Dialogue Speaker = "Diana" Text = "You... really think so? You know... I think I needed to hear that. Thanks, Phil. I don't mean to keep you up... I was just wondering what you thought about it. Thanks for listening, Phil." Background= "" />
+	  <Dialogue Speaker = "Narrator" Text = "Later that night, when you're getting ready for bed, you're surprised to find Diana stopping by your nest to visit."/>
+	  <Dialogue Speaker = "Diana" Text = "Hey, Phil. Homer gave me that Violet you made me, and I just... wanted to say thanks for spending so much time with me lately, and being so nice."/>
+	  <Dialogue Speaker = "Diana" Text = "I've been thinking a lot about the future, and I had a question."/>
+	  <Dialogue Speaker = "Diana" Text = "A lot of herds are heading out lately... What are your thoughts about leaving the valley?"/>
+	  <Dialgoue Speaker = "Phil" Text = "&#10; 1) Well... it is pretty messed up around here. I don't blame them.&#10; 2) I think we could make it work here."/>
+	  <Dialogue Speaker = "Diana" Text = "Yeah, you make a pretty good point... I'm sure all these other T-Rex around here have been bothering you as much as they've been bothering me. And with everything all burnt down... Maybe you're right."/>
+	  <Dialogue Speaker = "Diana" Text = "You... really think so? You know... I think I needed to hear that. Thanks, Phil. I don't mean to keep you up... I was just wondering what you thought about it. Thanks for listening, Phil."/>
 	</Correct>
 	<Incorrect>
-	  <Dialogue Speaker = "Narrator" Text = "Later that night, when you're getting ready for bed, you're surprised to find Diana stopping by your nest to visit." Background="" />
-	  <Dialogue Speaker = "Diana" Text = "Hey Phil. I just thought I'd stop by, because I've been thinking a lot about the future. A lot of herds have been heading out of the valley lately... What are your thoughts on leaving?" Background = "" />
-	  <Dialgoue Speaker = "Phil" Text = "&#10; 1) Well... it is pretty messed up around here. I don't blame them. &#10; 2) I'm tired of travelling. I think we could make it work here." Background= "" />
-	  <Dialogue Speaker = "Diana" Text = "Yeah, you make a pretty good point... I'm sure all these other T-Rex around here have been bothering you as much as they've been bothering me. And with everything all burnt down... Maybe you're right. Anyway, I don't mean to keep you up... I was just wondering what you thought about it. Thanks for listening, Phil." Background ="" />
-	  <Dialogue Speaker = "Diana" Text = "Huh... You really think so? I'm not so sure... but I guess we'll have to see. Anyway, I don't mean to keep you up late. I was just wondering and thought I'd stop by and hear your thoughts on it. Thanks for listening, Phil." Background= "" />
+	  <Dialogue Speaker = "Narrator" Text = "Later that night, when you're getting ready for bed, you're surprised to find Diana stopping by your nest to visit."/>
+	  <Dialogue Speaker = "Diana" Text = "Hey Phil. I hope I'm not bothering you, I just thought I'd stop by."/>
+	  <Dialogue Speaker = "Diana" Text = "I actually had a question for you. I've been thinking a lot about the future lately."/>
+	  <Dialogue Speaker = "Diana" Text = "A lot of herds have been heading out of the valley lately... What are your thoughts on leaving?"/>
+	  <Dialgoue Speaker = "Phil" Text = "&#10; 1) Well... it is pretty messed up around here. I don't blame them. &#10; 2) I think we could make it work here."/>
+	  <Dialogue Speaker = "Diana" Text = "Yeah, you make a pretty good point... I'm sure all these other T-Rex around here have been bothering you as much as they've been bothering me. Maybe you're right."/>
+	  <Dialogue Speaker = "Diana" Text = "Huh... You really think so? I'm not so sure... but I guess we'll have to see. Anyway, I just  thought I'd stop by and hear your thoughts on it. Thanks for listening, Phil."/>
 	</Incorrect>
 </Level5>

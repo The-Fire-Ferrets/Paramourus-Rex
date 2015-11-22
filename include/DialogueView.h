@@ -40,6 +40,7 @@ class DialogueView {
 		static sf::Sound sound;
 		static int view_state;
 
+		static bool player_response;
 		static bool solved;
 		static unsigned num_times_impressed;
 		static int response;

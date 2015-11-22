@@ -313,7 +313,7 @@ void CraftView::Create(const char* resource, int* state) {
 
 
 	// set text to initial greeting from Homer
-    std::string str = "Welcome back, Phil! You have " + std::to_string(totalFlowers) + " flowers! To craft them, click on their icons.";
+    std::string str = "Phil come back to see Homer? Phil have " + std::to_string(totalFlowers) + " flowers! If Phil click on flower, Homer make more!";
     text.setString(fitStringToDialogueBox(str));
 
     if (!buffer.loadFromFile("./assets/music/marina-s-rhythm.ogg")) {
@@ -705,7 +705,7 @@ void CraftView::render(sf::RenderWindow *window) {
 
 
     // draw flower sprites on left
-    for (int i = 0; i < 10; i++){
+    for (int i = 0; i <= 10; i++){
 	window->draw(sprites[i]);
 	int height;
 	if (i == 0){
