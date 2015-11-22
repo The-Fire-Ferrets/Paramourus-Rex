@@ -106,6 +106,12 @@ class Actor {
 		void AddComponent(StrongActorComponentPtr component);
 		void updateBoundary(void);
 		void setMinimapSpritePosition(sf::Vector2f pos);
+
+		unsigned sprite_frame_count[4];
+		sf::Clock sprite_clock;
+		unsigned frame_duration;
+		unsigned frame_no;
+		void animate();
 };
 
 #endif

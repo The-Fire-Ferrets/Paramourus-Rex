@@ -69,91 +69,110 @@ Actor::~Actor(void) {
  **/
 bool Actor::Init(pugi::xml_node* elem) {
 	char* temp;
-    for (pugi::xml_attribute attr = elem->first_attribute(); attr; attr = attr.next_attribute()) {
-        if (!strcmp(attr.name(),"Type"))
-            id.push_back(attr.value());
-	 else if (!strcmp(attr.name(),"PathType")) {
-		path_type  = std::strtol(attr.value(), &temp, 10);
-		if (*temp != '\0') {
-		    std::cout << "Actor::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+	for (pugi::xml_attribute attr = elem->first_attribute(); attr; attr = attr.next_attribute()) {
+		if (!strcmp(attr.name(),"Type"))
+			id.push_back(attr.value());
+		else if (!strcmp(attr.name(),"PathType")) {
+			path_type  = std::strtol(attr.value(), &temp, 10);
+			if (*temp != '\0') {
+				std::cout << "Actor::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+			}
 		}
-	    }
-	else if (!strcmp(attr.name(),"TargetType")) {
-		target_type  = std::strtol(attr.value(), &temp, 10);
-		if (*temp != '\0') {
-		    std::cout << "Actor::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+		else if (!strcmp(attr.name(),"TargetType")) {
+			target_type  = std::strtol(attr.value(), &temp, 10);
+			if (*temp != '\0') {
+				std::cout << "Actor::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
+			}
 		}
-	    }
-        else if (!strcmp(attr.name(),"SpriteUp") || !strcmp(attr.name(),"Sprite")) {
-            sprite_filename[0] = attr.value();
-		if (sprite_filename[0] == "")
-			renderToGameView = false;
-	}
-	else if (!strcmp(attr.name(),"SpriteDown"))
-            sprite_filename[1] = attr.value();
-	else if (!strcmp(attr.name(),"SpriteLeft"))
-            sprite_filename[2] = attr.value();
-	else if (!strcmp(attr.name(),"SpriteRight"))
-            sprite_filename[3] = attr.value();
-	else if (!strcmp(attr.name(),"SpriteMinimap"))
-		if (!strcmp(attr.value(), ""))
-			renderToMinimap = false;
-		else {
-			renderToMinimap = true;
-			spriteMinimap_filename = attr.value();
+		else if (!strcmp(attr.name(),"SpriteUp") || !strcmp(attr.name(),"Sprite")) {
+			sprite_filename[0] = attr.value();
+			if (sprite_filename[0] == "")
+				renderToGameView = false;
 		}
-	else if (!strcmp(attr.name(),"Damage")) {
+		else if (!strcmp(attr.name(),"SpriteDown")) {
+			sprite_filename[1] = attr.value();
+		}
+		else if (!strcmp(attr.name(),"SpriteLeft")) {
+			sprite_filename[2] = attr.value();
+		}
+		else if (!strcmp(attr.name(),"SpriteRight")) {
+			sprite_filename[3] = attr.value();
+		}
+		else if (!strcmp(attr.name(), "FrameCountUp")) {
+			sprite_frame_count[0] = strtol(attr.value(), &temp, 10);
+		}
+		else if (!strcmp(attr.name(), "FrameCountDown")) {
+			sprite_frame_count[1] = strtol(attr.value(), &temp, 10);
+		}
+		else if (!strcmp(attr.name(), "FrameCountLeft")) {
+			sprite_frame_count[2] = strtol(attr.value(), &temp, 10);
+		}
+		else if (!strcmp(attr.name(), "FrameCountRight")) {
+			sprite_frame_count[3] = strtol(attr.value(), &temp, 10);
+		}
+		else if (!strcmp(attr.name(), "FrameDuration")) {
+			frame_duration = strtol(attr.value(), &temp, 10);
+		}
+		else if (!strcmp(attr.name(),"SpriteMinimap")) {
+			if (!strcmp(attr.value(), ""))
+				renderToMinimap = false;
+			else {
+				renderToMinimap = true;
+				spriteMinimap_filename = attr.value();
+			}
+		}
+		else if (!strcmp(attr.name(),"Damage")) {
 			if(!strcmp(attr.value(),"True"))
-               			damage = true;
+				damage = true;
 			else if(!strcmp(attr.value(),"False"))
 				damage = false;
-	}
-	else if (!strcmp(attr.name(),"VertexArray")) {
-		if (!strcmp(attr.value(), "")) {
 		}
-		else {
-			use_vertexarray = true;
-			int vertices = 0;
-			std::string string_temp;
-			int v_count = 0;
-			int v_idx = 0;
-			std::istringstream input;
-   			input.str(attr.value());
-			while (std::getline(input, string_temp, ' ')) {
-				if (v_count == 0) {
-					vertices = std::strtol(string_temp.c_str(), &temp, 10);
-					if (*temp != '\0') {
-					    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
-					}
-					sprite_vertexarray = sf::VertexArray(sf::TrianglesStrip, vertices);
-				}
-				else if (v_count % 2) {
-					sprite_vertexarray[v_idx].texCoords.x = std::strtol(string_temp.c_str(), &temp, 10);
-					sprite_vertexarray[v_idx].position.x = std::strtol(string_temp.c_str(), &temp, 10);
-					if (*temp != '\0') {
-					    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
-					}
-				}
-				else {
-					sprite_vertexarray[v_idx].texCoords.y = std::strtol(string_temp.c_str(), &temp, 10);
-					sprite_vertexarray[v_idx++].position.y = std::strtol(string_temp.c_str(), &temp, 10);
-					if (*temp != '\0') {
-					    std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
-					}
-				}
-				v_count++;
+		else if (!strcmp(attr.name(),"VertexArray")) {
+			if (!strcmp(attr.value(), "")) {
 			}
-			updateBoundary();
+			else {
+				use_vertexarray = true;
+				int vertices = 0;
+				std::string string_temp;
+				int v_count = 0;
+				int v_idx = 0;
+				std::istringstream input;
+				input.str(attr.value());
+				while (std::getline(input, string_temp, ' ')) {
+					if (v_count == 0) {
+						vertices = std::strtol(string_temp.c_str(), &temp, 10);
+						if (*temp != '\0') {
+							std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+						}
+						sprite_vertexarray = sf::VertexArray(sf::TrianglesStrip, vertices);
+					}
+					else if (v_count % 2) {
+						sprite_vertexarray[v_idx].texCoords.x = std::strtol(string_temp.c_str(), &temp, 10);
+						sprite_vertexarray[v_idx].position.x = std::strtol(string_temp.c_str(), &temp, 10);
+						if (*temp != '\0') {
+							std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+						}
+					}
+					else {
+						sprite_vertexarray[v_idx].texCoords.y = std::strtol(string_temp.c_str(), &temp, 10);
+						sprite_vertexarray[v_idx++].position.y = std::strtol(string_temp.c_str(), &temp, 10);
+						if (*temp != '\0') {
+							std::cout << "Actor::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+						}
+					}
+					v_count++;
+				}
+				updateBoundary();
+			}
 		}
+
 	}
-			
-    }
 	if (initial_init) {
-	    boundary.push_back(new sf::FloatRect());
-	    addDelegate(ContactEvent::event_type);
+		boundary.push_back(new sf::FloatRect());
+		addDelegate(ContactEvent::event_type);
 		initial_init = false;
 	}
-    return true;
+	return true;
 }
 
 /** Final Initializer
@@ -249,12 +268,19 @@ void Actor::PostInit(pugi::xml_node* elem) {
 		if (renderToGameView) {
 			for (int i = 0; i < num_directions; i++) {
 				if (!sprite_filename[i].empty())
-		    			sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[i]).c_str());
+					sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[i]).c_str());
 				else
 					sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[0]).c_str());
-		    		sprite[i] = sf::Sprite(sprite_texture[i], sf::IntRect(0, 0, (sprite_texture[i].getSize()).x, (sprite_texture[i].getSize()).y));
-		   		sprite[i].setScale(size.x/(sprite_texture[i].getSize()).x, size.y/(sprite_texture[i].getSize()).y);
-		    		sprite[i].setPosition(position);
+				sprite[i] = sf::Sprite(sprite_texture[i], sf::IntRect(0, 0, (sprite_texture[i].getSize()).x, (sprite_texture[i].getSize()).y));
+				if (!this->isOfType("Player")) {
+					sprite[i].setScale(size.x/(sprite_texture[i].getSize()).x, size.y/(sprite_texture[i].getSize()).y);
+				}
+				else {
+					float x = size.x / (sprite_texture[i].getSize().x/sprite_frame_count[i]);
+					float y = size.y / sprite_texture[i].getSize().y;
+					sprite[i].setScale(x, y);
+				}
+				sprite[i].setPosition(position);
 			}
 		}
 		if (renderToMinimap) {
@@ -274,7 +300,11 @@ void Actor::PostInit(pugi::xml_node* elem) {
 			else if (!sprite_filename[0].empty()) {
 				//sprite_texture[i].loadFromFile(("./assets/backgrounds/" + sprite_filename[0]).c_str());
 			}
-			
+	}
+
+	if (this->isOfType("Player")) {
+		frame_no = 0;
+		this->animate();
 	}
 }
 
@@ -287,8 +317,8 @@ void Actor::PostInit(void) {
  ** Prevents actors from moving past the top and bottom boundaries
  ** if the obstacle pointer is set (by a physics component o fthe actor or another actor after contact) it prevents the actors from moving into each other
  **/
-    void Actor::move(sf::Vector2f next_pos, sf::Vector2f dir) {
-       //Move Actor
+void Actor::move(sf::Vector2f next_pos, sf::Vector2f dir) {
+	//Move Actor
 	direction = dir;
 	if (dir.x < 0)
 		sprite_idx = 2;
@@ -298,12 +328,12 @@ void Actor::PostInit(void) {
 		sprite_idx = 0;
 	else if (dir.y > 0)
 		sprite_idx = 1;
-        sf::Vector2f p = next_pos;
-        this->setPosition(p);
+	sf::Vector2f p = next_pos;
+	this->setPosition(p);
 	if (isOfType("Player"))
 		Configuration::setGameViewCenter(sf::Vector2f((position.x + size.x/2.0), (position.y + size.y/2.0)));
-        
-    }
+
+}
 
 
 /** Moves the actor a certain distance based on the current game time
@@ -311,10 +341,7 @@ void Actor::PostInit(void) {
  ** Prevents actors from moving past the top and bottom boundaries
  ** if the obstacle pointer is set (by a physics component o fthe actor or another actor after contact) it prevents the actors from moving into each other
  **/
-    void Actor::move(float distance, sf::Vector2f dir) {
-        //Move Actor
-        sf::Vector2f p = this->getPosition() + dir * distance;
-	direction = dir;
+void Actor::move(float distance, sf::Vector2f dir) {
 	if (dir.x < 0)
 		sprite_idx = 2;
 	else if (dir.x > 0)
@@ -323,6 +350,24 @@ void Actor::PostInit(void) {
 		sprite_idx = 0;
 	else if (dir.y > 0)
 		sprite_idx = 1;
+
+	// update the frame number and animate
+	if (sprite_clock.getElapsedTime().asMilliseconds() > frame_duration) {
+		frame_no = (frame_no+1) % sprite_frame_count[sprite_idx];
+
+		this->animate();
+		sprite_clock.restart();
+	}
+	else if (direction != dir) {
+		frame_no = 0;
+
+		this->animate();
+		sprite_clock.restart();
+	}
+
+	//Move Actor
+	sf::Vector2f p = this->getPosition() + dir * distance;
+	direction = dir;
 
 	// disallow movement off the screen
 	unsigned width = Configuration::getWindowWidth();
@@ -337,18 +382,18 @@ void Actor::PostInit(void) {
 	if (p.y > height-size.y)
 		p.y = height - size.y;
 
-        //Get the bounds after movement and check if the movement is allowed
-        sf::FloatRect bound_after = sf::FloatRect(p, getSize() );
-        std::shared_ptr<ActorComponent>     ac;
-        std::shared_ptr<PhysicsComponent>   pc;
-        ac = components[PhysicsComponent::id];
-        pc = std::dynamic_pointer_cast<PhysicsComponent>(ac);
-        if (pc->query(bound_after, dir)) {
-            // set the position
-            this->setPosition(p);
+	//Get the bounds after movement and check if the movement is allowed
+	sf::FloatRect bound_after = sf::FloatRect(p, getSize() );
+	std::shared_ptr<ActorComponent>     ac;
+	std::shared_ptr<PhysicsComponent>   pc;
+	ac = components[PhysicsComponent::id];
+	pc = std::dynamic_pointer_cast<PhysicsComponent>(ac);
+	if (pc->query(bound_after, dir)) {
+		// set the position
+		this->setPosition(p);
 		Configuration::setGameViewCenter(sf::Vector2f((position.x + size.x/2.0), (position.y + size.y/2.0)));
-        }
-    }
+	}
+}
 
 /** Updates each of the actor's components
  ** time: current game time
@@ -706,4 +751,23 @@ bool Actor::isOfType(ActorId type) {
 			return true;
 	}
 	return false;
+}
+
+/** Update the animation frame.
+ **
+ **/
+void Actor::animate() {
+	// sanity check
+	if (!this->isOfType("Player")) {
+		return;
+	}
+
+	// determine the bounds of the frame
+	int top  = 0;
+	int width = sprite_texture[sprite_idx].getSize().x / sprite_frame_count[sprite_idx];
+	int left = frame_no * width;
+	int height = sprite_texture[sprite_idx].getSize().y;
+
+	// set the frame
+	sprite[sprite_idx].setTextureRect(sf::IntRect(left, top, width, height));
 }
