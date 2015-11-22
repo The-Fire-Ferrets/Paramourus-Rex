@@ -18,6 +18,7 @@ class Actor {
 
 		ActorComponents components;
 		std::vector<ActorId> getId(void) const;
+		void replaceId(ActorId newId, ActorId oldId);
 		bool operator==(const Actor& rhs) const;
 
 		explicit Actor(void);

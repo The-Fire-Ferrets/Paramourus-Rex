@@ -207,6 +207,8 @@ void CraftableComponent::combineWith(const CraftableComponent& other) {
 		std::cout << "CraftableComponent: unable to load recipe book" << std::endl;
 		return;
 	}
+	
+	ActorId oldType = owner->getId().back();
 
 	// look at each result
     pugi::xml_node recipes = doc.child("Recipes");
@@ -222,6 +224,7 @@ void CraftableComponent::combineWith(const CraftableComponent& other) {
 
 					// change the owner actor to the appropirate type
 					this->type = type;
+					owner->replaceId(type, oldType);
 					owner->sprite_texture[0].loadFromFile("./assets/sprites/" + sprite);
 					owner->sprite[0].setTexture(owner->sprite_texture[0]);
 					return;

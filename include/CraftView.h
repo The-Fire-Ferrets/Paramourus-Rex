@@ -61,6 +61,7 @@ class CraftView  {
 	// exit buttons
 	static sf::RectangleShape map_button, dialogue_button;
 	static bool has_crafted;
+	static bool first_click;
 	
 	// Determining occupation of craftTable
 	static bool box1;

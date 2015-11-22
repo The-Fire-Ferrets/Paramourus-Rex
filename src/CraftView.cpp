@@ -79,6 +79,7 @@ sf::RectangleShape CraftView::map_button;
 sf::RectangleShape CraftView::dialogue_button;
 bool CraftView::has_crafted = false;
 
+bool CraftView::first_click = false;
 bool CraftView::pressed;
 // Used to determine if there is an item in both boxes of crafting table
 bool CraftView::box1;
@@ -345,7 +346,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 		  ++total_craft_visits;
 		  cleanUp();
         }
-		else if (map_button.getGlobalBounds().contains(pos.x, pos.y)) {
+		else if (map_button.getGlobalBounds().contains(pos.x, pos.y) && first_click) {
 			LevelView::player->reset();
 			*state = 0;
 			cleanUp();
@@ -506,6 +507,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
       // mouse click released
     else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
         pressed = false;
+	first_click = true;
      }
 
 }
