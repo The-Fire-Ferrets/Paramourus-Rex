@@ -45,6 +45,7 @@ Actor::Actor(void) {
 	visible = true;
 	renderToGameView = true;
 	direction = sf::Vector2f(0,0);
+	animation_scaling = 1;
 	id.clear();
 }
 
@@ -112,6 +113,9 @@ bool Actor::Init(pugi::xml_node* elem) {
 		}
 		else if (!strcmp(attr.name(), "FrameDuration")) {
 			frame_duration = strtol(attr.value(), &temp, 10);
+		}
+		else if (!strcmp(attr.name(), "AnimationScaling")) {
+			animation_scaling = strtol(attr.value(), &temp, 10);
 		}
 		else if (!strcmp(attr.name(),"SpriteMinimap")) {
 			if (!strcmp(attr.value(), ""))
@@ -272,13 +276,13 @@ void Actor::PostInit(pugi::xml_node* elem) {
 				else
 					sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[0]).c_str());
 				sprite[i] = sf::Sprite(sprite_texture[i], sf::IntRect(0, 0, (sprite_texture[i].getSize()).x, (sprite_texture[i].getSize()).y));
-				if (!this->isOfType("Player")) {
+				if (!this->isOfType("Player") && !this->isOfType("NPC")) {
 					sprite[i].setScale(size.x/(sprite_texture[i].getSize()).x, size.y/(sprite_texture[i].getSize()).y);
 				}
 				else {
 					float x = size.x / (sprite_texture[i].getSize().x/sprite_frame_count[i]);
 					float y = size.y / sprite_texture[i].getSize().y;
-					sprite[i].setScale(x, y);
+					sprite[i].setScale(animation_scaling*x, animation_scaling*y);
 				}
 				sprite[i].setPosition(position);
 			}
@@ -302,7 +306,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 			}
 	}
 
-	if (this->isOfType("Player")) {
+	if (this->isOfType("Player") || this->isOfType("NPC")) {
 		frame_no = 0;
 		this->animate();
 	}
@@ -318,8 +322,6 @@ void Actor::PostInit(void) {
  ** if the obstacle pointer is set (by a physics component o fthe actor or another actor after contact) it prevents the actors from moving into each other
  **/
 void Actor::move(sf::Vector2f next_pos, sf::Vector2f dir) {
-	//Move Actor
-	direction = dir;
 	if (dir.x < 0)
 		sprite_idx = 2;
 	else if (dir.x > 0)
@@ -328,8 +330,26 @@ void Actor::move(sf::Vector2f next_pos, sf::Vector2f dir) {
 		sprite_idx = 0;
 	else if (dir.y > 0)
 		sprite_idx = 1;
+
+	// update the frame number and animate
+	if (sprite_clock.getElapsedTime().asMilliseconds() > frame_duration) {
+		frame_no = (frame_no+1) % sprite_frame_count[sprite_idx];
+
+		this->animate();
+		sprite_clock.restart();
+	}
+	else if (direction != dir) {
+		frame_no = 0;
+
+		this->animate();
+		sprite_clock.restart();
+	}
+
+	//Move Actor
 	sf::Vector2f p = next_pos;
 	this->setPosition(p);
+	direction = dir;
+
 	if (isOfType("Player"))
 		Configuration::setGameViewCenter(sf::Vector2f((position.x + size.x/2.0), (position.y + size.y/2.0)));
 
@@ -475,7 +495,7 @@ void Actor::updateBoundary(void) {
 			height = sprite_vertexarray[i].position.y - pos.y;
 			boundary.push_back(new  sf::FloatRect(pos.x, pos.y, width, height));
 		}
-	}	
+	}
 	else {
 		if (isOfType("Obstacle"))
 			*boundary.back() = sf::FloatRect(position.x + size.x * minimize, position.y + size.y * minimize, size.x * (1 - 2*minimize), size.y * (1 - 2*minimize));
@@ -621,7 +641,7 @@ void Actor::getEvent(EventInterfacePtr e) {
 
 	//if (event_type == ContactEvent::event_type)
 	//	std::cout << other_actor->getId() << " made contact with " << id << std::endl;
-	
+
 	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
 		(it->second)->update(e);
 }
@@ -644,7 +664,7 @@ void Actor::setVisible(bool v) {
 }
 
 /** Returns whether or not the actor is rendering itself
- ** 
+ **
  **/
 bool Actor::getVisible(void) {
     return visible;
@@ -758,7 +778,7 @@ bool Actor::isOfType(ActorId type) {
  **/
 void Actor::animate() {
 	// sanity check
-	if (!this->isOfType("Player")) {
+	if (!this->isOfType("Player") && !this->isOfType("NPC")) {
 		return;
 	}
 

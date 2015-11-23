@@ -107,10 +107,13 @@ class Actor {
 		void updateBoundary(void);
 		void setMinimapSpritePosition(sf::Vector2f pos);
 
+		// members related to spritesheets and animation
 		unsigned sprite_frame_count[4];
 		sf::Clock sprite_clock;
 		unsigned frame_duration;
 		unsigned frame_no;
+		unsigned animation_scaling;
+
 		void animate();
 };
 
