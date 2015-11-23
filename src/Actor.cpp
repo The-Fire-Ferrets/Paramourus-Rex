@@ -45,7 +45,7 @@ Actor::Actor(void) {
 	visible = true;
 	renderToGameView = true;
 	direction = sf::Vector2f(0,0);
-	animation_scaling = 1;
+	animation_scaling = 1.f;
 	id.clear();
 }
 
@@ -115,7 +115,7 @@ bool Actor::Init(pugi::xml_node* elem) {
 			frame_duration = strtol(attr.value(), &temp, 10);
 		}
 		else if (!strcmp(attr.name(), "AnimationScaling")) {
-			animation_scaling = strtol(attr.value(), &temp, 10);
+			animation_scaling = strtof(attr.value(), &temp);
 		}
 		else if (!strcmp(attr.name(),"SpriteMinimap")) {
 			if (!strcmp(attr.value(), ""))

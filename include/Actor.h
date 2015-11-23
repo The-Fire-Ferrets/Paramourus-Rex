@@ -112,7 +112,7 @@ class Actor {
 		sf::Clock sprite_clock;
 		unsigned frame_duration;
 		unsigned frame_no;
-		unsigned animation_scaling;
+		float animation_scaling;
 
 		void animate();
 };
