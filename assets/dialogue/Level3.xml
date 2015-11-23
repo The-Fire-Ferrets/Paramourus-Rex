@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level3 Background = "Level3.png" Response="1" Flower = "Orchid" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "300" DianaPosY = "350" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30">
+<Level3 Background = "Orchard.png" Response="1" Flower = "Orchid" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "300" DianaPosY = "350" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30">
 	<Correct>
 	  <Dialogue Speaker = "Narrator" Text ="Exhausted from all of your flower-hunting, you're not expecting to see Diana when you're walking back through the remains of the old apple orchards. Diana perks up upon seeing you, waving her short arms at you enthusiastically." />
 	  <Dialogue Speaker = "Diana" Text = "Hey Phil! I'm glad I ran into you! I loved that other Orchid you found for me! I never would have been able to grow that with just the water that I have. What are you out here for anyway? Are you looking for a snack too? I haven't had too much luck. There's not too much green left around here. I think all the earth's too dry. Wanna look around with me?" />
