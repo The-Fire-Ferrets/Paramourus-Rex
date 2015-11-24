@@ -2,9 +2,9 @@
 <Map Background = "MapView-BG.png" Font = "arial.ttf" TitleSprite = "BackButton.png" TitleHeight = "30" TitleWidth = "30">
 	<CraftTable X = "730" Y = "0" Height = "50" Width = "60" Sprite = "CraftTable.png"/>
 	<Level0  X = "-100" Y = "-100" Height = "30" Width = "30" Sprite = "Level0.png" MinFlowers = "0" MaxFlowers = "0" FireFlower = "0" EarthFlower = "0" WaterFlower = "0" AirFlower = "0"/>
-	<Level1 X = "700" Y = "500" Height = "30" Width = "30" Sprite = "Level1.png" MinFlowers = "4" MaxFlowers = "8" FireFlower = ".20" EarthFlower = ".75" WaterFlower = ".05" AirFlower = ".0"/>
-	<Level2 X = "760" Y = "230" Height = "30" Width = "30" Sprite = "Level2.png" MinFlowers = "4" MaxFlowers = "8" FireFlower = ".80" EarthFlower = ".175" WaterFlower = ".025" AirFlower = ".0"/>
-	<Level3 X = "150" Y = "250" Height = "30" Width = "30" Sprite = "Level3.png" MinFlowers = "4" MaxFlowers = "8" FireFlower = "0" EarthFlower = ".2" WaterFlower = ".6" AirFlower = ".2"/>
-	<Level4 X = "215" Y = "150" Height = "30" Width = "30" Sprite = "Level4.png" MinFlowers = "4" MaxFlowers = "4" FireFlower = "0" EarthFlower = "0" WaterFlower = ".25" AirFlower = ".75"/>
-	<Level5 X = "425" Y = "550" Height = "30" Width = "30" Sprite = "Level5.png" MinFlowers = "4" MaxFlowers = "8" FireFlower = ".3" EarthFlower = ".3" WaterFlower = ".3" AirFlower = ".1"/>
+	<Level1 X = "575" Y = "175" Height = "30" Width = "30" Sprite = "Level1.png" MinFlowers = "4" MaxFlowers = "8" FireFlower = ".20" EarthFlower = ".75" WaterFlower = ".05" AirFlower = ".0"/>
+	<Level2 X = "600" Y = "400" Height = "30" Width = "30" Sprite = "Level2.png" MinFlowers = "4" MaxFlowers = "8" FireFlower = ".80" EarthFlower = ".175" WaterFlower = ".025" AirFlower = ".0"/>
+	<Level3 X = "740" Y = "230" Height = "30" Width = "30" Sprite = "Level3.png" MinFlowers = "4" MaxFlowers = "8" FireFlower = "0" EarthFlower = ".2" WaterFlower = ".6" AirFlower = ".2"/>
+	<Level4 X = "200" Y = "225" Height = "30" Width = "30" Sprite = "Level4.png" MinFlowers = "4" MaxFlowers = "4" FireFlower = "0" EarthFlower = "0" WaterFlower = ".25" AirFlower = ".75"/>
+	<Level5 X = "450" Y = "550" Height = "30" Width = "30" Sprite = "Level5.png" MinFlowers = "4" MaxFlowers = "8" FireFlower = ".3" EarthFlower = ".3" WaterFlower = ".3" AirFlower = ".1"/>
 </Map>
