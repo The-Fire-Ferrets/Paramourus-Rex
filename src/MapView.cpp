@@ -167,7 +167,7 @@ void MapView::Create(const char* resource) {
     for (int i = 0; i < num_levels; i++) {
         sprites[i] = sf::Sprite(textures[i], sf::IntRect(0, 0, textures[i].getSize().x, textures[i].getSize().y));
         sprites[i].setScale(sizes[i].x/(textures[i].getSize()).x, sizes[i].y/(textures[i].getSize()).y);
-	sprites[i].setPosition(positions[i]);
+	sprites[i].setPosition(positions[i] + sf::Vector2f(-45, -20));
     }
 
 }
@@ -248,7 +248,7 @@ void MapView::resetPopulationValues(void) {
 			flowers_text[i].setCharacterSize(15);
 			flowers_text[i].setStyle(sf::Text::Bold);
 			flowers_text[i].setColor(sf::Color::Black);
-			flowers_text[i].setPosition(positions[i] + sf::Vector2f(sizes[i].x/2 - flowers_text[i].getGlobalBounds().width/2, -1.5*flowers_text[i].getGlobalBounds().height));
+			flowers_text[i].setPosition(positions[i] + sf::Vector2f(30.0/2 - flowers_text[i].getGlobalBounds().width/2, -1.5*flowers_text[i].getGlobalBounds().height));
 		}
 	}
 	reset = false;
@@ -273,7 +273,7 @@ void MapView::render(sf::RenderWindow *window) {
 		window->draw(background);
 		window->draw(title_sprite);
 		for (int i = 0; i < num_levels; i++) {
-			window->draw(sprites[i]);
+			//window->draw(sprites[i]);
 			if (i > 1) {
 				window->draw(flowers_text[i]);
 			}		
