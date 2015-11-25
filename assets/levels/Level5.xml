@@ -113,12 +113,34 @@
 		</PhysicsComponent>
 	</Obstacle>
 	-->
-	<Obstacle Generate = "175" Type = "Rock"  Sprite = "Rock.png"  Damage = "True">
+<!-- 	<Obstacle Generate = "175" Type = "Rock"  Sprite = "Rock.png"  Damage = "True">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<PhysicsComponent>
 			<Properties Type = "Opaque" />
 		</PhysicsComponent>
 	</Obstacle>
+ -->
+
+	<Obstacle Generate = "60" Type = "Crystal-Green"  Sprite = "Obst-Crystal-Green.png"  Damage = "True">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<PhysicsComponent>
+			<Properties Type = "Opaque" />
+		</PhysicsComponent>
+	</Obstacle>	
+
+	<Obstacle Generate = "60" Type = "Crystal-Orange"  Sprite = "Obst-Crystal-Orange.png"  Damage = "True">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<PhysicsComponent>
+			<Properties Type = "Opaque" />
+		</PhysicsComponent>
+	</Obstacle>	
+
+	<Obstacle Generate = "60" Type = "Crystal-Pink"  Sprite = "Obst-Crystal-Pink.png"  Damage = "True">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<PhysicsComponent>
+			<Properties Type = "Opaque" />
+		</PhysicsComponent>
+	</Obstacle>	
 
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
