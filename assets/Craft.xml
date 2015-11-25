@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Craft Background = "HomersCave.png" Map = "Lily.png" Book = "NPCUp.png" Recipes = "RecipeScroll.png" Font = "arial.ttf" Text_Size = "30" Text_X="150" Text_Y = "450">
+<Craft Background = "HomersCave.png" Map = "Map.png" Book = "Recipes.png" Recipes = "RecipeScroll.png" Font = "arial.ttf" Text_Size = "30" Text_X="150" Text_Y = "450">
   <FireFlower Sprite = "FireFlower" Height = "30" Width = "30" X = "10" Y = "10"/>
   <WaterFlower Sprite = "WaterFlower" Height = "30" Width = "30" X = "10" Y = "50" />
   <EarthFlower Sprite = "EarthFlower" Height = "30" Width = "30" X = "10" Y = "90" />
