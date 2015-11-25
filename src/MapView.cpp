@@ -273,10 +273,11 @@ void MapView::render(sf::RenderWindow *window) {
 		window->draw(background);
 		window->draw(title_sprite);
 		for (int i = 0; i < num_levels; i++) {
-			//window->draw(sprites[i]);
 			if (i > 1) {
 				window->draw(flowers_text[i]);
-			}		
+			}
+			else
+				window->draw(sprites[i]);		
 		}
 		std::shared_ptr<ActorComponent>     ac;
 		std::shared_ptr<CollectorComponent>   cc;
