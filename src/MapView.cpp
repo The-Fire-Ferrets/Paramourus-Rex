@@ -283,34 +283,36 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
         for (int i = 0; i < level_idx + 4; i++) {
-            if (sprites[i].getGlobalBounds().contains(pos.x, pos.y)) {
-		if (i > 1 && view_state == 1) {
-			view_state = 0;
-			render(window);
-			int flowers[] = {fireflowers_count[i], earthflowers_count[i], airflowers_count[i], waterflowers_count[i]};
-		        LevelView::Create(levels[i].c_str(), state, flowers);
-		        LevelView::start();
-			reset = true;
-			view_state = 1;
-		        *state = 1;
+		if ( i < num_levels) {
+		    if (sprites[i].getGlobalBounds().contains(pos.x, pos.y)) {
+			if (i > 1 && view_state == 1) {
+				view_state = 0;
+				render(window);
+				int flowers[] = {fireflowers_count[i], earthflowers_count[i], airflowers_count[i], waterflowers_count[i]};
+				LevelView::Create(levels[i].c_str(), state, flowers);
+				LevelView::start();
+				reset = true;
+				view_state = 1;
+				*state = 1;
+			}
+			else if (i <= 1) {
+				int last_state = view_state;
+				if (view_state == 2)
+					CraftView::view_state = 2;
+				view_state = 0;
+				render(window);
+				reset = true;
+				view_state = last_state;
+				*state = 3;
+			}
+		    }
+			else if (title_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
+			*state = 5;
+			MapView::level_idx = -1;
+			MapView::commentary_idx = 0;
+			LevelView::player->reset();
+		    }
 		}
-		else if (i <= 1) {
-			int last_state = view_state;
-			if (view_state == 2)
-				CraftView::view_state = 2;
-			view_state = 0;
-			render(window);
-			reset = true;
-			view_state = last_state;
-			*state = 3;
-		}
-            }
-		else if (title_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
-		*state = 5;
-		MapView::level_idx = -1;
-		MapView::commentary_idx = 0;
-		LevelView::player->reset();
-            }
         }
     }
     else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
@@ -362,11 +364,13 @@ void MapView::render(sf::RenderWindow *window) {
 		window->draw(background);
 		window->draw(title_sprite);
 		for (int i = 0; i < level_idx + 4; i++) {
-			if (i > 1 && view_state == 1) {
-				window->draw(flowers_text[i]);
-			}
-			else if (i <= 1)
-				window->draw(sprites[i]);		
+			if ( i < num_levels) {
+				if (i > 1 && view_state == 1) {
+					window->draw(flowers_text[i]);
+				}
+				else if (i <= 1)
+					window->draw(sprites[i]);
+			}		
 		}
 		std::shared_ptr<ActorComponent>     ac;
 		std::shared_ptr<CollectorComponent>   cc;
