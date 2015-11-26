@@ -160,7 +160,7 @@
 			<Control Speed = "3.5"/>
 		</InputComponent>
 		<PhysicsComponent>
-			<VisionBoundary Height = "100" Width = "100" X = "-25" Y = "-25"/>
+			<VisionBoundary Height = "100" Width = "100" X = "-50" Y = "-50"/>
 		</PhysicsComponent>
 	</NPC>
 

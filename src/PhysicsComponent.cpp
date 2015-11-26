@@ -276,7 +276,7 @@ bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
  ** window: current game render window
  **/
 void PhysicsComponent::render(sf::RenderWindow *window, bool minimap) {
-	window->draw(vision_boundary_sprite);
+	//window->draw(vision_boundary_sprite);
 }
 
 /** Sets the value of the given bit

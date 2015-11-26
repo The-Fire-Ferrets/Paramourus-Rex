@@ -198,9 +198,9 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	back_button.setScale(title_size.x/(title_texture.getSize()).x, title_size.y/(title_texture.getSize()).y);
 	back_button.setPosition(sf::Vector2f(-1000,-1000));
 
-	title = sf::Text(title_text, font, 30);
+	title = sf::Text(title_text, font, 25);
 	title.setColor(sf::Color::Black);
-	load_state = sf::Text(load_text, font, 30);
+	load_state = sf::Text(load_text, font, 25);
 	load_state.setColor(sf::Color::Black);
 
 	title.setPosition(Configuration::getWindowWidth()/2 - title.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 - title.getGlobalBounds().height - 10);
