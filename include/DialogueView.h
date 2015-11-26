@@ -5,9 +5,18 @@
 #include "ActorFactory.h"
 #include <vector>
 #include <utility>
+#include "LevelView.h"
+#include "CraftView.h"
+#include "TitleView.h"
+#include "MapView.h"
 
 class DialogueView {
-
+	friend class LevelView;
+	friend class TitleView;
+	friend class CraftView;
+	friend class MapView;
+	protected:
+		static int view_state;
 	private:
 		static std::string name;
 		static int numDialogues;
@@ -38,7 +47,6 @@ class DialogueView {
 
 		static sf::SoundBuffer buffer;
 		static sf::Sound sound;
-		static int view_state;
 
 		static bool player_response;
 		static bool solved;

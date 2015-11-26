@@ -22,6 +22,7 @@ int CraftView::magnolias = 0;
 int CraftView::totalFlowers = 0;
 std::string CraftView::flower_str;
 sf::Text CraftView::flower_text;
+int CraftView::view_state = 0;
 
 // Number of visits to CraftView. Used to determine which dialogue.xml
 // file to use after the crafting and level.
@@ -101,10 +102,11 @@ sf::Sprite  CraftView::character_sprite;
  ** resource: filename for xml
  ** state: current game state
  **/
-void CraftView::Create(const char* resource, int* state) {
+void CraftView::Create(const char* resource) {
     //Reference to current location in Actor population array
     //Holds referenced to loaded XML file
     totalFlowers = 0;
+	view_state = 1;
 	has_crafted = false;
     pugi::xml_document doc;
 	if (delegate == NULL)
@@ -268,40 +270,6 @@ void CraftView::Create(const char* resource, int* state) {
 	  std::get<0>(flowerStrList[count]).setPosition(positions[count]);
     }
 
-    // Checks player for current inventory, updates.
-    // Accessing this info from LevelView::Player's CollectorComponent.
-    if (LevelView::player != NULL){
-      StrongActorPtr player = LevelView::player;
-      StrongActorComponentPtr ac = player->components[CollectorComponent::id];
-      std::shared_ptr<CollectorComponent> cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
-      std::vector<StrongActorPtr> flowers = cc->getFlowers();
-
-      // add flowers to persistent list to make available to other classes
-      CraftView::actorList.insert(CraftView::actorList.end(), flowers.begin(), flowers.end());
-
-      // iterate through player's inventory to update inventory on screen
-      for (int i=0; i < flowers.size() ; i++){
-	// here, flowerList is a vector full of StrongActorPtrs. determine the id of each strongactorptr
-	// to determine if it is a fire flower, water flower, air flower, or earth flower
-	  if (flowers[i]->isOfType("FireFlower")){
-	      fireFlowers++;
-	  }
-	  else if (flowers[i]->isOfType("WaterFlower")){
-	      waterFlowers++;
-	  }
-	  else if (flowers[i]->isOfType("AirFlower")){
-	      airFlowers++;
-	  }
-	  else if (flowers[i]->isOfType("EarthFlower")){
-	      earthFlowers++;
-	  }
-
-	  //restore player's vases now that it's cleared space in inventory
-	  totalFlowers++;
-	  cc->setVases(cc->getVases()+1);
-      }
-    }
-
 	// draw character art
 	unsigned int width = Configuration::getWindowWidth()/10;
 	unsigned int posX = Configuration::getWindowWidth()/6.6;
@@ -347,11 +315,47 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 		  cleanUp();
         }
 		else if (map_button.getGlobalBounds().contains(pos.x, pos.y) && first_click) {
-			LevelView::player->reset();
+			LevelView::player->reset();				
+			view_state = 1;
 			*state = 0;
 			cleanUp();
 		}
 
+	// Checks player for current inventory, updates.
+    // Accessing this info from LevelView::Player's CollectorComponent.
+    if (LevelView::player != NULL){
+      StrongActorPtr player = LevelView::player;
+      StrongActorComponentPtr ac = player->components[CollectorComponent::id];
+      std::shared_ptr<CollectorComponent> cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
+      std::vector<StrongActorPtr> flowers = cc->getFlowers();
+	 if (flowers.size() > 0){
+	      // add flowers to persistent list to make available to other classes
+	      CraftView::actorList.insert(CraftView::actorList.end(), flowers.begin(), flowers.end());
+
+	      // iterate through player's inventory to update inventory on screen
+	      for (int i=0; i < flowers.size() ; i++){
+		// here, flowerList is a vector full of StrongActorPtrs. determine the id of each strongactorptr
+		// to determine if it is a fire flower, water flower, air flower, or earth flower
+		  if (flowers[i]->isOfType("FireFlower")){
+		      fireFlowers++;
+		  }
+		  else if (flowers[i]->isOfType("WaterFlower")){
+		      waterFlowers++;
+		  }
+		  else if (flowers[i]->isOfType("AirFlower")){
+		      airFlowers++;
+		  }
+		  else if (flowers[i]->isOfType("EarthFlower")){
+		      earthFlowers++;
+		  }
+
+		  //restore player's vases now that it's cleared space in inventory
+		  totalFlowers++;
+		  cc->setVases(cc->getVases()+1);
+	      }
+		LevelView::player->reset();
+	}
+    }
         bool inList;
 
         // checking to see if flowers clicked on

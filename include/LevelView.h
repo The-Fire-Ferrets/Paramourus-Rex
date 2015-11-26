@@ -4,13 +4,19 @@
 #include "Constants.h"
 #include "ActorFactory.h"
 #include "DialogueView.h"
+#include "CraftView.h"
+#include "TitleView.h"
+#include "MapView.h"
 
 typedef std::pair<ActorId, ActorId> ContactPair;
 typedef std::pair<ActorId, ContactPair> DisplayContactPair;
 
 class LevelView  {
-	friend class CraftView;
 	friend class Pathfinder;
+	friend class DialogueView;
+	friend class TitleView;
+	friend class CraftView;
+	friend class MapView;
 	protected:
 		static int view_state;
 	private:

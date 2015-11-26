@@ -33,6 +33,10 @@ int main(int argc, char* argv[])
 	const char* title = {"Title"};
 	TitleView::Create(title);
 
+	//Loads the craft table
+	const char* craft = {"Craft"};
+	CraftView::Create(craft);
+
 	fr_clock.restart();
 	/**
 	 ** Main Game Loop

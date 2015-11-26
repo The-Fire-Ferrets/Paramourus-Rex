@@ -91,6 +91,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	//Reset values
 	num_actors = 0;
 	flowers_left = 0;
+	last_action = 0;
 	reveal_back_button = false;
 	pause_key_pressed = false;
 	vases_full = false;
@@ -374,6 +375,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 
 	//Checks to see if done generating paths
 	if (!Pathfinder::generatingPaths && view_state == 0) {
+		std::cout << "HERE" << std::endl;
 		if (name == "Introduction") {
 			view_state = 2;
 			EventInterfacePtr event;
@@ -409,7 +411,6 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		level_clock.restart();
 		return;
 	}
-
 	//Checks to see if back button has been selected
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && reveal_back_button) {
 		pressed = true;
@@ -417,11 +418,14 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		if (back_button.getGlobalBounds().contains(pos.x * Configuration::getGameViewWidth() / Configuration::getWindowWidth() +  Configuration::getGameViewPosition().x, pos.y * Configuration::getGameViewHeight() / Configuration::getWindowHeight() +  Configuration::getGameViewPosition().y)) {
 			if (view_state == 2) {
 				view_state = 1;
-				LevelView::player->reset();
-				*state = 5;
+				MapView::view_state = 2;
+				MapView::commentary_idx = 0;
+				MapView::reset = true;
+				*state = 0;
 				cleanUp();
 			}
 			else {
+				MapView::view_state = 1;
 				*state = 0;
 				cleanUp();
 			}
@@ -437,12 +441,14 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		if (view_state == 1) {
 			const char* time_out = {"TimeOut"};
 			DialogueView::Create(time_out, state);
+			MapView::view_state = 1;
 			LevelView::player->reset();
 			*state = 2;
 		}
 		else if (view_state == 2) {
 			view_state = 1;
 			LevelView::player->reset();
+			MapView::view_state = 1;
 			*state = 5;
 		}
 		cleanUp();
@@ -608,10 +614,10 @@ void LevelView::render(sf::RenderWindow *window) {
 		std::vector<StrongActorPtr>::iterator it;
 		for (it = actorList.begin(); it != actorList.end(); it++) {
 			(*it)->render(window, false);
-			if ((view_state == -2 && commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 10) || (commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 4))
+			if ((view_state == 2 && commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 30) || (commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 4))
 				window->draw(commentary[(*it)->getInstance()]);
 		}
-		if ((view_state == -2 && commentary_timer[-1].getElapsedTime().asSeconds() < 10) || (commentary_timer[-1].getElapsedTime().asSeconds() < 4))
+		if ((view_state == 2 && commentary_timer[-1].getElapsedTime().asSeconds() < 30) || (commentary_timer[-1].getElapsedTime().asSeconds() < 4))
 			window->draw(commentary[-1]);
 		player->render(window, false);
 		window->draw(timer);

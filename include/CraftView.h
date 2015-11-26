@@ -7,8 +7,17 @@
 #include "CraftableComponent.h"
 #include "ActorComponent.h"
 #include "LevelView.h"
+#include "DialogueView.h"
+#include "TitleView.h"
+#include "MapView.h"
 
 class CraftView  {
+	friend class LevelView;
+	friend class DialogueView;
+	friend class TitleView;
+	friend class MapView;
+	protected:
+		static int view_state;
     private:	
 	// Flower counts
         static int totalFlowers;
@@ -90,7 +99,7 @@ class CraftView  {
 		static int getNumFlowers(void);
 		static bool pressed;
 		static void start();
-		static void Create(const char *resource, int *state);
+		static void Create(const char *resource);
 		static void update(EventInterfacePtr e);
 		static void update(sf::RenderWindow *window, int *state);
 		static void quit(void);

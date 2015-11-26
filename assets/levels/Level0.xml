@@ -9,16 +9,16 @@
 	</Player>
 	<Action>
 		<Spawn1>
-			<FireFlower>
+			<WaterFlower>
 		    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 				<Pathfinder PathType = "-2"/>
-			</FireFlower>
+			</WaterFlower>
 		</Spawn1>
 		<Spawn2>
-			<EarthFlower>
+			<AirFlower>
 		    		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 				<Pathfinder PathType = "-2"/>
-			</EarthFlower>
+			</AirFlower>
 		</Spawn2>
 		<Spawn3>
 			<Obstacle Generate = "50" Type = "Cactus"  Sprite = "Cactus.png"  Damage = "True">
@@ -58,17 +58,17 @@
 		<Commentary1 Display = "Homer" Actor = "Player" Contact = "" Action = "0" Occurance = "1">
 			<Dialogue1 Text = "Hey Phil! I'm going to try to help you win Dianna's heart. First, you'll need to collect some elemental flowers. Try to find one.. ps. top right corner may help!" />
 		</Commentary1>
-		<Commentary2  Display = "Homer" Actor = "Player" Contact = "FireFlower"  Action = "1" Occurance = "1">
+		<Commentary2  Display = "Homer" Actor = "Player" Contact = "WaterFlower"  Action = "1" Occurance = "1">
 			<Dialogue1  Text = "Great! See what happened there, you filled one of your vases, displayed at the top left corner. Do it again so you see what I mean." />
 		</Commentary2>		
-		<Commentary3  Display = "Homer" Actor = "Player" Contact = "EarthFlower"  Action = "2" Occurance = "1">
+		<Commentary3  Display = "Homer" Actor = "Player" Contact = "AirFlower"  Action = "2" Occurance = "1">
 			<Dialogue1  Text = "Now, you should watch out for these obstacles. They'll cause you to drop a vase and/or flower. Touch one to see." />
 		</Commentary3>		
 		<Commentary4   Display = "Homer" Actor = "Player" Contact = "Obstacle"  Action = "3" Occurance = "1">
 			<Dialogue1  Text = "Oh, looks like you have some competition. Dont let them touch you or they may steal your vases and/or flowers. Touch one to see." />
 		</Commentary4>		
 		<Commentary5   Display = "Homer" Actor = "Player" Contact = "NPC"  Action = "-1" Occurance = "1">
-			<Dialogue1  Text = "That's all for now. But I'll be around to help more. Back button on bottom left what you're done. May have to touch something else." />
+			<Dialogue1  Text = "Now try to get away. You'll know you're out of sight when the back button appears on the bottom left. That's all for navigating the level. We'll head over to the map when you click the back button!" />
 		</Commentary5>
 		<Commentary6  Display = "Player" Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Ouch! That hurt." />

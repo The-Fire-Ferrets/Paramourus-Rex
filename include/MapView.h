@@ -5,9 +5,21 @@
 #include "LevelView.h"
 #include "DialogueView.h"
 #include "CraftView.h"
+#include "TitleView.h"
 #include "CollectorComponent.h"
 
+typedef std::pair<ActorId, ActorId> ContactPair;
+typedef std::pair<ActorId, ContactPair> DisplayContactPair;
+
 class MapView {
+	friend class LevelView;
+	friend class DialogueView;
+	friend class TitleView;
+	friend class CraftView;
+	protected:
+		static int view_state;
+		static int commentary_idx;
+		static bool reset;
 	private:
 		static const int size;
 		static int num_levels;
@@ -29,20 +41,25 @@ class MapView {
 		static int earthflowers_count[];
 		static int airflowers_count[];
 		static int waterflowers_count[];
+		static std::map<int, sf::Text> commentary;
+		static std::map<DisplayContactPair, sf::Vector2f> commentary_positions;
+		static std::map<DisplayContactPair, std::vector<std::string>> commentary_strings;
+		static std::map<DisplayContactPair, int> commentary_occurance;
+		static std::map<DisplayContactPair, int> commentary_actions;
+		static sf::Vector2f commentary_pos;
+		static std::map<int, sf::Clock> commentary_timer;
+		static std::string fitStringToCommentaryBox(std::string str);
 		static std::string flowers_string[];
 		static sf::Text flowers_text[];
 		static sf::Font font;
 		static int flowers[];
 		static bool pressed;
-		static bool reset;
 		static void resetPopulationValues(void);
-		static int view_state;
 		static EventDelegate delegate;
 		static int min_flowers[];
 		static int max_flowers[];
 	public:
 		static void Create(const char* resource);
-
 		static void update(sf::RenderWindow *window, int* state, float time);
 		static void update(EventInterfacePtr e);
 		static void render(sf::RenderWindow *window);
