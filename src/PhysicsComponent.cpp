@@ -127,13 +127,13 @@ void PhysicsComponent::update(float time) {
 		vision_boundary_sprite.setPosition(owner->getPosition().x + vision_boundary_position.x, owner->getPosition().y + vision_boundary_position.y);
 		if (LevelView::player->intersects(vision_boundary_sprite.getGlobalBounds()) && !inVision) {
 			inVision = true;
-			Pathfinder::changeVision(owner->getInitialPosition());
+			Pathfinder::changeVision(owner->getInitialPosition(), LevelView::player->getInitialPosition());
 			vision_timer.restart();
 			LevelView::inVision++;
 		}
 		else if (inVision && vision_timer.getElapsedTime().asSeconds() > 5) {
 			inVision = false;
-			Pathfinder::changeVision(owner->getInitialPosition());
+			Pathfinder::changeVision(owner->getInitialPosition(), LevelView::player->getInitialPosition());
 			LevelView::inVision--;
 		}
 			 
@@ -159,6 +159,17 @@ void PhysicsComponent::update(float time) {
                     break;
                 }
             }
+		if (other_actor->hasComponent(CollectableComponent::id)) {
+			if (use_vision_boundary) {	
+				vision_boundary = sf::IntRect(0, 0, (int) (vision_boundary_size.x), (int) (vision_boundary_size.y));
+				vision_boundary_sprite.setTextureRect(vision_boundary);
+				vision_boundary_sprite.setPosition(owner->getPosition().x + vision_boundary_position.x, owner->getPosition().y + vision_boundary_position.y);
+				if (other_actor->intersects(vision_boundary_sprite.getGlobalBounds())) {
+					Pathfinder::changeVision(owner->getInitialPosition(), other_actor->getInitialPosition());
+				}
+			}
+		}
+			
 	    sf::FloatRect* bound;
             if ((bound = other_actor->intersects(owner)) != NULL) {
                 madeContact = true;
@@ -265,7 +276,7 @@ bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
  ** window: current game render window
  **/
 void PhysicsComponent::render(sf::RenderWindow *window, bool minimap) {
-	//window->draw(vision_boundary_sprite);
+	window->draw(vision_boundary_sprite);
 }
 
 /** Sets the value of the given bit

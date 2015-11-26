@@ -133,7 +133,7 @@
 			<Control Speed = "3.5"/>
 		</InputComponent>
 		<PhysicsComponent>
-			<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
+			<VisionBoundary Height = "100" Width = "100" X = "-25" Y = "-25"/>
 		</PhysicsComponent>
 	</NPC>
 	<NPC Generate = "1">
@@ -143,7 +143,7 @@
 			<Control Speed = "3.5"/>
 		</InputComponent>
 		<PhysicsComponent>
-			<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
+			<VisionBoundary Height = "100" Width = "100" X = "-25" Y = "-25"/>
 		</PhysicsComponent>
 	</NPC>
 	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">

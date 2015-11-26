@@ -79,6 +79,10 @@ int* LevelView::game_state;
 // pause screen medium map
 bool LevelView::pause_key_pressed = false;
 bool LevelView::vases_full = false;
+sf::Text LevelView::title;
+std::string LevelView::title_text;
+sf::Text LevelView::load_state;
+std::string LevelView::load_text;
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -86,6 +90,9 @@ bool LevelView::vases_full = false;
 void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	//Reference to current location in Actor population array
 	//Holds referenced to loaded XML file	
+	title_text = "";
+	load_text = "Loading...";
+	title_text += (std::string) resource + ": ";
 	delegate.bind(&LevelView::update);
 	Pathfinder::Create(Configuration::getWindowWidth(), Configuration::getWindowHeight(), 10);
 	//Reset values
@@ -118,7 +125,8 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	for (pugi::xml_attribute attr = tools.first_attribute(); attr; attr = attr.next_attribute()) {
 		if (!strcmp(attr.name(), "Name")) {
 			name = attr.value();
-			if (!strcmp(attr.value(), "Introduction") && *state == 5) {
+			title_text += name;
+			if (!strcmp(attr.value(), "Tutorial") && *state == 5) {
 				view_state = 2;
 			}
 		}
@@ -190,6 +198,15 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	back_button.setScale(title_size.x/(title_texture.getSize()).x, title_size.y/(title_texture.getSize()).y);
 	back_button.setPosition(sf::Vector2f(-1000,-1000));
 
+	title = sf::Text(title_text, font, 30);
+	title.setColor(sf::Color::Black);
+	load_state = sf::Text(load_text, font, 30);
+	load_state.setColor(sf::Color::Black);
+
+	title.setPosition(Configuration::getWindowWidth()/2 - title.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 - title.getGlobalBounds().height - 10);
+
+	load_state.setPosition(Configuration::getWindowWidth()/2 - load_state.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 + 10);
+	
 	//Setup timeout graphics
 	const char* timeout_file = {"./assets/backgrounds/TimeOut.png"};
 	timeout_texture.loadFromFile(timeout_file);
@@ -372,23 +389,16 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	//Switch actorlist to current view
 	EventManagerInterface::setCurrentActorList(&actorList);
 	Configuration::setGameViewDimensions(gameView.getSize().x, gameView.getSize().y);
-
+	
+	bool ready_to_play = false;
 	//Checks to see if done generating paths
 	if (!Pathfinder::generatingPaths && view_state == 0) {
-		if (name == "Introduction") {
-			view_state = 2;
-			EventInterfacePtr event;
-			event.reset(new ContactEvent(0.f, -1, -1));
-			update(event);
-		}
-		else
-			view_state = 1;
+		load_text = "Press the Space Bar to Start!";
+		load_state.setString(load_text);
+		load_state.setPosition(Configuration::getWindowWidth()/2 - load_state.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 + 10);
+		ready_to_play = true;
 		//std::cout << "Pathfinder Path Generation Success!" << std::endl;
 	}
-
-	//If still rendering paths return
-	if (view_state == 0)
-		return;
 
 	// should we pause the screen?
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !pause_key_pressed) {
@@ -396,15 +406,31 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 			view_state = 1;
 			pause_key_pressed = true;
 		}
-		else {
+		else if (view_state != 0) {
 			view_state = 3;
 			pause_key_pressed = true;
 			duration = timer_time;
 		}
 	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && view_state == 0 && ready_to_play) {
+		if (name == "Introduction") {
+			view_state = 2;
+			EventInterfacePtr event;
+			event.reset(new ContactEvent(0.f, -1, -1));
+			update(event);
+		}
+		else {
+			view_state = 1;
+		}
+	}
 	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
 		pause_key_pressed = false;
 	}
+
+
+	//If still rendering paths return
+	if (view_state == 0)
+		return;
 
 	if (view_state == 3) {
 		level_clock.restart();
@@ -596,7 +622,9 @@ void LevelView::render(sf::RenderWindow *window) {
 	//Loading screen
 	if (view_state == 0) {
 		window->clear(sf::Color::White);
-		window->draw(Configuration::getLoadingSprite());
+		//window->draw(Configuration::getLoadingSprite());
+		window->draw(title);
+		window->draw(load_state);
 		window->display();
 		return;
 	}

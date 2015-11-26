@@ -74,6 +74,7 @@ void MapView::Create(const char* resource) {
 	commentary.clear();
 	commentary_idx = 0;
 	level_idx = -1;
+	num_levels = -1;
     if (!(result = doc.load_file(("./assets/" + resource_str + ".xml").c_str()))) {
         std::cout << "LevelView::CreateLevel(...): Failed to load" << std::endl;
         std::cout << "Filename: " << resource << " Load result: " << result.description() << std::endl;
@@ -168,7 +169,7 @@ void MapView::Create(const char* resource) {
 			}
 		}
 	else {
-		levels[num_levels++] = tool.name();	
+		levels[++num_levels] = tool.name();	
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
 		    if (!strcmp(attr.name(), "Sprite")) {
 		        textures[num_levels].loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
@@ -282,7 +283,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && view_state != 0) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
-        for (int i = 0; i < level_idx + 4; i++) {
+        for (int i = 0; i < level_idx + 3; i++) {
 		if ( i < num_levels) {
 		    if (sprites[i].getGlobalBounds().contains(pos.x, pos.y)) {
 			if (i > 1 && view_state == 1) {
@@ -363,7 +364,7 @@ void MapView::render(sf::RenderWindow *window) {
 	else if (view_state != 0) {
 		window->draw(background);
 		window->draw(title_sprite);
-		for (int i = 0; i < level_idx + 4; i++) {
+		for (int i = 0; i < level_idx + 3; i++) {
 			if ( i < num_levels) {
 				if (i > 1 && view_state == 1) {
 					window->draw(flowers_text[i]);

@@ -50,6 +50,10 @@ class LevelView  {
 		static std::map<DisplayContactPair, int> commentary_actions;
 		static std::map<int, sf::Clock> commentary_timer;
 		static std::string fitStringToCommentaryBox(std::string str);
+		static sf::Text title;
+		static std::string title_text;
+		static sf::Text load_state;
+		static std::string load_text;
 		static EventDelegate delegate;
 		static bool commentary_change;
 		static std::vector<std::vector<pugi::xml_node>> actions;
