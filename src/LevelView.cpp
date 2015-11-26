@@ -449,8 +449,10 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		else if (view_state == 2) {
 			view_state = 1;
 			LevelView::player->reset();
-			MapView::view_state = 1;
-			*state = 5;
+			MapView::view_state = 2;
+			MapView::commentary_idx = 0;
+			MapView::reset = true;
+			*state = 0;
 		}
 		cleanUp();
 	}
