@@ -259,8 +259,9 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 		commentary[-1] = sf::Text((commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))])[commentary_idx], font, 15);
 		commentary[-1].setPosition(commentary_pos);
 		commentary_timer[-1].restart();
-		if (commentary_idx == commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))].size())
+		if (commentary_idx == commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))].size()) {
 			level_idx = 0;
+		}
 	}
 	view_state = 0;
 	render(window);
@@ -374,7 +375,7 @@ void MapView::render(sf::RenderWindow *window) {
 
 		cc->render(window, false);
 
-		if ((view_state == 2 && commentary_timer[-1].getElapsedTime().asSeconds() < 30))
+		if ((commentary_idx < commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))].size() && commentary_timer[-1].getElapsedTime().asSeconds() < 30))
 			window->draw(commentary[-1]);
 	}
 }

@@ -120,7 +120,7 @@ void TitleView::update(sf::RenderWindow *window, int* state, float time) {
 		view_state = 0;
 		MapView::level_idx = 0;
 		MapView::view_state = 1;
-		MapView::commentary_idx = 0;
+		MapView::commentary_idx = 1;
 		*state = 0;
 		view_state = 1;
 	    }
