@@ -20,6 +20,7 @@ class MapView {
 		static int view_state;
 		static int commentary_idx;
 		static bool reset;
+		static int level_idx;
 	private:
 		static const int size;
 		static int num_levels;

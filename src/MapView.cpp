@@ -9,7 +9,7 @@ int MapView::num_levels = 0;
 std::string MapView::levels[size];
 //Level sprites
 sf::Sprite MapView::sprites[size];
-//Level textures
+//Level tlevel_idxextures
 sf::Texture MapView::textures[size];
 //Level sprite positions
 sf::Vector2f MapView::positions[size];
@@ -54,7 +54,7 @@ std::map<DisplayContactPair, int> MapView::commentary_actions;
 std::map<int, sf::Clock> MapView::commentary_timer;
 sf::Vector2f MapView::commentary_pos;
 int MapView::commentary_idx;
-
+int MapView::level_idx;
 /** Creates the map from the give configuration file
  **
  **/
@@ -73,6 +73,7 @@ void MapView::Create(const char* resource) {
 	commentary_timer.clear();
 	commentary.clear();
 	commentary_idx = 0;
+	level_idx = -1;
     if (!(result = doc.load_file(("./assets/" + resource_str + ".xml").c_str()))) {
         std::cout << "LevelView::CreateLevel(...): Failed to load" << std::endl;
         std::cout << "Filename: " << resource << " Load result: " << result.description() << std::endl;
@@ -230,7 +231,7 @@ void MapView::Create(const char* resource) {
 		        waterflowers[num_levels] = std::strtof(attr.value(), &temp);
 		    }
 		    else if (!strcmp(attr.name(),"EarthFlower")) {
-		        earthflostd::cwers[num_levels] = std::strtof(attr.value(), &temp);
+		        earthflowers[num_levels] = std::strtof(attr.value(), &temp);
 		    }
 		}
 	}
@@ -255,9 +256,11 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
     if (reset) {
 	int last_state = view_state;
 	if (commentary_idx < commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))].size()) {
-		commentary[-1] = sf::Text((commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))])[commentary_idx++], font, 20);
+		commentary[-1] = sf::Text((commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))])[commentary_idx], font, 15);
 		commentary[-1].setPosition(commentary_pos);
 		commentary_timer[-1].restart();
+		if (commentary_idx == commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))].size())
+			level_idx = 0;
 	}
 	view_state = 0;
 	render(window);
@@ -278,7 +281,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && view_state != 0) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
-        for (int i = 0; i < num_levels; i++) {
+        for (int i = 0; i < level_idx + 4; i++) {
             if (sprites[i].getGlobalBounds().contains(pos.x, pos.y)) {
 		if (i > 1 && view_state == 1) {
 			view_state = 0;
@@ -292,6 +295,8 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 		}
 		else if (i <= 1) {
 			int last_state = view_state;
+			if (view_state == 2)
+				CraftView::view_state = 2;
 			view_state = 0;
 			render(window);
 			reset = true;
@@ -301,6 +306,8 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
             }
 		else if (title_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
 		*state = 5;
+		MapView::level_idx = -1;
+		MapView::commentary_idx = 0;
 		LevelView::player->reset();
             }
         }
@@ -353,7 +360,7 @@ void MapView::render(sf::RenderWindow *window) {
 	else if (view_state != 0) {
 		window->draw(background);
 		window->draw(title_sprite);
-		for (int i = 0; i < num_levels; i++) {
+		for (int i = 0; i < level_idx + 4; i++) {
 			if (i > 1 && view_state == 1) {
 				window->draw(flowers_text[i]);
 			}
@@ -375,8 +382,8 @@ void MapView::render(sf::RenderWindow *window) {
 //Helper function to print hints correctly
 std::string MapView::fitStringToCommentaryBox(std::string str) {
 	// get dialogue box bound
-	int width = Configuration::getGameViewWidth() / 2;
-	int height = Configuration::getGameViewHeight() / 2;
+	int width = 100;
+	int height = 300;
 	int beginX = 0;
 	int beginY = 0;
 	//commentary_positions.push_back(sf::Vector2f(beginX, beginY));

@@ -375,7 +375,6 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 
 	//Checks to see if done generating paths
 	if (!Pathfinder::generatingPaths && view_state == 0) {
-		std::cout << "HERE" << std::endl;
 		if (name == "Introduction") {
 			view_state = 2;
 			EventInterfacePtr event;
@@ -417,17 +416,20 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		const sf::Vector2i pos = sf::Mouse::getPosition(*window);
 		if (back_button.getGlobalBounds().contains(pos.x * Configuration::getGameViewWidth() / Configuration::getWindowWidth() +  Configuration::getGameViewPosition().x, pos.y * Configuration::getGameViewHeight() / Configuration::getWindowHeight() +  Configuration::getGameViewPosition().y)) {
 			if (view_state == 2) {
-				view_state = 1;
+				view_state = 0;
 				MapView::view_state = 2;
 				MapView::commentary_idx = 0;
 				MapView::reset = true;
 				*state = 0;
 				cleanUp();
+				view_state = 1;
 			}
 			else {
+				view_state = 0;
 				MapView::view_state = 1;
 				*state = 0;
 				cleanUp();
+				view_state = 1;
 			}
 		}
 	}
@@ -435,7 +437,6 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		pressed = false;
 	} 
 	
-
 	//Ends the level after timeout
 	if (timer_time/1000 <= -3) {
 		if (view_state == 1) {

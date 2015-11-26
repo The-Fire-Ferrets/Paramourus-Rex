@@ -113,11 +113,14 @@ void TitleView::Create(const char* resource) {
 void TitleView::update(sf::RenderWindow *window, int* state, float time) {
 	EventManagerInterface::setViewDelegate(delegate);
 	EventManagerInterface::setCurrentActorList(NULL);
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && view_state == 1) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
 	    if (playbutton.getGlobalBounds().contains(pos.x, pos.y)) {
 		view_state = 0;
+		MapView::level_idx = 0;
+		MapView::view_state = 1;
+		MapView::commentary_idx = 0;
 		*state = 0;
 		view_state = 1;
 	    }
@@ -130,6 +133,7 @@ void TitleView::update(sf::RenderWindow *window, int* state, float time) {
 		}
 		else if (tutorialbutton.getGlobalBounds().contains(pos.x, pos.y)) {
 			view_state = 0;
+			MapView::commentary_idx = 0;
 			render(window);
 			int fireflowers_count = 1;
 			int earthflowers_count = 1;

@@ -302,25 +302,6 @@ int CraftView::getNumFlowers(void) {
 void CraftView::update(sf::RenderWindow *window, int* state) {
   	EventManagerInterface::setViewDelegate(delegate);
 	EventManagerInterface::setCurrentActorList(&actorList);
-      // Anticipates clicking in different areas of the screen
-      if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
-        pressed = true;
-        const sf::Vector2i pos = sf::Mouse::getPosition(*window);
-        if (has_crafted && dialogue_button.getGlobalBounds().contains(pos.x, pos.y)) {
-		LevelView::player->reset();
-		  *state = 2;
-		   DialogueView::Create(("Level" + std::to_string(total_craft_visits)).c_str(), state);
-
-		  ++total_craft_visits;
-		  cleanUp();
-        }
-		else if (map_button.getGlobalBounds().contains(pos.x, pos.y) && first_click) {
-			LevelView::player->reset();				
-			view_state = 1;
-			*state = 0;
-			cleanUp();
-		}
-
 	// Checks player for current inventory, updates.
     // Accessing this info from LevelView::Player's CollectorComponent.
     if (LevelView::player != NULL){
@@ -356,6 +337,25 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 		LevelView::player->reset();
 	}
     }
+      // Anticipates clicking in different areas of the screen
+      if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
+        pressed = true;
+        const sf::Vector2i pos = sf::Mouse::getPosition(*window);
+        if (has_crafted && dialogue_button.getGlobalBounds().contains(pos.x, pos.y)) {
+		LevelView::player->reset();
+		  *state = 2;
+		   DialogueView::Create(("Level" + std::to_string(total_craft_visits)).c_str(), state);
+
+		  ++total_craft_visits;
+		  cleanUp();
+        }
+		else if (map_button.getGlobalBounds().contains(pos.x, pos.y) && first_click) {
+			LevelView::player->reset();	
+			*state = 0;
+			cleanUp();
+		}
+
+	
         bool inList;
 
         // checking to see if flowers clicked on
