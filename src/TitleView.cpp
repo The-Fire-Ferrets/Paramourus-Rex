@@ -118,7 +118,7 @@ void TitleView::update(sf::RenderWindow *window, int* state, float time) {
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
 	    if (playbutton.getGlobalBounds().contains(pos.x, pos.y)) {
 		view_state = 0;
-		MapView::level_idx = 0;
+		MapView::level_idx = 10;
 		MapView::view_state = 1;
 		MapView::commentary_idx = 1;
 		*state = 0;

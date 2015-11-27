@@ -360,7 +360,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 **/
 void MapView::resetPopulationValues(void) {
 	for (int i = 0; i < num_levels; i++) {
-		if ((i > 1 && level_idx + 2 >= num_levels) || i == level_idx + 2) {
+		if (((i > 1 && level_idx + 2 >= num_levels) || i == level_idx + 2)) {
 			if (min_flowers[i] == max_flowers[i])
 				flowers[i] = max_flowers[i];
 			else
