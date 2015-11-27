@@ -162,7 +162,7 @@ void DialogueView::Create(const char* resource, int* state){
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
 			if (!strcmp(attr.name(), "Speaker") && strcmp(attr.value(), "Narrator")) {
 				speaker = std::string(attr.value());
-				dialogue += speaker + ": ";
+				dialogue += speaker+ ": ";
 			}
 			if (!strcmp(attr.name(), "Text")){
 				dialogue += attr.value();
@@ -225,10 +225,13 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 					rhs_character_tex = sf::Texture();
 				}
 				else if (boxes[index].first == "Phil"){
-				 	rhs_character_tex.loadFromFile("./assets/sprites/Diana.png");
+				 	rhs_character_tex.loadFromFile("./assets/sprites/Diana-Neutral.png");
 					player_response = true;
 				}
-				else {
+        else if (boxes[index].first == "Diana") {
+				 	rhs_character_tex.loadFromFile("./assets/sprites/Diana-Neutral.png");
+        }
+        else {
 					std::cout << "Load ./assets/sprites/" + boxes[index].first + ".png" << std::endl;
 					rhs_character_tex.loadFromFile("./assets/sprites/" + boxes[index].first + ".png");
 				}
@@ -237,7 +240,8 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 				unsigned int posY = Configuration::getWindowHeight()/1.4;
 
 				rhs_character_sprite = sf::Sprite(rhs_character_tex);
-				rhs_character_sprite.setPosition(posX+465, posY-rhs_character_tex.getSize().y-5);
+				rhs_character_sprite.setPosition(posX+width-rhs_character_tex.getSize().x, posY-rhs_character_tex.getSize().y-5);
+        //rhs_character_sprite.setPosition(lhs_character_sprite.getPosition());
 			
 				text.setString(boxes[index].second);
 				index++;
@@ -253,10 +257,21 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 	    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) && player_response == true){
 		    if (response == 1){
 			    num_times_impressed++;
+          std::cout << "Load ./assets/sprites/Diana-Happy.png" << std::endl;
+          rhs_character_tex.loadFromFile("./assets/sprites/Diana-Happy.png");
 		    }
 		    else{
 			    num_times_impressed--;
+          std::cout << "Load ./assets/sprites/Diana-Unimpressed.png" << std::endl;
+          rhs_character_tex.loadFromFile("./assets/sprites/Diana-Unimpressed.png");
 		    }
+        unsigned int width = Configuration::getWindowWidth()/1.05;
+        unsigned int posX = Configuration::getWindowWidth()/40;
+        unsigned int posY = Configuration::getWindowHeight()/1.4;
+
+        rhs_character_sprite = sf::Sprite(rhs_character_tex);
+        rhs_character_sprite.setPosition(posX+width-rhs_character_tex.getSize().x, posY-rhs_character_tex.getSize().y-5);
+
 		    // skip to Diana's first response, the response to option 1
 		    //index++;
 		    text.setString(boxes[index].second);
@@ -266,16 +281,28 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 	    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) && player_response == true){
 		    if (response == 2){
 			    num_times_impressed++;
+          std::cout << "Load ./assets/sprites/Diana-Happy.png" << std::endl;
+          rhs_character_tex.loadFromFile("./assets/sprites/Diana-Happy.png");
 		    }
 		    else{
 			    num_times_impressed--;
+          std::cout << "Load ./assets/sprites/Diana-Unimpressed.png" << std::endl;
+          rhs_character_tex.loadFromFile("./assets/sprites/Diana-Unimpressed.png");
 		    }
+        unsigned int width = Configuration::getWindowWidth()/1.05;
+        unsigned int posX = Configuration::getWindowWidth()/40;
+        unsigned int posY = Configuration::getWindowHeight()/1.4;
+
+        rhs_character_sprite = sf::Sprite(rhs_character_tex);
+        rhs_character_sprite.setPosition(posX+width-rhs_character_tex.getSize().x, posY-rhs_character_tex.getSize().y-5);
+
 		    // skip to Diana's first response, the response to option 1
 		    index++;
 		    text.setString(boxes[index].second);
 		    index = boxes.size();
 		    player_response = false;
 	    }
+
 	}
 }
 
