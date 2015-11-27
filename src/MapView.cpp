@@ -366,7 +366,6 @@ void MapView::resetPopulationValues(void) {
 				flowers[i] = max_flowers[i];
 			else
 				flowers[i] = rand() % (max_flowers[i] - min_flowers[i]) + min_flowers[i] + 1;
-			std::cout << flowers[i] << " " << round(1.0 * flowers[i] * fireflowers[i]) << std::endl;
 			fireflowers_count[i] = round(1.0 * flowers[i] * fireflowers[i]);
 			earthflowers_count[i] = round(1.0 * flowers[i] * earthflowers[i]);
 			waterflowers_count[i] = round(1.0 * flowers[i] * waterflowers[i]);
