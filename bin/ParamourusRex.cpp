@@ -64,6 +64,8 @@ int main(int argc, char* argv[])
 				LevelView::update(&App, &state, elapsed_ms); 
 				break;
 			case 2: //Display Diana
+				App.setView(defaultView);
+				Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));
 				DialogueView::update(&App, &state);
 				break;
 			case 3: 

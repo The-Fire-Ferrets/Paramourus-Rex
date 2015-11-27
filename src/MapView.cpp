@@ -83,7 +83,7 @@ void MapView::Create(const char* resource) {
 	commentary.clear();
 	commentary_idx = 0;
 	level_idx = -1;
-	num_levels = -1;
+	num_levels = 0;
     if (!(result = doc.load_file(("./assets/" + resource_str + ".xml").c_str()))) {
         std::cout << "LevelView::CreateLevel(...): Failed to load" << std::endl;
         std::cout << "Filename: " << resource << " Load result: " << result.description() << std::endl;
@@ -178,7 +178,7 @@ void MapView::Create(const char* resource) {
 			}
 		}
 	else {
-		levels[++num_levels] = tool.name();	
+		levels[num_levels] = tool.name();	
 		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
 		    if (!strcmp(attr.name(), "Sprite")) {
 		        textures[num_levels].loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
@@ -244,6 +244,7 @@ void MapView::Create(const char* resource) {
 		        earthflowers[num_levels] = std::strtof(attr.value(), &temp);
 		    }
 		}
+		num_levels++;
 	}
 
     }
@@ -360,7 +361,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 **/
 void MapView::resetPopulationValues(void) {
 	for (int i = 0; i < num_levels; i++) {
-		if ((i > 1 && level_idx + 2 >= num_levels) || i == level_idx + 2) {
+		if (((i > 1 && level_idx + 2 >= num_levels) || i == level_idx + 2)) {
 			if (min_flowers[i] == max_flowers[i])
 				flowers[i] = max_flowers[i];
 			else
