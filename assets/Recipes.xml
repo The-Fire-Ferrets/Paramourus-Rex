@@ -4,11 +4,18 @@
 	<EarthFlower Type = "EarthFlower" Sprite = "EarthFlower.png" Components = "Earth"/>
 	<FireFlower  Type = "FireFlower"  Sprite = "FireFlower.png"  Components = "Fire"/>
 	<AirFlower   Type = "AirFlower"	  Sprite = "AirFlower.png"   Components = "Air"/>
+  <!-- SunFlower = Fire + Fire -->
 	<SunFlower   Type = "SunFlower"   Sprite = "SunFlower.png"   Components = "Fire Fire"/>
-	<Tulip       Type = "Tulip"		  Sprite = "Tulip.png"	     Components = "Water Air"/>
+  <!-- Tulip = Water + Earth -->
+	<Tulip       Type = "Tulip"		    Sprite = "Tulip.png"	     Components = "Water Earth"/>
+  <!-- Rose = Fire + Air -->
 	<Rose        Type = "Rose"        Sprite = "Rose.png"        Components = "Fire Air"/>
+  <!-- Violet = Water + Fire -->
 	<Violet      Type = "Violet"      Sprite = "Violet.png"      Components = "Fire Water"/>
+  <!-- Lily = Water + Sunflower -->
 	<Lily        Type = "Lily"        Sprite = "Lily.png"        Components = "Fire Fire Water"/>
-	<Orchid      Type = "Orchid"      Sprite = "Orchid.png"      Components = "Water Water Air"/>
+  <!-- Orchid = Violet + Earth -->
+	<Orchid      Type = "Orchid"      Sprite = "Orchid.png"      Components = "Fire Water Earth"/>
+  <!-- Magnolia = Rose + Air -->
 	<Magnolia    Type = "Magnolia"    Sprite = "Magnolia.png"    Components = "Fire Air Air"/>
 </Recipes>
