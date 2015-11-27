@@ -123,12 +123,12 @@ class Pathfinder {
 		static std::vector<EventDelegate> delegateFuncList;
 		static void generateHCost(GridLocation* target_pos, GridLocation curr_pos);
 		static void setVertex(std::vector<pathNode*>* closed, pathNode* p_node, Grid* target_grid);
-		static GridLocation* findTarget(GridLocation pos);
+		static GridLocation* findTarget(GridLocation pos, GridLocation init = GridLocation(-1, -1));
 		static GridLocation* findStart(GridLocation init, GridLocation pos);
 		static bool isValidTarget(GridLocation* ptr);
 		static bool selectNewPath(GridLocation init_pair, GridLocation* start_pt, GridLocation curr_pair);
 		static bool positionsEqual(GridLocation* pos1, GridLocation* pos2);
-		static std::map<GridLocation*, bool> inVision;
+		static std::map<std::pair<GridLocation*, GridLocation*>, bool> inVision;
 
 	public:
 		static void Create(int lw, int lh, int ps);
@@ -159,7 +159,7 @@ class Pathfinder {
 		static bool canUpdateTargetGrid(sf::Vector2f start_pos);
 		static bool canUpdateStartPath(sf::Vector2f init_pos, sf::Vector2f start_pos);
 		static bool generatingPaths;
-		static void changeVision(sf::Vector2f init_pos);
+		static void changeVision(sf::Vector2f start_init_pos, sf::Vector2f targ_init_pos);
 		static void removePositionFromPath(sf::Vector2f init_pos);
 };
 

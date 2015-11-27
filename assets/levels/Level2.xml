@@ -95,6 +95,9 @@
 		</InputComponent>
 		<Pathfinder PathType = "-4"/>
 	</Player>
+	<Homer>
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+	</Homer>
 	<NPC Generate = "2">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
@@ -102,7 +105,7 @@
 			<Control Speed = "3"/>
 		</InputComponent>
 		<PhysicsComponent>
-			<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
+			<VisionBoundary Height = "100" Width = "100" X = "-50" Y = "-50"/>
 		</PhysicsComponent>
 	</NPC>
 	<Obstacle Generate = "6" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">

@@ -22,6 +22,7 @@ int CraftView::magnolias = 0;
 int CraftView::totalFlowers = 0;
 std::string CraftView::flower_str;
 sf::Text CraftView::flower_text;
+int CraftView::view_state = 0;
 
 // Number of visits to CraftView. Used to determine which dialogue.xml
 // file to use after the crafting and level.
@@ -50,8 +51,10 @@ sf::Texture CraftView::background_texture;
 sf::Sprite CraftView::background;
 // Holds map sprite
 sf::Sprite CraftView::map;
-// Hold recipe book sprite
-sf::Sprite CraftView::bookSprite;
+// Hold sprites for icons (recipescroll, Diana, Map)
+sf::Sprite CraftView::scroll_icon_sprite;
+sf::Sprite CraftView::diana_icon_sprite;
+sf::Sprite CraftView::map_icon_sprite;
 // Holds sprite for box 1 and 2 of crafting table
 sf::Sprite CraftView::box1Sprite;
 sf::Sprite CraftView::box2Sprite;
@@ -62,21 +65,18 @@ sf::Text CraftView::text;
 sf::Vector2f CraftView::text_pos;
 
 // Holds actual recipe pages that will be displayed when player clicks on book
-sf::Sprite CraftView::recipeBook;
+sf::Sprite CraftView::recipe_scroll_sprite;
 // texture for recipe scroll/book
 sf::Texture CraftView::scroll_texture;
 
-sf::Texture CraftView::map_icon;
-sf::Texture CraftView::diana_icon;
-sf::Texture CraftView::recipe_icon;
+sf::Texture CraftView::map_texture;
+sf::Texture CraftView::diana_icon_texture;
+sf::Texture CraftView::scroll_icon_texture;
 
 
 sf::RectangleShape CraftView::backlay;
-sf::RectangleShape CraftView::craftButton;
-
-// Ways to exit the crafting table
-sf::RectangleShape CraftView::map_button;
-sf::RectangleShape CraftView::dialogue_button;
+sf::RectangleShape CraftView::craft_button;
+sf::RectangleShape CraftView::map_button; // Ways to exit the crafting table
 bool CraftView::has_crafted = false;
 
 bool CraftView::first_click = false;
@@ -101,10 +101,11 @@ sf::Sprite  CraftView::character_sprite;
  ** resource: filename for xml
  ** state: current game state
  **/
-void CraftView::Create(const char* resource, int* state) {
+void CraftView::Create(const char* resource) {
     //Reference to current location in Actor population array
     //Holds referenced to loaded XML file
     totalFlowers = 0;
+	view_state = 1;
 	has_crafted = false;
     pugi::xml_document doc;
 	if (delegate == NULL)
@@ -164,29 +165,35 @@ void CraftView::Create(const char* resource, int* state) {
         }
         // texture and position of map icon so it can be interacted with
         else if (!strcmp(attr.name(), "Map")) {
-    	    if (!map_icon.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+    	    if (!map_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
     		  std::cout << "CraftView::Create: Failed to load " << attr.value();
     	    }
-    	    map = sf::Sprite(map_icon, sf::IntRect(0, 0, Configuration::getWindowWidth()/26.6, Configuration::getWindowHeight()/26.6));
-    	    map.setPosition(Configuration::getWindowWidth()/1.05,Configuration::getWindowHeight()/40);
+    	    map_icon_sprite = sf::Sprite(map_texture);
+    	    map_icon_sprite.setPosition(Configuration::getWindowWidth()/1.25,Configuration::getWindowHeight()/40);
         }
-        else if(!strcmp(attr.name(), "Book")) {
-	    if (!recipe_icon.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+        else if (!strcmp(attr.name(), "Diana_Icon")) {
+    	    if (!diana_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
     		  std::cout << "CraftView::Create: Failed to load " << attr.value();
     	    }
-    	    bookSprite = sf::Sprite(recipe_icon, sf::IntRect(0, 0, Configuration::getWindowWidth()/26.6, Configuration::getWindowHeight()/26.6));
-	    bookSprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.06);
-	}
-		else if(!strcmp(attr.name(), "Recipes")) {
+    	    diana_icon_sprite = sf::Sprite(diana_icon_texture);
+        }
+        else if(!strcmp(attr.name(), "Recipes_Icon")) {
+	    if (!scroll_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+    		  std::cout << "CraftView::Create: Failed to load " << attr.value();
+    	    }
+    	    scroll_icon_sprite = sf::Sprite(scroll_icon_texture);
+	    	scroll_icon_sprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.06);
+		}
+		else if(!strcmp(attr.name(), "Recipe_Scroll")) {
 	    if (!scroll_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
     		  std::cout << "CraftView::Create: Failed to load " << attr.value();
     	    }
-    	    //recipeBook= sf::Sprite(texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/1.33, Configuration::getWindowHeight()/1.33));
-    	    recipeBook= sf::Sprite(scroll_texture, sf::IntRect(0, 0, 700,200));
-	    recipeBook.setPosition(60, 150);
+    	    //recipe_scroll_sprite= sf::Sprite(texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/1.33, Configuration::getWindowHeight()/1.33));
+    	    recipe_scroll_sprite= sf::Sprite(scroll_texture, sf::IntRect(0, 0, 700,200));
+	    	recipe_scroll_sprite.setPosition(60, 150);
 
-	    //recipeBook.setPosition(Configuration::getWindowWidth()/7,Configuration::getWindowHeight()/15);
-	}
+	    //recipe_scroll_sprite.setPosition(Configuration::getWindowWidth()/7,Configuration::getWindowHeight()/15);
+	    }
     }
 
     //Iterates over XML to get components to add, primarily sprites to populate the screen with
@@ -241,23 +248,20 @@ void CraftView::Create(const char* resource, int* state) {
     backlay.setOutlineThickness(5);
 
     
-	map_button.setPosition(Configuration::getWindowWidth() - 110, 10);
-	map_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/15));
-	map_button.setFillColor(sf::Color::White);
-	map_button.setOutlineColor(sf::Color::Black);
-	map_button.setOutlineThickness(5.f);
+	// map_button.setPosition(Configuration::getWindowWidth() - 110, 10);
+	// map_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/15));
+	// map_button.setFillColor(sf::Color::White);
+	// map_button.setOutlineColor(sf::Color::Black);
+	// map_button.setOutlineThickness(5.f);
 
-	dialogue_button.setPosition(Configuration::getWindowWidth() - 110, 70);
-	dialogue_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/15));
-	dialogue_button.setFillColor(sf::Color::White);
-	dialogue_button.setOutlineColor(sf::Color::Black);
-	dialogue_button.setOutlineThickness(5.f);
+	diana_icon_sprite.setPosition(Configuration::getWindowWidth() - 110, 70);
+	// diana_icon_sprite.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/8));
 
-    craftButton.setPosition(Configuration::getWindowWidth()/4, Configuration::getWindowHeight()/3.53);
-    craftButton.setFillColor(sf::Color::White);
-    craftButton.setOutlineColor(sf::Color::Black);
-    craftButton.setOutlineThickness(5);
-    craftButton.setSize(sf::Vector2f(Configuration::getWindowWidth()/10, Configuration::getWindowHeight()/15));
+    craft_button.setPosition(Configuration::getWindowWidth()/4, Configuration::getWindowHeight()/3.53);
+    craft_button.setFillColor(sf::Color::White);
+    craft_button.setOutlineColor(sf::Color::Black);
+    craft_button.setOutlineThickness(5);
+    craft_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/10, Configuration::getWindowHeight()/15));
 
     // gather data for sprites to be rendered on screen
     for (int count = 0; count < i; count++){
@@ -266,40 +270,6 @@ void CraftView::Create(const char* resource, int* state) {
 	  sprites[count].setPosition(positions[count]);
 	  std::get<0>(flowerStrList[count]).setScale(sizes[count].x/(textures[count].getSize()).x, sizes[count].y/(textures[count].getSize()).y);
 	  std::get<0>(flowerStrList[count]).setPosition(positions[count]);
-    }
-
-    // Checks player for current inventory, updates.
-    // Accessing this info from LevelView::Player's CollectorComponent.
-    if (LevelView::player != NULL){
-      StrongActorPtr player = LevelView::player;
-      StrongActorComponentPtr ac = player->components[CollectorComponent::id];
-      std::shared_ptr<CollectorComponent> cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
-      std::vector<StrongActorPtr> flowers = cc->getFlowers();
-
-      // add flowers to persistent list to make available to other classes
-      CraftView::actorList.insert(CraftView::actorList.end(), flowers.begin(), flowers.end());
-
-      // iterate through player's inventory to update inventory on screen
-      for (int i=0; i < flowers.size() ; i++){
-	// here, flowerList is a vector full of StrongActorPtrs. determine the id of each strongactorptr
-	// to determine if it is a fire flower, water flower, air flower, or earth flower
-	  if (flowers[i]->isOfType("FireFlower")){
-	      fireFlowers++;
-	  }
-	  else if (flowers[i]->isOfType("WaterFlower")){
-	      waterFlowers++;
-	  }
-	  else if (flowers[i]->isOfType("AirFlower")){
-	      airFlowers++;
-	  }
-	  else if (flowers[i]->isOfType("EarthFlower")){
-	      earthFlowers++;
-	  }
-
-	  //restore player's vases now that it's cleared space in inventory
-	  totalFlowers++;
-	  cc->setVases(cc->getVases()+1);
-      }
     }
 
 	// draw character art
@@ -334,24 +304,56 @@ int CraftView::getNumFlowers(void) {
 void CraftView::update(sf::RenderWindow *window, int* state) {
   	EventManagerInterface::setViewDelegate(delegate);
 	EventManagerInterface::setCurrentActorList(&actorList);
+	// Checks player for current inventory, updates.
+    // Accessing this info from LevelView::Player's CollectorComponent.
+    if (LevelView::player != NULL){
+      StrongActorPtr player = LevelView::player;
+      StrongActorComponentPtr ac = player->components[CollectorComponent::id];
+      std::shared_ptr<CollectorComponent> cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
+      std::vector<StrongActorPtr> flowers = cc->getFlowers();
+	 if (flowers.size() > 0){
+	      // add flowers to persistent list to make available to other classes
+	      CraftView::actorList.insert(CraftView::actorList.end(), flowers.begin(), flowers.end());
+
+	      // iterate through player's inventory to update inventory on screen
+	      for (int i=0; i < flowers.size() ; i++){
+		// here, flowerList is a vector full of StrongActorPtrs. determine the id of each strongactorptr
+		// to determine if it is a fire flower, water flower, air flower, or earth flower
+		  if (flowers[i]->isOfType("FireFlower")){
+		      fireFlowers++;
+		  }
+		  else if (flowers[i]->isOfType("WaterFlower")){
+		      waterFlowers++;
+		  }
+		  else if (flowers[i]->isOfType("AirFlower")){
+		      airFlowers++;
+		  }
+		  else if (flowers[i]->isOfType("EarthFlower")){
+		      earthFlowers++;
+		  }
+
+		  //restore player's vases now that it's cleared space in inventory
+		  totalFlowers++;
+		  cc->setVases(cc->getVases()+1);
+	      }
+		LevelView::player->reset();
+	}
+    }
       // Anticipates clicking in different areas of the screen
       if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
-        if (has_crafted && dialogue_button.getGlobalBounds().contains(pos.x, pos.y)) {
-		LevelView::player->reset();
+        if (has_crafted && diana_icon_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
+        	has_crafted = false;
+			LevelView::player->reset();
 		  *state = 2;
 		   DialogueView::Create(("Level" + std::to_string(total_craft_visits)).c_str(), state);
 
 		  ++total_craft_visits;
 		  cleanUp();
         }
-		else if (map_button.getGlobalBounds().contains(pos.x, pos.y) && first_click) {
-			LevelView::player->reset();
-			*state = 0;
-			cleanUp();
-		}
 
+	
         bool inList;
 
         // checking to see if flowers clicked on
@@ -462,7 +464,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	}
 
 	// Check here for the 'Craft' button to have been clicked and two flowers have been selected to be filled
-	if (craftButton.getGlobalBounds().contains(pos.x, pos.y) && box1 == true && box2 == true){
+	if (craft_button.getGlobalBounds().contains(pos.x, pos.y) && box1 == true && box2 == true){
 
 
 	   StrongActorComponentPtr actor1AC = selectedActor1->components[CraftableComponent::id];
@@ -508,7 +510,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	}
 
 	// Draw recipe book
-	if (bookSprite.getGlobalBounds().contains(pos.x, pos.y)){
+	if (scroll_icon_sprite.getGlobalBounds().contains(pos.x, pos.y)){
 	    if (drawBook == true){
 	      drawBook = false;
 	    }
@@ -516,6 +518,13 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	      drawBook = true;
 	    }
 	}
+
+	if (map_icon_sprite.getGlobalBounds().contains(pos.x, pos.y) && first_click) {
+		LevelView::player->reset();	
+		*state = 0;
+		cleanUp();
+	}
+
 
      }
 
@@ -656,38 +665,29 @@ void CraftView::render(sf::RenderWindow *window) {
     window->draw(background);
     window->draw(backlay);
     window->draw(text);
-    //window->draw(map);
-    window->draw(bookSprite);
+    window->draw(map_icon_sprite);
+    window->draw(scroll_icon_sprite);
 	window->draw(character_sprite);
-	window->draw(map_button);
+	// window->draw(map_button);
 
     // Setting crafting button elements
 	sf::Text button_text("Craft", font);
 	button_text.setPosition(Configuration::getWindowWidth()/4,Configuration::getWindowHeight()/3.53);
 	button_text.setColor(sf::Color::Black);
 
-	sf::Text map_text("Map", font);
-	map_text.setColor(sf::Color::Black);
-	button_width = map_button.getSize().x;
-	text_width   = map_text.getGlobalBounds().width;
+	// sf::Text map_text("Map", font);
+	// map_text.setColor(sf::Color::Black);
+	// button_width = map_button.getSize().x;
+	// text_width   = map_text.getGlobalBounds().width;
 
-	pos = map_button.getPosition();
-	pos.x += (button_width-text_width) / 2.f;
-	map_text.setPosition(pos);
-	window->draw(map_text);
+	// pos = map_button.getPosition();
+	// pos.x += (button_width-text_width) / 2.f;
+	// map_text.setPosition(pos);
+	// window->draw(map_text);
 
 	if (has_crafted) {
-		sf::Text dialogue_text("Diana", font);
-		dialogue_text.setColor(sf::Color::Black);
-		button_width = dialogue_button.getSize().x;
-		text_width   = dialogue_text.getGlobalBounds().width;
 
-		pos = dialogue_button.getPosition();
-		pos.x += (button_width-text_width) / 2.f;
-		dialogue_text.setPosition(pos);
-
-		window->draw(dialogue_button);
-		window->draw(dialogue_text);
+		window->draw(diana_icon_sprite);
 	}
 
     // draw sprite in the "crafting table" box if there is one in it
@@ -697,7 +697,7 @@ void CraftView::render(sf::RenderWindow *window) {
       window->draw(box2Sprite);
 
     // draw craft button and text on it
-    window->draw(craftButton);
+    window->draw(craft_button);
     window->draw(button_text);
 
     
@@ -762,7 +762,7 @@ void CraftView::render(sf::RenderWindow *window) {
     
     // draw recipe book over top everything if it's open
     if (drawBook == true){
-      window->draw(recipeBook);
+      window->draw(recipe_scroll_sprite);
     }
 
 }

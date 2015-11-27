@@ -641,7 +641,6 @@ void Actor::getEvent(EventInterfacePtr e) {
 
 	//if (event_type == ContactEvent::event_type)
 	//	std::cout << other_actor->getId() << " made contact with " << id << std::endl;
-
 	for (ActorComponents::iterator it = components.begin(); it != components.end(); ++it)
 		(it->second)->update(e);
 }

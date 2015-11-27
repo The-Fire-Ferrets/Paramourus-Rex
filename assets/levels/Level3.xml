@@ -131,13 +131,16 @@
 		</InputComponent>
 		<Pathfinder PathType = "-4"/>
 	</Player>
+	<Homer>
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+	</Homer>
 	<NPC Generate = "1">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<InputComponent>
 			<Control Speed = "3.5"/>
 		</InputComponent>
 		<PhysicsComponent>
-			<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
+			<VisionBoundary Height = "100" Width = "100" X = "-50" Y = "-50"/>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
 	</NPC>
@@ -147,7 +150,7 @@
 			<Control Speed = "3.5"/>
 		</InputComponent>
 		<PhysicsComponent>
-			<VisionBoundary Height = "60" Width = "60" X = "-25" Y = "-25"/>
+			<VisionBoundary Height = "100" Width = "100" X = "-50" Y = "-50"/>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
 	</NPC>

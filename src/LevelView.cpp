@@ -62,7 +62,7 @@ sf::Sprite LevelView::back_button;
 sf::Texture LevelView::title_texture;
 sf::Vector2f LevelView::title_size;	
 bool LevelView::pressed = false;
-bool LevelView::reveal_back_button;
+bool LevelView::reveal_homer;
 //Update targers
 int LevelView::flowers_left;
 //Checks to see if player is being chased
@@ -79,6 +79,21 @@ int* LevelView::game_state;
 // pause screen medium map
 bool LevelView::pause_key_pressed = false;
 bool LevelView::vases_full = false;
+sf::Text LevelView::title;
+std::string LevelView::title_text;
+sf::Text LevelView::load_state;
+std::string LevelView::load_text;
+//Back button text
+sf::Text LevelView::back_continue;
+sf::Text LevelView::back_cancel;
+sf::Text LevelView::back_message;
+sf::Text LevelView::back_question;
+std::string LevelView::back_continue_text;
+std::string LevelView::back_cancel_text;
+std::string LevelView::back_message_text;
+std::string LevelView::back_question_text;
+int LevelView::last_state;
+StrongActorPtr LevelView::homer;
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -86,12 +101,17 @@ bool LevelView::vases_full = false;
 void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	//Reference to current location in Actor population array
 	//Holds referenced to loaded XML file	
+	title_text = "";
+	homer = NULL;
+	load_text = "Loading...";
+	title_text += (std::string) resource + ": ";
 	delegate.bind(&LevelView::update);
 	Pathfinder::Create(Configuration::getWindowWidth(), Configuration::getWindowHeight(), 10);
 	//Reset values
 	num_actors = 0;
 	flowers_left = 0;
-	reveal_back_button = false;
+	last_action = 0;
+	reveal_homer = false;
 	pause_key_pressed = false;
 	vases_full = false;
 	inVision = 0;
@@ -117,7 +137,8 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	for (pugi::xml_attribute attr = tools.first_attribute(); attr; attr = attr.next_attribute()) {
 		if (!strcmp(attr.name(), "Name")) {
 			name = attr.value();
-			if (!strcmp(attr.value(), "Introduction") && *state == 5) {
+			title_text += name;
+			if (!strcmp(attr.value(), "Tutorial") && *state == 5) {
 				view_state = 2;
 			}
 		}
@@ -189,12 +210,41 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	back_button.setScale(title_size.x/(title_texture.getSize()).x, title_size.y/(title_texture.getSize()).y);
 	back_button.setPosition(sf::Vector2f(-1000,-1000));
 
+	title = sf::Text(title_text, font, 25);
+	title.setColor(sf::Color::Black);
+	load_state = sf::Text(load_text, font, 25);
+	load_state.setColor(sf::Color::Black);
+
+	title.setPosition(Configuration::getWindowWidth()/2 - title.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 - title.getGlobalBounds().height - 10);
+
+	load_state.setPosition(Configuration::getWindowWidth()/2 - load_state.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 + 10);
+	
 	//Setup timeout graphics
 	const char* timeout_file = {"./assets/backgrounds/TimeOut.png"};
 	timeout_texture.loadFromFile(timeout_file);
 	timeout_sprite = sf::Sprite(timeout_texture, sf::IntRect(0, 0, timeout_texture.getSize().x, timeout_texture.getSize().y));
 	timeout_sprite.setScale(1.0 * Configuration::getGameViewWidth()/(timeout_texture.getSize()).x, 1.0 * Configuration::getGameViewHeight()/(timeout_texture.getSize()).y);
 	timer.setPosition(timer_position);
+
+	back_continue_text = "Yes, Cancel";
+	back_cancel_text = "No, Continue";
+	back_question_text = "Are you sure?";
+	back_message_text = "Leaving without Homer's help will result in losing all your flowers!";
+
+	back_continue = sf::Text(back_continue_text, font, 15);
+	back_cancel = sf::Text(back_cancel_text, font, 15);
+	back_question = sf::Text(back_question_text, font, 25);
+	back_message = sf::Text(back_message_text, font, 10);
+
+	back_message.setColor(sf::Color::Black);
+	back_question.setColor(sf::Color::Black);
+	back_continue.setColor(sf::Color::Black);
+	back_cancel.setColor(sf::Color::Black);	
+
+	back_question.setPosition(Configuration::getWindowWidth()/2 - back_question.getGlobalBounds().width/2, Configuration::getWindowHeight()/4);
+	back_message.setPosition(Configuration::getWindowWidth()/2 - back_message.getGlobalBounds().width/2, Configuration::getWindowHeight()/4 + back_question.getGlobalBounds().height + 10);
+	back_continue.setPosition(Configuration::getWindowWidth()/4 - back_continue.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 + 20);
+	back_cancel.setPosition(3*Configuration::getWindowWidth()/4  - back_cancel.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 + 20);
 
 	commentary_timer.insert(std::pair<int, sf::Clock>(-1, sf::Clock()));
 	commentary.insert(std::pair<int, sf::Text>(-1, sf::Text("", font, 5)));
@@ -249,6 +299,10 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 					actions.back().push_back(temp);
 				}
 			}
+		}
+		else if (!strcmp(tool.name(), "Homer")) {		
+			generateActor(&tool, state);
+			homer = (actorList.back());
 		}
 		else if (!strcmp(tool.name(), "Player") && player == NULL) {		
 			generateActor(&tool, state);
@@ -371,79 +425,103 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	//Switch actorlist to current view
 	EventManagerInterface::setCurrentActorList(&actorList);
 	Configuration::setGameViewDimensions(gameView.getSize().x, gameView.getSize().y);
-
+	
+	bool ready_to_play = false;
 	//Checks to see if done generating paths
 	if (!Pathfinder::generatingPaths && view_state == 0) {
-		if (name == "Introduction") {
+		load_text = "Press the Space Bar to Start!";
+		load_state.setString(load_text);
+		load_state.setPosition(Configuration::getWindowWidth()/2 - load_state.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 + 10);
+		ready_to_play = true;
+		//std::cout << "Pathfinder Path Generation Success!" << std::endl;
+	}
+
+	// should we pause the screen?
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !pause_key_pressed) {
+		if (view_state == 3) {
+			view_state = last_state;
+			pause_key_pressed = true;
+		}
+		else if (view_state != 0) {
+			last_state = view_state;
+			view_state = 3;
+			pause_key_pressed = true;
+			duration = timer_time;
+		}
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && view_state == 0 && ready_to_play) {
+		if (name == "Tutorial") {
 			view_state = 2;
 			EventInterfacePtr event;
 			event.reset(new ContactEvent(0.f, -1, -1));
 			update(event);
 		}
-		else
-			view_state = 1;
-		//std::cout << "Pathfinder Path Generation Success!" << std::endl;
-	}
-
-	//If still rendering paths return
-	if (view_state == 0)
-		return;
-
-	// should we pause the screen?
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M) && !pause_key_pressed) {
-		if (view_state == 3) {
-			view_state = 1;
-			pause_key_pressed = true;
-		}
 		else {
-			view_state = 3;
-			pause_key_pressed = true;
-			duration = timer_time;
+			view_state = 1;
 		}
 	}
 	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
 		pause_key_pressed = false;
 	}
 
-	if (view_state == 3) {
-		level_clock.restart();
-		return;
-	}
-
 	//Checks to see if back button has been selected
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && reveal_back_button) {
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
 		pressed = true;
 		const sf::Vector2i pos = sf::Mouse::getPosition(*window);
 		if (back_button.getGlobalBounds().contains(pos.x * Configuration::getGameViewWidth() / Configuration::getWindowWidth() +  Configuration::getGameViewPosition().x, pos.y * Configuration::getGameViewHeight() / Configuration::getWindowHeight() +  Configuration::getGameViewPosition().y)) {
+			last_state = view_state;
+			duration = timer_time;
+			view_state = 4;
+		}
+		else if (view_state == 4 && back_cancel.getGlobalBounds().contains(pos.x, pos.y )) {
+			view_state = last_state;
+		}
+		else if (view_state == 4 && back_continue.getGlobalBounds().contains(pos.x, pos.y )) {
+			view_state = last_state;
 			if (view_state == 2) {
-				view_state = 1;
+				view_state = 0;
 				LevelView::player->reset();
 				*state = 5;
 				cleanUp();
+				view_state = 1;
 			}
 			else {
+				view_state = 0;
+				LevelView::player->reset();
+				MapView::view_state = 1;
 				*state = 0;
 				cleanUp();
+				view_state = 1;
 			}
 		}
 	}
 	else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
 		pressed = false;
 	} 
-	
 
+	//If still rendering paths return
+	if (view_state == 0 || view_state == 4 || view_state == 3) {
+		level_clock.restart();
+		return;
+	}
+	
+	
 	//Ends the level after timeout
 	if (timer_time/1000 <= -3) {
 		if (view_state == 1) {
 			const char* time_out = {"TimeOut"};
 			DialogueView::Create(time_out, state);
+			MapView::view_state = 1;
 			LevelView::player->reset();
 			*state = 2;
 		}
 		else if (view_state == 2) {
 			view_state = 1;
 			LevelView::player->reset();
-			*state = 5;
+			MapView::view_state = 2;
+			MapView::commentary_idx = 0;
+			MapView::reset = true;
+			*state = 0;
 		}
 		cleanUp();
 	}
@@ -484,10 +562,14 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		//Check to see if conditions met to display back button
 		//std::cout << flowers_left << " " << vases_full << " " << inVision << std::endl; 
 		if ((flowers_left <= 0 || vases_full) && inVision <= 0) {
-			reveal_back_button = true;
+			if (view_state == 2 && last_action == -1)
+				reveal_homer = true;
+			else if (view_state != 2) {
+				reveal_homer = true;
+			}
 		}
 		else if (inVision > 0) {
-			reveal_back_button = false;
+			reveal_homer = false;
 		}
 
 		//Set timer to bottom right corner
@@ -517,17 +599,40 @@ void LevelView::update(EventInterfacePtr e) {
 	//In tutotial, update hints to display based on if event is acheived
 	if (e == NULL)
 		return;
-	if (last_action != -1) {
-		EventType event_type = e->getEventType();
-		if (event_type == ContactEvent::event_type) {
-			StrongActorPtr actor_ptr = NULL;
-			if ( (int) e->getSender() >= 0) {
-				actor_ptr = getActor(e->getSender());
+
+	EventType event_type = e->getEventType();
+	if (event_type == ContactEvent::event_type) {
+		StrongActorPtr actor_ptr = NULL;
+		if ( (int) e->getSender() >= 0) {
+			actor_ptr = getActor(e->getSender());
+		}
+		StrongActorPtr contact_ptr = NULL;
+		if ( (int) e->getReceiver() >= 0) {
+			contact_ptr = getActor(e->getReceiver());
+		}
+		
+		if (actor_ptr != NULL) {
+			if (actor_ptr->isOfType("Homer") && contact_ptr->isOfType("Player") && reveal_homer) {
+				if (view_state == 2) {
+					view_state = 0;
+					MapView::view_state = 2;
+					MapView::commentary_idx = 0;
+					MapView::reset = true;
+					*game_state = 0;
+					cleanUp();
+					view_state = 1;
+				}
+				else {
+					view_state = 0;
+					MapView::view_state = 1;
+					*game_state = 0;
+					cleanUp();
+					view_state = 1;
+				}
+				return;
 			}
-			StrongActorPtr contact_ptr = NULL;
-			if ( (int) e->getReceiver() >= 0) {
-				contact_ptr = getActor(e->getReceiver());
-			}
+		}
+		if (last_action != -1) {
 			for (auto itr_cs = commentary_strings.begin(); itr_cs != commentary_strings.end(); itr_cs++) {
 				bool found = false;
 				ActorId display_id = itr_cs->first.first;
@@ -556,11 +661,13 @@ void LevelView::update(EventInterfacePtr e) {
 						if (action >= 0) {
 							for (auto action_itr = actions[action].begin(); action_itr != actions[action].end(); action_itr++) {
 								pugi::xml_node temp = *action_itr;
+								if (!strcmp(temp.name(), "FireFlower") || !strcmp(temp.name(), "EarthFlower") || !strcmp(temp.name(), "WaterFlower") || !strcmp(temp.name(), "AirFlower"))
+									flowers_left++;
 								generateActor(&(temp), game_state);
 							}
 						}
 						else if (action == -1) {
-							reveal_back_button = true;
+							reveal_homer = true;
 						}
 						int r = rand() % itr_cs->second.size();
 						if (display_id == "Homer") {
@@ -587,7 +694,24 @@ void LevelView::render(sf::RenderWindow *window) {
 	//Loading screen
 	if (view_state == 0) {
 		window->clear(sf::Color::White);
-		window->draw(Configuration::getLoadingSprite());
+		window->setView(window->getDefaultView());
+		//window->draw(Configuration::getLoadingSprite());
+		window->draw(title);
+		window->draw(load_state);
+		window->display();
+		return;
+	}
+
+	//Quit Screen
+	if (view_state == 4) {
+		//Get the player location and center gameView to it
+		window->clear(sf::Color::White);
+		window->setView(window->getDefaultView());
+		//window->draw(Configuration::getLoadingSprite());
+		window->draw(back_message);
+		window->draw(back_continue);
+		window->draw(back_cancel);
+		window->draw(back_question);
 		window->display();
 		return;
 	}
@@ -607,19 +731,22 @@ void LevelView::render(sf::RenderWindow *window) {
 		window->draw(minimap_border);
 		std::vector<StrongActorPtr>::iterator it;
 		for (it = actorList.begin(); it != actorList.end(); it++) {
-			(*it)->render(window, false);
-			if ((view_state == -2 && commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 10) || (commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 4))
-				window->draw(commentary[(*it)->getInstance()]);
+			if (homer != *it) {
+				(*it)->render(window, false);
+				if ((view_state == 2 && commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 30) || (commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 4))
+					window->draw(commentary[(*it)->getInstance()]);
+			}
 		}
-		if ((view_state == -2 && commentary_timer[-1].getElapsedTime().asSeconds() < 10) || (commentary_timer[-1].getElapsedTime().asSeconds() < 4))
+		if ((view_state == 2 && commentary_timer[-1].getElapsedTime().asSeconds() < 30) || (commentary_timer[-1].getElapsedTime().asSeconds() < 4))
 			window->draw(commentary[-1]);
+
+		if (reveal_homer)
+			homer->render(window, false);
+
 		player->render(window, false);
+		window->draw(back_button);
 		window->draw(timer);
 		
-
-		if (reveal_back_button) {
-			window->draw(back_button);
-		}
 
 		//Set minimap view
 		minimapView.setViewport(sf::FloatRect(.9, 0, .1, .1));
@@ -629,11 +756,13 @@ void LevelView::render(sf::RenderWindow *window) {
 		window->draw(minimap_background);
 		//window->draw(timer);
 		for (it = actorList.begin(); it != actorList.end(); it++) {
-			if (!(*it)->isOfType("Obstacle") && !(*it)->isOfType("Wall")) {
+			if (!(*it)->isOfType("Obstacle") && !(*it)->isOfType("Wall") && !(*it)->isOfType("Homer")) {
 				(*it)->render(window, true);
 			}
 		}
 		player->render(window, true);
+		if (reveal_homer)
+			homer->render(window, true);
 		//window->draw(minimap_border);
 
 		if (view_state == 3) {
@@ -722,7 +851,7 @@ void LevelView::quit(void) {
 std::string LevelView::fitStringToCommentaryBox(std::string str) {
 	// get dialogue box bound
 	int width = Configuration::getGameViewWidth() / 2;
-	int height = Configuration::getGameViewHeight() / 2;
+	int height = Configuration::getGameViewHeight();
 	int beginX = 0;
 	int beginY = 0;
 	//commentary_positions.push_back(sf::Vector2f(beginX, beginY));

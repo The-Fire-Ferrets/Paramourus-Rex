@@ -2,10 +2,18 @@
 #define TITLEVIEW_H
 
 #include "Constants.h"
-#include "MapView.h"
 #include "LevelView.h"
+#include "DialogueView.h"
+#include "CraftView.h"
+#include "MapView.h"
 
 class TitleView {
+	friend class LevelView;
+	friend class DialogueView;
+	friend class CraftView;
+	friend class MapView;
+	protected:
+		static int view_state;
 	private:
 		static sf::Sprite background;
 		static sf::Texture background_texture;
@@ -22,7 +30,6 @@ class TitleView {
 		static std::string tutoriallevel;
 		static sf::Font font;
 		static bool pressed;
-		static int view_state;
 		static EventDelegate delegate;
 	public:
 		static void Create(const char* resource);

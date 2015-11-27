@@ -7,8 +7,17 @@
 #include "CraftableComponent.h"
 #include "ActorComponent.h"
 #include "LevelView.h"
+#include "DialogueView.h"
+#include "TitleView.h"
+#include "MapView.h"
 
 class CraftView  {
+	friend class LevelView;
+	friend class DialogueView;
+	friend class TitleView;
+	friend class MapView;
+	protected:
+		static int view_state;
     private:	
 	// Flower counts
         static int totalFlowers;
@@ -31,8 +40,11 @@ class CraftView  {
 	static sf::Sprite sprites[];
 	static sf::Sprite background;
 	static sf::Sprite map;
-	static sf::Sprite recipeBook;
-	static sf::Sprite bookSprite;
+	static sf::Sprite recipe_scroll_sprite;
+	static sf::Sprite scroll_icon_sprite;
+	static sf::Sprite diana_icon_sprite;
+	static sf::Sprite map_icon_sprite;
+
 	static sf::Sprite box1Sprite;
 	static sf::Sprite box2Sprite;
 	
@@ -51,11 +63,11 @@ class CraftView  {
         static sf::Texture background_texture;
 	static sf::Texture textures[];
         static sf::RectangleShape backlay;
-	static sf::RectangleShape craftButton;
+	static sf::RectangleShape craft_button;
 	static sf::Texture scroll_texture;
-	static sf::Texture map_icon;
-	static sf::Texture diana_icon;
-	static sf::Texture recipe_icon;
+	static sf::Texture map_texture;
+	static sf::Texture diana_icon_texture;
+	static sf::Texture scroll_icon_texture;
 
 
 	// exit buttons
@@ -90,7 +102,7 @@ class CraftView  {
 		static int getNumFlowers(void);
 		static bool pressed;
 		static void start();
-		static void Create(const char *resource, int *state);
+		static void Create(const char *resource);
 		static void update(EventInterfacePtr e);
 		static void update(sf::RenderWindow *window, int *state);
 		static void quit(void);
