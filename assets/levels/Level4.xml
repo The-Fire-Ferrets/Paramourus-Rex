@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level4 Name = "Skyline Paradise" Background = "Level4.png" MinimapBackground = "minimapbg.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "120000" Damage = "True">	
+<Level4 Name = "Skyline Paradise" Background = "Level4.png" MinimapBackground = "minimapbg.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "60000" Damage = "True">	
 
 	<!-- Top Boundary -->
 	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 0 775 0 25 25 775 25">		
@@ -127,25 +127,16 @@
 	-->
 
 	<NPC Generate = "1">
-		<Location X = "174" Y = "284" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-3" TargetType = "-6"/>
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-3" TargetType = "-2"/>
 		<InputComponent>
-			<Control Speed = "3.5"/>
+			<Control Speed = "3"/>
 		</InputComponent>
 		<PhysicsComponent>
 			<VisionBoundary Height = "100" Width = "100" X = "-50" Y = "-50"/>
 		</PhysicsComponent>
 	</NPC>
-	<NPC Generate = "1">
-		<Location X = "650" Y = "423" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-3" TargetType = "-7"/>
-		<InputComponent>
-			<Control Speed = "3.5"/>
-		</InputComponent>
-		<PhysicsComponent>
-			<VisionBoundary Height = "100" Width = "100" X = "-50" Y = "-50"/>
-		</PhysicsComponent>
-	</NPC>
+  <!--
 	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
 		<Location X = "170" Y = "174" Width = "10" Height = "10"/>		
 		<PhysicsComponent>
@@ -161,42 +152,74 @@
 		<Pathfinder PathType = "-6"/>
 	</Obstacle>
 	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "755" Y = "375" Width = "10" Height = "10"/>		
+		<Location X = "50" Y = "480" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-6"/>
+	</Obstacle>
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "177" Y = "480" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-6"/>
+	</Obstacle>
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "650" Y = "250" Width = "10" Height = "10"/>		
 		<PhysicsComponent>
 			<Properties Type = "Transparent"/>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-7"/>
 	</Obstacle>
 	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "755" Y = "475" Width = "10" Height = "10"/>		
+		<Location X = "650" Y = "375" Width = "10" Height = "10"/>		
 		<PhysicsComponent>
 			<Properties Type = "Transparent"/>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-7"/>
 	</Obstacle>
-	<AirFlower Generate = "1">
-    	<Location X = "738" Y = "48" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-2"/>
-	</AirFlower>
-	<AirFlower Generate = "1">
-    	<Location X = "630" Y = "558" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-2"/>
-	</AirFlower>
-	<AirFlower Generate = "1">
-    	<Location X = "47" Y = "477" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-2"/>
-	</AirFlower>
-	<WaterFlower Generate = "1">
-    	<Location X = "32" Y = "30" Width = "10" Height = "10"/>
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "750" Y = "375" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-7"/>
+	</Obstacle>
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "750" Y = "250" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-7"/>
+	</Obstacle>
+  -->
+	<WaterFlower>
+    	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
 	</WaterFlower>
+	<EarthFlower>
+    	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-2"/>
+	</EarthFlower>
+	<FireFlower>
+    	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-2"/>
+	</FireFlower>
+	<AirFlower>
+    	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Pathfinder PathType = "-2"/>
+	</AirFlower>
 
+  <!-- Commenting to address comments about getting stuck.          
+       Not much real estate in terms of space on this level anyway. 
 	<Obstacle Generate = "30" Type = "Rock"  Sprite = "Rock.png"  Damage = "False">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<PhysicsComponent>
 			<Properties Type = "Opaque" />
 		</PhysicsComponent>
 	</Obstacle>
+  -->
 
 	<Player>
 		<Location X = "32" Y = "560" Width = "10" Height = "10"/>
