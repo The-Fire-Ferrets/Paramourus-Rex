@@ -40,8 +40,11 @@ class CraftView  {
 	static sf::Sprite sprites[];
 	static sf::Sprite background;
 	static sf::Sprite map;
-	static sf::Sprite recipeBook;
-	static sf::Sprite bookSprite;
+	static sf::Sprite recipe_scroll_sprite;
+	static sf::Sprite scroll_icon_sprite;
+	static sf::Sprite diana_icon_sprite;
+	static sf::Sprite map_icon_sprite;
+
 	static sf::Sprite box1Sprite;
 	static sf::Sprite box2Sprite;
 	
@@ -60,11 +63,11 @@ class CraftView  {
         static sf::Texture background_texture;
 	static sf::Texture textures[];
         static sf::RectangleShape backlay;
-	static sf::RectangleShape craftButton;
+	static sf::RectangleShape craft_button;
 	static sf::Texture scroll_texture;
-	static sf::Texture map_icon;
-	static sf::Texture diana_icon;
-	static sf::Texture recipe_icon;
+	static sf::Texture map_texture;
+	static sf::Texture diana_icon_texture;
+	static sf::Texture scroll_icon_texture;
 
 
 	// exit buttons
