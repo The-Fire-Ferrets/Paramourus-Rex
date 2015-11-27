@@ -149,6 +149,9 @@
 		</InputComponent>
 		<Pathfinder PathType = "-4"/>
 	</Player>
+	<Homer>
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+	</Homer>
 	<!-- Uncomment to generate NPCs.  Didn't think it made sense to have them 
 		 here, story-wise.  To compensate, I generate a bunch of obstacles
 		 instead, requiring that the player have a little bit of finess in terms

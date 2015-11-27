@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level0 Name = "Tutorial" Background = "Level0.png" MinimapBackground = "minimapbg.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "100000" TitleSprite = "BackButton.png" TitleHeight = "10" TitleWidth = "10">
+<Level0 Name = "Tutorial" Background = "Level0.png" MinimapBackground = "minimapbg.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "1000000" TitleSprite = "BackButton.png" TitleHeight = "10" TitleWidth = "10">
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<InputComponent>
@@ -7,6 +7,11 @@
 		</InputComponent>
 		<Pathfinder PathType = "-4"/>
 	</Player>
+
+	<Homer>
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+	</Homer>
+
 	<Action>
 		<Spawn1>
 			<WaterFlower>
@@ -24,7 +29,7 @@
 			<Obstacle Generate = "50" Type = "Cactus"  Sprite = "Cactus.png"  Damage = "True">
 				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 				<PhysicsComponent>
-					<Properties Type = "Opaque" />
+				Obsta	<Properties Type = "Opaque" />
 				</PhysicsComponent>
 			</Obstacle>
 			<Obstacle Generate = "50" Type = "Rock"  Sprite = "Rock.png"  Damage = "False">
@@ -56,19 +61,19 @@
 	</Action>
 	<Commentary>
 		<Commentary1 Display = "Homer" Actor = "Player" Contact = "" Action = "0" Occurance = "1">
-			<Dialogue1 Text = "Hey Phil! I'm going to try to help you win Dianna's heart. First, you'll need to collect some elemental flowers. Try to find one.. ps. top right corner may help!" />
+			<Dialogue1 Text = "Hey Phil! I'm going to try to help you win Dianna's heart. First, you'll need to collect some elemental flowers. Try to find one.. ps. top right corner may help! There's a back button on the bottom left. Hit it anytime to leave the level. You'll lose everything though." />
 		</Commentary1>
 		<Commentary2  Display = "Homer" Actor = "Player" Contact = "WaterFlower"  Action = "1" Occurance = "1">
-			<Dialogue1  Text = "Great! See what happened there, you filled one of your vases, displayed at the top left corner. Do it again so you see what I mean." />
+			<Dialogue1  Text = "Great! See what happened there, you filled one of your vases, displayed at the top left corner. Do it again so you see what I mean. Also, keep an eye on the timer on the bottom right. Since the meteor struck, oxygen levels have been extremely low. If your timer runs out, you'll pass out, lose all your flowers, and I'll have to come find you." />
 		</Commentary2>		
 		<Commentary3  Display = "Homer" Actor = "Player" Contact = "AirFlower"  Action = "2" Occurance = "1">
-			<Dialogue1  Text = "Now, you should watch out for these obstacles. They'll cause you to drop a vase and/or flower. Touch one to see." />
+			<Dialogue1  Text = "Now, you should watch out for these obstacles. They'll cause you to drop a vase and/or flower. Touch one to see. Just make sure you still have those two flowers at the end of all this or you'll have to restart." />
 		</Commentary3>		
 		<Commentary4   Display = "Homer" Actor = "Player" Contact = "Obstacle"  Action = "3" Occurance = "1">
 			<Dialogue1  Text = "Oh, looks like you have some competition. Dont let them touch you or they may steal your vases and/or flowers. Touch one to see." />
 		</Commentary4>		
 		<Commentary5   Display = "Homer" Actor = "Player" Contact = "NPC"  Action = "-1" Occurance = "1">
-			<Dialogue1  Text = "Now try to get away. You'll know you're out of sight when the back button appears on the bottom left. That's all for navigating the level. We'll head over to the map when you click the back button!" />
+			<Dialogue1  Text = "Now try to get away. I'll come get you once you do. Whenever all the flowers are collected or you're vases are full and no one is chasing you, I'll appear on the map to get you and the flowers safely out!" />
 		</Commentary5>
 		<Commentary6  Display = "Player" Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Ouch! That hurt." />

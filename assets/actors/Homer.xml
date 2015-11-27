@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<Homer Type = "Homer" Sprite = "Homer.png"  SpriteMinimap = "HomerSpot.png" Damage = "False" PathType = "-1" TargetType = "0">
+	<PhysicsComponent>
+		<Properties Type = "Transparent" />
+		<VisionBoundary Height = "" Width = "" X = "" Y = ""/>
+	</PhysicsComponent>
+</Homer>

@@ -205,7 +205,9 @@
 		</InputComponent>
 		<Pathfinder PathType = "-4"/>
 	</Player>
-
+	<Homer>
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+	</Homer>
 	<Commentary>	
 		<Commentary1  Display = "Player" Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Ouch! That hurt." />

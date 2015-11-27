@@ -63,16 +63,26 @@ class LevelView  {
 		static sf::Vector2f title_size;	
 		static bool pressed;
 		static int flashing;
-		static bool reveal_back_button;
+		static bool reveal_homer;
 		static float timer_time;
 		static bool pause_key_pressed;
 		static int* game_state;
 		static int last_action;
+		static sf::Text back_continue;
+		static sf::Text back_cancel;
+		static sf::Text back_message;
+		static sf::Text back_question;
+		static std::string back_continue_text;
+		static std::string back_cancel_text;
+		static std::string back_message_text;
+		static std::string back_question_text;
+		static int last_state;
 
 	public:
 		static void generateActor(pugi::xml_node* elem, int* state, int generate = 1);
 		static std::vector<StrongActorPtr> actorList;	
 		static StrongActorPtr player;
+		static StrongActorPtr homer;
 		static StrongActorPtr npc;
 		static std::string getName(void);
 		static int getNumActors(void);
