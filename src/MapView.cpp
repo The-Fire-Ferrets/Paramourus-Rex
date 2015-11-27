@@ -362,7 +362,6 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 void MapView::resetPopulationValues(void) {
 	for (int i = 0; i < num_levels; i++) {
 		if (((i > 1 && level_idx + 2 >= num_levels) || i == level_idx + 2)) {
-			std::cout << "Branch 1" << std::endl;
 			if (min_flowers[i] == max_flowers[i])
 				flowers[i] = max_flowers[i];
 			else
@@ -380,7 +379,6 @@ void MapView::resetPopulationValues(void) {
 			flowers_text[i].setPosition(positions[i] + sf::Vector2f(30.0/2 - flowers_text[i].getGlobalBounds().width/2, -1.5*flowers_text[i].getGlobalBounds().height));
 		}
 		else {
-			std::cout << "Branch 2" << std::endl;
 			flowers[i] = 0;
 			fireflowers_count[i] = (int)(flowers[i] * fireflowers[i]);
 			earthflowers_count[i] = (int)(flowers[i] * earthflowers[i]);
