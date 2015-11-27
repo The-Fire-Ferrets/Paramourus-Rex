@@ -66,7 +66,7 @@ class CraftView  {
 	static sf::RectangleShape craft_button;
 	static sf::Texture scroll_texture;
 	static sf::Texture map_texture;
-	static sf::Texture diana_texture;
+	static sf::Texture diana_icon_texture;
 	static sf::Texture scroll_icon_texture;
 
 

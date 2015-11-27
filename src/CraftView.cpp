@@ -70,14 +70,13 @@ sf::Sprite CraftView::recipe_scroll_sprite;
 sf::Texture CraftView::scroll_texture;
 
 sf::Texture CraftView::map_texture;
-sf::Texture CraftView::diana_texture;
+sf::Texture CraftView::diana_icon_texture;
 sf::Texture CraftView::scroll_icon_texture;
 
 
 sf::RectangleShape CraftView::backlay;
 sf::RectangleShape CraftView::craft_button;
 sf::RectangleShape CraftView::map_button; // Ways to exit the crafting table
-sf::RectangleShape CraftView::dialogue_button; // Ways to exit the crafting table
 bool CraftView::has_crafted = false;
 
 bool CraftView::first_click = false;
@@ -172,6 +171,12 @@ void CraftView::Create(const char* resource) {
     	    map_icon_sprite = sf::Sprite(map_texture);
     	    map_icon_sprite.setPosition(Configuration::getWindowWidth()/1.25,Configuration::getWindowHeight()/40);
         }
+        else if (!strcmp(attr.name(), "Diana_Icon")) {
+    	    if (!diana_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+    		  std::cout << "CraftView::Create: Failed to load " << attr.value();
+    	    }
+    	    diana_icon_sprite = sf::Sprite(diana_icon_texture);
+        }
         else if(!strcmp(attr.name(), "Recipes_Icon")) {
 	    if (!scroll_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
     		  std::cout << "CraftView::Create: Failed to load " << attr.value();
@@ -249,11 +254,8 @@ void CraftView::Create(const char* resource) {
 	// map_button.setOutlineColor(sf::Color::Black);
 	// map_button.setOutlineThickness(5.f);
 
-	dialogue_button.setPosition(Configuration::getWindowWidth() - 110, 70);
-	dialogue_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/15));
-	dialogue_button.setFillColor(sf::Color::White);
-	dialogue_button.setOutlineColor(sf::Color::Black);
-	dialogue_button.setOutlineThickness(5.f);
+	diana_icon_sprite.setPosition(Configuration::getWindowWidth() - 110, 70);
+	// diana_icon_sprite.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/8));
 
     craft_button.setPosition(Configuration::getWindowWidth()/4, Configuration::getWindowHeight()/3.53);
     craft_button.setFillColor(sf::Color::White);
@@ -341,8 +343,9 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
       if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
-        if (has_crafted && dialogue_button.getGlobalBounds().contains(pos.x, pos.y)) {
-		LevelView::player->reset();
+        if (has_crafted && diana_icon_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
+        	has_crafted = false;
+			LevelView::player->reset();
 		  *state = 2;
 		   DialogueView::Create(("Level" + std::to_string(total_craft_visits)).c_str(), state);
 
@@ -683,17 +686,8 @@ void CraftView::render(sf::RenderWindow *window) {
 	// window->draw(map_text);
 
 	if (has_crafted) {
-		sf::Text dialogue_text("Diana", font);
-		dialogue_text.setColor(sf::Color::Black);
-		button_width = dialogue_button.getSize().x;
-		text_width   = dialogue_text.getGlobalBounds().width;
 
-		pos = dialogue_button.getPosition();
-		pos.x += (button_width-text_width) / 2.f;
-		dialogue_text.setPosition(pos);
-
-		window->draw(dialogue_button);
-		window->draw(dialogue_text);
+		window->draw(diana_icon_sprite);
 	}
 
     // draw sprite in the "crafting table" box if there is one in it
