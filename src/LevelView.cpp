@@ -654,7 +654,7 @@ void LevelView::update(EventInterfacePtr e) {
 					found = true;
 				}
 				if (found) {
-					if (commentary_occurance[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))] != 0) {
+					if (commentary_occurance[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))] > 0) {
 						commentary_occurance[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))]--;
 						int action = commentary_actions[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))];
 						last_action = action;
@@ -723,6 +723,7 @@ void LevelView::render(sf::RenderWindow *window) {
 			window->display();
 		}
 		//Get the player location and center gameView to it
+		window->setView(window->getDefaultView());
 		gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
 		window->setView(gameView);
 		//Update graphics	
@@ -779,6 +780,7 @@ void LevelView::render(sf::RenderWindow *window) {
 	}
 	else {
 		//Timeout display
+		window->setView(window->getDefaultView());
 		gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
 		window->setView(gameView);
 		player->render(window, false);

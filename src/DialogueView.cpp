@@ -205,12 +205,14 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 			if (index >= boxes.size()){
 				// stop displaying text, wait for user response before closing dialogueview
 			      if (view_state == 1) {
-					//Show a new level
-					MapView::level_idx++;
-					//Show new commentary
-					MapView::commentary_idx++;
-					//Return view states to narmal if not already
-					MapView::view_state = 1;
+					if (name == "TimeOut") {
+						//Show a new level
+						MapView::level_idx++;
+						//Show new commentary
+						MapView::commentary_idx++;
+						//Return view states to narmal if not already
+						MapView::view_state = 1;
+					}
 					DialogueView::view_state = 1;
 				  	*state = 0;
 				}
