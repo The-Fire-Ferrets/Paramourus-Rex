@@ -49,10 +49,10 @@ sf::SoundBuffer LevelView::buffer;
 sf::Sound LevelView::sound;
 // Level text
 std::map<int, sf::Text> LevelView::commentary;
-std::map<DisplayContactPair, sf::Vector2f> LevelView::commentary_positions;
-std::map<DisplayContactPair, std::vector<std::string>> LevelView::commentary_strings;
-std::map<DisplayContactPair, int> LevelView::commentary_actions;
-std::map<DisplayContactPair , int> LevelView::commentary_occurance;
+std::map<DisplayContactPair, std::vector<sf::Vector2f>> LevelView::commentary_positions;
+std::map<DisplayContactPair, std::vector<std::vector<std::string>>> LevelView::commentary_strings;
+std::map<DisplayContactPair, std::vector<int>> LevelView::commentary_actions;
+std::map<DisplayContactPair , std::vector<int>> LevelView::commentary_occurance;
 std::map<int, sf::Clock> LevelView::commentary_timer;
 bool LevelView::commentary_change = true;
 std::vector<std::vector<pugi::xml_node>> LevelView::actions;
@@ -280,12 +280,23 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 						}
 					}
 				}
-				commentary_strings.insert(std::pair<DisplayContactPair, std::vector<std::string>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<std::string>()));
-				commentary_actions.insert(std::pair<DisplayContactPair, int>(DisplayContactPair(display, ContactPair(actor_id, contact)), actions_val));	
-				commentary_occurance.insert(std::pair<DisplayContactPair, int>(DisplayContactPair(display, ContactPair(actor_id, contact)), occurance));				
+				if (commentary_strings.find(DisplayContactPair(display, ContactPair(actor_id, contact))) == commentary_strings.end()) {
+					commentary_strings.insert(std::pair<DisplayContactPair, std::vector<std::vector<std::string>>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<std::vector<std::string>>()));
+				}
+				commentary_strings[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(std::vector<std::string>());
+
+				if (commentary_actions.find(DisplayContactPair(display, ContactPair(actor_id, contact))) == commentary_actions.end()) {
+					commentary_actions.insert(std::pair<DisplayContactPair, std::vector<int>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<int>()));
+				}
+				commentary_actions[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(actions_val);	
+
+				if (commentary_occurance.find(DisplayContactPair(display, ContactPair(actor_id, contact))) == commentary_occurance.end()) {
+				commentary_occurance.insert(std::pair<DisplayContactPair, std::vector<int>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<int>()));			
+				}
+				commentary_occurance[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(occurance);		
 				for (pugi::xml_node tool2 = tool1.first_child(); tool2; tool2 = tool2.next_sibling()) {
 					for (pugi::xml_attribute attr = tool2.first_attribute(); attr; attr = attr.next_attribute()) {
-						commentary_strings[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(fitStringToCommentaryBox(attr.value()));
+						commentary_strings[DisplayContactPair(display, ContactPair(actor_id, contact))].back().push_back(fitStringToCommentaryBox(attr.value()));
 					}
 				}
 			}
@@ -654,9 +665,18 @@ void LevelView::update(EventInterfacePtr e) {
 					found = true;
 				}
 				if (found) {
-					if (commentary_occurance[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))] > 0) {
-						commentary_occurance[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))]--;
-						int action = commentary_actions[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))];
+					int count = -1;
+					int temp_count = -1;
+					for (auto itr_occ = commentary_occurance[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))].begin(); itr_occ != commentary_occurance[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))].end(); itr_occ++) {
+						temp_count++;
+						if (*itr_occ > 0) {
+							(*itr_occ)--;
+							count = temp_count;
+							break;
+						}
+					}
+					if (count >= 0) {
+						int action = commentary_actions[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))][count];
 						last_action = action;
 						if (action >= 0) {
 							for (auto action_itr = actions[action].begin(); action_itr != actions[action].end(); action_itr++) {
@@ -669,13 +689,13 @@ void LevelView::update(EventInterfacePtr e) {
 						else if (action == -1) {
 							reveal_homer = true;
 						}
-						int r = rand() % itr_cs->second.size();
+						int r = rand() % (itr_cs->second)[count].size();
 						if (display_id == "Homer") {
-							commentary[-1] = sf::Text((itr_cs->second)[r], font, 5);
+							commentary[-1] = sf::Text(((itr_cs->second)[count])[r], font, 5);
 							commentary_timer[-1].restart();
 						}
 						else {
-							commentary[e->getSender()] = sf::Text((itr_cs->second)[r], font, 5);
+							commentary[e->getSender()] = sf::Text(((itr_cs->second)[count])[r], font, 5);
 							commentary_timer[e->getSender()].restart();
 						}
 						break;
