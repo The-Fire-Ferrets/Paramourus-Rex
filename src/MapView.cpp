@@ -362,14 +362,16 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 void MapView::resetPopulationValues(void) {
 	for (int i = 0; i < num_levels; i++) {
 		if (((i > 1 && level_idx + 2 >= num_levels) || i == level_idx + 2)) {
+			std::cout << "Branch 1" << std::endl;
 			if (min_flowers[i] == max_flowers[i])
 				flowers[i] = max_flowers[i];
 			else
-				flowers[i] = rand() % (max_flowers[i] - min_flowers[i]) + min_flowers[i];
-			fireflowers_count[i] = (int)(flowers[i] * fireflowers[i]);
-			earthflowers_count[i] = (int)(flowers[i] * earthflowers[i]);
-			waterflowers_count[i] = (int)(flowers[i] * waterflowers[i]);
-			airflowers_count[i] = (int)(flowers[i] * airflowers[i]);
+				flowers[i] = rand() % (max_flowers[i] - min_flowers[i]) + min_flowers[i] + 1;
+			std::cout << flowers[i] << " " << round(1.0 * flowers[i] * fireflowers[i]) << std::endl;
+			fireflowers_count[i] = round(1.0 * flowers[i] * fireflowers[i]);
+			earthflowers_count[i] = round(1.0 * flowers[i] * earthflowers[i]);
+			waterflowers_count[i] = round(1.0 * flowers[i] * waterflowers[i]);
+			airflowers_count[i] = round(1.0 * flowers[i] * airflowers[i]);
 			flowers_string[i] = "F:" + std::to_string(fireflowers_count[i]) + " E:" + std::to_string(earthflowers_count[i]) + " A:" + std::to_string(airflowers_count[i]) + " W:" + std::to_string(waterflowers_count[i]);
 			flowers_text[i] = sf::Text(flowers_string[i], font);
 			flowers_text[i].setCharacterSize(15);
@@ -378,6 +380,7 @@ void MapView::resetPopulationValues(void) {
 			flowers_text[i].setPosition(positions[i] + sf::Vector2f(30.0/2 - flowers_text[i].getGlobalBounds().width/2, -1.5*flowers_text[i].getGlobalBounds().height));
 		}
 		else {
+			std::cout << "Branch 2" << std::endl;
 			flowers[i] = 0;
 			fireflowers_count[i] = (int)(flowers[i] * fireflowers[i]);
 			earthflowers_count[i] = (int)(flowers[i] * earthflowers[i]);

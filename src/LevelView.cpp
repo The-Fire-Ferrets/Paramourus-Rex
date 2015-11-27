@@ -611,7 +611,7 @@ void LevelView::update(EventInterfacePtr e) {
 			contact_ptr = getActor(e->getReceiver());
 		}
 		
-		if (actor_ptr != NULL) {
+		if (actor_ptr != NULL && contact_ptr != NULL) {
 			if (actor_ptr->isOfType("Homer") && contact_ptr->isOfType("Player") && reveal_homer) {
 				if (view_state == 2) {
 					view_state = 0;
