@@ -750,6 +750,7 @@ void LevelView::render(sf::RenderWindow *window) {
 		
 
 		//Set minimap view
+		window->setView(window->getDefaultView());
 		minimapView.setViewport(sf::FloatRect(.9, 0, .1, .1));
 		window->setView(minimapView);
 
