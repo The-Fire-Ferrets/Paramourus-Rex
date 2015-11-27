@@ -40,7 +40,7 @@
 			</Obstacle>
 		</Spawn3>
 		<Spawn4>
-			<NPC Generate = "10">
+			<NPC Generate = "5">
 				<Pathfinder PathType = "-3" TargetType = "-2"/>
 				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 				<InputComponent>
