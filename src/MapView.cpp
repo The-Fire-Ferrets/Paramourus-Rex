@@ -37,7 +37,7 @@ sf::Texture MapView::background_texture;
 bool MapView::pressed = false;
 //Reset population values
 bool MapView::reset = true;
-//View state 0: Loading, 1: Normal
+//View state 0: Loading, 1: Normal, 4: Quit Game confirmation
 int MapView::view_state = 1;
 //Back button to title screen
 sf::Sprite MapView::title_sprite;
@@ -55,6 +55,15 @@ std::map<int, sf::Clock> MapView::commentary_timer;
 sf::Vector2f MapView::commentary_pos;
 int MapView::commentary_idx;
 int MapView::level_idx;
+// quit game confirmation text
+sf::Text MapView::back_continue;
+sf::Text MapView::back_cancel;
+sf::Text MapView::back_message;
+sf::Text MapView::back_question;
+std::string MapView::back_continue_text;
+std::string MapView::back_cancel_text;
+std::string MapView::back_message_text;
+std::string MapView::back_question_text;
 /** Creates the map from the give configuration file
  **
  **/
@@ -245,75 +254,100 @@ void MapView::Create(const char* resource) {
 	sprites[i].setPosition(positions[i] + sf::Vector2f(-45, -20));
     }
 
+	back_continue_text = "Yes, Cancel";
+	back_cancel_text = "No, Continue";
+	back_question_text = "Leaving will return you to the title screen.";
+	back_message_text = "Your progress will remain until you close the window.  Are you sure?";
 
+	back_continue = sf::Text(back_continue_text, font, 30);
+	back_cancel = sf::Text(back_cancel_text, font, 30);
+	back_question = sf::Text(back_question_text, font, 40);
+	back_message = sf::Text(back_message_text, font, 20);
+
+	back_message.setColor(sf::Color::Black);
+	back_question.setColor(sf::Color::Black);
+	back_continue.setColor(sf::Color::Black);
+	back_cancel.setColor(sf::Color::Black);	
+
+	back_question.setPosition(Configuration::getWindowWidth()/2 - back_question.getGlobalBounds().width/2, Configuration::getWindowHeight()/4);
+	back_message.setPosition(Configuration::getWindowWidth()/2 - back_message.getGlobalBounds().width/2, Configuration::getWindowHeight()/4 + back_question.getGlobalBounds().height + 10);
+	back_continue.setPosition(Configuration::getWindowWidth()/4 - back_continue.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 + 20);
+	back_cancel.setPosition(3*Configuration::getWindowWidth()/4  - back_cancel.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 + 20);
 }
 
 /** Checks to see if level was clicked on and switches to it
  **
  **/
 void MapView::update(sf::RenderWindow *window, int* state, float time) {
-	EventManagerInterface::setViewDelegate(delegate);
-	EventManagerInterface::setCurrentActorList(NULL);
+    EventManagerInterface::setViewDelegate(delegate);
+    EventManagerInterface::setCurrentActorList(NULL);
     if (reset) {
-	int last_state = view_state;
-	if (commentary_idx < commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))].size()) {
-		commentary[-1] = sf::Text((commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))])[commentary_idx], font, 15);
-		commentary[-1].setPosition(commentary_pos);
-		commentary_timer[-1].restart();
-		if (commentary_idx == commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))].size()) {
-			level_idx = 0;
-		}
-	}
-	view_state = 0;
-	render(window);
-	resetPopulationValues();
-	view_state = last_state;
+        int last_state = view_state;
+        if (commentary_idx < commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))].size()) {
+            commentary[-1] = sf::Text((commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))])[commentary_idx], font, 15);
+            commentary[-1].setPosition(commentary_pos);
+            commentary_timer[-1].restart();
+            if (commentary_idx == commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))].size()) {
+                level_idx = 0;
+            }
+        }
+        view_state = 0;
+        render(window);
+        resetPopulationValues();
+        view_state = last_state;
     }	
 
     if (LevelView::player == NULL) {
-	int last_state = view_state;
-	view_state = 0;
-	render(window);
-	int flowers_temp[] = {fireflowers_count[1], earthflowers_count[1], airflowers_count[1], waterflowers_count[1]};
-	LevelView::Create("LevelPlayer", state, flowers_temp);
-	view_state = last_state;
-	LevelView::cleanUp();
+        int last_state = view_state;
+        view_state = 0;
+        render(window);
+        int flowers_temp[] = {fireflowers_count[1], earthflowers_count[1], airflowers_count[1], waterflowers_count[1]};
+        LevelView::Create("LevelPlayer", state, flowers_temp);
+        view_state = last_state;
+        LevelView::cleanUp();
     }
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && view_state != 0) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
         for (int i = 0; i < level_idx + 3; i++) {
-		if ( i < num_levels) {
-		    if (sprites[i].getGlobalBounds().contains(pos.x, pos.y)) {
-			if (i > 1 && view_state == 1) {
-				view_state = 0;
-				render(window);
-				int flowers[] = {fireflowers_count[i], earthflowers_count[i], airflowers_count[i], waterflowers_count[i]};
-				LevelView::Create(levels[i].c_str(), state, flowers);
-				LevelView::start();
-				reset = true;
-				view_state = 1;
-				*state = 1;
-			}
-			else if (i <= 1) {
-				int last_state = view_state;
-				if (view_state == 2)
-					CraftView::view_state = 2;
-				view_state = 0;
-				render(window);
-				reset = true;
-				view_state = last_state;
-				*state = 3;
-			}
-		    }
-			else if (title_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
-			*state = 5;
-			MapView::level_idx = -1;
-			MapView::commentary_idx = 0;
-			LevelView::player->reset();
-		    }
-		}
+            if ( i < num_levels) {
+                if (sprites[i].getGlobalBounds().contains(pos.x, pos.y)) {
+                    if (i > 1 && view_state == 1) {
+                        view_state = 0;
+                        render(window);
+                        int flowers[] = {fireflowers_count[i], earthflowers_count[i], airflowers_count[i], waterflowers_count[i]};
+                        LevelView::Create(levels[i].c_str(), state, flowers);
+                        LevelView::start();
+                        reset = true;
+                        view_state = 1;
+                        *state = 1;
+                    }
+                    else if (i <= 1) {
+                        int last_state = view_state;
+                        if (view_state == 2)
+                            CraftView::view_state = 2;
+                        view_state = 0;
+                        render(window);
+                        reset = true;
+                        view_state = last_state;
+                        *state = 3;
+                    }
+                }
+                else if (title_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
+                    view_state = 4;
+                }
+                else if (view_state == 4 && back_cancel.getGlobalBounds().contains(pos.x, pos.y)) {
+                    view_state = 1;
+                }
+                else if (view_state == 4 && back_continue.getGlobalBounds().contains(pos.x, pos.y)) {
+                    view_state = 0;
+                    MapView::level_idx = -1;
+                    MapView::commentary_idx = 0;
+                    LevelView::player->reset();
+                    *state = 5;
+                }
+            }
         }
     }
     else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
@@ -373,6 +407,19 @@ void MapView::render(sf::RenderWindow *window) {
 		window->clear(sf::Color::White);
 		window->draw(Configuration::getLoadingSprite());
 		window->display();
+	}
+	//Quit Screen
+  else if (view_state == 4) {
+		//Get the player location and center gameView to it
+		window->clear(sf::Color::White);
+		window->setView(window->getDefaultView());
+		//window->draw(Configuration::getLoadingSprite());
+		window->draw(back_message);
+		window->draw(back_continue);
+		window->draw(back_cancel);
+		window->draw(back_question);
+		window->display();
+		return;
 	}
 	else if (view_state != 0) {
 		window->draw(background);

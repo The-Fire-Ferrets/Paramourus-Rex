@@ -59,6 +59,15 @@ class MapView {
 		static EventDelegate delegate;
 		static int min_flowers[];
 		static int max_flowers[];
+    // quit game confirmation
+		static sf::Text back_continue;
+		static sf::Text back_cancel;
+		static sf::Text back_message;
+		static sf::Text back_question;
+		static std::string back_continue_text;
+		static std::string back_cancel_text;
+		static std::string back_message_text;
+		static std::string back_question_text;
 	public:
 		static void Create(const char* resource);
 		static void update(sf::RenderWindow *window, int* state, float time);
