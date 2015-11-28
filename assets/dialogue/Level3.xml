@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
-<Level3 Background = "Orchard.png" Response="1" Flower = "Orchid" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "300" DianaPosY = "350" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30">
+<Level3 Background = "Orchard.png" Response="1" Flower = "Tulip" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "300" DianaPosY = "350" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30">
 	<Correct>
 	  <Dialogue Speaker = "Narrator" Text ="Exhausted from all of your flower-hunting, you're not expecting to see Diana when you're walking back through the remains of the old apple orchards. Diana perks up upon seeing you, waving her short arms at you enthusiastically." />
 	  <Dialogue Speaker = "Diana" Text = "Hey Phil! I'm glad I ran into you! I loved that other Orchid you found for me! I never would have been able to grow that with just the water that I have. What are you out here for anyway? Are you looking for a snack too? I haven't had too much luck. There's not too much green left around here. I think all the earth's too dry. Wanna look around with me?" />
-	  <Dialgoue Speaker = "Narrator" Text = "You and Diana spend some time together wandering the old tree trunks, looking for old fallen apples. While you don't find any, you get to enjoy some extra time with just you and Diana. You wonder to yourself if you would have more success finding something green in the [earth level name]..." />
+	  <Dialgoue Speaker = "Narrator" Text = "You and Diana spend some time together wandering the old tree trunks, looking for old fallen apples. While you don't find any, you get to enjoy some extra time with just you and Diana. You wonder to yourself if you would have more success finding something green near that crater the meteor left..." />
 	  <Dialogue Speaker = "Diana" Text="What's your favorite food anyway, Phil?"/>
 	  <Dialogue Speaker = "Phil" Text= "&#10; 1) I'm actually a vegetarian. &#10; 2) Uh, you know, the usual, carnivore meat... things." />
 	  <Dialogue Speaker = "Diana" Text= "Wow, really? That's so interesting. I'll keep an extra eye out for those apples, then! See ya, Phil!"/>
-	  <Dialogue Speaker = "Diana" Text= "Carnivore things. Right. Guess you wouldn't've liked those apples anyway, then. See ya, Phil." />
+	  <Dialogue Speaker = "Diana" Text= "Carnivore things... Yeah. Guess you wouldn't've liked those apples anyway, then. See ya, Phil." />
 	</Correct>
 	<Incorrect>
 	  <Dialogue Speaker = "Narrator" Text ="Exhausted from all of your flower-hunting, you're not expecting to see Diana when you're walking back through the remains of the old apple orchards. Diana perks up upon seeing you, waving her short arms at you." />
 	  <Dialogue Speaker = "Diana" Text = "Hey Phil! What are you out here for? Are you looking for a snack too? I haven't had too much luck. There's not too much green left around here. I think all the earth's too dry. You join me if you want, but I haven't had much luck." />
-	  <Dialgoue Speaker = "Narrator" Text = "You and Diana spend some time together wandering the old tree trunks, looking for old fallen apples. While you don't find any, you get to enjoy some extra time with just you and Diana. You wonder to yourself if you would have more success finding something green in the [earth level name]..." />
+	  <Dialgoue Speaker = "Narrator" Text = "You and Diana spend some time together wandering the old tree trunks, looking for old fallen apples. While you don't find any, you get to enjoy some extra time with just you and Diana. You wonder to yourself if you would have more success finding something green near that crater the meteor left..." />
 	  <Dialogue Speaker = "Diana" Text="What's your favorite food anyway, Phil?" />
 	  <Dialogue Speaker = "Phil" Text= "&#10; 1) I'm actually a vegetarian. &#10; 2) Uh, you know, the usual, carnivore meat... things."/>
 	  <Dialogue Speaker = "Diana" Text= "Wow, really? That's so interesting. I'll keep an extra eye out for those apples, then! See ya, Phil!" />
-	  <Dialogue Speaker = "Diana" Text= "Carnivore things. Right. Guess you wouldn't've liked those apples anyway, then. See ya, Phil." />
+	  <Dialogue Speaker = "Diana" Text= "Carnivore things... Yeah. Guess you wouldn't've liked those apples anyway, then. See ya, Phil." />
 	</Incorrect>
 </Level3>
