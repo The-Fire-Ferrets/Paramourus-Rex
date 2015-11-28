@@ -44,6 +44,7 @@ class CraftView  {
 	static sf::Sprite scroll_icon_sprite;
 	static sf::Sprite diana_icon_sprite;
 	static sf::Sprite map_icon_sprite;
+	static sf::Sprite hints_icon_sprite;
 
 	static sf::Sprite box1Sprite;
 	static sf::Sprite box2Sprite;
@@ -54,10 +55,14 @@ class CraftView  {
 	static std::string flower_str;
 	static sf::Text flower_text;
 	
+	static sf::RectangleShape hints_overlay;
+	static sf::Text hints_text;
+
 	// Position variables
 	static sf::Vector2f sizes[];
 	static sf::Vector2f positions[];
 	static sf::Vector2f text_pos;
+	static sf::Vector2f hints_text_pos;
 
 	// Textures
         static sf::Texture background_texture;
@@ -68,6 +73,7 @@ class CraftView  {
 	static sf::Texture map_texture;
 	static sf::Texture diana_icon_texture;
 	static sf::Texture scroll_icon_texture;
+	static sf::Texture hints_icon_texture;
 
 
 	// exit buttons
@@ -81,6 +87,7 @@ class CraftView  {
 	
 	// Determining if recipe book is open or not
 	static bool drawBook;
+	static bool drawHints;
 	
 	// Misc
 	static void cleanUp(void);
@@ -97,6 +104,7 @@ class CraftView  {
 	static sf::Sprite  character_sprite;
 
 	static std::string fitStringToDialogueBox(std::string str);
+	static std::string fitStringToHintsBox(std::string str);
 
 	public:
 		static int getNumFlowers(void);

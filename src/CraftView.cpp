@@ -55,6 +55,7 @@ sf::Sprite CraftView::map;
 sf::Sprite CraftView::scroll_icon_sprite;
 sf::Sprite CraftView::diana_icon_sprite;
 sf::Sprite CraftView::map_icon_sprite;
+sf::Sprite CraftView::hints_icon_sprite;
 // Holds sprite for box 1 and 2 of crafting table
 sf::Sprite CraftView::box1Sprite;
 sf::Sprite CraftView::box2Sprite;
@@ -63,6 +64,8 @@ sf::Font CraftView::font;
 // Holds text "craftable companion" will be speaking
 sf::Text CraftView::text;
 sf::Vector2f CraftView::text_pos;
+sf::Text CraftView::hints_text;
+sf::Vector2f CraftView::hints_text_pos;
 
 // Holds actual recipe pages that will be displayed when player clicks on book
 sf::Sprite CraftView::recipe_scroll_sprite;
@@ -72,7 +75,8 @@ sf::Texture CraftView::scroll_texture;
 sf::Texture CraftView::map_texture;
 sf::Texture CraftView::diana_icon_texture;
 sf::Texture CraftView::scroll_icon_texture;
-
+sf::Texture CraftView::hints_icon_texture;
+sf::RectangleShape CraftView::hints_overlay;
 
 sf::RectangleShape CraftView::backlay;
 sf::RectangleShape CraftView::craft_button;
@@ -85,6 +89,7 @@ bool CraftView::pressed;
 bool CraftView::box1;
 bool CraftView::box2;
 bool CraftView::drawBook;
+bool CraftView::drawHints;
 
 bool CraftView::has_delegates = false;
 std::vector<EventDelegate> CraftView::delegateFuncList;
@@ -138,11 +143,13 @@ void CraftView::Create(const char* resource) {
         else if (!strcmp(attr.name(), "Font")) {
             font.loadFromFile(("./assets/" + (std::string)attr.value()).c_str());
             text.setFont(font);
+            hints_text.setFont(font);
 	    flower_text.setFont(font);
         }
         // Size of dialogue text
         else if (!strcmp(attr.name(), "Text_Size")) {
             text.setCharacterSize(std::strtol(attr.value(), &temp, 10));
+            hints_text.setCharacterSize((std::strtol(attr.value(), &temp, 10))/2);
 	    flower_text.setCharacterSize(25);
 
             if (*temp != '\0') {
@@ -159,6 +166,20 @@ void CraftView::Create(const char* resource) {
         // Pos of dialogue text
         else if (!strcmp(attr.name(), "Text_Y")) {
             text_pos.y = (std::strtol(attr.value(), &temp, 10));
+            if (*temp != '\0') {
+                std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
+            }
+        }
+        // Pos of hints text
+        else if (!strcmp(attr.name(), "Hints_PosX")) {
+            hints_text_pos.x = (std::strtol(attr.value(), &temp, 10));
+            if (*temp != '\0') {
+                std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
+            }
+        }
+        // Pos of hints text
+        else if (!strcmp(attr.name(), "Hints_PosY")) {
+            hints_text_pos.y = (std::strtol(attr.value(), &temp, 10));
             if (*temp != '\0') {
                 std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
             }
@@ -184,6 +205,13 @@ void CraftView::Create(const char* resource) {
     	    scroll_icon_sprite = sf::Sprite(scroll_icon_texture);
 	    	scroll_icon_sprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.06);
 		}
+        else if(!strcmp(attr.name(), "Hints_Icon")) {
+	    if (!hints_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+    		  std::cout << "CraftView::Create: Failed to load " << attr.value();
+    	    }
+    	    hints_icon_sprite = sf::Sprite(hints_icon_texture);
+	    	hints_icon_sprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.15);
+		}		
 		else if(!strcmp(attr.name(), "Recipe_Scroll")) {
 	    if (!scroll_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
     		  std::cout << "CraftView::Create: Failed to load " << attr.value();
@@ -239,6 +267,8 @@ void CraftView::Create(const char* resource) {
     text.setPosition(text_pos);
     text.setColor(sf::Color::Black);
     flower_text.setColor(sf::Color::Black);
+    hints_text.setPosition(hints_text_pos);
+    hints_text.setColor(sf::Color::Black);
 
     // Backlay set off to the side to allow space for item select screens to the left
     backlay.setPosition(Configuration::getWindowWidth()/6.6, Configuration::getWindowHeight()/1.4);
@@ -247,6 +277,11 @@ void CraftView::Create(const char* resource) {
     backlay.setSize(sf::Vector2f(Configuration::getWindowWidth()/1.3,Configuration::getWindowHeight()/4));
     backlay.setOutlineThickness(5);
 
+    hints_overlay.setPosition(Configuration::getWindowWidth()/5.5, Configuration::getWindowHeight()/4);
+    hints_overlay.setOutlineColor(sf::Color::Black);
+    hints_overlay.setFillColor(sf::Color::White);
+    hints_overlay.setSize(sf::Vector2f(Configuration::getWindowWidth()/1.7,Configuration::getWindowHeight()/2));
+    hints_overlay.setOutlineThickness(5);
     
 	// map_button.setPosition(Configuration::getWindowWidth() - 110, 10);
 	// map_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/15));
@@ -285,6 +320,18 @@ void CraftView::Create(const char* resource) {
 	// set text to initial greeting from Homer
     std::string str = "Phil come back to see Homer? Phil have " + std::to_string(totalFlowers) + " flowers! If Phil click on flower, Homer make more!";
     text.setString(fitStringToDialogueBox(str));
+    std::string hints_string = "This is Homer's home. If you come to him with flowers, he can\
+combine them into new flowers for you to give to Diana. If you want to know how the \
+various flowers are crafted, click on the RecipeScroll Icon in the bottom-left. The \
+Recipe Scroll explains which flowers combine into which other ones. If you don't want \
+to craft anything, you can still come over and he will restock you with vases for \
+your next foray into the wild. You will need to successfully craft flowers to \
+advance in the game. Once you've crafted a flower, a Diana Icon should appear \
+near the Map Icon. Click the Diana Icon to deliver your flower to Diana and have \
+a brief chat with her. Sometimes she'll ask you questions, Phil. \
+Try to keep in mind everything you already know about Diana when you answer; \
+sometimes you can infer which answer she will respond positively to.";
+    hints_text.setString(fitStringToHintsBox(hints_string));
 
     if (!buffer.loadFromFile("./assets/music/marina-s-rhythm.ogg")) {
 	std::cout << "CraftView::Create: failed to load music" << std::endl;
@@ -519,6 +566,15 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	    }
 	}
 
+	// Draw Hints
+	if (hints_icon_sprite.getGlobalBounds().contains(pos.x, pos.y)){
+		if (drawHints == true)
+			drawHints = false;
+		else
+			drawHints = true;
+	}
+
+	// Return to MapView
 	if (map_icon_sprite.getGlobalBounds().contains(pos.x, pos.y) && first_click) {
 		LevelView::player->reset();	
 		*state = 0;
@@ -668,6 +724,7 @@ void CraftView::render(sf::RenderWindow *window) {
     window->draw(map_icon_sprite);
     window->draw(scroll_icon_sprite);
 	window->draw(character_sprite);
+	window->draw(hints_icon_sprite);
 	// window->draw(map_button);
 
     // Setting crafting button elements
@@ -760,6 +817,12 @@ void CraftView::render(sf::RenderWindow *window) {
 	window->draw(flower_text);
     }
     
+    // Draw Hints if open.
+    if (drawHints == true){
+    	window->draw(hints_overlay);
+    	window->draw(hints_text);
+    }
+
     // draw recipe book over top everything if it's open
     if (drawBook == true){
       window->draw(recipe_scroll_sprite);
@@ -855,6 +918,60 @@ std::string CraftView::fitStringToDialogueBox(std::string str) {
 	sf::Text temp;
 	temp.setFont(font);
 	temp.setCharacterSize(text.getCharacterSize());
+
+	// current string and width
+	std::string fitted_string = "";
+	float current_width = 0.f;
+	float word_width = 0.f, word_height = 0.f;
+
+	// split the dialogue into words;
+	std::vector<std::string> words = split(str, ' ');
+
+	// for each word...
+	for (std::string word : words) {
+		// get the bounding box
+		temp.setString(word + " ");
+		word_width = temp.findCharacterPos(temp.getString().getSize()).x;
+
+		// will it go past the horizontal bound?
+		if (current_width + word_width > max_width) {
+			fitted_string += "\n" + word + " ";
+			current_width = word_width;
+		}
+		else {
+			// just add to string
+			fitted_string += word + " ";
+			current_width += word_width;
+		}
+	}
+
+	// done
+	return fitted_string;
+}
+
+/** Rewraps the given string such that it can be displayed
+ ** appropriately in the dialogue box.  Assumes the string
+ ** will fit into a single box.
+ ** str: the string to rewrap
+ **/
+std::string CraftView::fitStringToHintsBox(std::string str) {
+	// get dialogue box bounds
+	int box_begin_x = hints_overlay.getPosition().x;
+	int box_begin_y = hints_overlay.getPosition().x;
+	int box_end_x   = box_begin_x + hints_overlay.getSize().x;
+	int box_end_y   = box_begin_y + hints_overlay.getSize().y;
+
+	int text_begin_x = hints_text_pos.x;
+	int text_begin_y = hints_text_pos.y;
+	int text_end_x   = box_end_x - (text_begin_x - box_begin_x);
+	int text_end_y   = box_end_y - (text_begin_y - box_begin_y);
+
+	int max_width = text_end_x - text_begin_x;
+
+	// text object used to see how close each word puts us to the bounds
+	sf::Text temp;
+	temp.setFont(font);
+	temp.setCharacterSize(hints_text.getCharacterSize());
 
 	// current string and width
 	std::string fitted_string = "";
