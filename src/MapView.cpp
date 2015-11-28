@@ -257,8 +257,8 @@ void MapView::Create(const char* resource) {
 
 	back_continue_text = "Yes, Cancel";
 	back_cancel_text = "No, Continue";
-	back_question_text = "Leaving will return you to the title screen.";
-	back_message_text = "Your progress will remain until you close the window.  Are you sure?";
+	back_question_text = "Are you sure?";
+	back_message_text = "Leaving now will erase all progress.";
 
 	back_continue = sf::Text(back_continue_text, font, 30);
 	back_cancel = sf::Text(back_cancel_text, font, 30);
@@ -342,10 +342,17 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
                     view_state = 1;
                 }
                 else if (view_state == 4 && back_continue.getGlobalBounds().contains(pos.x, pos.y)) {
-                    view_state = 0;
+                    // reset ongoing game state
+                    CraftView::total_craft_visits = 1;
+                    CraftView::clearInventory();
+                    DialogueView::num_times_impressed = 0;
                     MapView::level_idx = -1;
                     MapView::commentary_idx = 0;
+                    MapView::resetPopulationValues();
                     LevelView::player->reset();
+
+                    // rest the view
+                    view_state = 0;
                     *state = 5;
                 }
             }
@@ -361,7 +368,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 **/
 void MapView::resetPopulationValues(void) {
 	for (int i = 0; i < num_levels; i++) {
-		if (((i > 1 && level_idx + 2 >= num_levels) || i == level_idx + 2)) {
+		if (((i > 1 && level_idx + 2 >= num_levels) || i == level_idx + 2) || level_idx == -1) {
 			if (min_flowers[i] == max_flowers[i])
 				flowers[i] = max_flowers[i];
 			else

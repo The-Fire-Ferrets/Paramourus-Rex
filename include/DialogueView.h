@@ -50,10 +50,10 @@ class DialogueView {
 
 		static bool player_response;
 		static bool solved;
-		static unsigned num_times_impressed;
 		static int response;
 
 	public:
+		static unsigned num_times_impressed;
 		static std::vector<std::pair<std::string, std::string>> boxes;     // what gets displayed on screen
 		static std::vector<std::pair<std::string, std::string>> dialogues; // what gets read in from the XML
 		static void Create(const char* resource, int* state);

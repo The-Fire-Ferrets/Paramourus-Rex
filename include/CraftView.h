@@ -33,7 +33,6 @@ class CraftView  {
         static int orchids;
         static int magnolias;
 
-        static int total_craft_visits;
 	static std::string flower_list[];
 	
 	// Sprites
@@ -107,6 +106,7 @@ class CraftView  {
 	static std::string fitStringToHintsBox(std::string str);
 
 	public:
+        static int total_craft_visits;
 		static int getNumFlowers(void);
 		static bool pressed;
 		static void start();
@@ -124,6 +124,7 @@ class CraftView  {
 		static void addDelegate(EventType type);
 		static void returnFlower(StrongActorPtr flower);
 		static void updateFlowerCount(std::string flower);
+    static void clearInventory(void);
 
 		static std::vector<std::tuple<sf::Sprite, std::string>> flowerStrList;
 

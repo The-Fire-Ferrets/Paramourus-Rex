@@ -1002,3 +1002,23 @@ std::string CraftView::fitStringToHintsBox(std::string str) {
 	// done
 	return fitted_string;
 }
+
+/** Clears out the player's inventory.
+ **
+ **/
+void CraftView::clearInventory(void) {
+    totalFlowers = 0;
+    fireFlowers = 0;
+    waterFlowers = 0;
+    earthFlowers = 0;
+    airFlowers = 0;
+    sunFlowers = 0;
+    tulips = 0;
+    roses = 0;
+    violets = 0;
+    lilies = 0;
+    orchids = 0;
+    magnolias = 0;
+
+    actorList.clear();
+}
