@@ -878,7 +878,11 @@ void LevelView::render(sf::RenderWindow *window) {
 			// actual rendering
 			window->draw(background);
 			for (it = actorList.begin(); it != actorList.end(); it++)
-				(*it)->render(window, true);
+				if (!(*it)->isOfType("Homer")) {
+					(*it)->render(window, true);
+				}
+			if (reveal_homer)
+				homer->render(window, true);
 			player->render(window, true);
 		}
 
