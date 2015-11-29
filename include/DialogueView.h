@@ -27,7 +27,9 @@ class DialogueView {
 		//images
 		static sf::Texture background_texture;
 		static sf::Sprite background;
-		static sf::RectangleShape backlay;
+		//static sf::RectangleShape backlay;
+		static sf::Texture backlay_texture;
+		static sf::Sprite backlay;
 
 		// text values
 		static sf::Font font;

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TimeOut Background = "Level0.png" Phil = "Phil.png" PhilPosX = "600" PhilPosY = "50" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30">
+<TimeOut Background = "Level0.png" Phil = "Phil.png" PhilPosX = "600" PhilPosY = "50" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30" Backlay = "Prompt.png">
 	<Correct>
 		<Dialogue Speaker = "Homer" Text = "Hey man, searched for you everywhere and found you passed out. Try not to stay out too long!"/>
 	</Correct>
