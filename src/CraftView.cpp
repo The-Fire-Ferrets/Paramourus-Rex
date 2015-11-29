@@ -81,7 +81,7 @@ sf::Texture CraftView::hints_prompt_texture;
 sf::Sprite CraftView::hints_prompt;
 int CraftView::hints_size;
 
-sf::RectangleShape CraftView::backlay;
+//sf::RectangleShape CraftView::backlay;
 sf::RectangleShape CraftView::craft_button;
 sf::RectangleShape CraftView::map_button; // Ways to exit the crafting table
 bool CraftView::has_crafted = false;
@@ -104,6 +104,9 @@ sf::Sound CraftView::sound;
 // Homer's sprite
 sf::Texture CraftView::character_tex;
 sf::Sprite  CraftView::character_sprite;
+
+sf::Texture CraftView::backlay_texture;
+sf::Sprite CraftView::backlay;
 
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
@@ -150,6 +153,7 @@ void CraftView::Create(const char* resource) {
         }
 		else if (!strcmp(attr.name(), "Prompt")) {
 			hints_prompt_texture.loadFromFile(("./assets/sprites/" + std::string(attr.value())).c_str());
+			backlay_texture.loadFromFile(("./assets/sprites/" + std::string(attr.value())).c_str());
 		}
         // Font for general text on screen
         else if (!strcmp(attr.name(), "Font")) {
@@ -240,6 +244,12 @@ void CraftView::Create(const char* resource) {
 	hints_prompt = sf::Sprite(hints_prompt_texture, sf::IntRect(0, 0, prompt_size.x, prompt_size.y));
 	hints_prompt.setPosition(sf::Vector2f(75, 75));
 
+    // Backlay set off to the side to allow space for item select screens to the left
+	backlay = sf::Sprite(backlay_texture, sf::IntRect(0, 0, prompt_size.x, prompt_size.y));
+	backlay.setPosition(Configuration::getWindowWidth()/6.6, Configuration::getWindowHeight()/1.4);
+	backlay.setScale((Configuration::getWindowWidth()/1.3) / prompt_size.x,
+			(Configuration::getWindowHeight()/4.0) / prompt_size.y);
+
     //Iterates over XML to get components to add, primarily sprites to populate the screen with
     int i = 0;
     for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling(), i++) {
@@ -294,13 +304,6 @@ void CraftView::Create(const char* resource) {
 	hints_text.setPosition(hints_position.x + hints_bounds.width/2.f - text_bounds.width/2.f,
 			hints_position.y + hints_bounds.height/2.f - text_bounds.height/2.f);
     hints_text.setColor(sf::Color::Black);
-
-    // Backlay set off to the side to allow space for item select screens to the left
-    backlay.setPosition(Configuration::getWindowWidth()/6.6, Configuration::getWindowHeight()/1.4);
-    backlay.setOutlineColor(sf::Color::Black);
-    backlay.setFillColor(sf::Color::White);
-    backlay.setSize(sf::Vector2f(Configuration::getWindowWidth()/1.3,Configuration::getWindowHeight()/4));
-    backlay.setOutlineThickness(5);
 
 	// map_button.setPosition(Configuration::getWindowWidth() - 110, 10);
 	// map_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/15));
@@ -912,9 +915,9 @@ void CraftView::addDelegate(EventType type) {
 std::string CraftView::fitStringToDialogueBox(std::string str) {
 	// get dialogue box bounds
 	int box_begin_x = backlay.getPosition().x;
-	int box_begin_y = backlay.getPosition().x;
-	int box_end_x   = box_begin_x + backlay.getSize().x;
-	int box_end_y   = box_begin_y + backlay.getSize().y;
+	int box_begin_y = backlay.getPosition().y;
+	int box_end_x   = box_begin_x + backlay.getGlobalBounds().width;
+	int box_end_y   = box_begin_y + backlay.getGlobalBounds().height;
 
 	int text_begin_x = text_pos.x;
 	int text_begin_y = text_pos.y;
