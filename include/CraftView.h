@@ -54,8 +54,11 @@ class CraftView  {
 	static std::string flower_str;
 	static sf::Text flower_text;
 	
-	static sf::RectangleShape hints_overlay;
+	//static sf::RectangleShape hints_overlay;
+	static sf::Texture hints_prompt_texture;
+	static sf::Sprite hints_prompt;
 	static sf::Text hints_text;
+	static int hints_size;
 
 	// Position variables
 	static sf::Vector2f sizes[];
@@ -103,7 +106,7 @@ class CraftView  {
 	static sf::Sprite  character_sprite;
 
 	static std::string fitStringToDialogueBox(std::string str);
-	static std::string fitStringToHintsBox(std::string str);
+	static std::string fitStringToHintsBox(std::string str, int character_size = 0, sf::Vector2f box_size = sf::Vector2f(0,0), bool center = true);
 
 	public:
         static int total_craft_visits;
