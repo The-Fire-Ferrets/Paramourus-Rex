@@ -72,6 +72,7 @@ class LevelView  {
 		static bool reveal_homer;
 		static float timer_time;
 		static bool pause_key_pressed;
+		static bool back_key_pressed;
 		static int* game_state;
 		static int last_action;
 		static sf::Text back_continue;

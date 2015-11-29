@@ -325,12 +325,12 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
         LevelView::cleanUp();
     }
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && view_state != 0) {
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && (view_state == 1 || view_state == 2 || view_state == 4)) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
 	if (!display_commentary) {
 		for (int i = 0; i < level_idx + 3; i++) {
-		    if ( i < num_levels) {
+		    if ( i < num_levels  && view_state != 4) {
 		        if (sprites[i].getGlobalBounds().contains(pos.x, pos.y)) {
 		            if (i > 1 && view_state == 1) {
 		                view_state = 0;
@@ -354,6 +354,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 		                *state = 3;
 		            }
 		        }
+			}
 		        else if (title_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
 		            view_state = 4;
 		        }
@@ -373,7 +374,6 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 		            view_state = 0;
 		            *state = 5;
 		        }
-		    }
 		}
 	}
 	display_commentary = false;
@@ -436,19 +436,6 @@ void MapView::render(sf::RenderWindow *window) {
 		window->draw(Configuration::getLoadingSprite());
 		window->display();
 	}
-	//Quit Screen
-  else if (view_state == 4) {
-		//Get the player location and center gameView to it
-		window->clear(sf::Color::White);
-		window->setView(window->getDefaultView());
-		//window->draw(Configuration::getLoadingSprite());
-		window->draw(back_message);
-		window->draw(back_continue);
-		window->draw(back_cancel);
-		window->draw(back_question);
-		window->display();
-		return;
-	}
 	else if (view_state != 0) {
 		window->draw(background);
 		window->draw(title_sprite);
@@ -471,6 +458,14 @@ void MapView::render(sf::RenderWindow *window) {
 			window->draw(commentary_prompt);
 			if ((commentary_idx < commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))].size()))
 				window->draw(commentary[-1]);
+		}
+
+		if (view_state == 4) {
+			window->draw(commentary_prompt);
+			window->draw(back_message);
+			window->draw(back_continue);
+			window->draw(back_cancel);
+			window->draw(back_question);
 		}
 	}
 }
