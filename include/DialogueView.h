@@ -52,6 +52,7 @@ class DialogueView {
 
 		static bool player_response;
 		static bool solved;
+		static bool draw_overlay;
 		static int response;
 
 	public:

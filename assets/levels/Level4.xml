@@ -233,7 +233,7 @@
 	</Homer>
 	<Action>
 		<Spawn1>
-			<NPC Generate = "4">
+			<NPC Generate = "1">
 				<Pathfinder PathType = "-3" TargetType = "-2"/>
 				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 				<InputComponent>

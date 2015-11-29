@@ -206,7 +206,7 @@ void CraftView::Create(const char* resource) {
     		  std::cout << "CraftView::Create: Failed to load " << attr.value();
     	    }
     	    map_icon_sprite = sf::Sprite(map_texture);
-    	    map_icon_sprite.setPosition(Configuration::getWindowWidth()/1.25,Configuration::getWindowHeight()/40);
+    	    map_icon_sprite.setPosition(Configuration::getWindowWidth()/1.17,Configuration::getWindowHeight()/40);
         }
         else if (!strcmp(attr.name(), "Diana_Icon")) {
     	    if (!diana_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
@@ -219,7 +219,7 @@ void CraftView::Create(const char* resource) {
     		  std::cout << "CraftView::Create: Failed to load " << attr.value();
     	    }
     	    scroll_icon_sprite = sf::Sprite(scroll_icon_texture);
-	    	scroll_icon_sprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.06);
+	    	scroll_icon_sprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.16);
 		}
   //       else if(!strcmp(attr.name(), "Hints_Icon")) {
 	 //    if (!hints_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
@@ -428,13 +428,10 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 					    if (actorList[j]->isOfType(std::get<1>(flowerStrList[i]))){
 						if (box1 == false){
 				    			selectedActor1 = actorList[j];
-							std::cout << "New flower selected" << std::endl;
 							break;
 				    		}
 				    		else if (box2 == false && actorList[j] != selectedActor1){
 				    			selectedActor2 = actorList[j];
-							std::cout << "New flower selected" << std::endl;
-
 							break;
 				    		}
 				    	}
@@ -536,27 +533,26 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 
 	   // Clear sprite image, add newly combined sprite to inventory?
 	   if (actor1CC->doesCombineWith(*actor2CC)){
-		   std::cout << "combining" << std::endl;
 		   box1 = false;
 		   box2 = false;
 		   //actor1CC->combineWith(*actor2CC);
 		   if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0, selectedActor1->getInstance(), selectedActor2->getInstance())))
 			   std::cout << "CraftView::update: Unable to queue event" << std::endl;
-		   std::cout << "Sent craft event to Flower: " << selectedActor1->getInstance() << " and Flower: " << selectedActor2->getInstance() << std::endl;
+		   //std::cout << "Sent craft event to Flower: " << selectedActor1->getInstance() << " and Flower: " << selectedActor2->getInstance() << std::endl;
 		   selectedActor1 = nullptr;
 		   selectedActor2 = nullptr;
 	   }
 
 	   // update text box to indicate that you cannot combine flowers
 	   else {
-	     std::cout << "CraftView::Update: Unable to craft " << selectedActor1->getId().back() << " and Flower: " << selectedActor2->getId().back() << std::endl;
+	    // std::cout << "CraftView::Update: Unable to craft " << selectedActor1->getId().back() << " and Flower: " << selectedActor2->getId().back() << std::endl;
 	     text.setString(fitStringToDialogueBox("Homer not think Diana-lady like those flowers, Phil. Phil try something else."));
 	   }
 	}
 
 	// Check to see if flowers within the craft box are clicked to return them to player inventory
 	if (box1 == true && box1Sprite.getGlobalBounds().contains(pos.x,pos.y)){
-	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor1->getId().back() << std::endl;
+	    //std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor1->getId().back() << std::endl;
 	    box1 = false;
 	    returnFlower(selectedActor1);
 	    selectedActor1 = nullptr;
@@ -564,7 +560,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 
 	// Attempting to remove flower from box2 of craft table and return them to player inventory
 	if (box2 == true && box2Sprite.getGlobalBounds().contains(pos.x,pos.y)){
-	    std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor2->getId().back() << std::endl;
+	    //std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor2->getId().back() << std::endl;
 	    box2 = false;
 	    returnFlower(selectedActor2);
 	    selectedActor2 = nullptr;
