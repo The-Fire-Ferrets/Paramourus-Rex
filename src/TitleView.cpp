@@ -118,12 +118,23 @@ void TitleView::update(sf::RenderWindow *window, int* state, float time) {
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
 	    if (playbutton.getGlobalBounds().contains(pos.x, pos.y)) {
 		view_state = 0;
-		MapView::level_idx = 0;
+		MapView::level_idx = -1;
+		LevelView::player = NULL;
+		LevelView::cleanUp();
 		//In order to display all the levels at once; uncomment line below // remember to comment it before pushing though
 		//MapView::level_idx = 5;
 		MapView::view_state = 1;
-		MapView::commentary_idx = 1;
-		*state = 0;
+		MapView::commentary_idx = 0;
+		render(window);
+		int fireflowers_count = 0;
+		int earthflowers_count = 0;
+		int airflowers_count = 0;
+		int waterflowers_count = 0;
+		MapView::first_level_entered = false;
+		int flowers[] = {fireflowers_count, earthflowers_count, airflowers_count, waterflowers_count};
+		LevelView::Create("LevelPlayer", state, flowers);
+		LevelView::start();
+		*state = 1;
 		view_state = 1;
 	    }
 		else if (introbutton.getGlobalBounds().contains(pos.x, pos.y)) {
@@ -132,15 +143,17 @@ void TitleView::update(sf::RenderWindow *window, int* state, float time) {
 			DialogueView::Create(introdialogue.c_str(), state);
 			*state = 2;
 			view_state = 1;
-		}
+				}
 		else if (tutorialbutton.getGlobalBounds().contains(pos.x, pos.y)) {
 			view_state = 0;
 			MapView::commentary_idx = 0;
+			MapView::level_idx = -1;
 			render(window);
 			int fireflowers_count = 1;
 			int earthflowers_count = 1;
 			int airflowers_count = 1;
 			int waterflowers_count = 1;
+			MapView::first_level_entered = false;
 			int flowers[] = {fireflowers_count, earthflowers_count, airflowers_count, waterflowers_count};
 			LevelView::Create(tutoriallevel.c_str(), state, flowers);
 			LevelView::start();

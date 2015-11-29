@@ -341,8 +341,8 @@ void CraftView::Create(const char* resource) {
 
 	// set text to initial greeting from Homer
     std::string str = "Phil come back to see Homer? Phil have " + std::to_string(totalFlowers) + " flowers! If Phil click on flower, Homer make more!";
-    text.setString(fitStringToDialogueBox(str));
-
+    text.setString(fitStringToHintsBox(str, 0, sf::Vector2f(backlay.getGlobalBounds().width,backlay.getGlobalBounds().height)));
+	text.setCharacterSize(hints_size);
     if (!buffer.loadFromFile("./assets/music/marina-s-rhythm.ogg")) {
 	std::cout << "CraftView::Create: failed to load music" << std::endl;
     }
@@ -978,6 +978,8 @@ std::string CraftView::fitStringToHintsBox(std::string str, int character_size, 
 		width = box_size.x;
 		height = box_size.y;
 	}
+
+	std::cout << width << " " << height << std::endl;
 	int beginX = 0;
 	int beginY = 0;
 	//commentary_positions.push_back(sf::Vector2f(beginX, beginY));
@@ -993,8 +995,8 @@ std::string CraftView::fitStringToHintsBox(std::string str, int character_size, 
 	std::string fitted_string;
 	int curr_size;
 	if (character_size <= 0) {
-		curr_size = 20;
-		character_size = 20;
+		curr_size = 50;
+		character_size = 50;
 		hints_text.setCharacterSize(character_size);
 	}
 	else {

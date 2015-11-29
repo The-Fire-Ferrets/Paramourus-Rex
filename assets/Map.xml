@@ -10,9 +10,11 @@
 	<Commentary>
 		<Commentary1 Display = "Homer" Actor = "" Contact = "" Action = "" Occurance = "1">
 			<Dialogue1 Text = "Welcome to the little valley we call home. In order to continue, you'll need to still have those two flowers. If you don't, go back and restart the tutorial. New levels will become available soon, first though, head over to my craft table. Button on the top right corner. Craft your first flower and talk to Diana." />
+			<Dialogue2 Text = "Welcome to the little valley we call home. Here are some FireFlowers I've been holding onto for this ocassion. I think you'll find more use for them. Head over to my craft table. Craft your first flower and talk to Diana." />
 		</Commentary1>
 		<Commentary2 Display = "Homer" Actor = "" Contact = "" Action = "" Occurance = "1">
 			<Dialogue1 Text = "Your first level just became available. At the top, you'll see the number and types of flowers to expect in the level. Now, got collect some flowers!" />
+			<Dialogue2 Text = "Your first level just became available. At the top, you'll see the number and types of flowers to expect in the level. Now, got collect some flowers!" />
 		</Commentary2>
 	</Commentary>
 </Map>

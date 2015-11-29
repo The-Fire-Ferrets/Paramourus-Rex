@@ -47,14 +47,15 @@ int MapView::min_flowers[size];
 int MapView::max_flowers[size];
 //COmmentary 
 std::map<int, sf::Text> MapView::commentary;
-std::map<DisplayContactPair, sf::Vector2f> MapView::commentary_positions;
-std::map<DisplayContactPair, std::vector<std::string>> MapView::commentary_strings;
-std::map<DisplayContactPair, int> MapView::commentary_occurance;
-std::map<DisplayContactPair, int> MapView::commentary_actions;
+std::map<DisplayContactPair, std::vector<sf::Vector2f>> MapView::commentary_positions;
+std::map<DisplayContactPair, std::vector<std::vector<std::string>>> MapView::commentary_strings;
+std::map<DisplayContactPair, std::vector<int>> MapView::commentary_actions;
+std::map<DisplayContactPair , std::vector<int>> MapView::commentary_occurance;
+std::map<DisplayContactPair, std::vector<std::vector<int>>> MapView::commentary_sizes;
+int MapView::commentary_type_idx;
 std::map<int, sf::Clock> MapView::commentary_timer;
 sf::Vector2f MapView::commentary_pos;
 int MapView::commentary_idx;
-std::map<DisplayContactPair, std::vector<int>> MapView::commentary_sizes;
 int MapView::commentary_size;
 sf::Texture MapView::commentary_prompt_texture;
 sf::Sprite MapView::commentary_prompt;
@@ -173,14 +174,30 @@ void MapView::Create(const char* resource) {
 						}
 					}
 				}
-				commentary_strings.insert(std::pair<DisplayContactPair, std::vector<std::string>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<std::string>()));
-				
-				commentary_actions.insert(std::pair<DisplayContactPair, int>(DisplayContactPair(display, ContactPair(actor_id, contact)), actions_val));	
-				commentary_occurance.insert(std::pair<DisplayContactPair, int>(DisplayContactPair(display, ContactPair(actor_id, contact)), occurance));				
+				if (commentary_strings.find(DisplayContactPair(display, ContactPair(actor_id, contact))) == commentary_strings.end()) {
+					commentary_strings.insert(std::pair<DisplayContactPair, std::vector<std::vector<std::string>>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<std::vector<std::string>>()));
+					commentary_sizes.insert(std::pair<DisplayContactPair, std::vector<std::vector<int>>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<std::vector<int>>()));
+				}
+				commentary_strings[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(std::vector<std::string>());
+				commentary_sizes[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(std::vector<int>());
+				if (commentary_actions.find(DisplayContactPair(display, ContactPair(actor_id, contact))) == commentary_actions.end()) {
+					commentary_actions.insert(std::pair<DisplayContactPair, std::vector<int>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<int>()));
+				}
+				commentary_actions[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(actions_val);	
+
+				if (commentary_occurance.find(DisplayContactPair(display, ContactPair(actor_id, contact))) == commentary_occurance.end()) {
+				commentary_occurance.insert(std::pair<DisplayContactPair, std::vector<int>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<int>()));			
+				}
+				commentary_occurance[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(occurance);		
 				for (pugi::xml_node tool2 = tool1.first_child(); tool2; tool2 = tool2.next_sibling()) {
 					for (pugi::xml_attribute attr = tool2.first_attribute(); attr; attr = attr.next_attribute()) {
-						commentary_strings[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(fitStringToCommentaryBox(attr.value()));
-						commentary_sizes[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(commentary_size);						
+						if (display == "Homer") {
+							commentary_strings[DisplayContactPair(display, ContactPair(actor_id, contact))].back().push_back(fitStringToCommentaryBox(attr.value()));
+						}
+						else {
+							commentary_strings[DisplayContactPair(display, ContactPair(actor_id, contact))].back().push_back(fitStringToCommentaryBox(attr.value(), 5, sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2), false));
+						}
+						commentary_sizes[DisplayContactPair(display, ContactPair(actor_id, contact))].back().push_back(commentary_size);	
 					}
 				}
 			}
@@ -292,9 +309,14 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
     EventManagerInterface::setCurrentActorList(NULL);
     if (reset) {
         int last_state = view_state;
+	if (view_state == 1)
+		commentary_type_idx = 1;
+	else if (view_state == 2)
+		commentary_type_idx = 0;
+
         if (commentary_idx < commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))].size() && !first_level_entered) {
-            commentary[-1] = sf::Text((commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))])[commentary_idx], font);
-		commentary[-1].setCharacterSize((commentary_sizes[DisplayContactPair("Homer", ContactPair("", ""))])[commentary_idx]);
+            commentary[-1] = sf::Text((commentary_strings[DisplayContactPair("Homer", ContactPair("", ""))][commentary_idx])[commentary_type_idx], font);
+		commentary[-1].setCharacterSize((commentary_sizes[DisplayContactPair("Homer", ContactPair("", ""))][commentary_idx])[commentary_type_idx]);
             commentary[-1].setPosition(commentary_prompt.getPosition().x + commentary_prompt.getGlobalBounds().width/2 - commentary[-1].getGlobalBounds().width/2, commentary_prompt.getPosition().y + commentary_prompt.getGlobalBounds().height/2 - commentary[-1].getGlobalBounds().height/2  );
 		commentary[-1].setColor(sf::Color::Black);
             commentary_timer[-1].restart();
@@ -315,15 +337,6 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
         view_state = last_state;
     }	
 
-    if (LevelView::player == NULL) {
-        int last_state = view_state;
-        view_state = 0;
-        render(window);
-        int flowers_temp[] = {fireflowers_count[1], earthflowers_count[1], airflowers_count[1], waterflowers_count[1]};
-        LevelView::Create("LevelPlayer", state, flowers_temp);
-        view_state = last_state;
-        LevelView::cleanUp();
-    }
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && (view_state == 1 || view_state == 2 || view_state == 4)) {
         pressed = true;
@@ -370,6 +383,7 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 		            MapView::level_idx = -1;
 		            MapView::commentary_idx = 0;
 		            MapView::resetPopulationValues();
+				//std::cout << "HERE" << std::endl;
 		            LevelView::player->reset();
 		            // rest the view
 		            view_state = 0;

@@ -21,6 +21,7 @@ class MapView {
 		static int commentary_idx;
 		static bool reset;
 		static int level_idx;
+		static bool first_level_entered;
 	private:
 		static const int size;
 		static int num_levels;
@@ -43,17 +44,17 @@ class MapView {
 		static int airflowers_count[];
 		static int waterflowers_count[];
 		static std::map<int, sf::Text> commentary;
-		static std::map<DisplayContactPair, sf::Vector2f> commentary_positions;
-		static std::map<DisplayContactPair, std::vector<std::string>> commentary_strings;
-		static std::map<DisplayContactPair, int> commentary_occurance;
-		static std::map<DisplayContactPair, std::vector<int>> commentary_sizes;
+		static std::map<DisplayContactPair, std::vector<sf::Vector2f>> commentary_positions;
+		static std::map<DisplayContactPair, std::vector<std::vector<std::string>>> commentary_strings;
+		static std::map<DisplayContactPair, std::vector<int>> commentary_occurance;
+		static std::map<DisplayContactPair, std::vector<int>> commentary_actions;
+		static std::map<DisplayContactPair, std::vector<std::vector<int>>> commentary_sizes;
+		static int commentary_type_idx;
 		static int commentary_size;
-		static std::map<DisplayContactPair, int> commentary_actions;
 		static sf::Texture commentary_prompt_texture;
 		static sf::Sprite commentary_prompt;
 		static sf::Vector2f commentary_pos;
 		static bool display_commentary;
-		static bool first_level_entered;
 		static std::map<int, sf::Clock> commentary_timer;
 		static std::string fitStringToCommentaryBox(std::string str, int character_size = 0, sf::Vector2f box_size = sf::Vector2f(0,0), bool center = true);
 		static std::string flowers_string[];

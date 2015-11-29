@@ -31,8 +31,8 @@ sf::Font DialogueView::font;
 // BACKGROUND VARIABLES
 sf::Texture DialogueView::background_texture;
 sf::Sprite DialogueView::background;
-sf::RectangleShape DialogueView::backlay;
-
+//sf::RectangleShape DialogueView::backlay;
+sf::Sprite  DialogueView::backlay;
 // character art to be rendered
 sf::Texture  DialogueView::lhs_character_tex;
 sf::Sprite   DialogueView::lhs_character_sprite;
@@ -140,10 +140,10 @@ void DialogueView::Create(const char* resource, int* state){
 	unsigned int posY = Configuration::getWindowHeight()/1.4;
 
 	backlay.setPosition(posX, posY);
-	backlay.setOutlineColor(sf::Color::Black);
-	backlay.setFillColor(sf::Color::White);
-	backlay.setSize(sf::Vector2f(width, height));
-	backlay.setOutlineThickness(5);
+	//backlay.setOutlineColor(sf::Color::Black);
+	//backlay.setFillColor(sf::Color::White);
+	//backlay.setSize(sf::Vector2f(width, height));
+	//backlay.setOutlineThickness(5);
 	text.setColor(sf::Color::Black);
 	text.setPosition(posX, posY);
 
