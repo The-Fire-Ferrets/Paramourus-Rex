@@ -106,6 +106,7 @@ sf::Texture CraftView::character_tex;
 sf::Sprite  CraftView::character_sprite;
 
 sf::Texture CraftView::backlay_texture;
+sf::Vector2f CraftView::backlay_size;
 sf::Sprite CraftView::backlay;
 
 /** Creates and populates a level and all its components based on XML configuration
@@ -153,6 +154,8 @@ void CraftView::Create(const char* resource) {
         }
 		else if (!strcmp(attr.name(), "Prompt")) {
 			hints_prompt_texture.loadFromFile(("./assets/sprites/" + std::string(attr.value())).c_str());
+		}
+		else if (!strcmp(attr.name(), "Backlay")) {
 			backlay_texture.loadFromFile(("./assets/sprites/" + std::string(attr.value())).c_str());
 		}
         // Font for general text on screen
@@ -341,7 +344,21 @@ void CraftView::Create(const char* resource) {
 
 	// set text to initial greeting from Homer
     std::string str = "Phil come back to see Homer? Phil have " + std::to_string(totalFlowers) + " flowers! If Phil click on flower, Homer make more!";
-    text.setString(fitStringToDialogueBox(str));
+	int box_begin_x = backlay.getPosition().x;
+	int box_begin_y = backlay.getPosition().y;
+	int box_end_x   = box_begin_x + backlay.getGlobalBounds().width;
+	int box_end_y   = box_begin_y + backlay.getGlobalBounds().height;
+
+	int text_begin_x = text_pos.x;
+	int text_begin_y = text_pos.y;
+	int text_end_x   = box_end_x - (text_begin_x - box_begin_x);
+	int text_end_y   = box_end_y - (text_begin_y - box_begin_y);
+	backlay_size = sf::Vector2f(
+			backlay.getGlobalBounds().width - (text_begin_x-box_begin_x)*2.f,
+			backlay.getGlobalBounds().height - (text_begin_y-box_begin_y)*2.f
+			);
+
+    text.setString(fitStringToHintsBox(str, text.getCharacterSize(), backlay_size));
 
     if (!buffer.loadFromFile("./assets/music/marina-s-rhythm.ogg")) {
 	std::cout << "CraftView::Create: failed to load music" << std::endl;
@@ -550,7 +567,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	   // update text box to indicate that you cannot combine flowers
 	   else {
 	     std::cout << "CraftView::Update: Unable to craft " << selectedActor1->getId().back() << " and Flower: " << selectedActor2->getId().back() << std::endl;
-	     text.setString(fitStringToDialogueBox("Homer not think Diana-lady like those flowers, Phil. Phil try something else."));
+	     text.setString(fitStringToHintsBox("Homer not think Diana-lady like those flowers, Phil. Phil try something else.", text.getCharacterSize(), backlay_size));
 	   }
 	}
 
@@ -692,7 +709,7 @@ void CraftView::update(EventInterfacePtr e) {
 		if (sender->hasComponent(CraftableComponent::id)) {
 			// item crafting completed
 			StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
-			text.setString(fitStringToDialogueBox("Homer make Phil new " + ac->getType() + "! Phil go talk to nice Diana-lady now?"));
+			text.setString(fitStringToHintsBox("Homer make Phil new " + ac->getType() + "! Phil go talk to nice Diana-lady now?", text.getCharacterSize(), backlay_size));
 			if (ac->getType() == "SunFlower"){
 				sunFlowers++;
 			}

@@ -80,6 +80,7 @@ class CraftView  {
 
 	// backlay
 	static sf::Texture backlay_texture;
+	static sf::Vector2f backlay_size;
 	static sf::Sprite backlay;
 
 	// exit buttons
