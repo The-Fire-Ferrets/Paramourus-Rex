@@ -76,7 +76,10 @@ sf::Texture CraftView::map_texture;
 sf::Texture CraftView::diana_icon_texture;
 sf::Texture CraftView::scroll_icon_texture;
 // sf::Texture CraftView::hints_icon_texture;
-sf::RectangleShape CraftView::hints_overlay;
+//sf::RectangleShape CraftView::hints_overlay;
+sf::Texture CraftView::hints_prompt_texture;
+sf::Sprite CraftView::hints_prompt;
+int CraftView::hints_size;
 
 sf::RectangleShape CraftView::backlay;
 sf::RectangleShape CraftView::craft_button;
@@ -128,11 +131,11 @@ void CraftView::Create(const char* resource) {
         std::cout << "Filename: " << resource << " Load result: " << result.description() << std::endl;
     }
 
-    hints_overlay.setPosition(Configuration::getWindowWidth()/5.5, Configuration::getWindowHeight()/4);
-    hints_overlay.setOutlineColor(sf::Color::Black);
-    hints_overlay.setFillColor(sf::Color::White);
-    hints_overlay.setSize(sf::Vector2f(Configuration::getWindowWidth()/1.7,Configuration::getWindowHeight()/2));
-    hints_overlay.setOutlineThickness(5);
+    /* hints_overlay.setPosition(Configuration::getWindowWidth()/5.5, Configuration::getWindowHeight()/4); */
+    /* hints_overlay.setOutlineColor(sf::Color::Black); */
+    /* hints_overlay.setFillColor(sf::Color::White); */
+    /* hints_overlay.setSize(sf::Vector2f(Configuration::getWindowWidth()/1.7,Configuration::getWindowHeight()/2)); */
+    /* hints_overlay.setOutlineThickness(5); */
 
     //Used to iterate over XML file to get attributes for this display -- currently none but background
     pugi::xml_node tools = doc.child(resource);
@@ -145,6 +148,9 @@ void CraftView::Create(const char* resource) {
             background = sf::Sprite(background_texture, sf::IntRect(0, 0, Configuration::getWindowWidth(),  Configuration::getWindowHeight()));
             background.setPosition(sf::Vector2f(0,0));
         }
+		else if (!strcmp(attr.name(), "Prompt")) {
+			hints_prompt_texture.loadFromFile(("./assets/sprites/" + std::string(attr.value())).c_str());
+		}
         // Font for general text on screen
         else if (!strcmp(attr.name(), "Font")) {
             font.loadFromFile(("./assets/" + (std::string)attr.value()).c_str());
@@ -155,7 +161,7 @@ void CraftView::Create(const char* resource) {
         // Size of dialogue text
         else if (!strcmp(attr.name(), "Text_Size")) {
             text.setCharacterSize(std::strtol(attr.value(), &temp, 10));
-            hints_text.setCharacterSize((std::strtol(attr.value(), &temp, 10))/2);
+            //hints_text.setCharacterSize((std::strtol(attr.value(), &temp, 10)));
 	    flower_text.setCharacterSize(25);
 
             if (*temp != '\0') {
@@ -217,7 +223,7 @@ void CraftView::Create(const char* resource) {
   //   	    }
   //   	    hints_icon_sprite = sf::Sprite(hints_icon_texture);
 	 //    	hints_icon_sprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.15);
-		// }		
+		// }
 		else if(!strcmp(attr.name(), "Recipe_Scroll")) {
 	    if (!scroll_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
     		  std::cout << "CraftView::Create: Failed to load " << attr.value();
@@ -229,6 +235,10 @@ void CraftView::Create(const char* resource) {
 	    //recipe_scroll_sprite.setPosition(Configuration::getWindowWidth()/7,Configuration::getWindowHeight()/15);
 	    }
     }
+
+	sf::Vector2u prompt_size = hints_prompt_texture.getSize();
+	hints_prompt = sf::Sprite(hints_prompt_texture, sf::IntRect(0, 0, prompt_size.x, prompt_size.y));
+	hints_prompt.setPosition(sf::Vector2f(75, 75));
 
     //Iterates over XML to get components to add, primarily sprites to populate the screen with
     int i = 0;
@@ -276,7 +286,13 @@ void CraftView::Create(const char* resource) {
     text.setPosition(text_pos);
     text.setColor(sf::Color::Black);
     flower_text.setColor(sf::Color::Black);
-    hints_text.setPosition(hints_text_pos);
+
+	// position the hints box and text
+	sf::Vector2f hints_position = hints_prompt.getPosition();
+	sf::FloatRect hints_bounds = hints_prompt.getGlobalBounds();
+	sf::FloatRect text_bounds = hints_text.getGlobalBounds();
+	hints_text.setPosition(hints_position.x + hints_bounds.width/2.f - text_bounds.width/2.f,
+			hints_position.y + hints_bounds.height/2.f - text_bounds.height/2.f);
     hints_text.setColor(sf::Color::Black);
 
     // Backlay set off to the side to allow space for item select screens to the left
@@ -285,7 +301,7 @@ void CraftView::Create(const char* resource) {
     backlay.setFillColor(sf::Color::White);
     backlay.setSize(sf::Vector2f(Configuration::getWindowWidth()/1.3,Configuration::getWindowHeight()/4));
     backlay.setOutlineThickness(5);
-    
+
 	// map_button.setPosition(Configuration::getWindowWidth() - 110, 10);
 	// map_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/15));
 	// map_button.setFillColor(sf::Color::White);
@@ -395,7 +411,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 		  cleanUp();
         }
 
-	
+
         bool inList;
 
         // checking to see if flowers clicked on
@@ -563,13 +579,13 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 
 	// If we are in tutorial AND the hints box is visible AND the player has clicked
 	// inside the hints box or pressed space, we turn off the hints box.
-	if (hints_overlay.getGlobalBounds().contains(pos.x, pos.y) && drawHints == true){
+	if (hints_prompt.getGlobalBounds().contains(pos.x, pos.y) && drawHints == true){
 		drawHints = false;
 	}
 
 	// Return to MapView
 	if (map_icon_sprite.getGlobalBounds().contains(pos.x, pos.y) && first_click) {
-		LevelView::player->reset();	
+		LevelView::player->reset();
 		*state = 0;
 		cleanUp();
 	}
@@ -592,7 +608,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 void CraftView::returnFlower(StrongActorPtr flower){
 
 	//std::cout << "are we segfaulting here";
-  
+
       if (flower->isOfType("FireFlower")){
 	fireFlowers++;
       }
@@ -634,7 +650,7 @@ void CraftView::returnFlower(StrongActorPtr flower){
  *  Removes the given flower from the flower count upon visiting Diana
  */
 void CraftView::updateFlowerCount(std::string flower){
-    
+
       if (flower == "SunFlower"){
 	sunFlowers--;
       }
@@ -750,7 +766,7 @@ void CraftView::render(sf::RenderWindow *window) {
     window->draw(craft_button);
     window->draw(button_text);
 
-    
+
     int width = Configuration::getWindowWidth()/13.3;
 
 
@@ -769,7 +785,7 @@ void CraftView::render(sf::RenderWindow *window) {
 	else if (i == 2){
 	  flower_str = "x " + std::to_string(earthFlowers);
 	  height = Configuration::getWindowHeight()/6.67;
-	  
+
 	}
 	else if (i == 3){
 	  flower_str = "x " + std::to_string(airFlowers);
@@ -778,7 +794,7 @@ void CraftView::render(sf::RenderWindow *window) {
 	else if (i == 4){
 	  flower_str = "x " + std::to_string(sunFlowers);
 	  height = Configuration::getWindowHeight()/3.53;
-	  
+
 	}
 	else if (i == 5){
 	  flower_str = "x " + std::to_string(tulips);
@@ -809,10 +825,10 @@ void CraftView::render(sf::RenderWindow *window) {
 	flower_text.setColor(sf::Color::Black);
 	window->draw(flower_text);
     }
-    
+
     // Draw Hints if open.
     if (view_state == 2 && drawHints == true){
-    	window->draw(hints_overlay);
+    	window->draw(hints_prompt);
     	window->draw(hints_text);
     }
 
@@ -947,53 +963,117 @@ std::string CraftView::fitStringToDialogueBox(std::string str) {
  ** will fit into a single box.
  ** str: the string to rewrap
  **/
-std::string CraftView::fitStringToHintsBox(std::string str) {
-	// get dialogue box bounds
-	int box_begin_x = hints_overlay.getPosition().x;
-	int box_begin_y = hints_overlay.getPosition().x;
-	int box_end_x   = box_begin_x + hints_overlay.getSize().x;
-	int box_end_y   = box_begin_y + hints_overlay.getSize().y;
+std::string CraftView::fitStringToHintsBox(std::string str, int character_size, sf::Vector2f box_size, bool center) {
+	// get dialogue box bound
+	int width;
+	int height;
+	if (box_size.x == 0  || box_size.y == 0) {
+		width = 600;
+		height = 400;
+	}
+	else {
+		width = box_size.x;
+		height = box_size.y;
+	}
+	int beginX = 0;
+	int beginY = 0;
+	//commentary_positions.push_back(sf::Vector2f(beginX, beginY));
+	int endX = beginX+width;
+	int max_width = endX-beginX;
 
-	int text_begin_x = hints_text_pos.x;
-	int text_begin_y = hints_text_pos.y;
-	int text_end_x   = box_end_x - (text_begin_x - box_begin_x);
-	int text_end_y   = box_end_y - (text_begin_y - box_begin_y);
+	int endY = beginY+height;
+	int max_height = (endY-beginY);
 
-	int max_width = text_end_x - text_begin_x;
-
-	// text object used to see how close each word puts us to the bounds
-	sf::Text temp;
-	temp.setFont(font);
-	temp.setCharacterSize(hints_text.getCharacterSize());
-
-	// current string and width
-	std::string fitted_string = "";
-	float current_width = 0.f;
-	float word_width = 0.f, word_height = 0.f;
-
-	// split the dialogue into words;
-	std::vector<std::string> words = split(str, ' ');
-
-	// for each word...
-	for (std::string word : words) {
-		// get the bounding box
-		temp.setString(word + " ");
-		word_width = temp.findCharacterPos(temp.getString().getSize()).x;
-
-		// will it go past the horizontal bound?
-		if (current_width + word_width > max_width) {
-			fitted_string += "\n" + word + " ";
-			current_width = word_width;
-		}
-		else {
-			// just add to string
-			fitted_string += word + " ";
-			current_width += word_width;
-		}
+	//To figure out correct size
+	bool size_found = false;
+	std::vector<std::string> boxes;
+	std::string fitted_string;
+	int curr_size;
+	if (character_size <= 0) {
+		curr_size = 20;
+		character_size = 20;
+		hints_text.setCharacterSize(character_size);
+	}
+	else {
+		curr_size = character_size;
+		character_size = 1;
 	}
 
+	while (!size_found && curr_size > 0 && character_size-- > 0) {
+		// text object used to see how close each word puts us to the bounds
+		sf::Text temp;
+		temp.setFont(font);
+		temp.setCharacterSize(curr_size);
+		// current string and width
+		fitted_string = "";
+		std::string next_line = "";
+		float current_width = 0.f;
+		float space_width = 0.f, word_width = 0.f, word_height = 0.f;
+
+		//gET WIDTH OF SPACE CHARACTER
+		temp.setString(" ");
+		space_width = temp.findCharacterPos(temp.getString().getSize()).x;
+		// split the dialogue into words;
+		std::vector<std::string> words = split(str, ' ');
+
+		// for each word...
+		for (std::string word : words) {
+			// get the bounding box
+			temp.setString(word + " ");
+			word_width = temp.findCharacterPos(temp.getString().getSize()).x;
+			word_height = temp.findCharacterPos(temp.getString().getSize()).y;
+
+			// will it go past the horizontal bound?
+			if (current_width + word_width > max_width) {
+				if (center) {
+					int num_spaces = (int) ((max_width - current_width)/2)/space_width;
+					for (int s_num = 0; s_num < num_spaces; s_num++)
+						next_line = " " + next_line + " ";
+				}
+
+				fitted_string += next_line + "\n";
+				next_line = word + " ";
+				current_width = word_width;
+			}
+			else {
+				// just add to string
+				next_line += word + " ";
+				current_width += word_width;
+				size_found = true;
+			}
+
+			// general word height (changes, hence the max)
+			sf::FloatRect bounds = temp.getGlobalBounds();
+			int line_spacing = font.getLineSpacing(temp.getCharacterSize());
+			word_height = std::max(bounds.height-bounds.top+line_spacing, word_height);
+
+			// the height of the full string so far
+			temp.setString(fitted_string);
+			float full_height = temp.getGlobalBounds().height - temp.getGlobalBounds().top;
+
+			// will it go past the vertical bound?
+			if (max_height - full_height < word_height) {
+				curr_size--;
+				size_found = false;
+				break;
+			}
+		}
+		if (center) {
+			int num_spaces = (int) ((max_width - current_width)/2)/space_width;
+			for (int s_num = 0; s_num < num_spaces; s_num++)
+				next_line = " " + next_line + " ";
+		}
+		fitted_string += next_line + "\n";
+	}
+	boxes.push_back(fitted_string);
 	// done
-	return fitted_string;
+	if (curr_size <= 0) {
+		hints_size = 0;
+		return "";
+	}
+	hints_size = curr_size;
+	return boxes.front();
+
 }
 
 /** Clears out the player's inventory.
