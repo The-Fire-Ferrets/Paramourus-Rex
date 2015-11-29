@@ -418,7 +418,7 @@ void LevelView::generateActor(pugi::xml_node* elem, int* state, int generate) {
 			if (!strcmp(elem->name(), "WaterFlower") || !strcmp(elem->name(), "EarthFlower") || !strcmp(elem->name(), "FireFlower") || !strcmp(elem->name(), "AirFlower")) 
 				flowers_left -= generate;
 			generate = (std::strtol(attr.value(), &temp, 10));
-			if (!strcmp(elem->name(), "WaterFlower") || !strcmp(elem->name(), "EarthFlower") || !strcmp(elem->name(), "FireFlower") || !strcmp(elem->name(), "AirFlower")) gameView.setCenter(Configuration::getGameViewCenter());
+			if (!strcmp(elem->name(), "WaterFlower") || !strcmp(elem->name(), "EarthFlower") || !strcmp(elem->name(), "FireFlower") || !strcmp(elem->name(), "AirFlower"))
 				flowers_left += generate;
 			if (*temp != '\0') {
 				std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
