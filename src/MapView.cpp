@@ -96,6 +96,7 @@ void MapView::Create(const char* resource) {
 	first_level_entered = false;
 	level_idx = -1;
 	pressed = true;
+	reset = true;
 	num_levels = 0;
     if (!(result = doc.load_file(("./assets/" + resource_str + ".xml").c_str()))) {
         std::cout << "LevelView::CreateLevel(...): Failed to load" << std::endl;

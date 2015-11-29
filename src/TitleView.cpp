@@ -117,6 +117,9 @@ void TitleView::update(sf::RenderWindow *window, int* state, float time) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
 	    if (playbutton.getGlobalBounds().contains(pos.x, pos.y)) {
+		//Loads the map
+		const char* map = {"Map"};	
+		MapView::Create(map);
 		view_state = 0;
 		MapView::level_idx = -1;
 		LevelView::player = NULL;
@@ -145,6 +148,9 @@ void TitleView::update(sf::RenderWindow *window, int* state, float time) {
 			view_state = 1;
 				}
 		else if (tutorialbutton.getGlobalBounds().contains(pos.x, pos.y)) {
+			//Loads the map
+			const char* map = {"Map"};	
+			MapView::Create(map);
 			view_state = 0;
 			MapView::commentary_idx = 0;
 			MapView::level_idx = -1;
