@@ -85,6 +85,7 @@ int* LevelView::game_state;
 // pause screen medium map
 bool LevelView::pause_key_pressed = false;
 bool LevelView::back_key_pressed = false;
+bool LevelView::call_key_pressed = false;
 bool LevelView::vases_full = false;
 sf::Text LevelView::title;
 std::string LevelView::title_text;
@@ -123,9 +124,11 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	reveal_homer = false;
 	pause_key_pressed = false;
 	back_key_pressed = false;
+	call_key_pressed = false;
 	vases_full = false;
 	inVision = 0;
 	flashing = 0;
+	actions.clear();
 	commentary_positions.clear();
 	commentary_strings.clear();
 	commentary_actions.clear();
@@ -327,8 +330,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 				//std::cout << tool1.name() << std::endl;
 				actions.push_back(std::vector<pugi::xml_node>());
 				for (pugi::xml_node tool2 = tool1.first_child(); tool2; tool2 = tool2.next_sibling()) {
-					pugi::xml_node temp = tool2;
-					actions.back().push_back(temp);
+					actions.back().push_back(tool2);
 				}
 			}
 		}
@@ -501,6 +503,14 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
 		back_key_pressed = false;
 	}
+
+	// should we pause the screen?
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && !call_key_pressed && (view_state == 1)) {
+		call_key_pressed = true;
+		EventInterfacePtr event;
+		event.reset(new ContactEvent(0.f, player->getInstance(), -1));
+		update(event);
+	}
 	
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && view_state == 0 && ready_to_play && !space_pressed) {
@@ -620,7 +630,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 
 		//Check to see if conditions met to display back button
 		//std::cout << flowers_left << " " << vases_full << " " << inVision << std::endl; 
-		if ((flowers_left <= 0 || vases_full) && inVision <= 0) {
+		if ((flowers_left <= 0 || vases_full || call_key_pressed) && inVision <= 0) {
 			if (view_state == 2 && last_action == -1)
 				reveal_homer = true;
 			else if (view_state != 2) {
@@ -706,21 +716,24 @@ void LevelView::update(EventInterfacePtr e) {
 				ActorId display_id = itr_cs->first.first;
 				ActorId actor_id = itr_cs->first.second.first;
 				ActorId contact_id = itr_cs->first.second.second;
-				if (actor_ptr == NULL && contact_ptr == NULL && display_id == "Homer" && contact_id == "") {
+				//std::cout << "HERE1" << std::endl;
+				if (actor_ptr == NULL && contact_ptr == NULL && (display_id == "Homer" || display_id == "Player")  && contact_id == "") {
 					found  = true;
 				}
-				else if (actor_ptr == NULL && display_id == "Homer") {
+				else if (actor_ptr == NULL && contact_ptr != NULL && display_id == "Homer") {
 					if (contact_ptr->isOfType(contact_id))
 						found = true;
 				}
-				else if (contact_ptr == NULL && contact_id == "") {
+				else if (contact_ptr == NULL && actor_ptr != NULL && contact_id == "") {
 					if (actor_ptr->isOfType(actor_id))
 						found = true;
 				}
-				else if (actor_ptr->isOfType(actor_id) && contact_ptr->isOfType(contact_id)) {
-					found = true;
+				else if (actor_ptr != NULL && contact_ptr != NULL ) {
+					if (actor_ptr->isOfType(actor_id) && contact_ptr->isOfType(contact_id))
+						found = true;
 				}
 				if (found) {
+					//std::cout << "HERE2" << std::endl;
 					int count = -1;
 					int temp_count = -1;
 					for (auto itr_occ = commentary_occurance[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))].begin(); itr_occ != commentary_occurance[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))].end(); itr_occ++) {
@@ -736,19 +749,23 @@ void LevelView::update(EventInterfacePtr e) {
 						}
 					}
 					if (count >= 0) {
+						//std::cout << "HERE3" << std::endl;
 						int action = commentary_actions[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))][count];
 						last_action = action;
 						if (action >= 0) {
 							for (auto action_itr = actions[action].begin(); action_itr != actions[action].end(); action_itr++) {
+								//std::cout << "GENERATED" << std::endl;
 								pugi::xml_node temp = *action_itr;
 								if (!strcmp(temp.name(), "FireFlower") || !strcmp(temp.name(), "EarthFlower") || !strcmp(temp.name(), "WaterFlower") || !strcmp(temp.name(), "AirFlower"))
 									flowers_left++;
+								//std::cout << "GENERATED2" << std::endl;
 								generateActor(&(temp), game_state);
 							}
 						}
 						else if (action == -1) {
 							reveal_homer = true;
 						}
+						//std::cout << "HERE4" << std::endl;
 						int r = rand() % (itr_cs->second)[count].size();
 						if (display_id == "Homer") {
 							commentary[-1] = sf::Text(((itr_cs->second)[count])[r], font);
@@ -760,6 +777,7 @@ void LevelView::update(EventInterfacePtr e) {
 							received_new_commentary = true;
 						}
 						else {
+							//std::cout << "Here4 " << display_id << " " << actor_id << " " << contact_id << " " << action << " " << ((itr_cs->second)[count])[r] <<  std::endl;
 							commentary[e->getSender()] = sf::Text(((itr_cs->second)[count])[r], font);
 							commentary[e->getSender()].setCharacterSize((commentary_sizes[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))]).back());
 							commentary_timer[e->getSender()].restart();
@@ -807,7 +825,7 @@ void LevelView::render(sf::RenderWindow *window) {
 		for (it = actorList.begin(); it != actorList.end(); it++) {
 			if (homer != *it) {
 				(*it)->render(window, false);
-				if ((view_state == 2 && commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 30) || (commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 4))
+				if ((commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 4))
 					window->draw(commentary[(*it)->getInstance()]);
 			}
 		}
@@ -860,7 +878,11 @@ void LevelView::render(sf::RenderWindow *window) {
 			// actual rendering
 			window->draw(background);
 			for (it = actorList.begin(); it != actorList.end(); it++)
-				(*it)->render(window, true);
+				if (!(*it)->isOfType("Homer")) {
+					(*it)->render(window, true);
+				}
+			if (reveal_homer)
+				homer->render(window, true);
 			player->render(window, true);
 		}
 
