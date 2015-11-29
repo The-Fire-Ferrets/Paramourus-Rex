@@ -2,10 +2,10 @@
 <Level6 Dialogues = "2" Background = "WateringHoleBg.png" Flower = "Rose" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30">
   <Correct>
      <Dialogue Speaker = "Diana" Text="You know, Phil... I actually have something I've been wanting to talk to you about. I'm... really glad you ended up moving back to the valley. And I'm really glad that you ended up staying. It's a good to have someone to talk to nowadays. I'd actually like to talk to you more... I've kind of had a huge crush on you for a while. I was hoping that you would go out with me some time?"/>
-      <Dialogue Speaker = "Narrator" Text="You've truly shown Diana you care! She seems quite smitten."/>
+      <Dialogue Speaker = "PlayerWin" Text="You've truly shown Diana you care! She seems quite smitten."/>
   </Correct>
   <Incorrect>
     <Dialogue Speaker = "Diana" Text="Oh, hey, Phil... Nice of you to stop by. I'm glad you're here, actually. I wanted to let you know that I think this is all getting to be just a little too much for me. I have a few cousins who live in the mountains a ways off, and I think I'm going to go live with them. I'm tired of all the other guys here bugging me. I figured I'd let you know before I headed out. It was nice knowing you, Phil. It's too bad we couldn't really reconnect since you came back."/>
-    <Dialogue Speaker = "Narrator" Text="You can't win 'em all, Phil. Play Again?" />
+    <Dialogue Speaker = "PlayerLose" Text="You can't win 'em all, Phil. Play Again?" />
   </Incorrect>
 </Level6>

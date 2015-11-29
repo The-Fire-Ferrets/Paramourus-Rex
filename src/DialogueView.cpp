@@ -42,6 +42,7 @@ sf::Sprite   DialogueView::rhs_character_sprite;
 
 bool DialogueView::pressed = false;
 bool DialogueView::player_response = false;
+bool DialogueView::draw_overlay = true;
 
 // dialogue music
 sf::SoundBuffer DialogueView::buffer;
@@ -202,7 +203,7 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 			pressed = true;
 			std::cout << index << " " << boxes.size() << std::endl;
 			// if we are at least at one of Diana's two responses to your answer
-			if (index >= boxes.size()){
+			if (index >= boxes.size() && draw_overlay == true){
 				// stop displaying text, wait for user response before closing dialogueview
 			      if (view_state == 1) {
 					if (name != "TimeOut") {
@@ -230,13 +231,23 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 				 	rhs_character_tex.loadFromFile("./assets/sprites/Diana-Neutral.png");
 					player_response = true;
 				}
-        else if (boxes[index].first == "Diana") {
+			else if (boxes[index].first == "Diana") {
 				 	rhs_character_tex.loadFromFile("./assets/sprites/Diana-Neutral.png");
-        }
-        else {
-					std::cout << "Load ./assets/sprites/" + boxes[index].first + ".png" << std::endl;
-					rhs_character_tex.loadFromFile("./assets/sprites/" + boxes[index].first + ".png");
-				}
+			 }
+			else if (boxes[index].first == "PlayerWin"){
+			      background_texture.loadFromFile("./assets/backgrounds/PlayerWin.png");
+			      // wait here for input from player to either close the game or to start over
+			      draw_overlay=false;
+			 }
+			else if (boxes[index].first == "PlayerLose"){
+			      background_texture.loadFromFile("./assets/backgrounds/PlayerLose.png");
+			      draw_overlay = false;
+
+			}
+			else {
+				std::cout << "Load ./assets/sprites/" + boxes[index].first + ".png" << std::endl;
+				rhs_character_tex.loadFromFile("./assets/sprites/" + boxes[index].first + ".png");
+			}
 				unsigned int width = Configuration::getWindowWidth()/1.05;
 				unsigned int posX = Configuration::getWindowWidth()/40;
 				unsigned int posY = Configuration::getWindowHeight()/1.4;
@@ -252,6 +263,24 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 		else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)){
 			pressed = false;
 		}
+	}
+	
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && draw_overlay == false){
+	 	// reset ongoing game state
+		CraftView::total_craft_visits = 1;
+		CraftView::clearInventory();
+		DialogueView::num_times_impressed = 0;
+		MapView::level_idx = -1;
+		MapView::commentary_idx = 0;
+		MapView::resetPopulationValues();
+		LevelView::player->reset();
+		// rest the view
+		view_state = 0;
+		*state = 5; 
+	}
+	
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && draw_overlay == false){
+	    // shut down the application
 	}
 	// wait for player to choose dialogue option 1 or 2 embedded in text
 	// update Diana's opinion, then end dialogueView accordingly
@@ -319,11 +348,14 @@ void DialogueView::update(EventInterfacePtr e){
 // Draws the dialogue, Diana and Phil
 void DialogueView::render(sf::RenderWindow *window){
 	window->draw(background);
-	window->draw(backlay);
-	window->draw(text);
-	// once Diana and Phil sprites are finished, will be rendered here as well
-	window->draw(lhs_character_sprite);
-	window->draw(rhs_character_sprite);
+	
+	if (draw_overlay == true){
+	    window->draw(backlay);
+	    window->draw(text);
+	    // once Diana and Phil sprites are finished, will be rendered here as well
+	    window->draw(lhs_character_sprite);
+	    window->draw(rhs_character_sprite);
+	}
 }
 
 /** Play nice with the resources...
