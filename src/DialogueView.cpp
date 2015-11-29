@@ -31,7 +31,9 @@ sf::Font DialogueView::font;
 // BACKGROUND VARIABLES
 sf::Texture DialogueView::background_texture;
 sf::Sprite DialogueView::background;
-sf::RectangleShape DialogueView::backlay;
+//sf::RectangleShape DialogueView::backlay;
+sf::Texture DialogueView::backlay_texture;
+sf::Sprite DialogueView::backlay;
 
 // character art to be rendered
 sf::Texture  DialogueView::lhs_character_tex;
@@ -92,6 +94,9 @@ void DialogueView::Create(const char* resource, int* state){
 			background = sf::Sprite(background_texture, sf::IntRect(0, 0, Configuration::getWindowWidth(), Configuration::getWindowHeight()));
 			background.setPosition(sf::Vector2f(0,0));
 		}
+		else if (!strcmp(attr.name(), "Backlay")) {
+			backlay_texture.loadFromFile(("./assets/sprites/" + std::string(attr.value())).c_str());
+		}
 		else if (!strcmp(attr.name(), "Font")) {
 			font.loadFromFile(("./assets/" + (std::string)attr.value()).c_str());
 			text.setFont(font);
@@ -140,11 +145,12 @@ void DialogueView::Create(const char* resource, int* state){
 	unsigned int posX = Configuration::getWindowWidth()/40;
 	unsigned int posY = Configuration::getWindowHeight()/1.4;
 
+	sf::Vector2u backlay_size = backlay_texture.getSize();
+	backlay = sf::Sprite(backlay_texture, sf::IntRect(0, 0, backlay_size.x, backlay_size.y));
 	backlay.setPosition(posX, posY);
-	backlay.setOutlineColor(sf::Color::Black);
-	backlay.setFillColor(sf::Color::White);
-	backlay.setSize(sf::Vector2f(width, height));
-	backlay.setOutlineThickness(5);
+	backlay.setScale((Configuration::getWindowWidth()/1.05) / backlay_size.x,
+			(Configuration::getWindowHeight()/4.0) / backlay_size.y);
+
 	text.setColor(sf::Color::Black);
 	text.setPosition(posX, posY);
 
