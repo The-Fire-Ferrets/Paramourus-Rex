@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<LevelPlayer Name = "Player Initialization" Background = "Level0.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "10" Duration = "100000" TitleSprite = "BackButton.png" TitleHeight = "10" TitleWidth = "10">
+<LevelPlayer Name = "Player Initialization" Background = "Level0.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "10" Duration = "100000" TitleSprite = "BackButton.png" TitleHeight = "10" TitleWidth = "10" Prompt = "Prompt.png">
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<InputComponent>

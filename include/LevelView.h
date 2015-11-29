@@ -49,7 +49,13 @@ class LevelView  {
 		static std::map<DisplayContactPair, std::vector<int>> commentary_occurance;
 		static std::map<DisplayContactPair, std::vector<int>> commentary_actions;
 		static std::map<int, sf::Clock> commentary_timer;
-		static std::string fitStringToCommentaryBox(std::string str);
+		static sf::Texture commentary_prompt_texture;
+		static sf::Sprite commentary_prompt;
+		static sf::Vector2f commentary_pos;
+		static int commentary_size;
+		static std::map<DisplayContactPair, std::vector<int>> commentary_sizes;
+		static bool display_commentary;
+		static std::string fitStringToCommentaryBox(std::string str, int character_size = 0, sf::Vector2f box_size = sf::Vector2f(0,0), bool center = true);
 		static sf::Text title;
 		static std::string title_text;
 		static sf::Text load_state;
@@ -77,6 +83,8 @@ class LevelView  {
 		static std::string back_message_text;
 		static std::string back_question_text;
 		static int last_state;
+		static bool space_pressed;
+		static bool received_new_commentary;
 
 	public:
 		static void generateActor(pugi::xml_node* elem, int* state, int generate = 1);

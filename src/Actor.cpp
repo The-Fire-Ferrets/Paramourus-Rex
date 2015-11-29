@@ -71,8 +71,10 @@ Actor::~Actor(void) {
 bool Actor::Init(pugi::xml_node* elem) {
 	char* temp;
 	for (pugi::xml_attribute attr = elem->first_attribute(); attr; attr = attr.next_attribute()) {
-		if (!strcmp(attr.name(),"Type"))
+		if (!strcmp(attr.name(),"Type")) {
+			id.push_back(elem->name());
 			id.push_back(attr.value());
+		}
 		else if (!strcmp(attr.name(),"PathType")) {
 			path_type  = std::strtol(attr.value(), &temp, 10);
 			if (*temp != '\0') {

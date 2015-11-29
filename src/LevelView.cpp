@@ -57,6 +57,12 @@ std::map<int, sf::Clock> LevelView::commentary_timer;
 bool LevelView::commentary_change = true;
 std::vector<std::vector<pugi::xml_node>> LevelView::actions;
 pugi::xml_document LevelView::doc;
+sf::Texture LevelView::commentary_prompt_texture;
+sf::Sprite LevelView::commentary_prompt;
+sf::Vector2f LevelView::commentary_pos;
+int LevelView::commentary_size;
+std::map<DisplayContactPair, std::vector<int>> LevelView::commentary_sizes;
+bool LevelView::display_commentary;
 //Back Button
 sf::Sprite LevelView::back_button;
 sf::Texture LevelView::title_texture;
@@ -94,6 +100,8 @@ std::string LevelView::back_message_text;
 std::string LevelView::back_question_text;
 int LevelView::last_state;
 StrongActorPtr LevelView::homer;
+bool LevelView::space_pressed;
+bool LevelView::received_new_commentary;
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -122,6 +130,9 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	commentary_occurance.clear();
 	commentary_timer.clear();
 	commentary.clear();
+	commentary_pos = sf::Vector2f(-1000, -1000);
+	display_commentary = false;
+	received_new_commentary = false;
 	game_state = state;
 	//Error check to see if file was loaded correctly
 	pugi::xml_parse_result result;
@@ -152,6 +163,9 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			minimap_background_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
 			minimap_background = sf::Sprite(minimap_background_texture);
 			minimap_background.setScale(Configuration::getWindowWidth()/10.f, Configuration::getWindowHeight()/10.f);
+		}
+		else if (!strcmp(attr.name(), "Prompt")) {
+		    commentary_prompt_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
 		}
 		else if (!strcmp(attr.name(), "TitleSprite")) {
 		    title_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str());
@@ -214,6 +228,9 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	title.setColor(sf::Color::Black);
 	load_state = sf::Text(load_text, font, 25);
 	load_state.setColor(sf::Color::Black);
+
+	commentary_prompt = sf::Sprite(commentary_prompt_texture, sf::IntRect(0, 0, commentary_prompt_texture.getSize().x, commentary_prompt_texture.getSize().y));
+	commentary_prompt.setScale(1.0 * Configuration::getGameViewWidth() / Configuration::getWindowWidth(), 1.0 * Configuration::getGameViewHeight() / Configuration::getWindowHeight());
 
 	title.setPosition(Configuration::getWindowWidth()/2 - title.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 - title.getGlobalBounds().height - 10);
 
@@ -282,9 +299,10 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 				}
 				if (commentary_strings.find(DisplayContactPair(display, ContactPair(actor_id, contact))) == commentary_strings.end()) {
 					commentary_strings.insert(std::pair<DisplayContactPair, std::vector<std::vector<std::string>>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<std::vector<std::string>>()));
+					commentary_sizes.insert(std::pair<DisplayContactPair, std::vector<int>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<int>()));
 				}
 				commentary_strings[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(std::vector<std::string>());
-
+				commentary_sizes[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(5);
 				if (commentary_actions.find(DisplayContactPair(display, ContactPair(actor_id, contact))) == commentary_actions.end()) {
 					commentary_actions.insert(std::pair<DisplayContactPair, std::vector<int>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<int>()));
 				}
@@ -296,7 +314,13 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 				commentary_occurance[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(occurance);		
 				for (pugi::xml_node tool2 = tool1.first_child(); tool2; tool2 = tool2.next_sibling()) {
 					for (pugi::xml_attribute attr = tool2.first_attribute(); attr; attr = attr.next_attribute()) {
-						commentary_strings[DisplayContactPair(display, ContactPair(actor_id, contact))].back().push_back(fitStringToCommentaryBox(attr.value()));
+						if (display == "Homer") {
+							commentary_strings[DisplayContactPair(display, ContactPair(actor_id, contact))].back().push_back(fitStringToCommentaryBox(attr.value()));
+						}
+						else {
+							commentary_strings[DisplayContactPair(display, ContactPair(actor_id, contact))].back().push_back(fitStringToCommentaryBox(attr.value(), 5, sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2), false));
+						}
+						commentary_sizes[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(commentary_size);	
 					}
 				}
 			}
@@ -375,7 +399,8 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	for (it = actorList.begin(); it != actorList.end(); it++) {
 		(*it) ->PostInit();
 	}
-	
+	gameView.setCenter(Configuration::getGameViewCenter());
+	commentary_prompt.setPosition(sf::Vector2f(Configuration::getGameViewPosition().x + (75 * commentary_prompt.getScale().x),Configuration::getGameViewPosition().y + (75 * commentary_prompt.getScale().y)));
 	//Sets up sound
 	sound.setBuffer(buffer);
 	sound.setLoop(true);
@@ -395,7 +420,7 @@ void LevelView::generateActor(pugi::xml_node* elem, int* state, int generate) {
 			if (!strcmp(elem->name(), "WaterFlower") || !strcmp(elem->name(), "EarthFlower") || !strcmp(elem->name(), "FireFlower") || !strcmp(elem->name(), "AirFlower")) 
 				flowers_left -= generate;
 			generate = (std::strtol(attr.value(), &temp, 10));
-			if (!strcmp(elem->name(), "WaterFlower") || !strcmp(elem->name(), "EarthFlower") || !strcmp(elem->name(), "FireFlower") || !strcmp(elem->name(), "AirFlower")) 
+			if (!strcmp(elem->name(), "WaterFlower") || !strcmp(elem->name(), "EarthFlower") || !strcmp(elem->name(), "FireFlower") || !strcmp(elem->name(), "AirFlower")) gameView.setCenter(Configuration::getGameViewCenter());
 				flowers_left += generate;
 			if (*temp != '\0') {
 				std::cout << "LevelView::Create: Error reading attribute for " << attr.name() << std::endl;
@@ -460,7 +485,11 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 			duration = timer_time;
 		}
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && view_state == 0 && ready_to_play) {
+	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+		pause_key_pressed = false;
+	}
+	
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && view_state == 0 && ready_to_play && !space_pressed) {
 		if (name == "Tutorial") {
 			view_state = 2;
 			EventInterfacePtr event;
@@ -470,9 +499,14 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		else {
 			view_state = 1;
 		}
+		space_pressed = true;
 	}
-	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
-		pause_key_pressed = false;
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && display_commentary && !space_pressed) {
+		space_pressed = true;
+		display_commentary = false;
+	}
+	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		space_pressed = false;
 	}
 
 	//Checks to see if back button has been selected
@@ -511,7 +545,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	} 
 
 	//If still rendering paths return
-	if (view_state == 0 || view_state == 4 || view_state == 3) {
+	if (view_state == 0 || view_state == 4 || view_state == 3 || display_commentary) {
 		level_clock.restart();
 		return;
 	}
@@ -566,9 +600,9 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 			}
 			commentary[(*it)->getInstance()].setPosition((*it)->getPosition() + (*it)->getSize());
 		}
-		sf::Vector2f homer_commentary_pos(Configuration::getGameViewPosition().x, Configuration::getGameViewPosition().y + 10);	
-		commentary[-1].setPosition(homer_commentary_pos);
+		commentary[-1].setPosition(sf::Vector2f(commentary_prompt.getPosition().x + commentary_prompt.getGlobalBounds().width/2 - commentary[-1].getGlobalBounds().width/2, commentary_prompt.getPosition().y + commentary_prompt.getGlobalBounds().height/2 - commentary[-1].getGlobalBounds().height/2));
 		gameView.setCenter(Configuration::getGameViewCenter());
+		commentary_prompt.setPosition(sf::Vector2f(Configuration::getGameViewPosition().x + (75 * commentary_prompt.getScale().x),Configuration::getGameViewPosition().y + (75 * commentary_prompt.getScale().y)));
 
 		//Check to see if conditions met to display back button
 		//std::cout << flowers_left << " " << vases_full << " " << inVision << std::endl; 
@@ -591,7 +625,8 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		timer.setPosition(gameView_bottom_corner);
 	}
 
-	//Places the timeout sprite
+	//Places the time
+		//Geout sprite
 	timeout_sprite.setPosition(sf::Vector2f(Configuration::getGameViewPosition().x, Configuration::getGameViewPosition().y));
 	
 	//Determines when to flash the screen when nearing timeout
@@ -599,6 +634,10 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		if ( (timer_time/1000 > 9.9 && timer_time/1000 <= 10) || (timer_time/1000 > 5.9 && timer_time/1000 <= 6) || (timer_time/1000 > 3.9 && timer_time/1000 <= 4) || (timer_time/1000 > 2.9 && timer_time/1000 <= 3) || (timer_time/1000 > 1.9 && timer_time/1000 <= 2) || (timer_time/1000 > .9 && timer_time/1000 <= 1) || (timer_time/1000 <= 0)) {
 			flashing = 1;
 		}
+	}
+	if (received_new_commentary) {
+		received_new_commentary = false;
+		display_commentary = true;
 	}
 	
 }
@@ -649,7 +688,6 @@ void LevelView::update(EventInterfacePtr e) {
 				ActorId display_id = itr_cs->first.first;
 				ActorId actor_id = itr_cs->first.second.first;
 				ActorId contact_id = itr_cs->first.second.second;
-
 				if (actor_ptr == NULL && contact_ptr == NULL && display_id == "Homer" && contact_id == "") {
 					found  = true;
 				}
@@ -674,6 +712,10 @@ void LevelView::update(EventInterfacePtr e) {
 							count = temp_count;
 							break;
 						}
+						else if (*itr_occ < 0) {
+							count = 0;
+							break;
+						}
 					}
 					if (count >= 0) {
 						int action = commentary_actions[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))][count];
@@ -691,11 +733,17 @@ void LevelView::update(EventInterfacePtr e) {
 						}
 						int r = rand() % (itr_cs->second)[count].size();
 						if (display_id == "Homer") {
-							commentary[-1] = sf::Text(((itr_cs->second)[count])[r], font, 5);
+							commentary[-1] = sf::Text(((itr_cs->second)[count])[r], font);
+							commentary[-1].setCharacterSize((commentary_sizes[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))])[count]);
+							commentary[-1].setColor(sf::Color::Black);
+							commentary[-1].setPosition(sf::Vector2f(commentary_prompt.getPosition().x + commentary_prompt.getGlobalBounds().width/2 - commentary[-1].getGlobalBounds().width/2, commentary_prompt.getPosition().y + commentary_prompt.getGlobalBounds().height/2 - commentary[-1].getGlobalBounds().height/2));		
 							commentary_timer[-1].restart();
+							duration = timer_time;
+							received_new_commentary = true;
 						}
 						else {
-							commentary[e->getSender()] = sf::Text(((itr_cs->second)[count])[r], font, 5);
+							commentary[e->getSender()] = sf::Text(((itr_cs->second)[count])[r], font);
+							commentary[e->getSender()].setCharacterSize((commentary_sizes[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))]).back());
 							commentary_timer[e->getSender()].restart();
 						}
 						break;
@@ -758,13 +806,17 @@ void LevelView::render(sf::RenderWindow *window) {
 					window->draw(commentary[(*it)->getInstance()]);
 			}
 		}
-		if ((view_state == 2 && commentary_timer[-1].getElapsedTime().asSeconds() < 30) || (commentary_timer[-1].getElapsedTime().asSeconds() < 4))
-			window->draw(commentary[-1]);
 
 		if (reveal_homer)
 			homer->render(window, false);
 
 		player->render(window, false);
+
+		if (((view_state == 2 && commentary_timer[-1].getElapsedTime().asSeconds() < 30) || commentary_timer[-1].getElapsedTime().asSeconds() < 4) && display_commentary) {
+			window->draw(commentary_prompt);
+			window->draw(commentary[-1]);
+		}
+
 		window->draw(back_button);
 		window->draw(timer);
 		
@@ -871,10 +923,18 @@ void LevelView::quit(void) {
 
 
 //Helper function to print hints correctly
-std::string LevelView::fitStringToCommentaryBox(std::string str) {
+std::string LevelView::fitStringToCommentaryBox(std::string str, int character_size, sf::Vector2f box_size, bool center) {
 	// get dialogue box bound
-	int width = Configuration::getGameViewWidth() / 2;
-	int height = Configuration::getGameViewHeight();
+	int width;
+	int height;
+	if (box_size.x == 0  || box_size.y == 0) {
+		width = Configuration::getGameViewWidth() * (1.0 * commentary_prompt_texture.getSize().x / Configuration::getWindowWidth()); 
+		height = Configuration::getGameViewHeight() * (1.0 * commentary_prompt_texture.getSize().y / Configuration::getWindowHeight());
+	}
+	else {
+		width = box_size.x;
+		height = box_size.y;
+	}
 	int beginX = 0;
 	int beginY = 0;
 	//commentary_positions.push_back(sf::Vector2f(beginX, beginY));
@@ -884,54 +944,92 @@ std::string LevelView::fitStringToCommentaryBox(std::string str) {
 	int endY = beginY+height;
 	int max_height = (endY-beginY);
 
-	// text object used to see how close each word puts us to the bounds
-	sf::Text temp;
-	temp.setFont(font);
-	temp.setCharacterSize(commentary.begin()->second.getCharacterSize());
-
-	// current string and width
+	//To figure out correct size
+	bool size_found = false;
 	std::vector<std::string> boxes;
-	std::string fitted_string = "";
-	float current_width = 0.f;
-	float word_width = 0.f, word_height = 0.f;
-	// split the dialogue into words;
-	std::vector<std::string> words = split(str, ' ');
+	std::string fitted_string;
+	int curr_size;
+	if (character_size <= 0) {
+		curr_size = 50;
+		character_size = 50;
+	}
+	else {
+		curr_size = character_size;
+		character_size = 1;
+	}
 
-	// for each word...
-	for (std::string word : words) {
-		// get the bounding box
-		temp.setString(word + " ");
-		word_width = temp.findCharacterPos(temp.getString().getSize()).x;
+	while (!size_found && curr_size > 0 && character_size-- > 0) {
+		// text object used to see how close each word puts us to the bounds
+		sf::Text temp;
+		temp.setFont(font);
+		temp.setCharacterSize(curr_size);
+		// current string and width
+		fitted_string = "";
+		std::string next_line = "";
+		float current_width = 0.f;
+		float space_width = 0.f, word_width = 0.f, word_height = 0.f;
 
-		// general word height (changes, hence the max)
-		sf::FloatRect bounds = temp.getGlobalBounds();
-		int line_spacing = font.getLineSpacing(temp.getCharacterSize());
-		word_height = std::max(bounds.height-bounds.top+line_spacing, word_height);
+		//gET WIDTH OF SPACE CHARACTER
+		temp.setString(" ");
+		space_width = temp.findCharacterPos(temp.getString().getSize()).x;
+		// split the dialogue into words;
+		std::vector<std::string> words = split(str, ' ');
 
-		// the height of the full string so far
-		temp.setString(fitted_string);
-		float full_height = temp.getGlobalBounds().height - temp.getGlobalBounds().top;
+		// for each word...
+		for (std::string word : words) {
+			// get the bounding box
+			temp.setString(word + " ");
+			word_width = temp.findCharacterPos(temp.getString().getSize()).x;
+			word_height = temp.findCharacterPos(temp.getString().getSize()).y;
 
-		// will it go past the horizontal bound?
-		if (current_width + word_width > max_width) {
-			// will it go past the vertical bound?
-			if (max_height - full_height < word_height) {
-				boxes.push_back(fitted_string);
-				fitted_string = word + " ";
+			// will it go past the horizontal bound?
+			if (current_width + word_width > max_width) {
+				if (center) {
+					int num_spaces = (int) ((max_width - current_width)/2)/space_width;
+					for (int s_num = 0; s_num < num_spaces; s_num++)
+						next_line = " " + next_line + " ";
+				}		
+				fitted_string += next_line + "\n";
+				next_line = word + " ";
 				current_width = word_width;
 			}
 			else {
-				fitted_string += "\n" + word + " ";
-				current_width = word_width;
+				// just add to string
+				next_line += word + " ";
+				current_width += word_width;
+				size_found = true;
+			}
+
+			// general word height (changes, hence the max)
+			sf::FloatRect bounds = temp.getGlobalBounds();
+			int line_spacing = font.getLineSpacing(temp.getCharacterSize());
+			word_height = std::max(bounds.height-bounds.top+line_spacing, word_height);
+
+			// the height of the full string so far
+			temp.setString(fitted_string);
+			float full_height = temp.getGlobalBounds().height - temp.getGlobalBounds().top;
+
+			// will it go past the vertical bound?
+			if (max_height - full_height < word_height) {
+				curr_size--;
+				size_found = false;
+				break;
 			}
 		}
-		else {
-			// just add to string
-			fitted_string += word + " ";
-			current_width += word_width;
+		if (center) {
+			int num_spaces = (int) ((max_width - current_width)/2)/space_width;
+			for (int s_num = 0; s_num < num_spaces; s_num++)
+				next_line = " " + next_line + " ";
 		}
+		fitted_string += next_line + "\n";
 	}
 	boxes.push_back(fitted_string);
 	// done
+	if (curr_size <= 0) {
+		commentary_size = 0;
+		return "";
+	}
+	commentary_size = curr_size;
+	std::cout << commentary_size << std::endl;
 	return boxes.front();
 }
