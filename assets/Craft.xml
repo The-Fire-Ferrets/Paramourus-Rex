@@ -11,4 +11,9 @@
   <Lily Sprite = "Lily" Height = "30" Width = "30" X = "10" Y = "330" />
   <Orchid Sprite = "Orchid" Height = "30" Width = "30" X = "10" Y = "370" />
   <Magnolia Sprite = "Magnolia" Height = "30" Width = "30" X = "10" Y = "410" /> 
+
+  <Hint Hint_Text = "This is Homer's home. If you come to him with flowers, he can combine them into new flowers for you to give to Diana. If you want to know how the various flowers are crafted, click on the RecipeScroll Icon in the bottom-left. The Recipe Scroll explains which flowers combine into which other ones. If you don't want to craft anything, you can still come over and he will restock you with vases for your next foray into the wild. You will need to successfully craft flowers to advance in the game. Once you've crafted a flower, a Diana Icon should appear near the Map Icon. Click the Diana Icon to deliver your flower to Diana and have a brief chat with her. Sometimes she'll ask you questions, Phil. Try to keep in mind everything you already know about Diana when you answer; sometimes you can infer which answer she will respond positively to." />
+
 </Craft> 
+
+

@@ -43,7 +43,7 @@ class CraftView  {
 	static sf::Sprite scroll_icon_sprite;
 	static sf::Sprite diana_icon_sprite;
 	static sf::Sprite map_icon_sprite;
-	static sf::Sprite hints_icon_sprite;
+	// static sf::Sprite hints_icon_sprite;
 
 	static sf::Sprite box1Sprite;
 	static sf::Sprite box2Sprite;
@@ -72,7 +72,7 @@ class CraftView  {
 	static sf::Texture map_texture;
 	static sf::Texture diana_icon_texture;
 	static sf::Texture scroll_icon_texture;
-	static sf::Texture hints_icon_texture;
+	// static sf::Texture hints_icon_texture;
 
 
 	// exit buttons

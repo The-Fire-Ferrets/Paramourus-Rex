@@ -55,7 +55,7 @@ sf::Sprite CraftView::map;
 sf::Sprite CraftView::scroll_icon_sprite;
 sf::Sprite CraftView::diana_icon_sprite;
 sf::Sprite CraftView::map_icon_sprite;
-sf::Sprite CraftView::hints_icon_sprite;
+// sf::Sprite CraftView::hints_icon_sprite;
 // Holds sprite for box 1 and 2 of crafting table
 sf::Sprite CraftView::box1Sprite;
 sf::Sprite CraftView::box2Sprite;
@@ -75,7 +75,7 @@ sf::Texture CraftView::scroll_texture;
 sf::Texture CraftView::map_texture;
 sf::Texture CraftView::diana_icon_texture;
 sf::Texture CraftView::scroll_icon_texture;
-sf::Texture CraftView::hints_icon_texture;
+// sf::Texture CraftView::hints_icon_texture;
 sf::RectangleShape CraftView::hints_overlay;
 
 sf::RectangleShape CraftView::backlay;
@@ -89,7 +89,7 @@ bool CraftView::pressed;
 bool CraftView::box1;
 bool CraftView::box2;
 bool CraftView::drawBook;
-bool CraftView::drawHints;
+bool CraftView::drawHints = true;
 
 bool CraftView::has_delegates = false;
 std::vector<EventDelegate> CraftView::delegateFuncList;
@@ -127,6 +127,12 @@ void CraftView::Create(const char* resource) {
         std::cout << "CraftView::Create(...): Failed to load" << std::endl;
         std::cout << "Filename: " << resource << " Load result: " << result.description() << std::endl;
     }
+
+    hints_overlay.setPosition(Configuration::getWindowWidth()/5.5, Configuration::getWindowHeight()/4);
+    hints_overlay.setOutlineColor(sf::Color::Black);
+    hints_overlay.setFillColor(sf::Color::White);
+    hints_overlay.setSize(sf::Vector2f(Configuration::getWindowWidth()/1.7,Configuration::getWindowHeight()/2));
+    hints_overlay.setOutlineThickness(5);
 
     //Used to iterate over XML file to get attributes for this display -- currently none but background
     pugi::xml_node tools = doc.child(resource);
@@ -205,13 +211,13 @@ void CraftView::Create(const char* resource) {
     	    scroll_icon_sprite = sf::Sprite(scroll_icon_texture);
 	    	scroll_icon_sprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.06);
 		}
-        else if(!strcmp(attr.name(), "Hints_Icon")) {
-	    if (!hints_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
-    		  std::cout << "CraftView::Create: Failed to load " << attr.value();
-    	    }
-    	    hints_icon_sprite = sf::Sprite(hints_icon_texture);
-	    	hints_icon_sprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.15);
-		}		
+  //       else if(!strcmp(attr.name(), "Hints_Icon")) {
+	 //    if (!hints_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+  //   		  std::cout << "CraftView::Create: Failed to load " << attr.value();
+  //   	    }
+  //   	    hints_icon_sprite = sf::Sprite(hints_icon_texture);
+	 //    	hints_icon_sprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.15);
+		// }		
 		else if(!strcmp(attr.name(), "Recipe_Scroll")) {
 	    if (!scroll_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
     		  std::cout << "CraftView::Create: Failed to load " << attr.value();
@@ -228,6 +234,9 @@ void CraftView::Create(const char* resource) {
     int i = 0;
     for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling(), i++) {
 	  for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()){
+	  	  if (!strcmp(attr.name(), "Hint_Text")){
+	  	  	hints_text.setString(fitStringToHintsBox(attr.value()));
+	  	  }
 	      if (!strcmp(attr.name(), "Sprite")) {
 		  if (!textures[i].loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str() + std::string(".png"))){
 			std::cout << "CraftView::Create: Failed to load " << attr.value();
@@ -276,12 +285,6 @@ void CraftView::Create(const char* resource) {
     backlay.setFillColor(sf::Color::White);
     backlay.setSize(sf::Vector2f(Configuration::getWindowWidth()/1.3,Configuration::getWindowHeight()/4));
     backlay.setOutlineThickness(5);
-
-    hints_overlay.setPosition(Configuration::getWindowWidth()/5.5, Configuration::getWindowHeight()/4);
-    hints_overlay.setOutlineColor(sf::Color::Black);
-    hints_overlay.setFillColor(sf::Color::White);
-    hints_overlay.setSize(sf::Vector2f(Configuration::getWindowWidth()/1.7,Configuration::getWindowHeight()/2));
-    hints_overlay.setOutlineThickness(5);
     
 	// map_button.setPosition(Configuration::getWindowWidth() - 110, 10);
 	// map_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/15));
@@ -320,18 +323,6 @@ void CraftView::Create(const char* resource) {
 	// set text to initial greeting from Homer
     std::string str = "Phil come back to see Homer? Phil have " + std::to_string(totalFlowers) + " flowers! If Phil click on flower, Homer make more!";
     text.setString(fitStringToDialogueBox(str));
-    std::string hints_string = "This is Homer's home. If you come to him with flowers, he can\
-combine them into new flowers for you to give to Diana. If you want to know how the \
-various flowers are crafted, click on the RecipeScroll Icon in the bottom-left. The \
-Recipe Scroll explains which flowers combine into which other ones. If you don't want \
-to craft anything, you can still come over and he will restock you with vases for \
-your next foray into the wild. You will need to successfully craft flowers to \
-advance in the game. Once you've crafted a flower, a Diana Icon should appear \
-near the Map Icon. Click the Diana Icon to deliver your flower to Diana and have \
-a brief chat with her. Sometimes she'll ask you questions, Phil. \
-Try to keep in mind everything you already know about Diana when you answer; \
-sometimes you can infer which answer she will respond positively to.";
-    hints_text.setString(fitStringToHintsBox(hints_string));
 
     if (!buffer.loadFromFile("./assets/music/marina-s-rhythm.ogg")) {
 	std::cout << "CraftView::Create: failed to load music" << std::endl;
@@ -339,6 +330,10 @@ sometimes you can infer which answer she will respond positively to.";
     sound.setBuffer(buffer);
     sound.setLoop(true);
     sound.play();
+
+    // // If this is tutorial mode, the hints should get drawn right away.
+    // if (view_state == 2)
+    // 	drawHints = true;
 }
 
 int CraftView::getNumFlowers(void) {
@@ -566,12 +561,10 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	    }
 	}
 
-	// Draw Hints
-	if (hints_icon_sprite.getGlobalBounds().contains(pos.x, pos.y)){
-		if (drawHints == true)
-			drawHints = false;
-		else
-			drawHints = true;
+	// If we are in tutorial AND the hints box is visible AND the player has clicked
+	// inside the hints box or pressed space, we turn off the hints box.
+	if (hints_overlay.getGlobalBounds().contains(pos.x, pos.y) && drawHints == true){
+		drawHints = false;
 	}
 
 	// Return to MapView
@@ -724,7 +717,7 @@ void CraftView::render(sf::RenderWindow *window) {
     window->draw(map_icon_sprite);
     window->draw(scroll_icon_sprite);
 	window->draw(character_sprite);
-	window->draw(hints_icon_sprite);
+	// window->draw(hints_icon_sprite);
 	// window->draw(map_button);
 
     // Setting crafting button elements
@@ -818,7 +811,7 @@ void CraftView::render(sf::RenderWindow *window) {
     }
     
     // Draw Hints if open.
-    if (drawHints == true){
+    if (view_state == 2 && drawHints == true){
     	window->draw(hints_overlay);
     	window->draw(hints_text);
     }
