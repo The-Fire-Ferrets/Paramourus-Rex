@@ -132,21 +132,46 @@
 		<Pathfinder PathType = "-2"/>
 	</FireFlower>
 
-	<Commentary>	
-		<Commentary1  Display = "Player" Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
+	<Action>
+		<Spawn1>
+			<NPC Generate = "3">
+				<Pathfinder PathType = "-3" TargetType = "-2"/>
+				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+				<InputComponent>
+					<Control Type = "Artificial" Speed = "3.5"/>
+				</InputComponent>
+				<PhysicsComponent>
+					<VisionBoundary Height = "100" Width = "100" X = "-50" Y = "-50"/>
+				</PhysicsComponent>
+			</NPC>
+			<Obstacle Generate = "20" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
+				<PhysicsComponent>
+					<Properties Type = "Transparent"/>
+				</PhysicsComponent>
+				<Pathfinder PathType = "-5"/>
+			</Obstacle>
+		</Spawn1>
+	</Action>
+
+	<Commentary>
+		<Commentary1 Display = "Player" Actor = "Player" Contact = "" Action = "0" Occurance = "1">
+			<Dialogue1 Text = "Homer! HELP!" />
+		</Commentary1>
+		<Commentary2  Display = "Player" Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Ouch! That hurt." />
 			<Dialogue2  Text = "I'll try to avoid that next time." />
 			<Dialogue3  Text = "Lost another flower." />
 			<Dialogue4  Text = "That was a mistake." />
 			<Dialogue5  Text = "Prickly, Prickly, Prickly." />
-		</Commentary1>	
-		<Commentary2  Display = "NPC" Actor = "NPC" Contact = "Player"  Action = "-2" Occurance = "-1">
+		</Commentary2>	
+		<Commentary3  Display = "NPC" Actor = "NPC" Contact = "Player"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Thank You!" />
 			<Dialogue2  Text = "Don't mind if I take one of these!" />
 			<Dialogue3  Text = "Diana is going to love this." />
 			<Dialogue4  Text = "You didn't run fast enough" />
 			<Dialogue5  Text = "You can run and you can hide, oh wait..." />
-		</Commentary2>		
+		</Commentary3>		
 	</Commentary>
 
 </Level2>

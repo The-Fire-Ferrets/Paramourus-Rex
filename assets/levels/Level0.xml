@@ -61,7 +61,7 @@
 	</Action>
 	<Commentary>
 		<Commentary1 Display = "Homer" Actor = "Player" Contact = "" Action = "0" Occurance = "1">
-			<Dialogue1 Text = "All right, Phil, I'm here to help you win over Diana by collecting flowers. Look at that map in the top-right corner. The green dot is you, and the red X is your target: a FireFlower. Go pick it up, or press the Back Button in the bottom-left corner, if you're a quitter." />
+			<Dialogue1 Text = "All right, Phil, I'm here to help you win over Diana by collecting flowers. Look at that map in the top-right corner. You can also press the M key to show the map and pause the game. The green dot is you, and the red X is your target: a FireFlower. Go pick it up, or press the Back Button in the bottom-left corner, if you're a quitter." />
 		</Commentary1>
 		<Commentary2  Display = "Homer" Actor = "Player" Contact = "FireFlower"  Action = "1" Occurance = "1">
 			<Dialogue1  Text = "Good job. Observe that the air out here is foul; you will pass out if you breathe it in for too long. See the timer in the bottom-right corner: If it hits zero, that means you've run out of stamina.  If you do faint, I'll come and bail you out, but I'm also going to eat the flowers. Go get the next one, Phil." />
@@ -69,11 +69,11 @@
 		<Commentary3  Display = "Homer" Actor = "Player" Contact = "FireFlower"  Action = "2" Occurance = "1">
 			<Dialogue1  Text = "In the top-left corner, you'll see that you've collected two FireFlowers. Hold on to them. You will see many more of these cacti and rocks in the future. You will drop a vase if you touch a cactus, so you should generally avoid doing so. Try touching a cactus, just once, to see what it's like." />
 		</Commentary3>		
-		<Commentary4   Display = "Homer" Actor = "Player" Contact = "Obstacle"  Action = "3" Occurance = "1">
+		<Commentary4   Display = "Homer" Actor = "Player" Contact = "Cactus"  Action = "3" Occurance = "1">
 			<Dialogue1  Text = "What a brave raptor you are. Now see these T-Rexes: They want the same flowers you want, and they want to give those flowers to Diana, to woo her. If they become aware of your presence, they will start chasing you. If they bump into you, you'll drop a vase. Go get bumped by one, so you learn what that's like, too." />
 		</Commentary4>		
 		<Commentary5   Display = "Homer" Actor = "Player" Contact = "NPC"  Action = "-1" Occurance = "1">
-			<Dialogue1  Text = "You goofball, you did it!  Come find me so we can leave. If you get out of your pursuers' field of vision, they will quickly forget about you. Once you're out of immediate danger, and you've taken all the flowers you can take, I'll show up. If I disappear occasionally, it's probably because you're suddenly in danger again." />
+			<Dialogue1  Text = "You goofball, you did it!  Come find me so we can leave. If you get out of your pursuers' field of vision, they will quickly forget about you. Once you're out of immediate danger, and you've taken all the flowers you can take, I'll show up. It won't work now since I'm already helping you, but you can press the C button to call me. Be carefull though, you'll attract other T-Rexes to the area. If I disappear occasionally, it's probably because you're suddenly in danger again." />
 		</Commentary5>
 		<Commentary6  Display = "Player" Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Ouch! That hurt." />
