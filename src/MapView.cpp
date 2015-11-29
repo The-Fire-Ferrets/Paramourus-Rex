@@ -355,7 +355,8 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 		            }
 		        }
 			}
-		        else if (title_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
+			}
+		        if (title_sprite.getGlobalBounds().contains(pos.x, pos.y) && (view_state == 1 || view_state == 2)) {
 		            view_state = 4;
 		        }
 		        else if (view_state == 4 && back_cancel.getGlobalBounds().contains(pos.x, pos.y)) {
@@ -374,7 +375,6 @@ void MapView::update(sf::RenderWindow *window, int* state, float time) {
 		            view_state = 0;
 		            *state = 5;
 		        }
-		}
 	}
 	display_commentary = false;
     }
