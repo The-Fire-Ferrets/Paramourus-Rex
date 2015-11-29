@@ -1044,6 +1044,5 @@ std::string LevelView::fitStringToCommentaryBox(std::string str, int character_s
 		return "";
 	}
 	commentary_size = curr_size;
-	std::cout << commentary_size << std::endl;
 	return boxes.front();
 }
