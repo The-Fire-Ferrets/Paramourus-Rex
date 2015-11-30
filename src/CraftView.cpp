@@ -975,7 +975,7 @@ std::string CraftView::fitStringToHintsBox(std::string str, int character_size, 
 		height = box_size.y;
 	}
 
-	std::cout << width << " " << height << std::endl;
+	//std::cout << width << " " << height << std::endl;
 	int beginX = 0;
 	int beginY = 0;
 	//commentary_positions.push_back(sf::Vector2f(beginX, beginY));

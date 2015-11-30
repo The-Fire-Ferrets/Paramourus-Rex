@@ -161,6 +161,7 @@ void DialogueView::Create(const char* resource, int* state){
 
 	// navigating through xml files and storing the actual dialogue into array
 	if (fileString != "Level0") {
+		//std::cout << num_times_impressed << std::endl;
 		tools = (num_times_impressed > 0) ? (tools.child("Correct")) : (tools.child("Incorrect"));
 	}
 	for (pugi::xml_node tool = tools.first_child(); tool; tool =tool.next_sibling()){
@@ -207,7 +208,7 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 	{
 		if ((sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) || index == 0){
 			pressed = true;
-			std::cout << index << " " << boxes.size() << std::endl;
+			//std::cout << index << " " << boxes.size() << std::endl;
 			// if we are at least at one of Diana's two responses to your answer
 			if (index >= boxes.size() && draw_overlay == true){
 				// stop displaying text, wait for user response before closing dialogueview
@@ -275,7 +276,7 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 	 	// reset ongoing game state
 		CraftView::total_craft_visits = 1;
 		CraftView::clearInventory();
-		DialogueView::num_times_impressed = 0;
+		//DialogueView::num_times_impressed = 0;
 		MapView::level_idx = -1;
 		MapView::commentary_idx = 0;
 		MapView::resetPopulationValues();
