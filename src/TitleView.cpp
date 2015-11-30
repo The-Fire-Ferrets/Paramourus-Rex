@@ -24,6 +24,9 @@ sf::Text TitleView::introbutton;
 sf::Font TitleView::font;
 //Determiend single button press
 bool TitleView::pressed = false;
+
+bool TitleView::testing_key_pressed = false;
+bool TitleView::testing_view = false;
 //View state
 int TitleView::view_state = 1;
 
@@ -113,6 +116,16 @@ void TitleView::Create(const char* resource) {
 void TitleView::update(sf::RenderWindow *window, int* state, float time) {
 	EventManagerInterface::setViewDelegate(delegate);
 	EventManagerInterface::setCurrentActorList(NULL);
+
+		// should we pause the screen?
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::T) && !testing_key_pressed) {
+		testing_key_pressed = true;
+		testing_view = !testing_view;
+	}
+	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::T)) {
+		testing_key_pressed = false;
+	}
+
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && view_state == 1) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
@@ -125,7 +138,8 @@ void TitleView::update(sf::RenderWindow *window, int* state, float time) {
 		LevelView::player = NULL;
 		LevelView::cleanUp();
 		//In order to display all the levels at once; uncomment line below // remember to comment it before pushing though
-		MapView::level_idx = 5;
+		if (testing_view)
+			MapView::level_idx = 5;
 		MapView::view_state = 1;
 		MapView::commentary_idx = 0;
 		render(window);

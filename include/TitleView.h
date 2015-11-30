@@ -31,6 +31,8 @@ class TitleView {
 		static sf::Font font;
 		static bool pressed;
 		static EventDelegate delegate;
+		static bool testing_key_pressed;
+		static bool testing_view;
 	public:
 		static void Create(const char* resource);
 		static void update(sf::RenderWindow *window, int* state, float time);
