@@ -667,7 +667,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 
 		//Check to see if conditions met to display back button
 		//std::cout << flowers_left << " " << vases_full << " " << inVision << std::endl; 
-		if ((flowers_left <= 0 || vases_full || call_key_pressed) && inVision <= 0) {
+		if (call_key_pressed && inVision <= 0) {
 			if (view_state == 2 && last_action == -1)
 				reveal_homer = true;
 			else if (view_state != 2) {
