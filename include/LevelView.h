@@ -74,6 +74,7 @@ class LevelView  {
 		static bool pause_key_pressed;
 		static bool back_key_pressed;
 		static bool call_key_pressed;
+		static bool testing_key_pressed;
 		static int* game_state;
 		static int last_action;
 		static sf::Text back_continue;
@@ -87,6 +88,7 @@ class LevelView  {
 		static int last_state;
 		static bool space_pressed;
 		static bool received_new_commentary;
+		static bool testing_view;
 
 	public:
 		static void generateActor(pugi::xml_node* elem, int* state, int generate = 1);

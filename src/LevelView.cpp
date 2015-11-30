@@ -104,6 +104,8 @@ int LevelView::last_state;
 StrongActorPtr LevelView::homer;
 bool LevelView::space_pressed;
 bool LevelView::received_new_commentary;
+bool LevelView::testing_view;
+bool LevelView::testing_key_pressed = false;
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -125,9 +127,12 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	pause_key_pressed = false;
 	back_key_pressed = false;
 	call_key_pressed = false;
+	testing_key_pressed = false;
 	vases_full = false;
+	testing_view = false;
 	inVision = 0;
 	flashing = 0;
+	actorList.clear();
 	actions.clear();
 	commentary_positions.clear();
 	commentary_strings.clear();
@@ -236,7 +241,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	load_state.setColor(sf::Color::Black);
 
 	commentary_prompt = sf::Sprite(commentary_prompt_texture, sf::IntRect(0, 0, commentary_prompt_texture.getSize().x, commentary_prompt_texture.getSize().y));
-	commentary_prompt.setScale(1.0 * Configuration::getGameViewWidth() / Configuration::getWindowWidth(), 1.0 * Configuration::getGameViewHeight() / Configuration::getWindowHeight());
+	//commentary_prompt.setScale(1.0 * Configuration::getGameViewWidth() / Configuration::getWindowWidth(), 1.0 * Configuration::getGameViewHeight() / Configuration::getWindowHeight());
 
 	title.setPosition(Configuration::getWindowWidth()/2 - title.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 - title.getGlobalBounds().height - 10);
 
@@ -252,20 +257,28 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	back_continue_text = "Yes, Cancel";
 	back_cancel_text = "No, Continue";
 	back_question_text = "Are you sure?";
-	back_message_text = fitStringToCommentaryBox("Leaving without Homer's help will result in losing all your flowers!", 5);
+	back_message_text = "Leaving without Homer's help will result in losing all your flowers!";
 
-	back_continue = sf::Text(back_continue_text, font, 5);
-	back_cancel = sf::Text(back_cancel_text, font, 5);
-	back_question = sf::Text(back_question_text, font, 5);
-	back_message = sf::Text(back_message_text, font, 5);
+	back_continue = sf::Text(back_continue_text, font, 20);
+	back_cancel = sf::Text(back_cancel_text, font, 20);
+	back_question = sf::Text(back_question_text, font, 30);
+	back_message = sf::Text(back_message_text, font, 10);
 
 	back_message.setColor(sf::Color::Black);
 	back_question.setColor(sf::Color::Black);
 	back_continue.setColor(sf::Color::Black);
 	back_cancel.setColor(sf::Color::Black);	
 
+	back_question.setPosition(Configuration::getWindowWidth()/2 - back_question.getGlobalBounds().width/2, Configuration::getWindowHeight()/4);
+	back_message.setPosition(Configuration::getWindowWidth()/2 - back_message.getGlobalBounds().width/2, Configuration::getWindowHeight()/4 + back_question.getGlobalBounds().height + 10);
+	back_continue.setPosition(Configuration::getWindowWidth()/4 - back_continue.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 + 20);
+	back_cancel.setPosition(3*Configuration::getWindowWidth()/4  - back_cancel.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 + 20);
+
+	commentary_prompt.setPosition(sf::Vector2f(75, 75));
+
 	commentary_timer.insert(std::pair<int, sf::Clock>(-1, sf::Clock()));
 	commentary.insert(std::pair<int, sf::Text>(-1, sf::Text("", font, 5)));
+	commentary[-1].setPosition(sf::Vector2f(commentary_prompt.getPosition().x + 35, commentary_prompt.getPosition().y + 35));
 	//Iterates over XML to get components to add
 	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling()) {
 		if (!strcmp(tool.name(), "Commentary")) {		
@@ -400,8 +413,6 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 		(*it) ->PostInit();
 	}
 	gameView.setCenter(Configuration::getGameViewCenter());
-	commentary_prompt.setPosition(sf::Vector2f(Configuration::getGameViewPosition().x + (75 * commentary_prompt.getScale().x),Configuration::getGameViewPosition().y + (75 * commentary_prompt.getScale().y)));
-
 	//Sets up sound
 	if (name != "LevelPlayer") {
 		sound.setBuffer(buffer);
@@ -522,6 +533,15 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	}
 
 	// should we pause the screen?
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::T) && !testing_key_pressed && (view_state == 1 || view_state == 2)) {
+		testing_key_pressed = true;
+		testing_view = !testing_view;
+	}
+	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::T)) {
+		testing_key_pressed = false;
+	}
+
+	// should we pause the screen?
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && !call_key_pressed && (view_state == 1)) {
 		call_key_pressed = true;
 		EventInterfacePtr event;
@@ -559,10 +579,10 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 			duration = timer_time;
 			view_state = 4;
 		}
-		else if (view_state == 4 && back_cancel.getGlobalBounds().contains(pos.x * Configuration::getGameViewWidth() / Configuration::getWindowWidth() +  Configuration::getGameViewPosition().x, pos.y * Configuration::getGameViewHeight() / Configuration::getWindowHeight() +  Configuration::getGameViewPosition().y)) {
+		else if (view_state == 4 && back_cancel.getGlobalBounds().contains(pos.x, pos.y)) {
 			view_state = last_state;
 		}
-		else if (view_state == 4 && back_continue.getGlobalBounds().contains(pos.x * Configuration::getGameViewWidth() / Configuration::getWindowWidth() +  Configuration::getGameViewPosition().x, pos.y * Configuration::getGameViewHeight() / Configuration::getWindowHeight() +  Configuration::getGameViewPosition().y)) {
+		else if (view_state == 4 && back_continue.getGlobalBounds().contains(pos.x, pos.y)) {
 			view_state = last_state;
 			if (view_state == 2) {
 				view_state = 0;
@@ -626,8 +646,8 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		//Updates target grids for moving targets such as the player in pathfinder
 		//Updates normally for all other objects
 		std::vector<StrongActorPtr>::iterator it;
-	
-
+		if (testing_view)
+		std::cout << player->getPosition().x << " " << player->getPosition().y << std::endl;
 		for (it = actorList.begin(); it != actorList.end(); it++) {
 			if ((*it)->getPathType() == -4) {
 				(*it)->update(time);
@@ -643,9 +663,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 			}
 			commentary[(*it)->getInstance()].setPosition((*it)->getPosition() + (*it)->getSize());
 		}
-		commentary[-1].setPosition(sf::Vector2f(commentary_prompt.getPosition().x + commentary_prompt.getGlobalBounds().width/2 - commentary[-1].getGlobalBounds().width/2, commentary_prompt.getPosition().y + commentary_prompt.getGlobalBounds().height/2 - commentary[-1].getGlobalBounds().height/2));
-		gameView.setCenter(Configuration::getGameViewCenter());
-		commentary_prompt.setPosition(sf::Vector2f(Configuration::getGameViewPosition().x + (75 * commentary_prompt.getScale().x),Configuration::getGameViewPosition().y + (75 * commentary_prompt.getScale().y)));
+		gameView.setCenter(Configuration::getGameViewCenter());		
 
 		//Check to see if conditions met to display back button
 		//std::cout << flowers_left << " " << vases_full << " " << inVision << std::endl; 
@@ -666,10 +684,6 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		gameView_bottom_corner.y += Configuration::getGameViewHeight()/2 - timer.getGlobalBounds().height * 1.25;
 		back_button.setPosition(sf::Vector2f(Configuration::getGameViewPosition().x,Configuration::getGameViewPosition().y + Configuration::getGameViewHeight() - back_button.getGlobalBounds().height));
 		timer.setPosition(gameView_bottom_corner);
-		back_question.setPosition(Configuration::getGameViewCenter().x - back_question.getGlobalBounds().width/2, commentary_prompt.getGlobalBounds().top + 5);
-		back_message.setPosition(Configuration::getGameViewCenter().x - back_message.getGlobalBounds().width/2, commentary_prompt.getGlobalBounds().top + back_question.getGlobalBounds().height + 5);
-		back_continue.setPosition(Configuration::getGameViewCenter().x - commentary_prompt.getGlobalBounds().width/4.0 - back_continue.getGlobalBounds().width/2, Configuration::getGameViewCenter().y);
-		back_cancel.setPosition(Configuration::getGameViewCenter().x + commentary_prompt.getGlobalBounds().width/4.0  - back_cancel.getGlobalBounds().width/2, Configuration::getGameViewCenter().y);
 	}
 
 	//Places the time
@@ -842,7 +856,6 @@ void LevelView::render(sf::RenderWindow *window) {
 		return;
 	}
 
-
 	//Game display	
 	if (timer_time/1000 >= 0) {
 		if (flashing && view_state == 1) {
@@ -852,14 +865,16 @@ void LevelView::render(sf::RenderWindow *window) {
 		//Get the player location and center gameView to it
 		window->setView(window->getDefaultView());
 		gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
-		window->setView(gameView);
+		
+		if (!testing_view)
+			window->setView(gameView);
 		//Update graphics	
 		//window->draw(edge);
 		window->draw(background);
 		window->draw(minimap_border);
 		std::vector<StrongActorPtr>::iterator it;
 		for (it = actorList.begin(); it != actorList.end(); it++) {
-			if (homer != *it) {
+			if (player != *it && homer != *it) {
 				(*it)->render(window, false);
 				if ((commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 4))
 					window->draw(commentary[(*it)->getInstance()]);
@@ -871,22 +886,9 @@ void LevelView::render(sf::RenderWindow *window) {
 
 		player->render(window, false);
 
-		if (((view_state == 2 && commentary_timer[-1].getElapsedTime().asSeconds() < 30) || commentary_timer[-1].getElapsedTime().asSeconds() < 4) && display_commentary) {
-			window->draw(commentary_prompt);
-			window->draw(commentary[-1]);
-		}
 
 		window->draw(back_button);
 		window->draw(timer);
-		
-		//Quit Screen
-		if (view_state == 4) {
-			window->draw(commentary_prompt);
-			window->draw(back_message);
-			window->draw(back_continue);
-			window->draw(back_cancel);
-			window->draw(back_question);
-		}
 
 		//Set minimap view
 		window->setView(window->getDefaultView());
@@ -920,6 +922,24 @@ void LevelView::render(sf::RenderWindow *window) {
 			if (reveal_homer)
 				homer->render(window, true);
 			player->render(window, true);
+		}
+	
+		if (((view_state == 2 && commentary_timer[-1].getElapsedTime().asSeconds() < 30) || commentary_timer[-1].getElapsedTime().asSeconds() < 4) && display_commentary) {
+			window->setView(window->getDefaultView());
+			window->draw(commentary_prompt);
+			window->draw(commentary[-1]);
+			window->display();
+		}
+
+		//Quit Screen
+		if (view_state == 4) {
+			window->setView(window->getDefaultView());
+			window->draw(commentary_prompt);
+			window->draw(back_message);
+			window->draw(back_continue);
+			window->draw(back_cancel);
+			window->draw(back_question);
+			window->display();
 		}
 
 	}
@@ -1000,8 +1020,8 @@ std::string LevelView::fitStringToCommentaryBox(std::string str, int character_s
 	int width;
 	int height;
 	if (box_size.x == 0  || box_size.y == 0) {
-		width = Configuration::getGameViewWidth() * (1.0 * commentary_prompt_texture.getSize().x / Configuration::getWindowWidth()); 
-		height = Configuration::getGameViewHeight() * (1.0 * commentary_prompt_texture.getSize().y / Configuration::getWindowHeight());
+		width = commentary_prompt.getGlobalBounds().width - 35;
+		height = commentary_prompt.getGlobalBounds().height - 35;
 	}
 	else {
 		width = box_size.x;

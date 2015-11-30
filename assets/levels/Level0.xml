@@ -47,7 +47,7 @@
 					<Control Type = "Artificial" Speed = "3.5"/>
 				</InputComponent>
 				<PhysicsComponent>
-					<VisionBoundary Height = "100" Width = "100" X = "-50" Y = "-50"/>
+					<VisionBoundary Height = "50" Width = "50"/>
 				</PhysicsComponent>
 			</NPC>
 			<Obstacle Generate = "20" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
