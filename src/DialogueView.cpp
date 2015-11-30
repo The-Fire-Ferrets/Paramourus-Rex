@@ -247,12 +247,12 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 				 	rhs_character_tex.loadFromFile("./assets/sprites/Diana-Neutral.png");
 			 }
 			else if (boxes[index].first == "PlayerWin"){
-			      background_texture.loadFromFile("./assets/backgrounds/PlayerWin.png");
+			      background_texture.loadFromFile("./assets/backgrounds/PlayerWin-Text.png");
 			      // wait here for input from player to either close the game or to start over
 			      draw_overlay=false;
 			 }
 			else if (boxes[index].first == "PlayerLose"){
-			      background_texture.loadFromFile("./assets/backgrounds/PlayerLose.png");
+			      background_texture.loadFromFile("./assets/backgrounds/PlayerLose-Text.png");
 			      draw_overlay = false;
 
 			}
