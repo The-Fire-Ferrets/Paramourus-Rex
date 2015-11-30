@@ -674,10 +674,6 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 				reveal_homer = true;
 			}
 		}
-		else if (inVision > 0) {
-			reveal_homer = false;
-		}
-
 		//Set timer to bottom right corner
 		sf::Vector2f gameView_bottom_corner = Configuration::getGameViewCenter();
 		gameView_bottom_corner.x += Configuration::getGameViewWidth()/2 - timer.getGlobalBounds().width;
@@ -802,6 +798,9 @@ void LevelView::update(EventInterfacePtr e) {
 								//std::cout << "GENERATED2" << std::endl;
 								generateActor(&(temp), game_state);
 							}
+						}
+						else if (action == -1) {
+							reveal_homer = true;
 						}
 						if (contact_id == "FireFlower" || contact_id == "EarthFlower" || contact_id == "WaterFlower" || contact_id == "AirFlower")
 							if (vases_full)
