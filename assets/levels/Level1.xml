@@ -232,7 +232,7 @@
 		<Commentary1 Display = "Player" Actor = "Player" Contact = "" Action = "0" Occurance = "1">
 			<Dialogue1 Text = "Homer! HELP!" />
 		</Commentary1>
-		<Commentary2  Display = "Player" Actor = "Player" Contact "FireFlower"  Action = "-2" Occurance = "-1">
+		<Commentary2  Display = "Player" Actor = "Player" Contact = "Crystal-Green"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Ouch! That hurt." />
 			<Dialogue2  Text = "I'll try to avoid that next time." />
 			<Dialogue3  Text = "Lost another flower." />
