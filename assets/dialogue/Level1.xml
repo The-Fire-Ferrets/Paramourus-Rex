@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level1 Background = "WateringHoleBg.png" Response="1" Flower = "SunFlower" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "25" DianaPosY = "25" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30" Backlay = "Prompt.png">
+<Level1 Background = "WateringHoleBg.png" Response="1" Flower = "SunFlower" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "25" DianaPosY = "25" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30" Backlay = "Prompt.png" Prompt = "Prompt.png">
 	<Correct>
 	  <Dialogue Speaker = "Narrator" Text = "With Homer's help, you were able to make a small bouquet in hopes that it would remind Diana of the home you once had and cheer her up. When you walk back into Diana's cave, she immediately runs up."/>
 	  <Dialogue Speaker = "Diana" Text = "Oh, hey Phil! Homer stopped by earlier and told me that you're the one that found this Sunflower... I don't know how in the world you found it, but it's incredible! I wonder what else he has back there in his cave. Do you think he has any violets? They used to grow all around the entrance of his cave, but they don't anymore... But who knows what he has back in there if he found this!"/>
@@ -18,4 +18,6 @@
 		<Dialogue Speaker = "Diana" Text ="Me too! I wish I had a chance to have done some more adventuring!"/>
 		<Dialogue Speaker = "Diana" Text ="Uh... if you're into that, that's nice for you, I guess." />
 	</Incorrect>
+	<Commentary Text = "This is your time to shine, Phil! Whenever you deliver a flower to Diana, you have two ways of impressing her. First, she'll be impressed if the flower you've brought her corresponds to something she mentioned before your most recent adventure. For example, you've brought her a Sunflower today because she mentioned the other day that she enjoyed sunbathing. Future hints won't be so clear! Generally speaking, if she alludes to an element when talking to you, you should craft her a flower that uses that element."/>
+	<Commentary Text = "The other way to make a good impression is through your dialogue choices. Sometimes Diana will ask you a question, and you'll have two choices of response. She's a smart lady, and she'll know if you're just telling her what she wants to hear. All I can really say is that you should be honest-- and don't be a jerk, I suppose. When prompted, choose your response by pressing 1 or 2 on the keypad."/>
 </Level1>

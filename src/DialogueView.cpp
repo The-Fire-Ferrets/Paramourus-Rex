@@ -55,6 +55,16 @@ bool DialogueView::solved = false;
 int DialogueView::num_times_impressed = 0;
 int DialogueView::response;
 
+// commentary display
+sf::Texture DialogueView::commentary_prompt_texture;
+sf::Sprite  DialogueView::commentary_prompt;
+std::string DialogueView::commentary_string_flower;
+std::string DialogueView::commentary_string_choices;
+sf::Text    DialogueView::commentary_flower;
+sf::Text    DialogueView::commentary_choices;
+bool        DialogueView::display_commentary_flower  = false;
+bool        DialogueView::display_commentary_choices = false;
+
 /** Searches for the correct dialogue box the player is on and populates the text with what you want Diana to be saying 
  ** resource: filename for XML  file we are getting the dialogue from. Currently just level0, only level we have.
  ** state: current game state (state should be 2 if in dialogue view)
@@ -62,7 +72,6 @@ int DialogueView::response;
 void DialogueView::Create(const char* resource, int* state){
 	dialogues.clear();
 	boxes.clear();
-	view_state = 1;
 	//Reset the index before each iteration
 	index = 0;
 	// reference to XML file we are getting our info from
@@ -72,7 +81,7 @@ void DialogueView::Create(const char* resource, int* state){
 	std::string fileString(resource);
 	name = fileString;
 	if (name == "Level0") {
-		view_state = 2;
+		view_state = 3;
 	}
 	// Checks to make sure XML file exists and was correctly loaded
 	if (!(result = doc.load_file(("./assets/dialogue/" + fileString + ".xml").c_str()))){
@@ -97,6 +106,9 @@ void DialogueView::Create(const char* resource, int* state){
 		}
 		else if (!strcmp(attr.name(), "Backlay")) {
 			backlay_texture.loadFromFile(("./assets/sprites/" + std::string(attr.value())).c_str());
+		}
+		else if (!strcmp(attr.name(), "Prompt")) {
+			commentary_prompt_texture.loadFromFile(("./assets/sprites/" + std::string(attr.value())).c_str());
 		}
 		else if (!strcmp(attr.name(), "Font")) {
 			font.loadFromFile(("./assets/" + (std::string)attr.value()).c_str());
@@ -154,10 +166,46 @@ void DialogueView::Create(const char* resource, int* state){
 	text.setColor(sf::Color::Black);
 	text.setPosition(posX, posY);
 
+	// position the commentary box
+	sf::Vector2u prompt_size = commentary_prompt_texture.getSize();
+	commentary_prompt = sf::Sprite(commentary_prompt_texture, sf::IntRect(0, 0, prompt_size.x, prompt_size.y));
+	commentary_prompt.setPosition(75.f, 75.f);
+
 	// Create phil_ and diana_sprite here I think?
 	lhs_character_tex.loadFromFile("./assets/sprites/Phil.png");
 	lhs_character_sprite = sf::Sprite(lhs_character_tex);
 	lhs_character_sprite.setPosition(posX, posY-lhs_character_tex.getSize().y-5);
+
+	// get commentary text and set positions
+	if (fileString == "Level1") {
+		pugi::xml_node commentary_tools = tools.child("Commentary");
+		commentary_string_flower = std::string(commentary_tools.first_attribute().value());
+		commentary_flower.setFont(font);
+		commentary_flower.setCharacterSize(25);
+		commentary_flower.setString(fitStringToBox(commentary_string_flower, 25)[0]);
+		if (view_state == 2) { // only if in tutorial
+			display_commentary_flower = true;
+		}
+
+		sf::Vector2f commentary_position = commentary_prompt.getPosition();
+		sf::FloatRect commentary_bounds = commentary_prompt.getGlobalBounds();
+		sf::FloatRect text_bounds = commentary_flower.getGlobalBounds();
+		commentary_flower.setPosition(commentary_position.x + commentary_bounds.width/2.f - text_bounds.width/2.f,
+				commentary_position.y + commentary_bounds.height/2.f - text_bounds.height/2.f);
+		commentary_flower.setColor(sf::Color::Black);
+
+		commentary_tools = commentary_tools.next_sibling();
+		commentary_string_choices = std::string(commentary_tools.first_attribute().value());
+		commentary_choices.setFont(font);
+		commentary_choices.setCharacterSize(25);
+		commentary_choices.setString(fitStringToBox(commentary_string_choices, 25)[0]);
+		commentary_position = commentary_prompt.getPosition();
+		commentary_bounds = commentary_prompt.getGlobalBounds();
+		text_bounds = commentary_choices.getGlobalBounds();
+		commentary_choices.setPosition(commentary_position.x + commentary_bounds.width/2.f - text_bounds.width/2.f,
+				commentary_position.y + commentary_bounds.height/2.f - text_bounds.height/2.f);
+		commentary_choices.setColor(sf::Color::Black);
+	}
 
 	// navigating through xml files and storing the actual dialogue into array
 	if (fileString != "Level0" && fileString != "Level7") {
@@ -199,7 +247,11 @@ void DialogueView::Create(const char* resource, int* state){
 	sound.setBuffer(buffer);
 	sound.setLoop(true);
 	sound.play();
-	
+
+	// this is really hacky, but whatever
+	if (fileString != "Level1") { // definitely OUT of tutorial mode
+		view_state = 1;
+	}
 }
 
 
@@ -211,13 +263,28 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 	if (mouse_pos.x > 0.f && mouse_pos.x < Configuration::getWindowWidth()
 			&& mouse_pos.y > 0.f && mouse_pos.y < Configuration::getWindowHeight())
 	{
+		if (display_commentary_flower) {
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && commentary_prompt.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
+				display_commentary_flower = false;
+				pressed = true;
+				return;
+			}
+		}
+		else if (display_commentary_choices) {
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed && commentary_prompt.getGlobalBounds().contains(mouse_pos.x, mouse_pos.y)) {
+				display_commentary_choices = false;
+				pressed = true;
+				return;
+			}
+		}
+
 		if ((sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) || index == 0){
 			pressed = true;
 			//std::cout << index << " " << boxes.size() << std::endl;
 			// if we are at least at one of Diana's two responses to your answer
 			if (index >= boxes.size() && draw_overlay == true){
 				// stop displaying text, wait for user response before closing dialogueview
-			      if (view_state == 1) {
+				if (view_state == 1 || view_state == 2) {
 					if (name != "TimeOut") {
 						//Show a new level
 						MapView::level_idx++;
@@ -227,47 +294,50 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 						MapView::view_state = 1;
 					}
 					DialogueView::view_state = 1;
-				  	*state = 0;
+					*state = 0;
 				}
-			      else if (view_state == 2)
-				  	*state = 5;
-			      cleanUp();
+				else if (view_state == 3)
+					*state = 5;
+				cleanUp();
 			}
-    
+
 			// If it's two dialogues away from the end, we know it's at Phil's dialogue (except in case of Level0 and Level6)
 			else if (index < boxes.size() && player_response == false){
 				if (boxes[index].first == "Narrator") {
 					rhs_character_tex = sf::Texture();
 				}
 				else if (boxes[index].first == "Phil"){
-				 	rhs_character_tex.loadFromFile("./assets/sprites/Diana-Neutral.png");
+					rhs_character_tex.loadFromFile("./assets/sprites/Diana-Neutral.png");
 					player_response = true;
+					if (view_state == 2) {
+						display_commentary_choices = true;
+					}
 				}
-			else if (boxes[index].first == "Diana") {
-				 	rhs_character_tex.loadFromFile("./assets/sprites/Diana-Neutral.png");
-			 }
-			else if (boxes[index].first == "PlayerWin"){
-			      background_texture.loadFromFile("./assets/backgrounds/PlayerWin.png");
-			      // wait here for input from player to either close the game or to start over
-			      draw_overlay=false;
-			 }
-			else if (boxes[index].first == "PlayerLose"){
-			      background_texture.loadFromFile("./assets/backgrounds/PlayerLose.png");
-			      draw_overlay = false;
+				else if (boxes[index].first == "Diana") {
+					rhs_character_tex.loadFromFile("./assets/sprites/Diana-Neutral.png");
+				}
+				else if (boxes[index].first == "PlayerWin"){
+					background_texture.loadFromFile("./assets/backgrounds/PlayerWin.png");
+					// wait here for input from player to either close the game or to start over
+					draw_overlay=false;
+				}
+				else if (boxes[index].first == "PlayerLose"){
+					background_texture.loadFromFile("./assets/backgrounds/PlayerLose.png");
+					draw_overlay = false;
 
-			}
-			else {
-				//std::cout << "Load ./assets/sprites/" + boxes[index].first + ".png" << std::endl;
-				rhs_character_tex.loadFromFile("./assets/sprites/" + boxes[index].first + ".png");
-			}
+				}
+				else {
+					//std::cout << "Load ./assets/sprites/" + boxes[index].first + ".png" << std::endl;
+					rhs_character_tex.loadFromFile("./assets/sprites/" + boxes[index].first + ".png");
+				}
 				unsigned int width = Configuration::getWindowWidth()/1.05;
 				unsigned int posX = Configuration::getWindowWidth()/40;
 				unsigned int posY = Configuration::getWindowHeight()/1.4;
 
 				rhs_character_sprite = sf::Sprite(rhs_character_tex);
 				rhs_character_sprite.setPosition(posX+width-rhs_character_tex.getSize().x, posY-rhs_character_tex.getSize().y-5);
-        //rhs_character_sprite.setPosition(lhs_character_sprite.getPosition());
-			
+				//rhs_character_sprite.setPosition(lhs_character_sprite.getPosition());
+
 				text.setString(boxes[index].second);
 				index++;
 			}
@@ -276,9 +346,9 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 			pressed = false;
 		}
 	}
-	
+
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && draw_overlay == false){
-	 	// reset ongoing game state
+		// reset ongoing game state
 		CraftView::total_craft_visits = 1;
 		CraftView::clearInventory();
 		//DialogueView::num_times_impressed = 0;
@@ -290,61 +360,61 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 		view_state = 0;
 		*state = 5; 
 	}
-	
+
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && draw_overlay == false){
-	    // shut down the application
+		// shut down the application
 	}
 	// wait for player to choose dialogue option 1 or 2 embedded in text
 	// update Diana's opinion, then end dialogueView accordingly
 	if (name != "Level0" || "Level7"){
-	    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) && player_response == true){
-		    if (response == 1){
-			    num_times_impressed++;
-         // std::cout << "Load ./assets/sprites/Diana-Happy.png" << std::endl;
-          rhs_character_tex.loadFromFile("./assets/sprites/Diana-Happy.png");
-		    }
-		    else{
-			    num_times_impressed--;
-          //std::cout << "Load ./assets/sprites/Diana-Unimpressed.png" << std::endl;
-          rhs_character_tex.loadFromFile("./assets/sprites/Diana-Unimpressed.png");
-		    }
-        unsigned int width = Configuration::getWindowWidth()/1.05;
-        unsigned int posX = Configuration::getWindowWidth()/40;
-        unsigned int posY = Configuration::getWindowHeight()/1.4;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) && player_response == true){
+			if (response == 1){
+				num_times_impressed++;
+				// std::cout << "Load ./assets/sprites/Diana-Happy.png" << std::endl;
+				rhs_character_tex.loadFromFile("./assets/sprites/Diana-Happy.png");
+			}
+			else{
+				num_times_impressed--;
+				//std::cout << "Load ./assets/sprites/Diana-Unimpressed.png" << std::endl;
+				rhs_character_tex.loadFromFile("./assets/sprites/Diana-Unimpressed.png");
+			}
+			unsigned int width = Configuration::getWindowWidth()/1.05;
+			unsigned int posX = Configuration::getWindowWidth()/40;
+			unsigned int posY = Configuration::getWindowHeight()/1.4;
 
-        rhs_character_sprite = sf::Sprite(rhs_character_tex);
-        rhs_character_sprite.setPosition(posX+width-rhs_character_tex.getSize().x, posY-rhs_character_tex.getSize().y-5);
+			rhs_character_sprite = sf::Sprite(rhs_character_tex);
+			rhs_character_sprite.setPosition(posX+width-rhs_character_tex.getSize().x, posY-rhs_character_tex.getSize().y-5);
 
-		    // skip to Diana's first response, the response to option 1
-		    //index++;
-		    text.setString(boxes[index].second);
-		    index = boxes.size();
-		    player_response = false;
-	    }
-	    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) && player_response == true){
-		    if (response == 2){
-			    num_times_impressed++;
-          //std::cout << "Load ./assets/sprites/Diana-Happy.png" << std::endl;
-          rhs_character_tex.loadFromFile("./assets/sprites/Diana-Happy.png");
-		    }
-		    else{
-			    num_times_impressed--;
-          //std::cout << "Load ./assets/sprites/Diana-Unimpressed.png" << std::endl;
-          rhs_character_tex.loadFromFile("./assets/sprites/Diana-Unimpressed.png");
-		    }
-        unsigned int width = Configuration::getWindowWidth()/1.05;
-        unsigned int posX = Configuration::getWindowWidth()/40;
-        unsigned int posY = Configuration::getWindowHeight()/1.4;
+			// skip to Diana's first response, the response to option 1
+			//index++;
+			text.setString(boxes[index].second);
+			index = boxes.size();
+			player_response = false;
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) && player_response == true){
+			if (response == 2){
+				num_times_impressed++;
+				//std::cout << "Load ./assets/sprites/Diana-Happy.png" << std::endl;
+				rhs_character_tex.loadFromFile("./assets/sprites/Diana-Happy.png");
+			}
+			else{
+				num_times_impressed--;
+				//std::cout << "Load ./assets/sprites/Diana-Unimpressed.png" << std::endl;
+				rhs_character_tex.loadFromFile("./assets/sprites/Diana-Unimpressed.png");
+			}
+			unsigned int width = Configuration::getWindowWidth()/1.05;
+			unsigned int posX = Configuration::getWindowWidth()/40;
+			unsigned int posY = Configuration::getWindowHeight()/1.4;
 
-        rhs_character_sprite = sf::Sprite(rhs_character_tex);
-        rhs_character_sprite.setPosition(posX+width-rhs_character_tex.getSize().x, posY-rhs_character_tex.getSize().y-5);
+			rhs_character_sprite = sf::Sprite(rhs_character_tex);
+			rhs_character_sprite.setPosition(posX+width-rhs_character_tex.getSize().x, posY-rhs_character_tex.getSize().y-5);
 
-		    // skip to Diana's first response, the response to option 1
-		    index++;
-		    text.setString(boxes[index].second);
-		    index = boxes.size();
-		    player_response = false;
-	    }
+			// skip to Diana's first response, the response to option 1
+			index++;
+			text.setString(boxes[index].second);
+			index = boxes.size();
+			player_response = false;
+		}
 
 	}
 }
@@ -367,6 +437,15 @@ void DialogueView::render(sf::RenderWindow *window){
 	    // once Diana and Phil sprites are finished, will be rendered here as well
 	    window->draw(lhs_character_sprite);
 	    window->draw(rhs_character_sprite);
+	}
+
+	if (display_commentary_flower) {
+		window->draw(commentary_prompt);
+		window->draw(commentary_flower);
+	}
+	else if (display_commentary_choices) {
+		window->draw(commentary_prompt);
+		window->draw(commentary_choices);
 	}
 }
 
@@ -441,7 +520,6 @@ std::vector<std::string> DialogueView::fitStringToBox(std::string str, int chara
 
 			// will it go past the horizontal bound?
 			std::size_t newline_loc = word.find("\n");
-			std::cout << word << " " << current_width << " " << word_width << " " << max_width << std::endl;
 			if (current_width + word_width > max_width || newline_loc != std::string::npos) {
 				if (center) {
 					int num_spaces = (int) ((max_width - current_width)/2)/space_width;

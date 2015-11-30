@@ -380,240 +380,241 @@ int CraftView::getNumFlowers(void) {
  **
  **/
 void CraftView::update(sf::RenderWindow *window, int* state) {
-  	EventManagerInterface::setViewDelegate(delegate);
+	EventManagerInterface::setViewDelegate(delegate);
 	EventManagerInterface::setCurrentActorList(&actorList);
 	// Checks player for current inventory, updates.
-    // Accessing this info from LevelView::Player's CollectorComponent.
-    if (LevelView::player != NULL){
-      StrongActorPtr player = LevelView::player;
-      StrongActorComponentPtr ac = player->components[CollectorComponent::id];
-      std::shared_ptr<CollectorComponent> cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
-      std::vector<StrongActorPtr> flowers = cc->getFlowers();
-	 if (flowers.size() > 0){
-	      // add flowers to persistent list to make available to other classes
-	      CraftView::actorList.insert(CraftView::actorList.end(), flowers.begin(), flowers.end());
+	// Accessing this info from LevelView::Player's CollectorComponent.
+	if (LevelView::player != NULL){
+		StrongActorPtr player = LevelView::player;
+		StrongActorComponentPtr ac = player->components[CollectorComponent::id];
+		std::shared_ptr<CollectorComponent> cc = std::dynamic_pointer_cast<CollectorComponent>(ac);
+		std::vector<StrongActorPtr> flowers = cc->getFlowers();
+		if (flowers.size() > 0){
+			// add flowers to persistent list to make available to other classes
+			CraftView::actorList.insert(CraftView::actorList.end(), flowers.begin(), flowers.end());
 
-	      // iterate through player's inventory to update inventory on screen
-	      for (int i=0; i < flowers.size() ; i++){
-		// here, flowerList is a vector full of StrongActorPtrs. determine the id of each strongactorptr
-		// to determine if it is a fire flower, water flower, air flower, or earth flower
-		  if (flowers[i]->isOfType("FireFlower")){
-		      fireFlowers++;
-		  }
-		  else if (flowers[i]->isOfType("WaterFlower")){
-		      waterFlowers++;
-		  }
-		  else if (flowers[i]->isOfType("AirFlower")){
-		      airFlowers++;
-		  }
-		  else if (flowers[i]->isOfType("EarthFlower")){
-		      earthFlowers++;
-		  }
+			// iterate through player's inventory to update inventory on screen
+			for (int i=0; i < flowers.size() ; i++){
+				// here, flowerList is a vector full of StrongActorPtrs. determine the id of each strongactorptr
+				// to determine if it is a fire flower, water flower, air flower, or earth flower
+				if (flowers[i]->isOfType("FireFlower")){
+					fireFlowers++;
+				}
+				else if (flowers[i]->isOfType("WaterFlower")){
+					waterFlowers++;
+				}
+				else if (flowers[i]->isOfType("AirFlower")){
+					airFlowers++;
+				}
+				else if (flowers[i]->isOfType("EarthFlower")){
+					earthFlowers++;
+				}
 
-		  //restore player's vases now that it's cleared space in inventory
-		  totalFlowers++;
-		  cc->setVases(cc->getVases()+1);
-	      }
-		LevelView::player->reset();
-	}
-    }
-      // Anticipates clicking in different areas of the screen
-      if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
-        pressed = true;
-        const sf::Vector2i pos = sf::Mouse::getPosition(*window);
-        if (has_crafted && diana_icon_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
-        	has_crafted = false;
+				//restore player's vases now that it's cleared space in inventory
+				totalFlowers++;
+				cc->setVases(cc->getVases()+1);
+			}
 			LevelView::player->reset();
-		  *state = 2;
-		   DialogueView::Create(("Level" + std::to_string(total_craft_visits)).c_str(), state);
+		}
+	}
+	// Anticipates clicking in different areas of the screen
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
+		pressed = true;
+		const sf::Vector2i pos = sf::Mouse::getPosition(*window);
+		if (has_crafted && diana_icon_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
+			has_crafted = false;
+			LevelView::player->reset();
+			*state = 2;
 
-		  ++total_craft_visits;
-		  cleanUp();
-        }
+			DialogueView::view_state = (view_state == 2) ? (2) : (1);
+			DialogueView::Create(("Level" + std::to_string(total_craft_visits)).c_str(), state);
+			++total_craft_visits;
+			cleanUp();
+		}
 
 
-        bool inList;
+		bool inList;
 
-        // checking to see if flowers clicked on
-        for (int i = 0; i <= 10; i++){
-		    // player attempts to use this item for crafting by clicking on them, but only if one of the two boxes are filled
-		    if (sprites[i].getGlobalBounds().contains(pos.x,pos.y)){
-			      // check if this sprite exists within the flowerlist - if so, sets
-			      // selected actor equal to the first flower it finds of that type
-			      for (int j = 0; j < actorList.size(); j++){
-					    // here, element 1 of flowerStrList[i] is a string indicating what type it is (i.e., SunFlower, FireFlower, etc.)
-					    if (actorList[j]->isOfType(std::get<1>(flowerStrList[i]))){
+		// checking to see if flowers clicked on
+		for (int i = 0; i <= 10; i++){
+			// player attempts to use this item for crafting by clicking on them, but only if one of the two boxes are filled
+			if (sprites[i].getGlobalBounds().contains(pos.x,pos.y)){
+				// check if this sprite exists within the flowerlist - if so, sets
+				// selected actor equal to the first flower it finds of that type
+				for (int j = 0; j < actorList.size(); j++){
+					// here, element 1 of flowerStrList[i] is a string indicating what type it is (i.e., SunFlower, FireFlower, etc.)
+					if (actorList[j]->isOfType(std::get<1>(flowerStrList[i]))){
 						if (box1 == false){
-				    			selectedActor1 = actorList[j];
+							selectedActor1 = actorList[j];
 							break;
-				    		}
-				    		else if (box2 == false && actorList[j] != selectedActor1){
-				    			selectedActor2 = actorList[j];
+						}
+						else if (box2 == false && actorList[j] != selectedActor1){
+							selectedActor2 = actorList[j];
 							break;
-				    		}
-				    	}
-			       }
+						}
+					}
+				}
 
-			      inList = false;
+				inList = false;
 
-			      if (i == 0 && fireFlowers > 0 && (box1 == false || box2 == false)){
+				if (i == 0 && fireFlowers > 0 && (box1 == false || box2 == false)){
 					fireFlowers--;
 					inList = true;
-			      }
-			      else if (i == 1 && waterFlowers > 0 && (box1 == false || box2 == false)){
+				}
+				else if (i == 1 && waterFlowers > 0 && (box1 == false || box2 == false)){
 					waterFlowers--;
 					inList = true;
-			      }
-			      else if (i == 2 && earthFlowers > 0 && (box1 == false || box2 == false)){
+				}
+				else if (i == 2 && earthFlowers > 0 && (box1 == false || box2 == false)){
 					earthFlowers--;
 					inList = true;
-			      }
-			      else if (i == 3 && airFlowers > 0 && (box1 == false || box2 == false)){
+				}
+				else if (i == 3 && airFlowers > 0 && (box1 == false || box2 == false)){
 					airFlowers--;
 					inList = true;
-			      }
-			      if (i == 4 && sunFlowers > 0 && (box1 == false || box2 == false)){
+				}
+				if (i == 4 && sunFlowers > 0 && (box1 == false || box2 == false)){
 					sunFlowers--;
 					inList = true;
-			      }
-			      else if (i == 5 && tulips > 0 && (box1 == false || box2 == false)){
+				}
+				else if (i == 5 && tulips > 0 && (box1 == false || box2 == false)){
 					tulips--;
 					inList = true;
-			      }
-			      else if (i == 6 && roses > 0 && (box1 == false || box2 == false)){
+				}
+				else if (i == 6 && roses > 0 && (box1 == false || box2 == false)){
 					roses--;
 					inList = true;
-			      }
-			      else if (i == 7 && violets > 0 && (box1 == false || box2 == false)){
+				}
+				else if (i == 7 && violets > 0 && (box1 == false || box2 == false)){
 					violets--;
 					inList = true;
-			      }
-			      else if (i == 8 && lilies > 0 && (box1 == false || box2 == false)){
+				}
+				else if (i == 8 && lilies > 0 && (box1 == false || box2 == false)){
 					lilies--;
 					inList = true;
-			      }
-			      else if (i == 9 && orchids > 0 && (box1 == false || box2 == false)){
+				}
+				else if (i == 9 && orchids > 0 && (box1 == false || box2 == false)){
 					violets--;
 					inList = true;
-			      }
-			      else if (i == 10 && magnolias > 0 && (box1 == false || box2 == false)){
+				}
+				else if (i == 10 && magnolias > 0 && (box1 == false || box2 == false)){
 					magnolias--;
 					inList = true;
-			      }
+				}
 
-			      if (box1 == false && inList == true){
-					 // draw sprite in box 1
-					  box1 = true;
-					  box1Sprite = sprites[i];
-					  totalFlowers--;
-					  // check here for if it's a base flower -- if it's a tier flower, needs to be scaled differently
-					  if (std::get<1>(flowerStrList[i]) == "FireFlower" || std::get<1>(flowerStrList[i]) == "WaterFlower" || std::get<1>(flowerStrList[i]) == "AirFlower" \
-					    || std::get<1>(flowerStrList[i]) == "EarthFlower"){
-					      box1Sprite.setScale(1.0f, 1.0f);
-					      box1Sprite.setPosition(Configuration::getWindowWidth()/5.71,Configuration::getWindowHeight()/12);
-					  }
-					  else{
-					    box1Sprite.setScale(0.4f, 0.4f);
-					    box1Sprite.setPosition(Configuration::getWindowWidth()/5.71,Configuration::getWindowHeight()/9);
-					  }
+				if (box1 == false && inList == true){
+					// draw sprite in box 1
+					box1 = true;
+					box1Sprite = sprites[i];
+					totalFlowers--;
+					// check here for if it's a base flower -- if it's a tier flower, needs to be scaled differently
+					if (std::get<1>(flowerStrList[i]) == "FireFlower" || std::get<1>(flowerStrList[i]) == "WaterFlower" || std::get<1>(flowerStrList[i]) == "AirFlower" \
+							|| std::get<1>(flowerStrList[i]) == "EarthFlower"){
+						box1Sprite.setScale(1.0f, 1.0f);
+						box1Sprite.setPosition(Configuration::getWindowWidth()/5.71,Configuration::getWindowHeight()/12);
+					}
+					else{
+						box1Sprite.setScale(0.4f, 0.4f);
+						box1Sprite.setPosition(Configuration::getWindowWidth()/5.71,Configuration::getWindowHeight()/9);
+					}
 
-				  }
-			      else if (box2 == false && inList == true){
-					 // draw sprite in box 2
+				}
+				else if (box2 == false && inList == true){
+					// draw sprite in box 2
 					box2 = true;
 					box2Sprite = sprites[i];
 					if (std::get<1>(flowerStrList[i]) == "FireFlower" || std::get<1>(flowerStrList[i]) == "WaterFlower" || std::get<1>(flowerStrList[i]) == "AirFlower" \
-					    || std::get<1>(flowerStrList[i]) == "EarthFlower"){
-					      box2Sprite.setScale(1.0f, 1.0f);
-					      box2Sprite.setPosition(Configuration::getWindowWidth()/3.2,Configuration::getWindowHeight()/12);
+							|| std::get<1>(flowerStrList[i]) == "EarthFlower"){
+						box2Sprite.setScale(1.0f, 1.0f);
+						box2Sprite.setPosition(Configuration::getWindowWidth()/3.2,Configuration::getWindowHeight()/12);
 
 					}
 					else{
-					    box2Sprite.setScale(0.4f, 0.4f);
-					    box2Sprite.setPosition(Configuration::getWindowWidth()/3.2,Configuration::getWindowHeight()/9);
+						box2Sprite.setScale(0.4f, 0.4f);
+						box2Sprite.setPosition(Configuration::getWindowWidth()/3.2,Configuration::getWindowHeight()/9);
 
 					}
 					totalFlowers--;
-				  }
-		    }
+				}
+			}
+		}
+
+		// Check here for the 'Craft' button to have been clicked and two flowers have been selected to be filled
+		if (craft_button.getGlobalBounds().contains(pos.x, pos.y) && box1 == true && box2 == true){
+
+
+			StrongActorComponentPtr actor1AC = selectedActor1->components[CraftableComponent::id];
+			std::shared_ptr<CraftableComponent> actor1CC = std::dynamic_pointer_cast<CraftableComponent>(actor1AC);
+			StrongActorComponentPtr actor2AC = selectedActor2->components[CraftableComponent::id];
+			std::shared_ptr<CraftableComponent> actor2CC = std::dynamic_pointer_cast<CraftableComponent>(actor2AC);
+
+
+			// Clear sprite image, add newly combined sprite to inventory?
+			if (actor1CC->doesCombineWith(*actor2CC)){
+				box1 = false;
+				box2 = false;
+				//actor1CC->combineWith(*actor2CC);
+				if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0, selectedActor1->getInstance(), selectedActor2->getInstance())))
+					std::cout << "CraftView::update: Unable to queue event" << std::endl;
+				//std::cout << "Sent craft event to Flower: " << selectedActor1->getInstance() << " and Flower: " << selectedActor2->getInstance() << std::endl;
+				selectedActor1 = nullptr;
+				selectedActor2 = nullptr;
+			}
+
+			// update text box to indicate that you cannot combine flowers
+			else {
+				std::cout << "CraftView::Update: Unable to craft " << selectedActor1->getId().back() << " and Flower: " << selectedActor2->getId().back() << std::endl;
+				text.setString(fitStringToBox("Gee Phil, I don't think Diana would like those. Why don't you try something else?", text.getCharacterSize(), backlay_size));
+			}
+		}
+
+		// Check to see if flowers within the craft box are clicked to return them to player inventory
+		if (box1 == true && box1Sprite.getGlobalBounds().contains(pos.x,pos.y)){
+			//std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor1->getId().back() << std::endl;
+			box1 = false;
+			returnFlower(selectedActor1);
+			selectedActor1 = nullptr;
+		}
+
+		// Attempting to remove flower from box2 of craft table and return them to player inventory
+		if (box2 == true && box2Sprite.getGlobalBounds().contains(pos.x,pos.y)){
+			//std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor2->getId().back() << std::endl;
+			box2 = false;
+			returnFlower(selectedActor2);
+			selectedActor2 = nullptr;
+		}
+
+		// Draw recipe book
+		if (scroll_icon_sprite.getGlobalBounds().contains(pos.x, pos.y)){
+			if (drawBook == true){
+				drawBook = false;
+			}
+			else{
+				drawBook = true;
+			}
+		}
+
+		// If we are in tutorial AND the hints box is visible AND the player has clicked
+		// inside the hints box or pressed space, we turn off the hints box.
+		if (hints_prompt.getGlobalBounds().contains(pos.x, pos.y) && drawHints == true){
+			drawHints = false;
+		}
+
+		// Return to MapView
+		if (map_icon_sprite.getGlobalBounds().contains(pos.x, pos.y) && first_click) {
+			LevelView::player->reset();
+			*state = 0;
+			cleanUp();
+		}
+
+
 	}
 
-	// Check here for the 'Craft' button to have been clicked and two flowers have been selected to be filled
-	if (craft_button.getGlobalBounds().contains(pos.x, pos.y) && box1 == true && box2 == true){
-
-
-	   StrongActorComponentPtr actor1AC = selectedActor1->components[CraftableComponent::id];
-	   std::shared_ptr<CraftableComponent> actor1CC = std::dynamic_pointer_cast<CraftableComponent>(actor1AC);
-	   StrongActorComponentPtr actor2AC = selectedActor2->components[CraftableComponent::id];
-	   std::shared_ptr<CraftableComponent> actor2CC = std::dynamic_pointer_cast<CraftableComponent>(actor2AC);
-
-
-	   // Clear sprite image, add newly combined sprite to inventory?
-	   if (actor1CC->doesCombineWith(*actor2CC)){
-		   box1 = false;
-		   box2 = false;
-		   //actor1CC->combineWith(*actor2CC);
-		   if (!EventManagerInterface::get()->queueEvent(new CraftEvent(0, selectedActor1->getInstance(), selectedActor2->getInstance())))
-			   std::cout << "CraftView::update: Unable to queue event" << std::endl;
-		   //std::cout << "Sent craft event to Flower: " << selectedActor1->getInstance() << " and Flower: " << selectedActor2->getInstance() << std::endl;
-		   selectedActor1 = nullptr;
-		   selectedActor2 = nullptr;
-	   }
-
-	   // update text box to indicate that you cannot combine flowers
-	   else {
-	     std::cout << "CraftView::Update: Unable to craft " << selectedActor1->getId().back() << " and Flower: " << selectedActor2->getId().back() << std::endl;
-	     text.setString(fitStringToBox("Gee Phil, I don't think Diana would like those. Why don't you try something else?", text.getCharacterSize(), backlay_size));
-	   }
+	// mouse click released
+	else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
+		pressed = false;
+		first_click = true;
 	}
-
-	// Check to see if flowers within the craft box are clicked to return them to player inventory
-	if (box1 == true && box1Sprite.getGlobalBounds().contains(pos.x,pos.y)){
-	    //std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor1->getId().back() << std::endl;
-	    box1 = false;
-	    returnFlower(selectedActor1);
-	    selectedActor1 = nullptr;
-	}
-
-	// Attempting to remove flower from box2 of craft table and return them to player inventory
-	if (box2 == true && box2Sprite.getGlobalBounds().contains(pos.x,pos.y)){
-	    //std::cout << "CraftView::Update: Returning to inventory flower of type " + selectedActor2->getId().back() << std::endl;
-	    box2 = false;
-	    returnFlower(selectedActor2);
-	    selectedActor2 = nullptr;
-	}
-
-	// Draw recipe book
-	if (scroll_icon_sprite.getGlobalBounds().contains(pos.x, pos.y)){
-	    if (drawBook == true){
-	      drawBook = false;
-	    }
-	    else{
-	      drawBook = true;
-	    }
-	}
-
-	// If we are in tutorial AND the hints box is visible AND the player has clicked
-	// inside the hints box or pressed space, we turn off the hints box.
-	if (hints_prompt.getGlobalBounds().contains(pos.x, pos.y) && drawHints == true){
-		drawHints = false;
-	}
-
-	// Return to MapView
-	if (map_icon_sprite.getGlobalBounds().contains(pos.x, pos.y) && first_click) {
-		LevelView::player->reset();
-		*state = 0;
-		cleanUp();
-	}
-
-
-     }
-
-      // mouse click released
-    else if (!(sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
-        pressed = false;
-	first_click = true;
-     }
 
 }
 
