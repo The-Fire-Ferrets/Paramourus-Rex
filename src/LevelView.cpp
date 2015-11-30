@@ -874,7 +874,7 @@ void LevelView::render(sf::RenderWindow *window) {
 		window->draw(minimap_border);
 		std::vector<StrongActorPtr>::iterator it;
 		for (it = actorList.begin(); it != actorList.end(); it++) {
-			if (player != *it && homer != *it) {
+			if (homer != *it) {
 				(*it)->render(window, false);
 				if ((commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 4))
 					window->draw(commentary[(*it)->getInstance()]);

@@ -620,7 +620,7 @@ void Pathfinder::changeVision(sf::Vector2f start_init_pos, sf::Vector2f targ_ini
 		if (paths[start_ptr].first != NULL) {
 			if (paths[start_ptr].first == targ_ptr)
 				return;
-			std::cout << "Changing Vision " << target_values[targ_ptr] << " " << start_ptr->first << " " << start_ptr->second << " " << targ_ptr->first << " " << targ_ptr->second << std::endl;
+			//std::cout << "Changing Vision " << target_values[targ_ptr] << " " << start_ptr->first << " " << start_ptr->second << " " << targ_ptr->first << " " << targ_ptr->second << std::endl;
 			paths[start_ptr].second->clear();
 		}
 		

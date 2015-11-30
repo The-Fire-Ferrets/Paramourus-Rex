@@ -441,7 +441,7 @@ std::vector<std::string> DialogueView::fitStringToBox(std::string str, int chara
 
 			// will it go past the horizontal bound?
 			std::size_t newline_loc = word.find("\n");
-			std::cout << word << " " << current_width << " " << word_width << " " << max_width << std::endl;
+			//std::cout << word << " " << current_width << " " << word_width << " " << max_width << std::endl;
 			if (current_width + word_width > max_width || newline_loc != std::string::npos) {
 				if (center) {
 					int num_spaces = (int) ((max_width - current_width)/2)/space_width;
