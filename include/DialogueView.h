@@ -45,7 +45,7 @@ class DialogueView {
 
 		static bool pressed;
 
-		static std::vector<std::string> fitStringToDialogueBox(std::string str);
+		static std::vector<std::string> fitStringToBox(std::string str, int character_size = 0, sf::Vector2f box_size = sf::Vector2f(0, 0), bool center = true);
 
 		static sf::SoundBuffer buffer;
 		static sf::Sound sound;
