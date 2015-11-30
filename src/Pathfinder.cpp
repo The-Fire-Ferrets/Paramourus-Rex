@@ -785,7 +785,7 @@ void Pathfinder::generateHCosts(void) {
 		generateHCost_helper(left, &temp_grid);
 		target_grids.insert(std::pair<GridLocation*, Grid>(target_ptr, temp_grid));
 	}
-	std::cout << "Pathfinder Cost Generation Success!" << std::endl;
+	//std::cout << "Pathfinder Cost Generation Success!" << std::endl;
 	generatingPaths = false;	
 }
 
