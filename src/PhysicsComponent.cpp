@@ -116,10 +116,13 @@ void PhysicsComponent::update(float time) {
 			vision_timer.restart();
 			LevelView::inVision++;
 		}
-		else if (inVision && vision_timer.getElapsedTime().asSeconds() > 5) {
+		else if (!LevelView::player->intersects(vision_boundary_sprite.getGlobalBounds()) && inVision && vision_timer.getElapsedTime().asSeconds() > 5) {
 			inVision = false;
 			Pathfinder::removeFromPaths(LevelView::player->getInitialPosition(), owner->getInitialPosition());
 			LevelView::inVision--;
+		}
+		else if (LevelView::player->intersects(vision_boundary_sprite.getGlobalBounds())) {
+			vision_timer.restart();
 		}
 			 
 	}

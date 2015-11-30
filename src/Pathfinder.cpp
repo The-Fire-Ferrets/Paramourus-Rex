@@ -508,6 +508,8 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 	for (auto itr = inVision.begin(); itr != inVision.end(); itr++) {
 		if ( itr->second && itr->first.first == start_ptr ) {
 			if (isValidTarget(itr->first.second)) {
+				if (*(itr->first.second) == curr_pair)
+					return false;
 				if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 					return false;
 				//std::cout << "Branch 0" << std::endl;
@@ -524,7 +526,9 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 				return true;
 			}
 			else {
-				itr->second = false;
+				for (auto itr2 = inVision.begin(); itr2 != inVision.end(); itr2++)
+					if (itr2->first.second == itr->first.second)
+						itr2->second = false;
 			}
 		}
 	
@@ -616,7 +620,7 @@ void Pathfinder::changeVision(sf::Vector2f start_init_pos, sf::Vector2f targ_ini
 		if (paths[start_ptr].first != NULL) {
 			if (paths[start_ptr].first == targ_ptr)
 				return;
-			std::cout << "Changing Vision " << target_values[targ_ptr] << " " << start_ptr->first << " " << start_ptr->second << " " << targ_ptr->first << " " << targ_ptr->second << std::endl;
+			//std::cout << "Changing Vision " << target_values[targ_ptr] << " " << start_ptr->first << " " << start_ptr->second << " " << targ_ptr->first << " " << targ_ptr->second << std::endl;
 			paths[start_ptr].second->clear();
 		}
 		
