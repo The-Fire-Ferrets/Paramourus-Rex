@@ -55,6 +55,7 @@ class PhysicsComponent : public ActorComponent {
 		sf::Vector2f vision_boundary_position;
 		bool use_vision_boundary;
 		bool inVision;
+		std::pair<int, bool> inVision_flower;
 		sf::Texture vision_boundary_texture;
 		sf::Sprite vision_boundary_sprite;
 		sf::Clock vision_timer;

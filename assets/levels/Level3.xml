@@ -148,12 +148,29 @@
 		<Pathfinder PathType = "-6"/>
 	</Obstacle>
 
+
 	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
 		<Location X = "422" Y = "335" Width = "10" Height = "10"/>		
 		<PhysicsComponent>
 			<Properties Type = "Transparent"/>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-6"/>
+	</Obstacle>
+
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "152" Y = "303" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-7"/>
+	</Obstacle>
+
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "389" Y = "447" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-7"/>
 	</Obstacle>
 
 	<NPC Generate = "1">
@@ -165,6 +182,17 @@
 			<VisionBoundary Height = "80" Width = "80" X = "-50" Y = "-50"/>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-3" TargetType = "-6"/>
+	</NPC>
+
+	<NPC Generate = "1">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<InputComponent>
+			<Control Speed = "3.5"/>
+		</InputComponent>
+		<PhysicsComponent>
+			<VisionBoundary Height = "80" Width = "80" X = "-50" Y = "-50"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-3" TargetType = "-7"/>
 	</NPC>
 	
 

@@ -82,7 +82,8 @@ sf::Sprite CraftView::hints_prompt;
 int CraftView::hints_size;
 
 //sf::RectangleShape CraftView::backlay;
-sf::RectangleShape CraftView::craft_button;
+//sf::RectangleShape CraftView::craft_button;
+sf::Sprite CraftView::craft_button;
 sf::RectangleShape CraftView::map_button; // Ways to exit the crafting table
 bool CraftView::has_crafted = false;
 
@@ -114,12 +115,12 @@ sf::Sprite CraftView::backlay;
  ** state: current game state
  **/
 void CraftView::Create(const char* resource) {
-    //Reference to current location in Actor population array
-    //Holds referenced to loaded XML file
-    totalFlowers = 0;
+	//Reference to current location in Actor population array
+	//Holds referenced to loaded XML file
+	totalFlowers = 0;
 	view_state = 1;
 	has_crafted = false;
-    pugi::xml_document doc;
+	pugi::xml_document doc;
 	if (delegate == NULL)
 		delegate.bind(&CraftView::update);
 	if (!has_delegates) {
@@ -127,178 +128,178 @@ void CraftView::Create(const char* resource) {
 		has_delegates = true;
 	}
 
-    //Error check to see if file was loaded correctly
-    pugi::xml_parse_result result;
-    std::string resource_str(resource);
-    if (!(result = doc.load_file(("./assets/" + resource_str + ".xml").c_str()))) {
-        std::cout << "CraftView::Create(...): Failed to load" << std::endl;
-        std::cout << "Filename: " << resource << " Load result: " << result.description() << std::endl;
-    }
+	//Error check to see if file was loaded correctly
+	pugi::xml_parse_result result;
+	std::string resource_str(resource);
+	if (!(result = doc.load_file(("./assets/" + resource_str + ".xml").c_str()))) {
+		std::cout << "CraftView::Create(...): Failed to load" << std::endl;
+		std::cout << "Filename: " << resource << " Load result: " << result.description() << std::endl;
+	}
 
-    /* hints_overlay.setPosition(Configuration::getWindowWidth()/5.5, Configuration::getWindowHeight()/4); */
-    /* hints_overlay.setOutlineColor(sf::Color::Black); */
-    /* hints_overlay.setFillColor(sf::Color::White); */
-    /* hints_overlay.setSize(sf::Vector2f(Configuration::getWindowWidth()/1.7,Configuration::getWindowHeight()/2)); */
-    /* hints_overlay.setOutlineThickness(5); */
+	/* hints_overlay.setPosition(Configuration::getWindowWidth()/5.5, Configuration::getWindowHeight()/4); */
+	/* hints_overlay.setOutlineColor(sf::Color::Black); */
+	/* hints_overlay.setFillColor(sf::Color::White); */
+	/* hints_overlay.setSize(sf::Vector2f(Configuration::getWindowWidth()/1.7,Configuration::getWindowHeight()/2)); */
+	/* hints_overlay.setOutlineThickness(5); */
 
-    //Used to iterate over XML file to get attributes for this display -- currently none but background
-    pugi::xml_node tools = doc.child(resource);
-    char* temp;
+	//Used to iterate over XML file to get attributes for this display -- currently none but background
+	pugi::xml_node tools = doc.child(resource);
+	char* temp;
 
-    for (pugi::xml_attribute attr = tools.first_attribute(); attr; attr = attr.next_attribute()) {
-        // Background to hold general backdrop image, + static image of "crafting companion"
-        if (!strcmp(attr.name(), "Background")) {
-            background_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
-            background = sf::Sprite(background_texture, sf::IntRect(0, 0, Configuration::getWindowWidth(),  Configuration::getWindowHeight()));
-            background.setPosition(sf::Vector2f(0,0));
-        }
+	for (pugi::xml_attribute attr = tools.first_attribute(); attr; attr = attr.next_attribute()) {
+		// Background to hold general backdrop image, + static image of "crafting companion"
+		if (!strcmp(attr.name(), "Background")) {
+			background_texture.loadFromFile(("./assets/backgrounds/" + (std::string)attr.value()).c_str());
+			background = sf::Sprite(background_texture, sf::IntRect(0, 0, Configuration::getWindowWidth(),  Configuration::getWindowHeight()));
+			background.setPosition(sf::Vector2f(0,0));
+		}
 		else if (!strcmp(attr.name(), "Prompt")) {
 			hints_prompt_texture.loadFromFile(("./assets/sprites/" + std::string(attr.value())).c_str());
 		}
 		else if (!strcmp(attr.name(), "Backlay")) {
 			backlay_texture.loadFromFile(("./assets/sprites/" + std::string(attr.value())).c_str());
 		}
-        // Font for general text on screen
-        else if (!strcmp(attr.name(), "Font")) {
-            font.loadFromFile(("./assets/" + (std::string)attr.value()).c_str());
-            text.setFont(font);
-            hints_text.setFont(font);
-	    flower_text.setFont(font);
-        }
-        // Size of dialogue text
-        else if (!strcmp(attr.name(), "Text_Size")) {
-            text.setCharacterSize(std::strtol(attr.value(), &temp, 10));
-	    flower_text.setCharacterSize(25);
-
-            if (*temp != '\0') {
-                std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
-            }
-        }
-        // Pos of dialogue text
-        else if (!strcmp(attr.name(), "Text_X")) {
-            text_pos.x = (std::strtol(attr.value(), &temp, 10));
-            if (*temp != '\0') {
-                std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
-            }
-        }
-        // Pos of dialogue text
-        else if (!strcmp(attr.name(), "Text_Y")) {
-            text_pos.y = (std::strtol(attr.value(), &temp, 10));
-            if (*temp != '\0') {
-                std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
-            }
-        }
-        // Pos of hints text
-        else if (!strcmp(attr.name(), "Hints_PosX")) {
-            hints_text_pos.x = (std::strtol(attr.value(), &temp, 10));
-            if (*temp != '\0') {
-                std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
-            }
-        }
-        // Pos of hints text
-        else if (!strcmp(attr.name(), "Hints_PosY")) {
-            hints_text_pos.y = (std::strtol(attr.value(), &temp, 10));
-            if (*temp != '\0') {
-                std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
-            }
-        }
-        // texture and position of map icon so it can be interacted with
-        else if (!strcmp(attr.name(), "Map")) {
-    	    if (!map_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
-    		  std::cout << "CraftView::Create: Failed to load " << attr.value();
-    	    }
-    	    map_icon_sprite = sf::Sprite(map_texture);
-    	    map_icon_sprite.setPosition(Configuration::getWindowWidth()/1.17,Configuration::getWindowHeight()/40);
-        }
-        else if (!strcmp(attr.name(), "Diana_Icon")) {
-    	    if (!diana_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
-    		  std::cout << "CraftView::Create: Failed to load " << attr.value();
-    	    }
-    	    diana_icon_sprite = sf::Sprite(diana_icon_texture);
-        }
-        else if(!strcmp(attr.name(), "Recipes_Icon")) {
-	    if (!scroll_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
-    		  std::cout << "CraftView::Create: Failed to load " << attr.value();
-    	    }
-    	    scroll_icon_sprite = sf::Sprite(scroll_icon_texture);
-	    	scroll_icon_sprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.16);
+		// Font for general text on screen
+		else if (!strcmp(attr.name(), "Font")) {
+			font.loadFromFile(("./assets/" + (std::string)attr.value()).c_str());
+			text.setFont(font);
+			hints_text.setFont(font);
+			flower_text.setFont(font);
 		}
-  //       else if(!strcmp(attr.name(), "Hints_Icon")) {
-	 //    if (!hints_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
-  //   		  std::cout << "CraftView::Create: Failed to load " << attr.value();
-  //   	    }
-  //   	    hints_icon_sprite = sf::Sprite(hints_icon_texture);
-	 //    	hints_icon_sprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.15);
+		// Size of dialogue text
+		else if (!strcmp(attr.name(), "Text_Size")) {
+			text.setCharacterSize(std::strtol(attr.value(), &temp, 10));
+			flower_text.setCharacterSize(25);
+
+			if (*temp != '\0') {
+				std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
+		}
+		// Pos of dialogue text
+		else if (!strcmp(attr.name(), "Text_X")) {
+			text_pos.x = (std::strtol(attr.value(), &temp, 10));
+			if (*temp != '\0') {
+				std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
+		}
+		// Pos of dialogue text
+		else if (!strcmp(attr.name(), "Text_Y")) {
+			text_pos.y = (std::strtol(attr.value(), &temp, 10));
+			if (*temp != '\0') {
+				std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
+		}
+		// Pos of hints text
+		else if (!strcmp(attr.name(), "Hints_PosX")) {
+			hints_text_pos.x = (std::strtol(attr.value(), &temp, 10));
+			if (*temp != '\0') {
+				std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
+		}
+		// Pos of hints text
+		else if (!strcmp(attr.name(), "Hints_PosY")) {
+			hints_text_pos.y = (std::strtol(attr.value(), &temp, 10));
+			if (*temp != '\0') {
+				std::cout << "CraftView::Create: Error reading attribute for " << attr.name() << std::endl;
+			}
+		}
+		// texture and position of map icon so it can be interacted with
+		else if (!strcmp(attr.name(), "Map")) {
+			if (!map_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+				std::cout << "CraftView::Create: Failed to load " << attr.value();
+			}
+			map_icon_sprite = sf::Sprite(map_texture);
+			map_icon_sprite.setPosition(Configuration::getWindowWidth()/1.17,Configuration::getWindowHeight()/40);
+		}
+		else if (!strcmp(attr.name(), "Diana_Icon")) {
+			if (!diana_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+				std::cout << "CraftView::Create: Failed to load " << attr.value();
+			}
+			diana_icon_sprite = sf::Sprite(diana_icon_texture);
+		}
+		else if(!strcmp(attr.name(), "Recipes_Icon")) {
+			if (!scroll_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+				std::cout << "CraftView::Create: Failed to load " << attr.value();
+			}
+			scroll_icon_sprite = sf::Sprite(scroll_icon_texture);
+			scroll_icon_sprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.16);
+		}
+		//       else if(!strcmp(attr.name(), "Hints_Icon")) {
+		//    if (!hints_icon_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+		//   		  std::cout << "CraftView::Create: Failed to load " << attr.value();
+		//   	    }
+		//   	    hints_icon_sprite = sf::Sprite(hints_icon_texture);
+		//    	hints_icon_sprite.setPosition(Configuration::getWindowWidth()/40,Configuration::getWindowHeight()/1.15);
 		// }
 		else if(!strcmp(attr.name(), "Recipe_Scroll")) {
-	    if (!scroll_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
-    		  std::cout << "CraftView::Create: Failed to load " << attr.value();
-    	    }
-    	    //recipe_scroll_sprite= sf::Sprite(texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/1.33, Configuration::getWindowHeight()/1.33));
-    	    recipe_scroll_sprite= sf::Sprite(scroll_texture, sf::IntRect(0, 0, 700,200));
-	    	recipe_scroll_sprite.setPosition(60, 150);
+			if (!scroll_texture.loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str())){
+				std::cout << "CraftView::Create: Failed to load " << attr.value();
+			}
+			//recipe_scroll_sprite= sf::Sprite(texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/1.33, Configuration::getWindowHeight()/1.33));
+			recipe_scroll_sprite= sf::Sprite(scroll_texture, sf::IntRect(0, 0, 700,200));
+			recipe_scroll_sprite.setPosition(60, 150);
 
-	    //recipe_scroll_sprite.setPosition(Configuration::getWindowWidth()/7,Configuration::getWindowHeight()/15);
-	    }
-    }
+			//recipe_scroll_sprite.setPosition(Configuration::getWindowWidth()/7,Configuration::getWindowHeight()/15);
+		}
+	}
 
 	sf::Vector2u prompt_size = hints_prompt_texture.getSize();
 	hints_prompt = sf::Sprite(hints_prompt_texture, sf::IntRect(0, 0, prompt_size.x, prompt_size.y));
 	hints_prompt.setPosition(sf::Vector2f(75, 75));
 
-    // Backlay set off to the side to allow space for item select screens to the left
+	// Backlay set off to the side to allow space for item select screens to the left
 	backlay = sf::Sprite(backlay_texture, sf::IntRect(0, 0, prompt_size.x, prompt_size.y));
 	backlay.setPosition(Configuration::getWindowWidth()/6.6, Configuration::getWindowHeight()/1.4);
 	backlay.setScale((Configuration::getWindowWidth()/1.3) / prompt_size.x,
 			(Configuration::getWindowHeight()/4.0) / prompt_size.y);
 
-    //Iterates over XML to get components to add, primarily sprites to populate the screen with
-    int i = 0;
-    for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling(), i++) {
-	  for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()){
-	  	  if (!strcmp(attr.name(), "Hint_Text")){
-	  	  	hints_text.setString(fitStringToBox(attr.value()));
-			hints_text.setCharacterSize(hints_size);
-	  	  }
-	      if (!strcmp(attr.name(), "Sprite")) {
-		  if (!textures[i].loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str() + std::string(".png"))){
-			std::cout << "CraftView::Create: Failed to load " << attr.value();
-		  }
-		  // create sprite w/texture, push it to stack w/associated string it was made with
-		  flowerStrList.push_back(std::make_tuple(sf::Sprite(textures[i], sf::IntRect(0,0, textures[i].getSize().x, textures[i].getSize().y)), (std::string)attr.value()));
-	      }
-	      // pos of sprite
-	      else if (!strcmp(attr.name(), "X")){
-		  positions[i].x = std::strtol(attr.value(), &temp, 10);
-		  if (*temp != '\0'){
-		      std::cout << "CraftView::Create: Error reading attribute for " << tool.name() << std::endl;
-		  }
-	      }
-	      else if (!strcmp(attr.name(), "Y")) {
-		  positions[i].y =std::strtol(attr.value(), &temp, 10);
-		  if (*temp != '\0') {
-		    std::cout << "CraftView::Create: Error reading attribute for " << tool.name() << std::endl;
-		  }
-	      }
-	      else if (!strcmp(attr.name(), "Width")){
-		sizes[i].x = std::strtol(attr.value(), &temp, 10);
-		if (*temp != '\0') {
-		  std::cout << "CraftView::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+	//Iterates over XML to get components to add, primarily sprites to populate the screen with
+	int i = 0;
+	for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling(), i++) {
+		for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()){
+			if (!strcmp(attr.name(), "Hint_Text")){
+				hints_text.setString(fitStringToBox(attr.value()));
+				hints_text.setCharacterSize(hints_size);
+			}
+			if (!strcmp(attr.name(), "Sprite")) {
+				if (!textures[i].loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str() + std::string(".png"))){
+					std::cout << "CraftView::Create: Failed to load " << attr.value();
+				}
+				// create sprite w/texture, push it to stack w/associated string it was made with
+				flowerStrList.push_back(std::make_tuple(sf::Sprite(textures[i], sf::IntRect(0,0, textures[i].getSize().x, textures[i].getSize().y)), (std::string)attr.value()));
+			}
+			// pos of sprite
+			else if (!strcmp(attr.name(), "X")){
+				positions[i].x = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0'){
+					std::cout << "CraftView::Create: Error reading attribute for " << tool.name() << std::endl;
+				}
+			}
+			else if (!strcmp(attr.name(), "Y")) {
+				positions[i].y =std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+					std::cout << "CraftView::Create: Error reading attribute for " << tool.name() << std::endl;
+				}
+			}
+			else if (!strcmp(attr.name(), "Width")){
+				sizes[i].x = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+					std::cout << "CraftView::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+				}
+			}
+			else if (!strcmp(attr.name(),"Height")) {
+				sizes[i].y = std::strtol(attr.value(), &temp, 10);
+				if (*temp != '\0') {
+					std::cout << "CraftView::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
+				}
+			}
 		}
-	      }
-	      else if (!strcmp(attr.name(),"Height")) {
-		sizes[i].y = std::strtol(attr.value(), &temp, 10);
-		if (*temp != '\0') {
-		  std::cout << "CraftView::PostInit: Failed to post-initialize: Error reading attribute for " << attr.name() << std::endl;
-		}
-	      }
-	  }
-    }
+	}
 
-    // Setting dialogue text position
-    text.setPosition(text_pos);
-    text.setColor(sf::Color::Black);
-    flower_text.setColor(sf::Color::Black);
+	// Setting dialogue text position
+	text.setPosition(text_pos);
+	text.setColor(sf::Color::Black);
+	flower_text.setColor(sf::Color::Black);
 
 	// position the hints box and text
 	sf::Vector2f hints_position = hints_prompt.getPosition();
@@ -306,7 +307,7 @@ void CraftView::Create(const char* resource) {
 	sf::FloatRect text_bounds = hints_text.getGlobalBounds();
 	hints_text.setPosition(hints_position.x + hints_bounds.width/2.f - text_bounds.width/2.f,
 			hints_position.y + hints_bounds.height/2.f - text_bounds.height/2.f);
-    hints_text.setColor(sf::Color::Black);
+	hints_text.setColor(sf::Color::Black);
 
 	// map_button.setPosition(Configuration::getWindowWidth() - 110, 10);
 	// map_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/15));
@@ -317,20 +318,21 @@ void CraftView::Create(const char* resource) {
 	diana_icon_sprite.setPosition(Configuration::getWindowWidth() - 110, 70);
 	// diana_icon_sprite.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/8));
 
-    craft_button.setPosition(Configuration::getWindowWidth()/4, Configuration::getWindowHeight()/3.53);
-    craft_button.setFillColor(sf::Color::White);
-    craft_button.setOutlineColor(sf::Color::Black);
-    craft_button.setOutlineThickness(5);
-    craft_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/10, Configuration::getWindowHeight()/15));
+	craft_button = sf::Sprite(backlay_texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/10, Configuration::getWindowHeight()/15));
+	craft_button.setPosition(Configuration::getWindowWidth()/4, Configuration::getWindowHeight()/3.53);
+	//craft_button.setFillColor(sf::Color::White);
+	//craft_button.setOutlineColor(sf::Color::Black);
+	//craft_button.setOutlineThickness(5);
+	//craft_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/10, Configuration::getWindowHeight()/15));
 
-    // gather data for sprites to be rendered on screen
-    for (int count = 0; count < i; count++){
-    	  sprites[count] = sf::Sprite(textures[count], sf::IntRect(0,0, textures[count].getSize().x, textures[count].getSize().y));
-	  sprites[count].setScale(sizes[count].x/(textures[count].getSize()).x, sizes[count].y/(textures[count].getSize()).y);
-	  sprites[count].setPosition(positions[count]);
-	  std::get<0>(flowerStrList[count]).setScale(sizes[count].x/(textures[count].getSize()).x, sizes[count].y/(textures[count].getSize()).y);
-	  std::get<0>(flowerStrList[count]).setPosition(positions[count]);
-    }
+	// gather data for sprites to be rendered on screen
+	for (int count = 0; count < i; count++){
+		sprites[count] = sf::Sprite(textures[count], sf::IntRect(0,0, textures[count].getSize().x, textures[count].getSize().y));
+		sprites[count].setScale(sizes[count].x/(textures[count].getSize()).x, sizes[count].y/(textures[count].getSize()).y);
+		sprites[count].setPosition(positions[count]);
+		std::get<0>(flowerStrList[count]).setScale(sizes[count].x/(textures[count].getSize()).x, sizes[count].y/(textures[count].getSize()).y);
+		std::get<0>(flowerStrList[count]).setPosition(positions[count]);
+	}
 
 	// draw character art
 	unsigned int width = Configuration::getWindowWidth()/10;
@@ -343,7 +345,7 @@ void CraftView::Create(const char* resource) {
 
 
 	// set text to initial greeting from Homer
-    std::string str = "It's good to see you back Phil! You have " + std::to_string(totalFlowers) + " new flowers! If you click on a few flowers you want to combine, I can make you something new!";
+	std::string str = "It's good to see you back Phil! You have " + std::to_string(totalFlowers) + " new flowers! If you click on the flowers you want to combine, I can make you something new!";
 	int box_begin_x = backlay.getPosition().x;
 	int box_begin_y = backlay.getPosition().y;
 	int box_end_x   = box_begin_x + backlay.getGlobalBounds().width;
@@ -358,22 +360,22 @@ void CraftView::Create(const char* resource) {
 			backlay.getGlobalBounds().height - (text_begin_y-box_begin_y)*2.f
 			);
 
-    text.setString(fitStringToBox(str, text.getCharacterSize(), backlay_size));
+	text.setString(fitStringToBox(str, text.getCharacterSize(), backlay_size));
 
-    if (!buffer.loadFromFile("./assets/music/marina-s-rhythm.ogg")) {
-	std::cout << "CraftView::Create: failed to load music" << std::endl;
-    }
-    sound.setBuffer(buffer);
-    sound.setLoop(true);
-    sound.play();
+	if (!buffer.loadFromFile("./assets/music/marina-s-rhythm.ogg")) {
+		std::cout << "CraftView::Create: failed to load music" << std::endl;
+	}
+	sound.setBuffer(buffer);
+	sound.setLoop(true);
+	sound.play();
 
-    // // If this is tutorial mode, the hints should get drawn right away.
-    // if (view_state == 2)
-    // 	drawHints = true;
+	// // If this is tutorial mode, the hints should get drawn right away.
+	// if (view_state == 2)
+	// 	drawHints = true;
 }
 
 int CraftView::getNumFlowers(void) {
-    return totalFlowers;
+	return totalFlowers;
 }
 
 /** Handles events happening in craft view and listens for user input.
@@ -392,6 +394,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 		if (flowers.size() > 0){
 			// add flowers to persistent list to make available to other classes
 			CraftView::actorList.insert(CraftView::actorList.end(), flowers.begin(), flowers.end());
+			totalFlowers = 0;
 
 			// iterate through player's inventory to update inventory on screen
 			for (int i=0; i < flowers.size() ; i++){
@@ -421,13 +424,16 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
 		pressed = true;
 		const sf::Vector2i pos = sf::Mouse::getPosition(*window);
+
+		// If player clicks on Diana's icon, takes you to DialogueView
 		if (has_crafted && diana_icon_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
 			has_crafted = false;
 			LevelView::player->reset();
 			*state = 2;
-
 			DialogueView::view_state = (view_state == 2) ? (2) : (1);
 			DialogueView::Create(("Level" + std::to_string(total_craft_visits)).c_str(), state);
+			std::string str = "It's good to see you back Phil! You have " + std::to_string(totalFlowers) + " new flowers! If you click on a few flowers you want to combine, I can make you something new!";
+			text.setString(fitStringToBox(str, text.getCharacterSize(), backlay_size));
 			++total_craft_visits;
 			cleanUp();
 		}
@@ -604,9 +610,10 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 		if (map_icon_sprite.getGlobalBounds().contains(pos.x, pos.y) && first_click) {
 			LevelView::player->reset();
 			*state = 0;
+			std::string str = "It's good to see you back Phil! You have " + std::to_string(totalFlowers) + " new flowers! If you click on a few flowers you want to combine, I can make you something new!";
+			text.setString(fitStringToBox(str, text.getCharacterSize(), backlay_size));
 			cleanUp();
 		}
-
 
 	}
 
@@ -615,52 +622,47 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 		pressed = false;
 		first_click = true;
 	}
-
 }
-
 
 /**
  *  Returns the given flower to the player's inventory rather than crafting it
  */
 void CraftView::returnFlower(StrongActorPtr flower){
 
-	//std::cout << "are we segfaulting here";
-
-      if (flower->isOfType("FireFlower")){
-	fireFlowers++;
-      }
-      else if (flower->isOfType("WaterFlower")){
-	waterFlowers++;
-      }
-      else if (flower->isOfType("EarthFlower")){
-	earthFlowers++;
-      }
-      else if (flower->isOfType("AirFlower")){
-	airFlowers++;
-      }
-      else if (flower->isOfType("SunFlower")){
-	sunFlowers++;
-      }
-      else if (flower->isOfType("Tulip")){
-	tulips++;
-      }
-      else if (flower->isOfType("Rose")){
-	roses++;
-      }
-      else if (flower->isOfType("Violet")){
-	violets++;
-      }
-      else if (flower->isOfType("Lily")){
-	lilies++;
-      }
-      else if (flower->isOfType("Orchid")){
-	orchids++;
-      }
-      else if (flower->isOfType("Magnolia")){
-	magnolias++;
-      }
-      totalFlowers++;
-	//std::cout << "end of the returnFlower function";
+	if (flower->isOfType("FireFlower")){
+		fireFlowers++;
+	}
+	else if (flower->isOfType("WaterFlower")){
+		waterFlowers++;
+	}
+	else if (flower->isOfType("EarthFlower")){
+		earthFlowers++;
+	}
+	else if (flower->isOfType("AirFlower")){
+		airFlowers++;
+	}
+	else if (flower->isOfType("SunFlower")){
+		sunFlowers++;
+	}
+	else if (flower->isOfType("Tulip")){
+		tulips++;
+	}
+	else if (flower->isOfType("Rose")){
+		roses++;
+	}
+	else if (flower->isOfType("Violet")){
+		violets++;
+	}
+	else if (flower->isOfType("Lily")){
+		lilies++;
+	}
+	else if (flower->isOfType("Orchid")){
+		orchids++;
+	}
+	else if (flower->isOfType("Magnolia")){
+		magnolias++;
+	}
+	totalFlowers++;
 }
 
 /**
@@ -668,28 +670,28 @@ void CraftView::returnFlower(StrongActorPtr flower){
  */
 void CraftView::updateFlowerCount(std::string flower){
 
-      if (flower == "SunFlower"){
-	sunFlowers--;
-      }
-      else if (flower == "Tulip"){
-	tulips--;
-      }
-      else if (flower == "Rose"){
-	roses--;
-      }
-      else if (flower == "Violet"){
-	violets--;
-      }
-      else if (flower =="Lily"){
-	lilies--;
-      }
-      else if (flower == "Orchid"){
-	orchids--;
-      }
-      else if (flower == "Magnolia"){
-	magnolias--;
-      }
-      totalFlowers--;
+	if (flower == "SunFlower"){
+		sunFlowers--;
+	}
+	else if (flower == "Tulip"){
+		tulips--;
+	}
+	else if (flower == "Rose"){
+		roses--;
+	}
+	else if (flower == "Violet"){
+		violets--;
+	}
+	else if (flower =="Lily"){
+		lilies--;
+	}
+	else if (flower == "Orchid"){
+		orchids--;
+	}
+	else if (flower == "Magnolia"){
+		magnolias--;
+	}
+	totalFlowers--;
 }
 
 
@@ -743,17 +745,17 @@ void CraftView::render(sf::RenderWindow *window) {
 	float button_width, text_width;
 	sf::Vector2f pos;
 
-    //Update graphics
-    window->draw(background);
-    window->draw(backlay);
-    window->draw(text);
-    window->draw(map_icon_sprite);
-    window->draw(scroll_icon_sprite);
+	//Update graphics
+	window->draw(background);
+	window->draw(backlay);
+	window->draw(text);
+	window->draw(map_icon_sprite);
+	window->draw(scroll_icon_sprite);
 	window->draw(character_sprite);
 	// window->draw(hints_icon_sprite);
 	// window->draw(map_button);
 
-    // Setting crafting button elements
+	// Setting crafting button elements
 	sf::Text button_text("Craft", font);
 	button_text.setPosition(Configuration::getWindowWidth()/4,Configuration::getWindowHeight()/3.53);
 	button_text.setColor(sf::Color::Black);
@@ -773,86 +775,86 @@ void CraftView::render(sf::RenderWindow *window) {
 		window->draw(diana_icon_sprite);
 	}
 
-    // draw sprite in the "crafting table" box if there is one in it
-    if (box1 == true)
-      window->draw(box1Sprite);
-    if (box2 == true)
-      window->draw(box2Sprite);
+	// draw sprite in the "crafting table" box if there is one in it
+	if (box1 == true)
+		window->draw(box1Sprite);
+	if (box2 == true)
+		window->draw(box2Sprite);
 
-    // draw craft button and text on it
-    window->draw(craft_button);
-    window->draw(button_text);
-
-
-    int width = Configuration::getWindowWidth()/13.3;
+	// draw craft button and text on it
+	window->draw(craft_button);
+	window->draw(button_text);
 
 
-    // draw flower sprites on left
-    for (int i = 0; i <= 10; i++){
-	window->draw(sprites[i]);
-	int height;
-	if (i == 0){
-	  flower_str = "x " + std::to_string(fireFlowers);
-	  height = Configuration::getWindowHeight()/60;
-	}
-	else if (i ==1){
-	  flower_str = "x " + std::to_string(waterFlowers);
-	  height = Configuration::getWindowHeight()/12;
-	}
-	else if (i == 2){
-	  flower_str = "x " + std::to_string(earthFlowers);
-	  height = Configuration::getWindowHeight()/6.67;
+	int width = Configuration::getWindowWidth()/13.3;
 
-	}
-	else if (i == 3){
-	  flower_str = "x " + std::to_string(airFlowers);
-	  height = Configuration::getWindowHeight()/4.62;
-	}
-	else if (i == 4){
-	  flower_str = "x " + std::to_string(sunFlowers);
-	  height = Configuration::getWindowHeight()/3.53;
 
-	}
-	else if (i == 5){
-	  flower_str = "x " + std::to_string(tulips);
-	  height = Configuration::getWindowHeight()/2.86;
-	}
-	else if (i == 6){
-	  flower_str = "x " + std::to_string(roses);
-	  height = Configuration::getWindowHeight()/2.4;
-	}
-	else if (i == 7){
-	  flower_str = "x " + std::to_string(violets);
-	  height = Configuration::getWindowHeight()/2.06;
-	}
-	else if (i == 8){
-	 flower_str = "x " + std::to_string(lilies);
-	  height = Configuration::getWindowHeight()/1.81;
-	}
-	else if (i == 9){
-	 flower_str = "x " + std::to_string(orchids);
-	  height = Configuration::getWindowHeight()/1.61;
-	}
-	else if (i == 10){
-	  flower_str = "x " + std::to_string(magnolias);
-	  height = Configuration::getWindowHeight()/1.46;
-	}
-	sf::Text flower_text(flower_str, font);
-	flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+height);
-	flower_text.setColor(sf::Color::Black);
-	window->draw(flower_text);
-    }
+	// draw flower sprites on left
+	for (int i = 0; i <= 10; i++){
+		window->draw(sprites[i]);
+		int height;
+		if (i == 0){
+			flower_str = "x " + std::to_string(fireFlowers);
+			height = Configuration::getWindowHeight()/60;
+		}
+		else if (i ==1){
+			flower_str = "x " + std::to_string(waterFlowers);
+			height = Configuration::getWindowHeight()/12;
+		}
+		else if (i == 2){
+			flower_str = "x " + std::to_string(earthFlowers);
+			height = Configuration::getWindowHeight()/6.67;
 
-    // Draw Hints if open.
-    if (view_state == 2 && drawHints == true){
-    	window->draw(hints_prompt);
-    	window->draw(hints_text);
-    }
+		}
+		else if (i == 3){
+			flower_str = "x " + std::to_string(airFlowers);
+			height = Configuration::getWindowHeight()/4.62;
+		}
+		else if (i == 4){
+			flower_str = "x " + std::to_string(sunFlowers);
+			height = Configuration::getWindowHeight()/3.53;
 
-    // draw recipe book over top everything if it's open
-    if (drawBook == true){
-      window->draw(recipe_scroll_sprite);
-    }
+		}
+		else if (i == 5){
+			flower_str = "x " + std::to_string(tulips);
+			height = Configuration::getWindowHeight()/2.86;
+		}
+		else if (i == 6){
+			flower_str = "x " + std::to_string(roses);
+			height = Configuration::getWindowHeight()/2.4;
+		}
+		else if (i == 7){
+			flower_str = "x " + std::to_string(violets);
+			height = Configuration::getWindowHeight()/2.06;
+		}
+		else if (i == 8){
+			flower_str = "x " + std::to_string(lilies);
+			height = Configuration::getWindowHeight()/1.81;
+		}
+		else if (i == 9){
+			flower_str = "x " + std::to_string(orchids);
+			height = Configuration::getWindowHeight()/1.61;
+		}
+		else if (i == 10){
+			flower_str = "x " + std::to_string(magnolias);
+			height = Configuration::getWindowHeight()/1.46;
+		}
+		sf::Text flower_text(flower_str, font);
+		flower_text.setPosition(sprites[i].getLocalBounds().left+width, sprites[i].getLocalBounds().top+height);
+		flower_text.setColor(sf::Color::Black);
+		window->draw(flower_text);
+	}
+
+	// Draw Hints if open.
+	if (view_state == 2 && drawHints == true){
+		window->draw(hints_prompt);
+		window->draw(hints_text);
+	}
+
+	// draw recipe book over top everything if it's open
+	if (drawBook == true){
+		window->draw(recipe_scroll_sprite);
+	}
 
 }
 
@@ -869,7 +871,7 @@ void CraftView::cleanUp(void) {
  **
  **/
 void CraftView::quit(void) {
-    cleanUp();
+	cleanUp();
 }
 
 /** Returns a pointer to flower instance, if present
@@ -1039,18 +1041,18 @@ std::string CraftView::fitStringToBox(std::string str, int character_size, sf::V
  **
  **/
 void CraftView::clearInventory(void) {
-    totalFlowers = 0;
-    fireFlowers = 0;
-    waterFlowers = 0;
-    earthFlowers = 0;
-    airFlowers = 0;
-    sunFlowers = 0;
-    tulips = 0;
-    roses = 0;
-    violets = 0;
-    lilies = 0;
-    orchids = 0;
-    magnolias = 0;
+	totalFlowers = 0;
+	fireFlowers = 0;
+	waterFlowers = 0;
+	earthFlowers = 0;
+	airFlowers = 0;
+	sunFlowers = 0;
+	tulips = 0;
+	roses = 0;
+	violets = 0;
+	lilies = 0;
+	orchids = 0;
+	magnolias = 0;
 
-    actorList.clear();
+	actorList.clear();
 }

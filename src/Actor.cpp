@@ -500,7 +500,7 @@ void Actor::updateBoundary(void) {
 	}
 	else {
 		if (isOfType("Obstacle"))
-			*boundary.back() = sf::FloatRect(position.x + size.x * minimize, position.y + size.y * minimize, size.x * (1 - 2*minimize), size.y * (1 - 2*minimize));
+			*boundary.back() = sf::FloatRect(position.x + size.x * minimize, position.y + size.y * minimize, size.x * (1 - minimize), size.y * (1 - minimize));
 		else
 			*boundary.back() = sf::FloatRect(position.x, position.y, size.x, size.y);
 	}

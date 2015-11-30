@@ -37,6 +37,7 @@ class CraftView  {
 	
 	// Sprites
 	static sf::Sprite sprites[];
+	static sf::Sprite craft_button;
 	static sf::Sprite background;
 	static sf::Sprite map;
 	static sf::Sprite recipe_scroll_sprite;
@@ -71,7 +72,7 @@ class CraftView  {
 	static sf::Texture textures[];
         //static sf::RectangleShape backlay;
 
-	static sf::RectangleShape craft_button;
+	//static sf::RectangleShape craft_button;
 	static sf::Texture scroll_texture;
 	static sf::Texture map_texture;
 	static sf::Texture diana_icon_texture;

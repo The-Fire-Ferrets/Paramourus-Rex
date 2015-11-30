@@ -647,7 +647,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		//Updates normally for all other objects
 		std::vector<StrongActorPtr>::iterator it;
 		if (testing_view)
-		std::cout << player->getPosition().x << " " << player->getPosition().y << std::endl;
+			std::cout << player->getPosition().x << " " << player->getPosition().y << std::endl;
 		for (it = actorList.begin(); it != actorList.end(); it++) {
 			if ((*it)->getPathType() == -4) {
 				(*it)->update(time);
@@ -667,7 +667,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 
 		//Check to see if conditions met to display back button
 		//std::cout << flowers_left << " " << vases_full << " " << inVision << std::endl; 
-		if ((flowers_left <= 0 || vases_full || call_key_pressed) && inVision <= 0) {
+		if (call_key_pressed && inVision <= 0) {
 			if (view_state == 2 && last_action == -1)
 				reveal_homer = true;
 			else if (view_state != 2) {
@@ -803,9 +803,6 @@ void LevelView::update(EventInterfacePtr e) {
 								generateActor(&(temp), game_state);
 							}
 						}
-						else if (action == -1) {
-							reveal_homer = true;
-						}
 						if (contact_id == "FireFlower" || contact_id == "EarthFlower" || contact_id == "WaterFlower" || contact_id == "AirFlower")
 							if (vases_full)
 								count = 1;
@@ -874,7 +871,7 @@ void LevelView::render(sf::RenderWindow *window) {
 		window->draw(minimap_border);
 		std::vector<StrongActorPtr>::iterator it;
 		for (it = actorList.begin(); it != actorList.end(); it++) {
-			if (player != *it && homer != *it) {
+			if (homer != *it) {
 				(*it)->render(window, false);
 				if ((commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 4))
 					window->draw(commentary[(*it)->getInstance()]);
