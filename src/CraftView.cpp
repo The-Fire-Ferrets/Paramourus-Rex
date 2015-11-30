@@ -257,7 +257,7 @@ void CraftView::Create(const char* resource) {
     for (pugi::xml_node tool = tools.first_child(); tool; tool = tool.next_sibling(), i++) {
 	  for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()){
 	  	  if (!strcmp(attr.name(), "Hint_Text")){
-	  	  	hints_text.setString(fitStringToHintsBox(attr.value()));
+	  	  	hints_text.setString(fitStringToBox(attr.value()));
 			hints_text.setCharacterSize(hints_size);
 	  	  }
 	      if (!strcmp(attr.name(), "Sprite")) {
@@ -358,7 +358,7 @@ void CraftView::Create(const char* resource) {
 			backlay.getGlobalBounds().height - (text_begin_y-box_begin_y)*2.f
 			);
 
-    text.setString(fitStringToHintsBox(str, text.getCharacterSize(), backlay_size));
+    text.setString(fitStringToBox(str, text.getCharacterSize(), backlay_size));
 
     if (!buffer.loadFromFile("./assets/music/marina-s-rhythm.ogg")) {
 	std::cout << "CraftView::Create: failed to load music" << std::endl;
@@ -563,7 +563,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	   // update text box to indicate that you cannot combine flowers
 	   else {
 	     std::cout << "CraftView::Update: Unable to craft " << selectedActor1->getId().back() << " and Flower: " << selectedActor2->getId().back() << std::endl;
-	     text.setString(fitStringToHintsBox("Gee Phil, I don't think Diana would like those. Why don't you try something else?", text.getCharacterSize(), backlay_size));
+	     text.setString(fitStringToBox("Gee Phil, I don't think Diana would like those. Why don't you try something else?", text.getCharacterSize(), backlay_size));
 	   }
 	}
 
@@ -705,7 +705,7 @@ void CraftView::update(EventInterfacePtr e) {
 		if (sender->hasComponent(CraftableComponent::id)) {
 			// item crafting completed
 			StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
-			text.setString(fitStringToHintsBox("Here Phil, I made you a new " + ac->getType() + "! Why don't you take it to Diana?", text.getCharacterSize(), backlay_size));
+			text.setString(fitStringToBox("Here Phil, I made you a new " + ac->getType() + "! Why don't you take it to Diana?", text.getCharacterSize(), backlay_size));
 			if (ac->getType() == "SunFlower"){
 				sunFlowers++;
 			}
@@ -925,61 +925,7 @@ void CraftView::addDelegate(EventType type) {
  ** will fit into a single box.
  ** str: the string to rewrap
  **/
-std::string CraftView::fitStringToDialogueBox(std::string str) {
-	// get dialogue box bounds
-	int box_begin_x = backlay.getPosition().x;
-	int box_begin_y = backlay.getPosition().y;
-	int box_end_x   = box_begin_x + backlay.getGlobalBounds().width;
-	int box_end_y   = box_begin_y + backlay.getGlobalBounds().height;
-
-	int text_begin_x = text_pos.x;
-	int text_begin_y = text_pos.y;
-	int text_end_x   = box_end_x - (text_begin_x - box_begin_x);
-	int text_end_y   = box_end_y - (text_begin_y - box_begin_y);
-
-	int max_width = text_end_x - text_begin_x;
-
-	// text object used to see how close each word puts us to the bounds
-	sf::Text temp;
-	temp.setFont(font);
-	temp.setCharacterSize(text.getCharacterSize());
-
-	// current string and width
-	std::string fitted_string = "";
-	float current_width = 0.f;
-	float word_width = 0.f, word_height = 0.f;
-
-	// split the dialogue into words;
-	std::vector<std::string> words = split(str, ' ');
-
-	// for each word...
-	for (std::string word : words) {
-		// get the bounding box
-		temp.setString(word + " ");
-		word_width = temp.findCharacterPos(temp.getString().getSize()).x;
-
-		// will it go past the horizontal bound?
-		if (current_width + word_width > max_width) {
-			fitted_string += "\n" + word + " ";
-			current_width = word_width;
-		}
-		else {
-			// just add to string
-			fitted_string += word + " ";
-			current_width += word_width;
-		}
-	}
-
-	// done
-	return fitted_string;
-}
-
-/** Rewraps the given string such that it can be displayed
- ** appropriately in the dialogue box.  Assumes the string
- ** will fit into a single box.
- ** str: the string to rewrap
- **/
-std::string CraftView::fitStringToHintsBox(std::string str, int character_size, sf::Vector2f box_size, bool center) {
+std::string CraftView::fitStringToBox(std::string str, int character_size, sf::Vector2f box_size, bool center) {
 	// get dialogue box bound
 	int width;
 	int height;
@@ -1038,7 +984,7 @@ std::string CraftView::fitStringToHintsBox(std::string str, int character_size, 
 			// get the bounding box
 			temp.setString(word + " ");
 			word_width = temp.findCharacterPos(temp.getString().getSize()).x;
-			word_height = temp.findCharacterPos(temp.getString().getSize()).y;
+			//word_height = temp.findCharacterPos(temp.getString().getSize()).y;
 
 			// will it go past the horizontal bound?
 			if (current_width + word_width > max_width) {
@@ -1058,11 +1004,6 @@ std::string CraftView::fitStringToHintsBox(std::string str, int character_size, 
 				current_width += word_width;
 				size_found = true;
 			}
-
-			// general word height (changes, hence the max)
-			sf::FloatRect bounds = temp.getGlobalBounds();
-			int line_spacing = font.getLineSpacing(temp.getCharacterSize());
-			word_height = std::max(bounds.height-bounds.top+line_spacing, word_height);
 
 			// the height of the full string so far
 			temp.setString(fitted_string);

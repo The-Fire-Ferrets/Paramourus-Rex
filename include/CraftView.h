@@ -110,8 +110,7 @@ class CraftView  {
 	static sf::Texture character_tex;
 	static sf::Sprite  character_sprite;
 
-	static std::string fitStringToDialogueBox(std::string str);
-	static std::string fitStringToHintsBox(std::string str, int character_size = 0, sf::Vector2f box_size = sf::Vector2f(0,0), bool center = true);
+	static std::string fitStringToBox(std::string str, int character_size = 0, sf::Vector2f box_size = sf::Vector2f(0,0), bool center = true);
 
 	public:
         static int total_craft_visits;
