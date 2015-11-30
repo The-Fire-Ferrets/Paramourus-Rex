@@ -552,7 +552,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 	
 	//Select a fake target if appropriate
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
-		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && (start_targets[start_ptr] == target_values[itr->first.second] || target_values[itr->first.second] == -5)  && target_values[itr->first.second] <= -5 && *itr->first.second != curr_pair && !target_taken[itr->first.second]) {
+		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && ((start_targets[start_ptr] == target_values[itr->first.second] && start_targets[start_ptr] < -5) || (target_values[itr->first.second] == -5 && start_targets[start_ptr] > -5))  && target_values[itr->first.second] <= -5 && *itr->first.second != curr_pair && !target_taken[itr->first.second]) {
 			//std::cout << "Branch2 1" << std::endl;		
 			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 				return false;

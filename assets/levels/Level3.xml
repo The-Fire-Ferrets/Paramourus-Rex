@@ -119,7 +119,7 @@
 	</Player>
 
 	<NPC Generate = "1">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<Location X = "32" Y = "556" Width = "10" Height = "10"/>
 		<InputComponent>
 			<Control Speed = "3.5"/>
 		</InputComponent>
@@ -139,6 +139,42 @@
 		</PhysicsComponent>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
 	</NPC>
+
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "530" Y = "254" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-6"/>
+	</Obstacle>
+
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "422" Y = "335" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-6"/>
+	</Obstacle>
+
+	<NPC Generate = "1">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<InputComponent>
+			<Control Speed = "3.5"/>
+		</InputComponent>
+		<PhysicsComponent>
+			<VisionBoundary Height = "80" Width = "80" X = "-50" Y = "-50"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-3" TargetType = "-6"/>
+	</NPC>
+	
+
+	<Obstacle Generate = "4" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-5"/>
+	</Obstacle>
 
 	<Obstacle Generate = "20" Type = "Cactus"  Sprite = "Cactus.png"  Damage = "True">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
