@@ -161,7 +161,7 @@ void DialogueView::Create(const char* resource, int* state){
 
 	// navigating through xml files and storing the actual dialogue into array
 	if (fileString != "Level0") {
-		tools = (solved == true) ? (tools.child("Correct")) : (tools.child("Incorrect"));
+		tools = (num_times_impressed > 0) ? (tools.child("Correct")) : (tools.child("Incorrect"));
 	}
 	for (pugi::xml_node tool = tools.first_child(); tool; tool =tool.next_sibling()){
 		std::string speaker = "";
@@ -290,7 +290,7 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 	}
 	// wait for player to choose dialogue option 1 or 2 embedded in text
 	// update Diana's opinion, then end dialogueView accordingly
-	if (name != "Level0" || "Level6"){
+	if (name != "Level0" || "Level7"){
 	    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) && player_response == true){
 		    if (response == 1){
 			    num_times_impressed++;

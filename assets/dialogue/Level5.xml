@@ -1,17 +1,22 @@
 <?xml version="1.0"?>
-<Level5 Background = "Dialogue5.png" Response="2" Flower = "Orchid" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30" Backlay = "Prompnt.png">
+<Level5 Background = "Orchard.png" Response = "1" Flower = "Magnolia" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30" backlay = "Prompt.png">
 	<Correct>
-	  <Dialogue Speaker = "Narrator" Text = "Later that night, when you're getting ready for bed, you're surprised to find Diana stopping by your nest to visit."/>
-	  <Dialogue Speaker = "Diana" Text = "Hey, Phil. Homer gave me that Orchid you made me, and I just... wanted to say thanks for spending so much time with me lately, and being so nice. I've been thinking a lot about the future, and I had a question. A lot of herds are heading out lately... What are your thoughts about leaving the valley?"/>
-	  <Dialgoue Speaker = "Phil" Text = "&#10; 1) Well... it is pretty messed up around here. &#10; 2) I think we could make it work here."/>
-	  <Dialogue Speaker = "Diana" Text = "Yeah... I'm sure all these other T-Rex around here have been bothering you as much as they haveme. Maybe you're right."/>
-	  <Dialogue Speaker = "Diana" Text = "You... really think so? You know... I think I needed to hear that. Thanks for listening, Phil."/>
+	  	  
+	  <Dialogue Speaker = "Narrator" Text ="Exhausted from all of your flower-hunting, you're not expecting to see Diana when you're walking back through the remains of the old apple orchards. Diana perks up upon seeing you, waving her short arms at you enthusiastically." />
+	  <Dialogue Speaker = "Diana" Text = "Hey Phil! I'm glad I ran into you! I loved that other Magnolia you found for me! I never would have been able to grow that with just the water that I have. What are you out here for anyway? Are you looking for a snack too? I haven't had too much luck. There's not too much green left around here. I think all the earth's too dry. Wanna look around with me?" />
+	  <Dialgoue Speaker = "Narrator" Text = "You and Diana spend some time together wandering the old tree trunks, looking for old fallen apples. While you don't find any, you get to enjoy some extra time with just you and Diana. You wonder to yourself if you would have more success finding something green near that crater the meteor left..." />
+	  <Dialogue Speaker = "Diana" Text="What's your favorite food anyway, Phil?"/>
+	  <Dialogue Speaker = "Phil" Text= "&#10; 1) I'm actually a vegetarian. &#10; 2) Uh, you know, the usual, carnivore meat... things." />
+	  <Dialogue Speaker = "Diana" Text= "Wow, really? That's so interesting. I'll keep an extra eye out for those apples, then! See ya, Phil!"/>
+	  <Dialogue Speaker = "Diana" Text= "Carnivore things... Yeah. Guess you wouldn't've liked those apples anyway, then. See ya, Phil." />
 	</Correct>
 	<Incorrect>
-	  <Dialogue Speaker = "Narrator" Text = "Later that night, when you're getting ready for bed, you're surprised to find Diana stopping by your nest to visit."/>
-	  <Dialogue Speaker = "Diana" Text = "Hey Phil. I hope I'm not bothering you, I just thought I'd stop by. I actually had a question for you. I've been thinking a lot about the future lately. A lot of herds have been heading out of the valley lately... What are your thoughts on leaving?"/>
-	  <Dialgoue Speaker = "Phil" Text = "&#10; 1) Well... it is pretty messed up around here. &#10; 2) I think we could make it work here."/>
-	  <Dialogue Speaker = "Diana" Text = "Yeah... I'm sure all these other T-Rex around here have been bothering you as much as they have me. Maybe you're right."/>
-	  <Dialogue Speaker = "Diana" Text = "Huh... You really think so? I'm not so sure... but I guess we'll have to see."/>
+	  <Dialogue Speaker = "Narrator" Text ="Exhausted from all of your flower-hunting, you're not expecting to see Diana when you're walking back through the remains of the old apple orchards. Diana perks up upon seeing you, waving her short arms at you." />
+	  <Dialogue Speaker = "Diana" Text = "Hey Phil! What are you out here for? Are you looking for a snack too? I haven't had too much luck. There's not too much green left around here. I think all the earth's too dry. You join me if you want, but I haven't had much luck." />
+	  <Dialgoue Speaker = "Narrator" Text = "You and Diana spend some time together wandering the old tree trunks, looking for old fallen apples. While you don't find any, you get to enjoy some extra time with just you and Diana. You wonder to yourself if you would have more success finding something green near that crater the meteor left..." />
+	  <Dialogue Speaker = "Diana" Text="What's your favorite food anyway, Phil?" />
+	  <Dialogue Speaker = "Phil" Text= "&#10; 1) I'm actually a vegetarian. &#10; 2) Uh, you know, the usual, carnivore meat... things."/>
+	  <Dialogue Speaker = "Diana" Text= "Wow, really? That's so interesting. I'll keep an extra eye out for those apples, then! See ya, Phil!" />
+	  <Dialogue Speaker = "Diana" Text= "Carnivore things... Yeah. Guess you wouldn't've liked those apples anyway, then. See ya, Phil." />
 	</Incorrect>
 </Level5>

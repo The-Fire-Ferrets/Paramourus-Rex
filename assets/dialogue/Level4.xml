@@ -1,21 +1,17 @@
 <?xml version="1.0"?>
-<Level4 Background = "WateringHoleBg.png" Response = "2" Flower = "Tulip" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30" backlay = "Prompt.png">
+<Level4 Background = "WateringHole.png" Response="2" Flower = "Tulip" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "300" DianaPosY = "350" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30" Backlay = "Prompt.png">
 	<Correct>
-	  <Dialogue Speaker = "Narrator" Text = "You and Homer head to the watering hole together after you're done making your latest bouquet. When you find Diana there, Homer ushers you on, encouraging you to give her your new flowers yourself for once."/>
-	  <Dialogue Speaker = "Diana" Text = "Phil, is this Tulip for me? I love it! Thank you so much for all of these flowers. They've been so nice, and it's been nice to be able to talk to you again."/>
-	  <Dialgoue Speaker = "Homer" Text = "*from across the watering hole* PHIL DO GOOD JOB!"/>
-	  <Dialogue Speaker = "Diana" Text = "Hehe... And it sounds like you've gotten to spend some time with Homer, too. That's great that you guys are friends. Most people don't hang out with Homer. Are you guys close?"/>
-	  <Dialogue Speaker = "Phil" Text= "&#10; 1) He's a little dumb, but he's pretty helpful. &#10; 2) He's my best friend." />
-	  <Dialogue Speaker = "Diana" Text= "Oh... I thought you guys were friends. Homer actually said you should stop by, by the way. Something about finding something way back in his cave? You should try looking there."/>
-	  <Dialogue Speaker = "Diana" Text = "That's so cute. Oh, speaking of Homer - he told me to tell you that you should stop by later... something about finding something way back in his cave? You should try looking there."/>
+	  <Dialogue Speaker = "Narrator" Text = "The other T-Rex fighting for Diana's heart may have had strength and size on their side, but you figure that your small size and speed came in handy on Optimism Island. That island is hard to navigate, but the flowers you found up there really paid off. You stop by at the local watering hole to get a drink, only to find Diana there too." />
+	  <Dialogue Speaker = "Diana" Text = "Hey Phil! Homer gave me that Tulip and said it was from you again... Thank you so much! It made me feel all bright and cheerful again, like it was sunny outside again. It's too bad there's so much dust around -- normally I'd go find a good sunning rock after getting a drink. I hate all this dust and ash - it was so much nicer when the air was all crisp and clean, huh? I feel like you'd have to be all the way up in the mountains to get a breath of fresh air nowadays. Do you like mountaineering Phil?" />
+	  <Dialogue Speaker = "Phil" Text = "&#10; 1) Of course. I was actually raised by Pterodactyls. 2)&#10;I'm kind of afraid of heights." />
+	  <Dialogue Speaker = "Diana" Text= "Uhm... you know I've met your mom and dad before. You don't need to lie." />
+	  <Dialogue Speaker = "Diana" Text = "Haha, I don't blame you. I'm not really built for climbing either." /> 
 	</Correct>
 	<Incorrect>
-	  <Dialogue Speaker = "Narrator" Text = "You and Homer head to the watering hole together after you're done making your latest bouquet. When you find Diana there, Homer ushers you on, encouraging you to give her your new flowers yourself for once."/>
-	  <Dialogue Speaker = "Diana" Text = "Oh -- is this also for me? You really don't have to keep getting me all of these... But thanks, though. I feel like I've been seeing you and Homer around all the time, lately."/>
-	  <Dialgoue Speaker = "Homer" Text = "*from across the watering hole* PHIL DO GOOD JOB!"/>
-	  <Dialogue Speaker = "Diana" Text = "Uhh... okay, Homer. I take it you guys have been hanging out a lot, lately? That's nice that you guys are friends. Most people don't hang out with Homer. Are you guys close?"/>
-	  <Dialogue Speaker = "Phil" Text= "&#10; 1) He's a little dumb, but he's pretty helpful.&#10; 2) He's my best friend."/>
-	  <Dialogue Speaker = "Diana" Text= "Oh... I thought you guys were friends. Homer actually said you should stop by, by the way. Something about finding something way back in his cave? You should try looking there."/>
-	  <Dialogue Speaker = "Diana" Text = "That's so cute. Oh, speaking of Homer - he said you should stop by... something about finding something way back in his cave? You should try looking there."/>
+	  <Dialogue Speaker = "Narrator" Text = "The other T-Rex fighting for Diana's heart may have had strength and size on their side, but you figure that your small size and speed came in handy on Optimism Island. The island is hard to navigate but the flowers you found up there really paid off. You stop by at the local watering hole to get a drink, only to find Diana there too." />
+	  <Dialogue Speaker = "Diana" Text = "Hey Phil! I was just about to leave... It's too bad there's so much dust around. Normally I'd go find a good sunning rock after getting a drink. I hate all this dust and ash - it was so much nicer when the air was all crisp and clean, huh? I feel like you'd have to be all the way up in the mountains to get a breath of fresh air nowadays. Do you like mountaineering Phil?" />
+	  <Dialogue Speaker = "Phil" Text = "&#10; 1) Of course. I was actually raised by Pterodactyls. 2)&#10; I'm kind of afraid of heights." />
+	  <Dialogue Speaker = "Diana" Text= "Uhm... you know I've met your mom and dad before. You don't need to lie." />
+	  <Dialogue Speaker = "Diana" Text = "Haha, I don't blame you. I'm not really built for climbing either." /> 
 	</Incorrect>
 </Level4>
