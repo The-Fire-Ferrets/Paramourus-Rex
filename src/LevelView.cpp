@@ -647,7 +647,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		//Updates normally for all other objects
 		std::vector<StrongActorPtr>::iterator it;
 		if (testing_view)
-		std::cout << player->getPosition().x << " " << player->getPosition().y << std::endl;
+			std::cout << player->getPosition().x << " " << player->getPosition().y << std::endl;
 		for (it = actorList.begin(); it != actorList.end(); it++) {
 			if ((*it)->getPathType() == -4) {
 				(*it)->update(time);

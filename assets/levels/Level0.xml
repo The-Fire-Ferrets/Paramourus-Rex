@@ -40,6 +40,14 @@
 			</Obstacle>
 		</Spawn3>
 		<Spawn4>
+			<Obstacle Generate = "20" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
+				<PhysicsComponent>
+					<Properties Type = "Transparent"/>
+				</PhysicsComponent>
+				<Pathfinder PathType = "-5"/>
+			</Obstacle>
+
 			<NPC Generate = "5">
 				<Pathfinder PathType = "-3" TargetType = "-2"/>
 				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
@@ -50,13 +58,6 @@
 					<VisionBoundary Height = "50" Width = "50"/>
 				</PhysicsComponent>
 			</NPC>
-			<Obstacle Generate = "20" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
-				<PhysicsComponent>
-					<Properties Type = "Transparent"/>
-				</PhysicsComponent>
-				<Pathfinder PathType = "-5"/>
-			</Obstacle>
 		</Spawn4>
 	</Action>
 	<Commentary>

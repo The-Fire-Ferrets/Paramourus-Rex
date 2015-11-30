@@ -124,7 +124,7 @@ class Pathfinder {
 		static void generateHCost(GridLocation* target_pos, GridLocation curr_pos);
 		static void setVertex(std::vector<pathNode*>* closed, pathNode* p_node, Grid* target_grid);
 		static GridLocation* findTarget(GridLocation pos, GridLocation init = GridLocation(-1, -1));
-		static GridLocation* findStart(GridLocation init, GridLocation pos);
+		static GridLocation* findStart(GridLocation init, GridLocation pos = GridLocation(-1, -1));
 		static bool isValidTarget(GridLocation* ptr);
 		static bool selectNewPath(GridLocation init_pair, GridLocation* start_pt, GridLocation curr_pair);
 		static bool positionsEqual(GridLocation* pos1, GridLocation* pos2);
@@ -148,7 +148,7 @@ class Pathfinder {
 		static bool isValidMove(GridLocation loc, Grid* target_grid, GridLocation prev = GridLocation(-1, -1));
 		static bool isValidPlacement(GridLocation loc, Grid* target_grid);
 		static bool getNextPosition(float dist, sf::Vector2f init_pos, sf::Vector2f start_pos, sf::Vector2f curr_pos, sf::Vector2f* next_pos, sf::Vector2f* direction);
-		static void removeFromPaths(sf::Vector2f pos);
+		static void removeFromPaths(sf::Vector2f targ_pos, sf::Vector2f start_pos = sf::Vector2f(-1, -1));
 		static void generatePath2(sf::Vector2f init_pos, sf::Vector2f start_pos, sf::Vector2f curr_pos);
 		static std::mutex paths_mutex;
 		static std::mutex targets_mutex;

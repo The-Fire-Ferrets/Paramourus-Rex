@@ -31,6 +31,7 @@ PhysicsComponent::PhysicsComponent(void) {
 	direction_bit = 0;
 	use_vision_boundary = false;
 	inVision = false;
+	inVision_flower = std::pair<int, bool>(-1, false);
 	first_run = 0;
 }
 
@@ -117,7 +118,7 @@ void PhysicsComponent::update(float time) {
 		}
 		else if (inVision && vision_timer.getElapsedTime().asSeconds() > 5) {
 			inVision = false;
-			Pathfinder::changeVision(owner->getInitialPosition(), LevelView::player->getInitialPosition());
+			Pathfinder::removeFromPaths(LevelView::player->getInitialPosition(), owner->getInitialPosition());
 			LevelView::inVision--;
 		}
 			 
@@ -145,7 +146,8 @@ void PhysicsComponent::update(float time) {
             }
 		if (other_actor->hasComponent(CollectableComponent::id)) {
 			if (use_vision_boundary) {	
-				if (other_actor->intersects(vision_boundary_sprite.getGlobalBounds())) {
+				if (other_actor->intersects(vision_boundary_sprite.getGlobalBounds()) && !inVision_flower.second) {
+					inVision_flower = std::pair<int, bool>(other_actor->getInstance(), true);
 					Pathfinder::changeVision(owner->getInitialPosition(), other_actor->getInitialPosition());
 				}
 			}
@@ -216,7 +218,8 @@ sf::Vector2f PhysicsComponent::collisionSide(sf::FloatRect other_bounds) {
  **
  **/
 void PhysicsComponent::update(EventInterfacePtr e) {
-
+	if (inVision_flower.first == e->getSender())
+		inVision_flower.second = false;
 }
 /** Reset the component
  **
