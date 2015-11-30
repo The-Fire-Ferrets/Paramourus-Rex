@@ -249,7 +249,7 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 			else if (boxes[index].first == "PlayerWin"){
 			      background_texture.loadFromFile("./assets/backgrounds/PlayerWin-Text.png");
 			      // wait here for input from player to either close the game or to start over
-			      draw_overlay=false;
+			      draw_overlay = false;
 			 }
 			else if (boxes[index].first == "PlayerLose"){
 			      background_texture.loadFromFile("./assets/backgrounds/PlayerLose-Text.png");
@@ -277,9 +277,9 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 		}
 	}
 	
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && draw_overlay == false){
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && draw_overlay == false){
 	 	// reset ongoing game state
-		CraftView::total_craft_visits = 1;
+		CraftView::total_craft_visits = 0;
 		CraftView::clearInventory();
 		//DialogueView::num_times_impressed = 0;
 		MapView::level_idx = -1;
@@ -290,10 +290,7 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 		view_state = 0;
 		*state = 5; 
 	}
-	
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && draw_overlay == false){
-	    // shut down the application
-	}
+
 	// wait for player to choose dialogue option 1 or 2 embedded in text
 	// update Diana's opinion, then end dialogueView accordingly
 	if (name != "Level0" || "Level7"){
