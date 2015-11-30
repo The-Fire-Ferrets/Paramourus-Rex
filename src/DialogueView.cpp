@@ -52,7 +52,7 @@ sf::SoundBuffer DialogueView::buffer;
 sf::Sound DialogueView::sound;
 
 bool DialogueView::solved = false;
-unsigned DialogueView::num_times_impressed = 0;
+int DialogueView::num_times_impressed = 0;
 int DialogueView::response;
 
 /** Searches for the correct dialogue box the player is on and populates the text with what you want Diana to be saying 
