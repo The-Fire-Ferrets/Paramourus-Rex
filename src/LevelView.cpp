@@ -104,6 +104,8 @@ int LevelView::last_state;
 StrongActorPtr LevelView::homer;
 bool LevelView::space_pressed;
 bool LevelView::received_new_commentary;
+bool LevelView::testing_view;
+bool LevelView::testing_key_pressed = false;
 /** Creates and populates a level and all its components based on XML configuration
  ** resource: filename for xml
  ** state: current game state
@@ -125,7 +127,9 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	pause_key_pressed = false;
 	back_key_pressed = false;
 	call_key_pressed = false;
+	testing_key_pressed = false;
 	vases_full = false;
+	testing_view = false;
 	inVision = 0;
 	flashing = 0;
 	actorList.clear();
@@ -529,6 +533,15 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	}
 
 	// should we pause the screen?
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::T) && !testing_key_pressed && (view_state == 1 || view_state == 2)) {
+		testing_key_pressed = true;
+		testing_view = !testing_view;
+	}
+	else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::T)) {
+		testing_key_pressed = false;
+	}
+
+	// should we pause the screen?
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && !call_key_pressed && (view_state == 1)) {
 		call_key_pressed = true;
 		EventInterfacePtr event;
@@ -634,7 +647,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		//Updates normally for all other objects
 		std::vector<StrongActorPtr>::iterator it;
 	
-
+		//std::cout << player->getPosition().x << " " << player->getPosition().y << std::endl;
 		for (it = actorList.begin(); it != actorList.end(); it++) {
 			if ((*it)->getPathType() == -4) {
 				(*it)->update(time);
@@ -852,7 +865,9 @@ void LevelView::render(sf::RenderWindow *window) {
 		//Get the player location and center gameView to it
 		window->setView(window->getDefaultView());
 		gameView.setViewport(sf::FloatRect(0, 0, 1, 1));
-		window->setView(gameView);
+		
+		if (!testing_view)
+			window->setView(gameView);
 		//Update graphics	
 		//window->draw(edge);
 		window->draw(background);

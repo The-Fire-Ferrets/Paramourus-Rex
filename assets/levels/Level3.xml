@@ -110,6 +110,35 @@
 		</PhysicsComponent>
 	</Obstacle>
 
+	<Player>
+		<Location X = "34" Y = "66" Width = "10" Height = "10"/>
+		<InputComponent>
+			<Control Speed = "4"/>
+		</InputComponent>
+		<Pathfinder PathType = "-4"/>
+	</Player>
+
+	<NPC Generate = "1">
+		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+		<InputComponent>
+			<Control Speed = "3.5"/>
+		</InputComponent>
+		<PhysicsComponent>
+			<VisionBoundary Height = "80" Width = "80" X = "-50" Y = "-50"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-3" TargetType = "-2"/>
+	</NPC>
+
+	<NPC Generate = "1">
+		<Location X = "750" Y = "550" Width = "10" Height = "10"/>
+		<InputComponent>
+			<Control Speed = "3.5"/>
+		</InputComponent>
+		<PhysicsComponent>
+			<VisionBoundary Height = "80" Width = "80" X = "-50" Y = "-50"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-3" TargetType = "-2"/>
+	</NPC>
 
 	<Obstacle Generate = "20" Type = "Cactus"  Sprite = "Cactus.png"  Damage = "True">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
@@ -123,37 +152,9 @@
 			<Properties Type = "Opaque" />
 		</PhysicsComponent>
 	</Obstacle>
-
-	<Player>
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<InputComponent>
-			<Control Speed = "4"/>
-		</InputComponent>
-		<Pathfinder PathType = "-4"/>
-	</Player>
 	<Homer>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Homer>
-	<NPC Generate = "1">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<InputComponent>
-			<Control Speed = "3.5"/>
-		</InputComponent>
-		<PhysicsComponent>
-			<VisionBoundary Height = "80" Width = "80" X = "-50" Y = "-50"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-3" TargetType = "-2"/>
-	</NPC>
-	<NPC Generate = "1">
-		<Location X = "750" Y = "550" Width = "10" Height = "10"/>
-		<InputComponent>
-			<Control Speed = "3.5"/>
-		</InputComponent>
-		<PhysicsComponent>
-			<VisionBoundary Height = "80" Width = "80" X = "-50" Y = "-50"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-3" TargetType = "-2"/>
-	</NPC>
 	<EarthFlower>
     		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
