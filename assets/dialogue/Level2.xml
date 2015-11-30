@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <Level2 Background = "HomersCave.png" Response="2" Flower = "Violet" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30" Backlay = "Prompt.png">
 	<Correct>
-	  <Dialogue Speaker = "Narrator" Text = "Luckily, you were able to find one of the Violets Diana mentioned after all. You're only just leaving Homer's cave after your adventure inside it when you run into Diana again." />
+	  <Dialogue Speaker = "Narrator" Text = "Luckily, you were able to find one of the violets Diana mentioned after all. You're only just leaving Homer's cave after your adventure inside it when you run into Diana again." />
 	  <Dialogue Speaker = "Diana" Text = "Hey Phil! I was just here to visit Homer. Did you find this Violet back there in his cave after all? I can't believe he saved them! You've been together a lot since you moved back, haven't you? That's great that you guys are friends. Most people don't hang out with Homer. Are you guys close?"/>
 	  <Dialogue Speaker = "Phil" Text= "&#10; 1) He's a little dumb, but he's pretty helpful. &#10; 2) He's my best friend." />
 	  <Dialogue Speaker = "Diana" Text= "Oh... I thought you guys were friends. Anyway, thanks again for this flower. It makes me feel all bright and sunny again. I'd love to have something else like that Sunflower."/>
 	  <Dialogue Speaker = "Diana" Text = "That's so cute! And hey, thanks again for this flower. It makes me feel all bright and sunny again. I'd love to have something else like that Sunflower."/>
 	</Correct>
 	<Incorrect>
-	  <Dialogue Speaker = "Narrator" Text = "Luckily, you were able to find one of the Violets Diana mentioned after all. You're only just leaving Homer's cave after your adventure inside it when you run into Diana again." />
+	  <Dialogue Speaker = "Narrator" Text = "You weren't able to find any of he violets that Diana mentioned. You're only just leaving Homer's cave after your adventure inside it when you run into Diana again." />
 	  <Dialogue Speaker = "Diana" Text = "Oh, hey Phil. I was just here to visit Homer. I'm surprised you found that flower back in his cave. I didn't think anything other than violets grew around here... But that's nice that Homer gave it to you anyway I guess. You've been together a lot since you moved back, haven't you? That's great that you guys are friends. Most people don't hang out with Homer. Are you guys close?"/>
 	  <Dialogue Speaker = "Phil" Text= "&#10; 1) He's a little dumb, but he's pretty helpful. &#10; 2) He's my best friend." />
 	  <Dialogue Speaker = "Diana" Text= "Oh... I thought you guys were friends. Anyway, thanks again for this flower. It makes me feel all bright and sunny again. I'd love to have something else like that Sunflower."/>

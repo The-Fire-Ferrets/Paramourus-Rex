@@ -3,7 +3,7 @@
 	<Correct>
 	  <Dialogue Speaker = "Narrator" Text="Things got pretty toasty in the heart of the volcano, but you managed to escape both the other Tyrannasaururs and all the lava with some flowers in tact. The next time you find Diana is later that afternoon, on your way to Homer's cave. She smiles happily at you as you approach." />
 	  <Dialogue Speaker = "Diana" Text = "Hey Phil! I was just here to visit Homer. He told me you'd gone out again - you've been awfully busy lately! Were you out finding this Rose? It's beautiful! I really need to go and find some water to keep these alive. It's too bad so much of it's dried up around here now!" />
-	  <Dialgoue Speaker = "Homer" Text = "Homer hear there still some water out by Optimism Island. Though, maybe not many optimisms anymore. Homer not go there cause lots of mean dinos, but maybe Phil can look!"/>
+	  <Dialgoue Speaker = "Homer" Text = "I heard there was still some water out by Optimism Island. It's... not super optimistic anymore. I don't go there anymore because of all the other dinosaurs, but maybe Phil can look!"/>
 	  <Dialogue Speaker = "Diana" Text = "Oh, Optimism Island! That used to be a great place to go swimming. Have you ever been, Phil?"/>
 	  <Dialogue Speaker = "Phil" Text = "&#10; 1) What am I, a Megaladon? &#10; 2) I'm not a big swimmer, but I'd give it a try!"/>
 	  <Dialogue Speaker = "Diana" Text = "If you say so... I'd still be careful."/>
@@ -12,7 +12,7 @@
 	<Incorrect>
 	  <Dialogue Speaker = "Narrator" Text="Things got pretty toasty in the heart of the volcano, but you managed to escape both the other Tyrannasaururs and all the lava with some flowers in tact. You find Diana later on your way to Homer's cave." />
 	  <Dialogue Speaker = "Diana" Text = "Oh, hey Phil. I was just here to visit Homer. He told me you'd gone out again - you've been awfully busy lately! Were you out finding this new flower? Thanks... I'll put it with the other one you got me. I should go and find some water to keep these alive. It's too bad so much of it's dried up around here now!"/>
-	  <Dialgoue Speaker = "Homer" Text = "Homer hear still some water out by Optimism Island. Though, maybe not many optimisms anymore. Homer not go there cause lots of mean dinos, but maybe Phil can look!" />
+	  <Dialgoue Speaker = "Homer" Text = "I heard there was still some water out by Optimism Island. It's... not super optimistic anymore. I don't go there anymore because of all the other dinosaurs, but maybe Phil can look!" />
 	  <Dialogue Speaker = "Diana" Text = "Oh, Optimism Island! That used to be a great place to go swimming. Have you ever been, Phil?" />
 	  <Dialogue Speaker = "Phil" Text = "&#10; 1) What am I, a Megaladon? &#10; 2) I'm not a big swimmer, but I'd give it a try!"/>
 	  <Dialogue Speaker = "Diana" Text = "Well, no... It's pretty dry now, so I guess you don't have to worry." />

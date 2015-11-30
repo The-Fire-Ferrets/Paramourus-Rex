@@ -340,7 +340,7 @@ void CraftView::Create(const char* resource) {
 
 
 	// set text to initial greeting from Homer
-    std::string str = "Phil come back to see Homer? Phil have " + std::to_string(totalFlowers) + " flowers! If Phil click on flower, Homer make more!";
+    std::string str = "It's good to see you back Phil! You have " + std::to_string(totalFlowers) + " new flowers! If you click on a few flowers you want to combine, I can make you something new!";
     text.setString(fitStringToHintsBox(str, 0, sf::Vector2f(backlay.getGlobalBounds().width,backlay.getGlobalBounds().height)));
 	text.setCharacterSize(hints_size);
     if (!buffer.loadFromFile("./assets/music/marina-s-rhythm.ogg")) {
@@ -546,7 +546,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	   // update text box to indicate that you cannot combine flowers
 	   else {
 	    // std::cout << "CraftView::Update: Unable to craft " << selectedActor1->getId().back() << " and Flower: " << selectedActor2->getId().back() << std::endl;
-	     text.setString(fitStringToDialogueBox("Homer not think Diana-lady like those flowers, Phil. Phil try something else."));
+	     text.setString(fitStringToDialogueBox("Gee Phil, I don't think Diana would like those. Why don't you try something else?"));
 	   }
 	}
 
@@ -688,7 +688,7 @@ void CraftView::update(EventInterfacePtr e) {
 		if (sender->hasComponent(CraftableComponent::id)) {
 			// item crafting completed
 			StrongActorComponentPtr ac = sender->components[CraftableComponent::id];
-			text.setString(fitStringToDialogueBox("Homer make Phil new " + ac->getType() + "! Phil go talk to nice Diana-lady now?"));
+			text.setString(fitStringToDialogueBox("Here Phil, I made you a new " + ac->getType() + "! Why don't you take it to Diana?"));
 			if (ac->getType() == "SunFlower"){
 				sunFlowers++;
 			}
