@@ -803,9 +803,6 @@ void LevelView::update(EventInterfacePtr e) {
 								generateActor(&(temp), game_state);
 							}
 						}
-						else if (action == -1) {
-							reveal_homer = true;
-						}
 						if (contact_id == "FireFlower" || contact_id == "EarthFlower" || contact_id == "WaterFlower" || contact_id == "AirFlower")
 							if (vases_full)
 								count = 1;
