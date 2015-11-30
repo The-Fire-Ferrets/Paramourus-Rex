@@ -128,6 +128,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	vases_full = false;
 	inVision = 0;
 	flashing = 0;
+	actorList.clear();
 	actions.clear();
 	commentary_positions.clear();
 	commentary_strings.clear();
@@ -858,7 +859,7 @@ void LevelView::render(sf::RenderWindow *window) {
 		window->draw(minimap_border);
 		std::vector<StrongActorPtr>::iterator it;
 		for (it = actorList.begin(); it != actorList.end(); it++) {
-			if (homer != *it) {
+			if (player != *it && homer != *it) {
 				(*it)->render(window, false);
 				if ((commentary_timer[(*it)->getInstance()].getElapsedTime().asSeconds() < 4))
 					window->draw(commentary[(*it)->getInstance()]);
