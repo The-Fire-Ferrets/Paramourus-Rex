@@ -542,10 +542,10 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	}
 
 	// should we pause the screen?
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && !call_key_pressed && (view_state == 1)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && !call_key_pressed && (view_state == 1 || (view_state == 2 && last_action < 0))) {
 		call_key_pressed = true;
 		EventInterfacePtr event;
-		event.reset(new ContactEvent(0.f, player->getInstance(), -1));
+		event.reset(new ContactEvent(0.f, player->getInstance(), -1));l;
 		update(event);
 	}
 	
@@ -668,11 +668,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		//Check to see if conditions met to display back button
 		//std::cout << flowers_left << " " << vases_full << " " << inVision << std::endl; 
 		if (call_key_pressed && inVision <= 0) {
-			if (view_state == 2 && last_action == -1)
 				reveal_homer = true;
-			else if (view_state != 2) {
-				reveal_homer = true;
-			}
 		}
 		//Set timer to bottom right corner
 		sf::Vector2f gameView_bottom_corner = Configuration::getGameViewCenter();
@@ -747,7 +743,6 @@ void LevelView::update(EventInterfacePtr e) {
 				return;
 			}
 		}
-		if (last_action != -1) {
 			for (auto itr_cs = commentary_strings.begin(); itr_cs != commentary_strings.end(); itr_cs++) {
 				bool found = false;
 				ActorId display_id = itr_cs->first.first;
@@ -788,7 +783,6 @@ void LevelView::update(EventInterfacePtr e) {
 					if (count >= 0) {
 						//std::cout << "HERE3" << std::endl;
 						int action = commentary_actions[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))][count];
-						last_action = action;
 						if (action >= 0) {
 							for (auto action_itr = actions[action].begin(); action_itr != actions[action].end(); action_itr++) {
 								//std::cout << "GENERATED" << std::endl;
@@ -799,9 +793,7 @@ void LevelView::update(EventInterfacePtr e) {
 								generateActor(&(temp), game_state);
 							}
 						}
-						else if (action == -1) {
-							reveal_homer = true;
-						}
+
 						if (contact_id == "FireFlower" || contact_id == "EarthFlower" || contact_id == "WaterFlower" || contact_id == "AirFlower")
 							if (vases_full)
 								count = 1;
@@ -822,10 +814,11 @@ void LevelView::update(EventInterfacePtr e) {
 							commentary[e->getSender()].setCharacterSize(((commentary_sizes[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))])[count])[r]);
 							commentary_timer[e->getSender()].restart();
 						}
+						//std::cout << action << std::endl;
+						last_action = action;
 						break;
 					}
 				}	
-			}
 		}
 	}
 }
