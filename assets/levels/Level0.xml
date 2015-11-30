@@ -89,5 +89,48 @@
 			<Dialogue4  Text = "You didn't run fast enough" />
 			<Dialogue5  Text = "You can run and you can hide, oh wait..." />
 		</Commentary7>	
+		<Commentary8 Display = "Player" Actor = "Player" Contact = "EarthFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "Woohoo!" />
+			<Dialogue2 Text = "Mmm. Earthy!" />
+			<Dialogue3 Text = "Lucky me!" />
+		</Commentary8>
+		<Commentary9 Display = "Player" Actor = "Player" Contact = "FireFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "Great!" />
+			<Dialogue2 Text = "Spicy!" />
+			<Dialogue3 Text = "Woop woop." />
+		</Commentary9>
+		<Commentary10 Display = "Player" Actor = "Player" Contact = "WaterFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "Cool cool!" />
+			<Dialogue2 Text = "Smooth sailing." />
+		</Commentary10>
+		<Commentary11 Display = "Player" Actor = "Player" Contact = "AirFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "Light as a feather!" />
+			<Dialogue2 Text = "Hmm hmm hmm!" />
+		</Commentary11>
+
+		<Commentary12 Display = "Player" Actor = "Player" Contact = "EarthFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "No can do." />
+			<Dialogue2 Text = "No more vases." />
+			<Dialogue3 Text = "Can't carry any more" />
+			<Dialogue4 Text = "All out of space" />
+		</Commentary12>
+		<Commentary13 Display = "Player" Actor = "Player" Contact = "FireFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "No can do." />
+			<Dialogue2 Text = "No more vases." />
+			<Dialogue3 Text = "Can't carry any more" />
+			<Dialogue4 Text = "All out of space" />
+		</Commentary13>
+		<Commentary14 Display = "Player" Actor = "Player" Contact = "WaterFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "No can do." />
+			<Dialogue2 Text = "No more vases." />
+			<Dialogue3 Text = "Can't carry any more" />
+			<Dialogue4 Text = "All out of space" />
+		</Commentary14>
+		<Commentary15 Display = "Player" Actor = "Player" Contact = "AirFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "No can do." />
+			<Dialogue2 Text = "No more vases." />
+			<Dialogue3 Text = "Can't carry any more" />
+			<Dialogue4 Text = "All out of space" />
+		</Commentary15>
 	</Commentary>
 </Level0>

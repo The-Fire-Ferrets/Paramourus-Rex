@@ -279,6 +279,31 @@
 			<Dialogue1 Text = "Light as a feather!" />
 			<Dialogue2 Text = "Hmm hmm hmm!" />
 		</Commentary9>
+
+		<Commentary10 Display = "Player" Actor = "Player" Contact = "EarthFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "No can do." />
+			<Dialogue2 Text = "No more vases." />
+			<Dialogue3 Text = "Can't carry any more" />
+			<Dialogue4 Text = "All out of space" />
+		</Commentary10>
+		<Commentary11 Display = "Player" Actor = "Player" Contact = "FireFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "No can do." />
+			<Dialogue2 Text = "No more vases." />
+			<Dialogue3 Text = "Can't carry any more" />
+			<Dialogue4 Text = "All out of space" />
+		</Commentary11>
+		<Commentary12 Display = "Player" Actor = "Player" Contact = "WaterFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "No can do." />
+			<Dialogue2 Text = "No more vases." />
+			<Dialogue3 Text = "Can't carry any more" />
+			<Dialogue4 Text = "All out of space" />
+		</Commentary12>
+		<Commentary13 Display = "Player" Actor = "Player" Contact = "AirFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "No can do." />
+			<Dialogue2 Text = "No more vases." />
+			<Dialogue3 Text = "Can't carry any more" />
+			<Dialogue4 Text = "All out of space" />
+		</Commentary13>
 	</Commentary>
 
 </Level1>

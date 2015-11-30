@@ -792,7 +792,10 @@ void LevelView::update(EventInterfacePtr e) {
 						else if (action == -1) {
 							reveal_homer = true;
 						}
-						//std::cout << "HERE4" << std::endl;
+						if (contact_id == "FireFlower" || contact_id == "EarthFlower" || contact_id == "WaterFlower" || contact_id == "AirFlower")
+							if (vases_full)
+								count = 1;
+						//std::cout << count << std::endl;
 						int r = rand() % (itr_cs->second)[count].size();
 						if (display_id == "Homer") {
 							commentary[-1] = sf::Text(((itr_cs->second)[count])[r], font);
