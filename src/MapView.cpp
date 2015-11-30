@@ -491,8 +491,8 @@ std::string MapView::fitStringToCommentaryBox(std::string str, int character_siz
 	int width;
 	int height;
 	if (box_size.x == 0  || box_size.y == 0) {
-		width = 600;
-		height = 400;
+		width = commentary_prompt.getGlobalBounds().width;
+		height = commentary_prompt.getGlobalBounds().height;
 	}
 	else {
 		width = box_size.x;

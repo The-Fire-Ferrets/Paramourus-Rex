@@ -8,6 +8,6 @@
 	</CraftableComponent>
 	<PhysicsComponent>
 		<Properties Type = "Transparent" />
-		<VisionBoundary Height = "" Width = "" X = "" Y = ""/>
+		<VisionBoundary Height = "" Width = ""/>
 	</PhysicsComponent>
 </EarthFlower>

@@ -51,31 +51,11 @@ bool PhysicsComponent::Init(pugi::xml_node* elem) {
         for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
             if (!strcmp(attr.name(),"Type"))
                 type = attr.value();
-		 else if (!strcmp(tool.name(), "VisionBoundary"), !strcmp(attr.name(),"X")) {
-			if (!strcmp(attr.value(), ""))
-				vision_boundary_position.x = 0;
-			else {
-				vision_boundary_position.x  = std::strtol(attr.value(), &temp, 10);
-				use_vision_boundary = true;
-				if (*temp != '\0') {
-				    std::cout << "PhysicsComponent::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
-				}
-			}
-		    }
-		else if (!strcmp(tool.name(), "VisionBoundary"), !strcmp(attr.name(),"Y")) {
-			if (!strcmp(attr.value(), ""))
-				vision_boundary_position.y = 0;
-			else {
-				vision_boundary_position.y  = std::strtol(attr.value(), &temp, 10);
-				if (*temp != '\0') {
-				    std::cout << "PhysicsComponent::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
-				}
-			}
-		    }
 		else if (!strcmp(tool.name(), "VisionBoundary"), !strcmp(attr.name(),"Width")) {
 			if (!strcmp(attr.value(), ""))
 				vision_boundary_size.x = 0;
 			else {
+				use_vision_boundary = true;
 				vision_boundary_size.x  = std::strtol(attr.value(), &temp, 10);
 				if (*temp != '\0') {
 				    std::cout << "PhysicsComponent::Init: Failed to post-initialize: Error reading attribute for " << attr.name() << " Value: " << attr.value() << std::endl;
@@ -94,10 +74,11 @@ bool PhysicsComponent::Init(pugi::xml_node* elem) {
 		    }
         }
     }
+	//std::cout << vision_boundary_size.x << " " << vision_boundary_size.y << " " << use_vision_boundary << std::endl;
 	//Sets up vision bo;undary sprite
 	if (use_vision_boundary) {
 		vision_boundary_texture.loadFromFile("./assets/backgrounds/Level0.png");
-		vision_boundary_sprite = sf::Sprite(vision_boundary_texture);
+		vision_boundary_sprite = sf::Sprite(vision_boundary_texture, sf::IntRect(0, 0, (int) (vision_boundary_size.x), (int) (vision_boundary_size.y)));
 	}
 	
     return true;	
@@ -121,10 +102,13 @@ bool PhysicsComponent::PostInit(void) {
  **/
 void PhysicsComponent::update(float time) {
 	//Checks vision boundary to see if player is seen
-	if (use_vision_boundary) {	
-		vision_boundary = sf::IntRect(0, 0, (int) (vision_boundary_size.x), (int) (vision_boundary_size.y));
-		vision_boundary_sprite.setTextureRect(vision_boundary);
-		vision_boundary_sprite.setPosition(owner->getPosition().x + vision_boundary_position.x, owner->getPosition().y + vision_boundary_position.y);
+	if (use_vision_boundary) {
+		vision_boundary_position.x = owner->getPosition().x + owner->getSize().x/2.0 - vision_boundary_size.x/2.0;
+		vision_boundary_position.y = owner->getPosition().y + owner->getSize().y/2.0 - vision_boundary_size.y/2.0;
+		vision_boundary_sprite.setPosition(vision_boundary_position.x, vision_boundary_position.y);
+	}
+
+	if (use_vision_boundary) {
 		if (LevelView::player->intersects(vision_boundary_sprite.getGlobalBounds()) && !inVision) {
 			inVision = true;
 			Pathfinder::changeVision(owner->getInitialPosition(), LevelView::player->getInitialPosition());
@@ -161,9 +145,6 @@ void PhysicsComponent::update(float time) {
             }
 		if (other_actor->hasComponent(CollectableComponent::id)) {
 			if (use_vision_boundary) {	
-				vision_boundary = sf::IntRect(0, 0, (int) (vision_boundary_size.x), (int) (vision_boundary_size.y));
-				vision_boundary_sprite.setTextureRect(vision_boundary);
-				vision_boundary_sprite.setPosition(owner->getPosition().x + vision_boundary_position.x, owner->getPosition().y + vision_boundary_position.y);
 				if (other_actor->intersects(vision_boundary_sprite.getGlobalBounds())) {
 					Pathfinder::changeVision(owner->getInitialPosition(), other_actor->getInitialPosition());
 				}

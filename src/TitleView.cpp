@@ -125,7 +125,7 @@ void TitleView::update(sf::RenderWindow *window, int* state, float time) {
 		LevelView::player = NULL;
 		LevelView::cleanUp();
 		//In order to display all the levels at once; uncomment line below // remember to comment it before pushing though
-		//MapView::level_idx = 5;
+		MapView::level_idx = 5;
 		MapView::view_state = 1;
 		MapView::commentary_idx = 0;
 		render(window);
