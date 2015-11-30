@@ -165,7 +165,6 @@ void CraftView::Create(const char* resource) {
         // Size of dialogue text
         else if (!strcmp(attr.name(), "Text_Size")) {
             text.setCharacterSize(std::strtol(attr.value(), &temp, 10));
-            //hints_text.setCharacterSize((std::strtol(attr.value(), &temp, 10)));
 	    flower_text.setCharacterSize(25);
 
             if (*temp != '\0') {
@@ -256,6 +255,7 @@ void CraftView::Create(const char* resource) {
 	  for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()){
 	  	  if (!strcmp(attr.name(), "Hint_Text")){
 	  	  	hints_text.setString(fitStringToHintsBox(attr.value()));
+			hints_text.setCharacterSize(hints_size);
 	  	  }
 	      if (!strcmp(attr.name(), "Sprite")) {
 		  if (!textures[i].loadFromFile(("./assets/sprites/" + (std::string)attr.value()).c_str() + std::string(".png"))){
@@ -993,7 +993,6 @@ std::string CraftView::fitStringToHintsBox(std::string str, int character_size, 
 	if (character_size <= 0) {
 		curr_size = 50;
 		character_size = 50;
-		hints_text.setCharacterSize(character_size);
 	}
 	else {
 		curr_size = character_size;
