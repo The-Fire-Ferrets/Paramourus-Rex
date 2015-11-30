@@ -64,7 +64,7 @@
 			<Dialogue1 Text = "All right, Phil, I'm here to help you win over Diana by collecting flowers. Look at that map in the top-right corner. You can also press the M key to show the map and pause the game. The green dot is you, and the red X is your target: a FireFlower. Go pick it up, or press the Back Button in the bottom-left corner, if you're a quitter." />
 		</Commentary1>
 		<Commentary2  Display = "Homer" Actor = "Player" Contact = "FireFlower"  Action = "1" Occurance = "1">
-			<Dialogue1  Text = "Good job! The air out here is pretty foul; you'll pass out if you breathe it in for too long! If it the timer in the bottom right hand corner hits zero, you've run out of stamina and will pass out.  If you do faint, I'll come and bail you out, but I'm also going to eat the flowers. Go get the next one, Phil." />
+			<Dialogue1  Text = "Good job! The air out here is pretty foul; you'll pass out if you breathe it in for too long! If the timer in the bottom right hand corner hits zero, you've run out of stamina and will pass out.  If you do faint, I'll come and bail you out, but I'm also going to eat the flowers. Go get the next one, Phil." />
 		</Commentary2>		
 		<Commentary3  Display = "Homer" Actor = "Player" Contact = "FireFlower"  Action = "2" Occurance = "1">
 			<Dialogue1  Text = "In the top-left corner, you'll see that you've collected two FireFlowers. Hold on to them. You'll see many more of these cacti and rocks in the future. You'll drop a vase if you touch a cactus, so try to avoid them! Try touching a cactus, just once, to see what it's like." />

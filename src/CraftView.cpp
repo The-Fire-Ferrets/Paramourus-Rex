@@ -343,7 +343,7 @@ void CraftView::Create(const char* resource) {
 
 
 	// set text to initial greeting from Homer
-    std::string str = "It's good to see you back Phil! You have " + std::to_string(totalFlowers) + " new flowers! If you click on a few flowers you want to combine, I can make you something new!";
+    std::string str = "It's good to see you back Phil! You have " + std::to_string(totalFlowers) + " new flowers! If you click on the flowers you want to combine, I can make you something new!";
 	int box_begin_x = backlay.getPosition().x;
 	int box_begin_y = backlay.getPosition().y;
 	int box_end_x   = box_begin_x + backlay.getGlobalBounds().width;
@@ -383,6 +383,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
   	EventManagerInterface::setViewDelegate(delegate);
 	EventManagerInterface::setCurrentActorList(&actorList);
 	// Checks player for current inventory, updates.
+	
     // Accessing this info from LevelView::Player's CollectorComponent.
     if (LevelView::player != NULL){
       StrongActorPtr player = LevelView::player;
@@ -421,12 +422,15 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
       if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !pressed) {
         pressed = true;
         const sf::Vector2i pos = sf::Mouse::getPosition(*window);
+	
+	// If player clicks on Diana's icon, takes you to DialogueView
         if (has_crafted && diana_icon_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
         	has_crafted = false;
 			LevelView::player->reset();
 		  *state = 2;
 		   DialogueView::Create(("Level" + std::to_string(total_craft_visits)).c_str(), state);
-
+		  std::string str = "It's good to see you back Phil! You have " + std::to_string(totalFlowers) + " new flowers! If you click on a few flowers you want to combine, I can make you something new!";
+		  text.setString(fitStringToBox(str, text.getCharacterSize(), backlay_size));
 		  ++total_craft_visits;
 		  cleanUp();
         }
@@ -603,6 +607,8 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	if (map_icon_sprite.getGlobalBounds().contains(pos.x, pos.y) && first_click) {
 		LevelView::player->reset();
 		*state = 0;
+		std::string str = "It's good to see you back Phil! You have " + std::to_string(totalFlowers) + " new flowers! If you click on a few flowers you want to combine, I can make you something new!";
+		text.setString(fitStringToBox(str, text.getCharacterSize(), backlay_size));
 		cleanUp();
 	}
 
