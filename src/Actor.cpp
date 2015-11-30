@@ -20,11 +20,11 @@ std::vector<ActorId> Actor::getId(void) const {
  *  Replaces actor Id with new Id - necessary for updating crafted flowers
  */
 void Actor::replaceId(ActorId newId, ActorId oldId) {
-    std::cout << "Old Id is " << oldId << std::endl;
+    //std::cout << "Old Id is " << oldId << std::endl;
     for (auto itr = id.begin(); itr != id.end(); itr++) {
 	if (*itr == oldId)
 		*itr = newId;
-		 std::cout << "Replaced old Id with " << newId << std::endl;
+		 //std::cout << "Replaced old Id with " << newId << std::endl;
     }
 }
 

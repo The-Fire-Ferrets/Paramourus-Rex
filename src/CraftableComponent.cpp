@@ -218,7 +218,7 @@ void CraftableComponent::combineWith(const CraftableComponent& other) {
 			if (!strcmp(attr.name(), "Components")) {
 				std::vector<std::string> components = split(std::string(attr.value()), ' ');
 				if (have_equivalent_strings(elements, components)) {
-					std::cout << "changing type" << std::endl;
+					//std::cout << "changing type" << std::endl;
 					std::string type = this->getCraftResultValue(recipe, "Type");
 					std::string sprite = this->getCraftResultValue(recipe, "Sprite");
 

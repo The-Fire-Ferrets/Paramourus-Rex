@@ -48,12 +48,12 @@ class LevelView  {
 		static std::map<DisplayContactPair, std::vector<std::vector<std::string>>> commentary_strings;
 		static std::map<DisplayContactPair, std::vector<int>> commentary_occurance;
 		static std::map<DisplayContactPair, std::vector<int>> commentary_actions;
+		static std::map<DisplayContactPair, std::vector<std::vector<int>>> commentary_sizes;
 		static std::map<int, sf::Clock> commentary_timer;
 		static sf::Texture commentary_prompt_texture;
 		static sf::Sprite commentary_prompt;
 		static sf::Vector2f commentary_pos;
 		static int commentary_size;
-		static std::map<DisplayContactPair, std::vector<int>> commentary_sizes;
 		static bool display_commentary;
 		static std::string fitStringToCommentaryBox(std::string str, int character_size = 0, sf::Vector2f box_size = sf::Vector2f(0,0), bool center = true);
 		static sf::Text title;

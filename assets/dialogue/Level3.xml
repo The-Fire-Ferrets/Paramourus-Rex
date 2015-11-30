@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
-<Level3 Background = "Orchard.png" Response="1" Flower = "Tulip" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "300" DianaPosY = "350" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30" Backlay = "Prompt.png">
+<Level3 Background = "HomersCave.png" Response="2" Flower = "Rose" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30" Backlay = "Prompt.png">
 	<Correct>
-	  <Dialogue Speaker = "Narrator" Text ="Exhausted from all of your flower-hunting, you're not expecting to see Diana when you're walking back through the remains of the old apple orchards. Diana perks up upon seeing you, waving her short arms at you enthusiastically." />
-	  <Dialogue Speaker = "Diana" Text = "Hey Phil! I'm glad I ran into you! I loved that other Orchid you found for me! I never would have been able to grow that with just the water that I have. What are you out here for anyway? Are you looking for a snack too? I haven't had too much luck. There's not too much green left around here. I think all the earth's too dry. Wanna look around with me?" />
-	  <Dialgoue Speaker = "Narrator" Text = "You and Diana spend some time together wandering the old tree trunks, looking for old fallen apples. While you don't find any, you get to enjoy some extra time with just you and Diana. You wonder to yourself if you would have more success finding something green near that crater the meteor left..." />
-	  <Dialogue Speaker = "Diana" Text="What's your favorite food anyway, Phil?"/>
-	  <Dialogue Speaker = "Phil" Text= "&#10; 1) I'm actually a vegetarian. &#10; 2) Uh, you know, the usual, carnivore meat... things." />
-	  <Dialogue Speaker = "Diana" Text= "Wow, really? That's so interesting. I'll keep an extra eye out for those apples, then! See ya, Phil!"/>
-	  <Dialogue Speaker = "Diana" Text= "Carnivore things... Yeah. Guess you wouldn't've liked those apples anyway, then. See ya, Phil." />
+	  <Dialogue Speaker = "Narrator" Text="Things got pretty toasty in the heart of the volcano, but you managed to escape both the other Tyrannasaururs and all the lava with some flowers in tact. The next time you find Diana is later that afternoon, on your way to Homer's cave. She smiles happily at you as you approach." />
+	  <Dialogue Speaker = "Diana" Text = "Hey Phil! I was just here to visit Homer. He told me you'd gone out again - you've been awfully busy lately! Were you out finding this Rose? It's beautiful! I really need to go and find some water to keep these alive. It's too bad so much of it's dried up around here now!" />
+	  <Dialgoue Speaker = "Homer" Text = "I heard there was still some water out by Optimism Island. It's... not super optimistic anymore. I don't go there anymore because of all the other dinosaurs, but maybe Phil can look!"/>
+	  <Dialogue Speaker = "Diana" Text = "Oh, Optimism Island! That used to be a great place to go swimming. Have you ever been, Phil?"/>
+	  <Dialogue Speaker = "Phil" Text = "&#10; 1) What am I, a Megaladon? &#10; 2) I'm not a big swimmer, but I'd give it a try!"/>
+	  <Dialogue Speaker = "Diana" Text = "If you say so... I'd still be careful."/>
+	  <Dialogue Speaker = "Diana" Text = "Haha, if it weren't all dried out I'd go with you!"/>     
 	</Correct>
 	<Incorrect>
-	  <Dialogue Speaker = "Narrator" Text ="Exhausted from all of your flower-hunting, you're not expecting to see Diana when you're walking back through the remains of the old apple orchards. Diana perks up upon seeing you, waving her short arms at you." />
-	  <Dialogue Speaker = "Diana" Text = "Hey Phil! What are you out here for? Are you looking for a snack too? I haven't had too much luck. There's not too much green left around here. I think all the earth's too dry. You join me if you want, but I haven't had much luck." />
-	  <Dialgoue Speaker = "Narrator" Text = "You and Diana spend some time together wandering the old tree trunks, looking for old fallen apples. While you don't find any, you get to enjoy some extra time with just you and Diana. You wonder to yourself if you would have more success finding something green near that crater the meteor left..." />
-	  <Dialogue Speaker = "Diana" Text="What's your favorite food anyway, Phil?" />
-	  <Dialogue Speaker = "Phil" Text= "&#10; 1) I'm actually a vegetarian. &#10; 2) Uh, you know, the usual, carnivore meat... things."/>
-	  <Dialogue Speaker = "Diana" Text= "Wow, really? That's so interesting. I'll keep an extra eye out for those apples, then! See ya, Phil!" />
-	  <Dialogue Speaker = "Diana" Text= "Carnivore things... Yeah. Guess you wouldn't've liked those apples anyway, then. See ya, Phil." />
+	  <Dialogue Speaker = "Narrator" Text="Things got pretty toasty in the heart of the volcano, but you managed to escape both the other Tyrannasaururs and all the lava with some flowers in tact. You find Diana later on your way to Homer's cave." />
+	  <Dialogue Speaker = "Diana" Text = "Oh, hey Phil. I was just here to visit Homer. He told me you'd gone out again - you've been awfully busy lately! Were you out finding this new flower? Thanks... I'll put it with the other one you got me. I should go and find some water to keep these alive. It's too bad so much of it's dried up around here now!"/>
+	  <Dialgoue Speaker = "Homer" Text = "I heard there was still some water out by Optimism Island. It's... not super optimistic anymore. I don't go there anymore because of all the other dinosaurs, but maybe Phil can look!" />
+	  <Dialogue Speaker = "Diana" Text = "Oh, Optimism Island! That used to be a great place to go swimming. Have you ever been, Phil?" />
+	  <Dialogue Speaker = "Phil" Text = "&#10; 1) What am I, a Megaladon? &#10; 2) I'm not a big swimmer, but I'd give it a try!"/>
+	  <Dialogue Speaker = "Diana" Text = "Well, no... It's pretty dry now, so I guess you don't have to worry." />
+	  <Dialogue Speaker = "Diana" Text = "Haha, if it weren't all dried out I'd go with you!"/>
 	</Incorrect>
 </Level3>

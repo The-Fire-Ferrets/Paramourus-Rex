@@ -208,7 +208,7 @@
 
 	<Action>
 		<Spawn1>
-			<NPC Generate = "5">
+			<NPC Generate = "1">
 				<Pathfinder PathType = "-3" TargetType = "-2"/>
 				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 				<InputComponent>
@@ -260,6 +260,50 @@
 			<Dialogue4  Text = "You didn't run fast enough" />
 			<Dialogue5  Text = "You can run and you can hide, oh wait..." />
 		</Commentary5>
+
+		<Commentary6 Display = "Player" Actor = "Player" Contact = "EarthFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "Woohoo!" />
+			<Dialogue2 Text = "Mmm. Earthy!" />
+			<Dialogue3 Text = "Lucky me!" />
+		</Commentary6>
+		<Commentary7 Display = "Player" Actor = "Player" Contact = "FireFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "Great!" />
+			<Dialogue2 Text = "Spicy!" />
+			<Dialogue3 Text = "Woop woop." />
+		</Commentary7>
+		<Commentary8 Display = "Player" Actor = "Player" Contact = "WaterFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "Cool cool!" />
+			<Dialogue2 Text = "Smooth sailing." />
+		</Commentary8>
+		<Commentary9 Display = "Player" Actor = "Player" Contact = "AirFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "Light as a feather!" />
+			<Dialogue2 Text = "Hmm hmm hmm!" />
+		</Commentary9>
+
+		<Commentary10 Display = "Player" Actor = "Player" Contact = "EarthFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "No can do." />
+			<Dialogue2 Text = "No more vases." />
+			<Dialogue3 Text = "Can't carry any more" />
+			<Dialogue4 Text = "All out of space" />
+		</Commentary10>
+		<Commentary11 Display = "Player" Actor = "Player" Contact = "FireFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "No can do." />
+			<Dialogue2 Text = "No more vases." />
+			<Dialogue3 Text = "Can't carry any more" />
+			<Dialogue4 Text = "All out of space" />
+		</Commentary11>
+		<Commentary12 Display = "Player" Actor = "Player" Contact = "WaterFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "No can do." />
+			<Dialogue2 Text = "No more vases." />
+			<Dialogue3 Text = "Can't carry any more" />
+			<Dialogue4 Text = "All out of space" />
+		</Commentary12>
+		<Commentary13 Display = "Player" Actor = "Player" Contact = "AirFlower" Action = "-2" Occurance = "-1">
+			<Dialogue1 Text = "No can do." />
+			<Dialogue2 Text = "No more vases." />
+			<Dialogue3 Text = "Can't carry any more" />
+			<Dialogue4 Text = "All out of space" />
+		</Commentary13>
 	</Commentary>
 
 </Level1>

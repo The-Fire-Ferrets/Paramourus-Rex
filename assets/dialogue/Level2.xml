@@ -1,21 +1,17 @@
 <?xml version="1.0"?>
-<Level2 Background = "HomersCave.png" Response="2" Flower = "Rose" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30" Backlay = "Prompt.png">
+<Level2 Background = "HomersCave.png" Response="2" Flower = "Violet" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30" Backlay = "Prompt.png">
 	<Correct>
-	  <Dialogue Speaker = "Narrator" Text = "The other T-Rex fighting for Diana's heart may have had strength and size on their side, but you figure that your small size and speed came in handy at Skyline Paradise. Those mountains are so hard to navigate, especially at such a high altitude, but the flowers you found up there really paid off. You haven't even left Homer's cave when Diana happens to wander in, and immediately brightens." />
-	  <Dialogue Speaker = "Diana" Text = "Hey Phil! I was just here to visit Homer. He told me you'd gone out again - you've been awfully busy lately! Were you out finding this new flower? It's beautiful! I really need to go and find some water to keep these alive. It's too bad so much of it's dried up around here now!" />
-	  <Dialgoue Speaker = "Homer" Text = "Homer hear there still some water out by Optimism Island. Though, maybe not many optimisms anymore. Homer not go there cause lots of mean dinos, but maybe Phil can look!"/>
-	  <Dialogue Speaker = "Diana" Text = "Oh, Optimism Island! That used to be a great place to go swimming. Have you ever been, Phil?"/>
-	  <Dialogue Speaker = "Phil" Text = "&#10; 1) What am I, a Megaladon? &#10; 2) I'm not a big swimmer, but I'd give it a try!"/>
-	  <Dialogue Speaker = "Diana" Text = "If you say so... I'd still be careful."/>
-	  <Dialogue Speaker = "Diana" Text = "Haha, if it weren't all dried out I'd go with you!"/>
+	  <Dialogue Speaker = "Narrator" Text = "Luckily, you were able to find one of the violets Diana mentioned after all. You're only just leaving Homer's cave after your adventure inside it when you run into Diana again." />
+	  <Dialogue Speaker = "Diana" Text = "Hey Phil! I was just here to visit Homer. Did you find this Violet back there in his cave after all? I can't believe he saved them! You've been together a lot since you moved back, haven't you? That's great that you guys are friends. Most people don't hang out with Homer. Are you guys close?"/>
+	  <Dialogue Speaker = "Phil" Text= "&#10; 1) He's a little dumb, but he's pretty helpful. &#10; 2) He's my best friend." />
+	  <Dialogue Speaker = "Diana" Text= "Oh... I thought you guys were friends. Anyway, thanks again for this flower. It makes me feel all bright and sunny again. I'd love to have something else like that Sunflower."/>
+	  <Dialogue Speaker = "Diana" Text = "That's so cute! And hey, thanks again for this flower. It makes me feel all bright and sunny again. I'd love to have something else like that Sunflower."/>
 	</Correct>
 	<Incorrect>
-	  <Dialogue Speaker = "Narrator" Text = "The other T-Rex fighting for Diana's heart may have had strength and size on their side, but you figure that your small size and speed came in handy at Skyline Paradise Those mountains are so hard to navigate, especially at such a high altitude, but the flowers you found up there really paid off. You haven't even left Homer's cave when Diana happens to wander in." />
-	  <Dialogue Speaker = "Diana" Text = "Oh, hey Phil. I was just here to visit Homer. He told me you'd gone out again - you've been awfully busy lately! Were you out finding this new flower? Thanks... I'll put it with the other one you got me. I should go and find some water to keep these alive. It's too bad so much of it's dried up around here now!"/>
-	  <Dialgoue Speaker = "Homer" Text = "Homer hear still some water out by Optimism Island. Though, maybe not many optimisms anymore. Homer not go there cause lots of mean dinos, but maybe Phil can look!" />
-	  <Dialogue Speaker = "Diana" Text = "Oh, Optimism Island! That used to be a great place to go swimming. Have you ever been, Phil?" />
-	  <Dialogue Speaker = "Phil" Text = "&#10; 1) What am I, a Megaladon? &#10; 2) I'm not a big swimmer, but I'd give it a try!"/>
-	  <Dialogue Speaker = "Diana" Text = "Well, no... It's pretty dry now, so I guess you don't have to worry." />
-	  <Dialogue Speaker = "Diana" Text = "Haha, if it weren't all dried out I'd go with you!"/>
+	  <Dialogue Speaker = "Narrator" Text = "You weren't able to find any of he violets that Diana mentioned. You're only just leaving Homer's cave after your adventure inside it when you run into Diana again." />
+	  <Dialogue Speaker = "Diana" Text = "Oh, hey Phil. I was just here to visit Homer. I'm surprised you found that flower back in his cave. I didn't think anything other than violets grew around here... But that's nice that Homer gave it to you anyway I guess. You've been together a lot since you moved back, haven't you? That's great that you guys are friends. Most people don't hang out with Homer. Are you guys close?"/>
+	  <Dialogue Speaker = "Phil" Text= "&#10; 1) He's a little dumb, but he's pretty helpful. &#10; 2) He's my best friend." />
+	  <Dialogue Speaker = "Diana" Text= "Oh... I thought you guys were friends. Anyway, thanks again for this flower. It makes me feel all bright and sunny again. I'd love to have something else like that Sunflower."/>
+	  <Dialogue Speaker = "Diana" Text = "That's so cute! And hey, thanks again for this flower. It makes me feel all bright and sunny again. I'd love to have something else like that Sunflower."/>
 	</Incorrect>
 </Level2>

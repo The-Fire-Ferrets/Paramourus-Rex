@@ -53,6 +53,7 @@ std::map<DisplayContactPair, std::vector<sf::Vector2f>> LevelView::commentary_po
 std::map<DisplayContactPair, std::vector<std::vector<std::string>>> LevelView::commentary_strings;
 std::map<DisplayContactPair, std::vector<int>> LevelView::commentary_actions;
 std::map<DisplayContactPair , std::vector<int>> LevelView::commentary_occurance;
+std::map<DisplayContactPair, std::vector<std::vector<int>>> LevelView::commentary_sizes;
 std::map<int, sf::Clock> LevelView::commentary_timer;
 bool LevelView::commentary_change = true;
 std::vector<std::vector<pugi::xml_node>> LevelView::actions;
@@ -61,7 +62,6 @@ sf::Texture LevelView::commentary_prompt_texture;
 sf::Sprite LevelView::commentary_prompt;
 sf::Vector2f LevelView::commentary_pos;
 int LevelView::commentary_size;
-std::map<DisplayContactPair, std::vector<int>> LevelView::commentary_sizes;
 bool LevelView::display_commentary;
 //Back Button
 sf::Sprite LevelView::back_button;
@@ -110,7 +110,7 @@ bool LevelView::received_new_commentary;
  **/
 void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	//Reference to current location in Actor population array
-	//Holds referenced to loaded XML file	
+	//Holds referenced to loaded XML file
 	title_text = "";
 	homer = NULL;
 	load_text = "Loading...";
@@ -139,6 +139,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	display_commentary = false;
 	received_new_commentary = false;
 	game_state = state;
+	view_state = 0;
 	//Error check to see if file was loaded correctly
 	pugi::xml_parse_result result;
 	std::string resource_str(resource);
@@ -299,10 +300,10 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 				}
 				if (commentary_strings.find(DisplayContactPair(display, ContactPair(actor_id, contact))) == commentary_strings.end()) {
 					commentary_strings.insert(std::pair<DisplayContactPair, std::vector<std::vector<std::string>>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<std::vector<std::string>>()));
-					commentary_sizes.insert(std::pair<DisplayContactPair, std::vector<int>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<int>()));
+					commentary_sizes.insert(std::pair<DisplayContactPair, std::vector<std::vector<int>>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<std::vector<int>>()));
 				}
 				commentary_strings[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(std::vector<std::string>());
-				commentary_sizes[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(5);
+				commentary_sizes[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(std::vector<int>());
 				if (commentary_actions.find(DisplayContactPair(display, ContactPair(actor_id, contact))) == commentary_actions.end()) {
 					commentary_actions.insert(std::pair<DisplayContactPair, std::vector<int>>(DisplayContactPair(display, ContactPair(actor_id, contact)), std::vector<int>()));
 				}
@@ -320,7 +321,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 						else {
 							commentary_strings[DisplayContactPair(display, ContactPair(actor_id, contact))].back().push_back(fitStringToCommentaryBox(attr.value(), 5, sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2), false));
 						}
-						commentary_sizes[DisplayContactPair(display, ContactPair(actor_id, contact))].push_back(commentary_size);	
+						commentary_sizes[DisplayContactPair(display, ContactPair(actor_id, contact))].back().push_back(commentary_size);	
 					}
 				}
 			}
@@ -343,7 +344,7 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 			player = (actorList.back());
 			gameView.setCenter(Configuration::getGameViewCenter());
 		}
-		else if (!strcmp(tool.name(), "Player")) {
+		else if (!strcmp(tool.name(), "Player") && player != NULL) {
 			actorList.push_back(player);
 			player->PostInit(&tool);
 			gameView.setCenter(Configuration::getGameViewCenter());
@@ -402,9 +403,11 @@ void LevelView::Create(const char* resource, int* state, int flowers[]) {
 	commentary_prompt.setPosition(sf::Vector2f(Configuration::getGameViewPosition().x + (75 * commentary_prompt.getScale().x),Configuration::getGameViewPosition().y + (75 * commentary_prompt.getScale().y)));
 
 	//Sets up sound
-	sound.setBuffer(buffer);
-	sound.setLoop(true);
-	sound.play();
+	if (name != "LevelPlayer") {
+		sound.setBuffer(buffer);
+		sound.setLoop(true);
+		sound.play();
+	}
 
 	//Loads the map into pathfinder
 	view_state = 0;
@@ -461,15 +464,29 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	//Switch actorlist to current view
 	EventManagerInterface::setCurrentActorList(&actorList);
 	Configuration::setGameViewDimensions(gameView.getSize().x, gameView.getSize().y);
-	
 	bool ready_to_play = false;
+
 	//Checks to see if done generating paths
 	if (!Pathfinder::generatingPaths && view_state == 0) {
-		load_text = "Press the Space Bar to Start!";
-		load_state.setString(load_text);
-		load_state.setPosition(Configuration::getWindowWidth()/2 - load_state.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 + 10);
-		ready_to_play = true;
-		//std::cout << "Pathfinder Path Generation Success!" << std::endl;
+		if (name == "LevelPlayer") {
+			for (auto it = actorList.begin(); it != actorList.end(); it++) {
+				if (player != *it && homer != *it) {
+					if (!EventManagerInterface::get()->queueEvent(new ContactEvent(0.f, player->getInstance(), (*it)->getInstance())) )
+                        			std::cout << "LevelView::update: Unable to queue event" << std::endl;
+					if (!EventManagerInterface::get()->queueEvent(new ContactEvent(0.f, (*it)->getInstance(), player->getInstance())) )
+                        			std::cout << "LevelView::update: Unable to queue event" << std::endl;
+				}
+			}
+			view_state = 1;
+		}
+		else {
+			load_text = "Press the Space Bar to Start!";
+			load_state.setString(load_text);
+			load_state.setPosition(Configuration::getWindowWidth()/2 - load_state.getGlobalBounds().width/2, Configuration::getWindowHeight()/2 + 10);
+		
+			ready_to_play = true;
+			//std::cout << "Pathfinder Path Generation Success!" << std::endl;
+		}
 	}
 
 	// should we pause the screen?
@@ -582,6 +599,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 			DialogueView::Create(time_out, state);
 			MapView::view_state = 1;
 			LevelView::player->reset();
+			//std::cout << "HERE" << std::endl;
 			*state = 2;
 		}
 		else if (view_state == 2) {
@@ -589,6 +607,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 			LevelView::player->reset();
 			MapView::view_state = 2;
 			MapView::commentary_idx = 0;
+			//std::cout << "HERE" << std::endl;
 			MapView::reset = true;
 			*state = 0;
 		}
@@ -667,6 +686,14 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		received_new_commentary = false;
 		display_commentary = true;
 	}
+
+	if (name == "LevelPlayer" && view_state == 1 && flowers_left == 0) {
+		view_state = 0;
+		MapView::view_state = 1;
+		*state = 0;
+		//cleanUp();
+		view_state = 1;
+	}
 	
 }
 
@@ -675,7 +702,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
  */
 void LevelView::update(EventInterfacePtr e) {
 	//In tutotial, update hints to display based on if event is acheived
-	if (e == NULL)
+	if (e == NULL || name == "LevelPlayer")
 		return;
 
 	EventType event_type = e->getEventType();
@@ -765,11 +792,14 @@ void LevelView::update(EventInterfacePtr e) {
 						else if (action == -1) {
 							reveal_homer = true;
 						}
-						//std::cout << "HERE4" << std::endl;
+						if (contact_id == "FireFlower" || contact_id == "EarthFlower" || contact_id == "WaterFlower" || contact_id == "AirFlower")
+							if (vases_full)
+								count = 1;
+						//std::cout << count << std::endl;
 						int r = rand() % (itr_cs->second)[count].size();
 						if (display_id == "Homer") {
 							commentary[-1] = sf::Text(((itr_cs->second)[count])[r], font);
-							commentary[-1].setCharacterSize((commentary_sizes[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))])[count]);
+							commentary[-1].setCharacterSize(((commentary_sizes[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))])[count])[r]);
 							commentary[-1].setColor(sf::Color::Black);
 							commentary[-1].setPosition(sf::Vector2f(commentary_prompt.getPosition().x + commentary_prompt.getGlobalBounds().width/2 - commentary[-1].getGlobalBounds().width/2, commentary_prompt.getPosition().y + commentary_prompt.getGlobalBounds().height/2 - commentary[-1].getGlobalBounds().height/2));		
 							commentary_timer[-1].restart();
@@ -779,7 +809,7 @@ void LevelView::update(EventInterfacePtr e) {
 						else {
 							//std::cout << "Here4 " << display_id << " " << actor_id << " " << contact_id << " " << action << " " << ((itr_cs->second)[count])[r] <<  std::endl;
 							commentary[e->getSender()] = sf::Text(((itr_cs->second)[count])[r], font);
-							commentary[e->getSender()].setCharacterSize((commentary_sizes[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))]).back());
+							commentary[e->getSender()].setCharacterSize(((commentary_sizes[DisplayContactPair(display_id, ContactPair(actor_id, contact_id))])[count])[r]);
 							commentary_timer[e->getSender()].restart();
 						}
 						break;
@@ -796,6 +826,12 @@ void LevelView::update(EventInterfacePtr e) {
 void LevelView::render(sf::RenderWindow *window) {
 
 	//Loading screen
+	if (name == "LevelPlayer") {
+		window->clear(sf::Color::White);
+		window->draw(Configuration::getLoadingSprite());
+		window->display();
+		return;
+	}
 	if (view_state == 0) {
 		window->clear(sf::Color::White);
 		window->setView(window->getDefaultView());

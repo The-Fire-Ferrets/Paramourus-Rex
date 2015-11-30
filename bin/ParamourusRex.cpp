@@ -26,9 +26,6 @@ int main(int argc, char* argv[])
 	sf::View defaultView = App.getDefaultView();
 	App.setView(defaultView);			
 	Configuration::setGameViewCenter(sf::Vector2f(Configuration::getGameViewWidth()/2, Configuration::getGameViewHeight()/2));
-	//Loads the map
-	const char* map = {"Map"};	
-	MapView::Create(map);
 	//Loads the title
 	const char* title = {"Title"};
 	TitleView::Create(title);
