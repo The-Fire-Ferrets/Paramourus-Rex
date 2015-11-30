@@ -256,7 +256,7 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 
 			}
 			else {
-				std::cout << "Load ./assets/sprites/" + boxes[index].first + ".png" << std::endl;
+				//std::cout << "Load ./assets/sprites/" + boxes[index].first + ".png" << std::endl;
 				rhs_character_tex.loadFromFile("./assets/sprites/" + boxes[index].first + ".png");
 			}
 				unsigned int width = Configuration::getWindowWidth()/1.05;
@@ -299,12 +299,12 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 	    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) && player_response == true){
 		    if (response == 1){
 			    num_times_impressed++;
-          std::cout << "Load ./assets/sprites/Diana-Happy.png" << std::endl;
+         // std::cout << "Load ./assets/sprites/Diana-Happy.png" << std::endl;
           rhs_character_tex.loadFromFile("./assets/sprites/Diana-Happy.png");
 		    }
 		    else{
 			    num_times_impressed--;
-          std::cout << "Load ./assets/sprites/Diana-Unimpressed.png" << std::endl;
+          //std::cout << "Load ./assets/sprites/Diana-Unimpressed.png" << std::endl;
           rhs_character_tex.loadFromFile("./assets/sprites/Diana-Unimpressed.png");
 		    }
         unsigned int width = Configuration::getWindowWidth()/1.05;
@@ -323,12 +323,12 @@ void DialogueView::update(sf::RenderWindow *window, int* state){
 	    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) && player_response == true){
 		    if (response == 2){
 			    num_times_impressed++;
-          std::cout << "Load ./assets/sprites/Diana-Happy.png" << std::endl;
+          //std::cout << "Load ./assets/sprites/Diana-Happy.png" << std::endl;
           rhs_character_tex.loadFromFile("./assets/sprites/Diana-Happy.png");
 		    }
 		    else{
 			    num_times_impressed--;
-          std::cout << "Load ./assets/sprites/Diana-Unimpressed.png" << std::endl;
+          //std::cout << "Load ./assets/sprites/Diana-Unimpressed.png" << std::endl;
           rhs_character_tex.loadFromFile("./assets/sprites/Diana-Unimpressed.png");
 		    }
         unsigned int width = Configuration::getWindowWidth()/1.05;
