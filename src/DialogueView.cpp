@@ -184,8 +184,9 @@ void DialogueView::Create(const char* resource, int* state){
 	}
 
 	// generatre dialogue boxes
+	sf::Vector2f box_size = sf::Vector2f(backlay.getGlobalBounds().width, backlay.getGlobalBounds().height);
 	for (std::pair<std::string, std::string> dialogue : dialogues) {
-		std::vector<std::string> fitted = fitStringToDialogueBox(dialogue.second);
+		std::vector<std::string> fitted = fitStringToBox(dialogue.second, text.getCharacterSize(), box_size);
 		for (std::string line: fitted) {
 			dialogue.first = (dialogue.first == "") ? ("Narrator") : (dialogue.first);
 			boxes.push_back(std::pair<std::string, std::string>(dialogue.first, line));
@@ -377,72 +378,113 @@ void DialogueView::cleanUp() {
 	solved = false;
 }
 
-std::vector<std::string> DialogueView::fitStringToDialogueBox(std::string str) {
-	// get dialogue box bounds
-	int width = Configuration::getWindowWidth()/1.05;
-	int beginX = Configuration::getWindowWidth()/40;
+std::vector<std::string> DialogueView::fitStringToBox(std::string str, int character_size, sf::Vector2f box_size, bool center) {
+	// get dialogue box bound
+	int width;
+	int height;
+	if (box_size.x == 0  || box_size.y == 0) {
+		width = 600;
+		height = 400;
+	}
+	else {
+		width = box_size.x;
+		height = box_size.y;
+	}
+
+	//std::cout << width << " " << height << std::endl;
+	int beginX = 0;
+	int beginY = 0;
+	//commentary_positions.push_back(sf::Vector2f(beginX, beginY));
 	int endX = beginX+width;
 	int max_width = endX-beginX;
 
-	int height = Configuration::getWindowHeight()/4;
-	int beginY = Configuration::getWindowHeight()/1.4;
 	int endY = beginY+height;
 	int max_height = (endY-beginY);
 
-	// text object used to see how close each word puts us to the bounds
-	sf::Text temp;
-	temp.setFont(font);
-	temp.setCharacterSize(text.getCharacterSize());
-
-	// current string and width
+	//To figure out correct size
+	bool size_found = false;
 	std::vector<std::string> boxes;
-	std::string fitted_string = "";
-	float current_width = 0.f;
-	float word_width = 0.f, word_height = 0.f;
+	std::string fitted_string;
+	int curr_size;
+	if (character_size <= 0) {
+		curr_size = 50;
+		character_size = 50;
+	}
+	else {
+		curr_size = character_size;
+		character_size = 1;
+	}
 
-	// split the dialogue into words;
-	std::vector<std::string> words = split(str, ' ');
+	while (!size_found && curr_size > 0 && character_size-- > 0) {
+		// text object used to see how close each word puts us to the bounds
+		sf::Text temp;
+		temp.setFont(font);
+		temp.setCharacterSize(curr_size);
+		// current string and width
+		fitted_string = "";
+		std::string next_line = "";
+		float current_width = 0.f;
+		float space_width = 0.f, word_width = 0.f, word_height = 0.f;
 
-	// for each word...
-	for (std::string word : words) {
-		// get the bounding box
-		temp.setString(word + " ");
-		word_width = temp.findCharacterPos(temp.getString().getSize()).x;
+		//gET WIDTH OF SPACE CHARACTER
+		temp.setString(" ");
+		space_width = temp.findCharacterPos(temp.getString().getSize()).x;
+		// split the dialogue into words;
+		std::vector<std::string> words = split(str, ' ');
 
-		// general word height (changes, hence the max)
-		sf::FloatRect bounds = temp.getGlobalBounds();
-		int line_spacing = font.getLineSpacing(temp.getCharacterSize());
-		word_height = std::max(bounds.height-bounds.top+line_spacing, word_height);
+		// for each word...
+		for (std::string word : words) {
+			// get the bounding box
+			temp.setString(word + " ");
+			word_width = temp.findCharacterPos(temp.getString().getSize()).x;
+			word_height = temp.findCharacterPos(temp.getString().getSize()).y;
 
-		// the height of the full string so far
-		temp.setString(fitted_string);
-		float full_height = temp.getGlobalBounds().height - temp.getGlobalBounds().top;
+			// will it go past the horizontal bound?
+			std::size_t newline_loc = word.find("\n");
+			std::cout << word << " " << current_width << " " << word_width << " " << max_width << std::endl;
+			if (current_width + word_width > max_width || newline_loc != std::string::npos) {
+				if (center) {
+					int num_spaces = (int) ((max_width - current_width)/2)/space_width;
+					for (int s_num = 0; s_num < num_spaces; s_num++)
+						next_line = " " + next_line + " ";
+				}
 
-		// will it go past the horizontal bound?
-		std::size_t newline_loc = word.find("\n");
-		if (current_width + word_width > max_width || newline_loc != std::string::npos) {
-			// will it go past the vertical bound?
-			if (max_height - full_height < word_height) {
-				boxes.push_back(fitted_string);
-				fitted_string = word + " ";
+				std::string newline = (newline_loc != std::string::npos) ? ("") : ("\n");
+				fitted_string += next_line + newline;
+				next_line = word + " ";
 				current_width = word_width;
 			}
 			else {
-				std::string newline = (newline_loc != std::string::npos) ? ("") : ("\n");
-				fitted_string += newline + word + " ";
+				// just add to string
+				next_line += word + " ";
+				current_width += word_width;
+				size_found = true;
+			}
+
+			// the height of the full string so far
+			temp.setString(fitted_string);
+			float full_height = temp.getGlobalBounds().height - temp.getGlobalBounds().top;
+
+			// will it go past the vertical bound?
+			if (max_height - full_height < word_height) {
+				//curr_size--;
+				size_found = false;
+				boxes.push_back(fitted_string);
+				fitted_string = "";
 				current_width = word_width;
 			}
 		}
-		else {
-			// just add to string
-			fitted_string += word + " ";
-			current_width += word_width;
+		if (center) {
+			int num_spaces = (int) ((max_width - current_width)/2)/space_width;
+			for (int s_num = 0; s_num < num_spaces; s_num++)
+				next_line = " " + next_line + " ";
 		}
+		fitted_string += next_line + "\n";
 	}
-	
-	// pick up the last text box
 	boxes.push_back(fitted_string);
-
 	// done
+	if (curr_size <= 0) {
+		return std::vector<std::string>(1, "");
+	}
 	return boxes;
 }
