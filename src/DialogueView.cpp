@@ -160,9 +160,14 @@ void DialogueView::Create(const char* resource, int* state){
 	lhs_character_sprite.setPosition(posX, posY-lhs_character_tex.getSize().y-5);
 
 	// navigating through xml files and storing the actual dialogue into array
-	if (fileString != "Level0") {
-		tools = (num_times_impressed > 0) ? (tools.child("Correct")) : (tools.child("Incorrect"));
+	if (fileString != "Level0" && fileString != "Level7") {
+		tools = (solved == true) ? (tools.child("Correct")) : (tools.child("Incorrect"));
 	}
+	
+	if (fileString == "Level7"){ 
+		tools = (num_times_impressed > 2) ? (tools.child("Correct")) : (tools.child("Incorrect"));
+	}
+	
 	for (pugi::xml_node tool = tools.first_child(); tool; tool =tool.next_sibling()){
 		std::string speaker = "";
 		std::string dialogue = "";
