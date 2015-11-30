@@ -82,7 +82,8 @@ sf::Sprite CraftView::hints_prompt;
 int CraftView::hints_size;
 
 //sf::RectangleShape CraftView::backlay;
-sf::RectangleShape CraftView::craft_button;
+//sf::RectangleShape CraftView::craft_button;
+sf::Sprite CraftView::craft_button;
 sf::RectangleShape CraftView::map_button; // Ways to exit the crafting table
 bool CraftView::has_crafted = false;
 
@@ -317,11 +318,12 @@ void CraftView::Create(const char* resource) {
 	diana_icon_sprite.setPosition(Configuration::getWindowWidth() - 110, 70);
 	// diana_icon_sprite.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/8));
 
+    craft_button = sf::Sprite(backlay_texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/10, Configuration::getWindowHeight()/15));
     craft_button.setPosition(Configuration::getWindowWidth()/4, Configuration::getWindowHeight()/3.53);
-    craft_button.setFillColor(sf::Color::White);
-    craft_button.setOutlineColor(sf::Color::Black);
-    craft_button.setOutlineThickness(5);
-    craft_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/10, Configuration::getWindowHeight()/15));
+    //craft_button.setFillColor(sf::Color::White);
+    //craft_button.setOutlineColor(sf::Color::Black);
+    //craft_button.setOutlineThickness(5);
+    //craft_button.setSize(sf::Vector2f(Configuration::getWindowWidth()/10, Configuration::getWindowHeight()/15));
 
     // gather data for sprites to be rendered on screen
     for (int count = 0; count < i; count++){
@@ -393,6 +395,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 	 if (flowers.size() > 0){
 	      // add flowers to persistent list to make available to other classes
 	      CraftView::actorList.insert(CraftView::actorList.end(), flowers.begin(), flowers.end());
+	      totalFlowers = 0;
 
 	      // iterate through player's inventory to update inventory on screen
 	      for (int i=0; i < flowers.size() ; i++){
@@ -628,9 +631,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
  *  Returns the given flower to the player's inventory rather than crafting it
  */
 void CraftView::returnFlower(StrongActorPtr flower){
-
-	//std::cout << "are we segfaulting here";
-
+  
       if (flower->isOfType("FireFlower")){
 	fireFlowers++;
       }
@@ -665,7 +666,6 @@ void CraftView::returnFlower(StrongActorPtr flower){
 	magnolias++;
       }
       totalFlowers++;
-	//std::cout << "end of the returnFlower function";
 }
 
 /**
