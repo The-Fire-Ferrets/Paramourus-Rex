@@ -571,7 +571,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 
 			// update text box to indicate that you cannot combine flowers
 			else {
-				std::cout << "CraftView::Update: Unable to craft " << selectedActor1->getId().back() << " and Flower: " << selectedActor2->getId().back() << std::endl;
+				//std::cout << "CraftView::Update: Unable to craft " << selectedActor1->getId().back() << " and Flower: " << selectedActor2->getId().back() << std::endl;
 				text.setString(fitStringToBox("Gee Phil, I don't think Diana would like those. Why don't you try something else?", text.getCharacterSize(), backlay_size));
 			}
 		}
