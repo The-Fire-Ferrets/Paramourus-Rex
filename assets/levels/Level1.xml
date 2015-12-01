@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level1 Name = "Deep in Homer's Cave" Background = "Level1.png" MinimapBackground = "minimapbg.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "60000" Prompt = "Prompt.png">
+<Level1 Name = "Deep in Homer's Cave" Background = "Level1.png" MinimapBackground = "minimapbg.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "80000" Prompt = "Prompt.png">
 
 	<!-- Top Boundary -->
 	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 0 775 0 25 25 775 25">		
@@ -124,6 +124,13 @@
 			<Properties Type = "Opaque" />
 		</PhysicsComponent>
 	</Obstacle>	
+			<Obstacle Generate = "20" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
+				<PhysicsComponent>
+					<Properties Type = "Transparent"/>
+				</PhysicsComponent>
+				<Pathfinder PathType = "-20"/>
+			</Obstacle>
 
 	<Player>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
