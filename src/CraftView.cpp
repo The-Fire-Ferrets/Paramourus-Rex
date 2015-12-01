@@ -318,8 +318,10 @@ void CraftView::Create(const char* resource) {
 	diana_icon_sprite.setPosition(Configuration::getWindowWidth() - 110, 70);
 	// diana_icon_sprite.setSize(sf::Vector2f(Configuration::getWindowWidth()/8, Configuration::getWindowHeight()/8));
 
-	craft_button = sf::Sprite(backlay_texture, sf::IntRect(0, 0, Configuration::getWindowWidth()/10, Configuration::getWindowHeight()/15));
+	craft_button = sf::Sprite(backlay_texture, sf::IntRect(0, 0, prompt_size.x, prompt_size.y));
 	craft_button.setPosition(Configuration::getWindowWidth()/4, Configuration::getWindowHeight()/3.53);
+  craft_button.setScale((Configuration::getWindowWidth()/10.f) / prompt_size.x,
+      (Configuration::getWindowHeight()/15.f) / prompt_size.y);
 	//craft_button.setFillColor(sf::Color::White);
 	//craft_button.setOutlineColor(sf::Color::Black);
 	//craft_button.setOutlineThickness(5);
@@ -756,9 +758,16 @@ void CraftView::render(sf::RenderWindow *window) {
 	// window->draw(map_button);
 
 	// Setting crafting button elements
-	sf::Text button_text("Craft", font);
-	button_text.setPosition(Configuration::getWindowWidth()/4,Configuration::getWindowHeight()/3.53);
+	sf::Text button_text;
+  button_text.setFont(font);
+  button_text.setString("Craft");
 	button_text.setColor(sf::Color::Black);
+
+  button_width = craft_button.getGlobalBounds().width;
+  text_width = button_text.getGlobalBounds().width;
+  pos = craft_button.getPosition();
+  pos.x += (button_width-text_width) / 2.f;
+	button_text.setPosition(pos);
 
 	// sf::Text map_text("Map", font);
 	// map_text.setColor(sf::Color::Black);
