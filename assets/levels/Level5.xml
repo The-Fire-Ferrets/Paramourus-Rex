@@ -89,13 +89,13 @@
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>	
-	<Obstacle Generate = "50" Type = "Cactus"  Sprite = "Cactus.png"  Damage = "True">
+	<Obstacle Generate = "50" Type = "Bramble"  Sprite = "Brambles.png"  Damage = "True">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<PhysicsComponent>
 			<Properties Type = "Opaque" />
 		</PhysicsComponent>
 	</Obstacle>
-	<Obstacle Generate = "50" Type = "Rock"  Sprite = "Rock.png"  Damage = "False">
+	<Obstacle Generate = "50" Type = "ThornyStump"  Sprite = "ThornyStump.png"  Damage = "True">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<PhysicsComponent>
 			<Properties Type = "Opaque" />
@@ -181,12 +181,12 @@
 		<Commentary1 Display = "Player" Actor = "Player" Contact = "" Action = "0" Occurance = "1">
 			<Dialogue1 Text = "Homer! HELP!" />
 		</Commentary1>
-		<Commentary2  Display = "Player" Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
+		<Commentary2  Display = "Player" Actor = "Player" Contact = "Brambles"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Ouch! That hurt." />
 			<Dialogue2  Text = "I'll try to avoid that next time." />
 			<Dialogue3  Text = "Lost another flower." />
 			<Dialogue4  Text = "That was a mistake." />
-			<Dialogue5  Text = "Prickly, Prickly, Prickly." />
+			<Dialogue5  Text = "Spiky, Spiky, Spiky." />
 		</Commentary2>	
 		<Commentary3  Display = "NPC" Actor = "NPC" Contact = "Player"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Thank You!" />
@@ -237,5 +237,12 @@
 			<Dialogue3 Text = "Can't carry any more" />
 			<Dialogue4 Text = "All out of space" />
 		</Commentary11>
+		<Commentary12  Display = "Player" Actor = "Player" Contact = "ThornyStump"  Action = "-2" Occurance = "-1">
+			<Dialogue1  Text = "Ouch! That hurt." />
+			<Dialogue2  Text = "I'll try to avoid that next time." />
+			<Dialogue3  Text = "Lost another flower." />
+			<Dialogue4  Text = "That was a mistake." />
+			<Dialogue5  Text = "Spiky, Spiky, Spiky." />
+		</Commentary12>	
 	</Commentary>
 </Level5>
