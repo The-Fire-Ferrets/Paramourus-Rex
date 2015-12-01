@@ -19,7 +19,7 @@ int CraftView::violets = 0;
 int CraftView::orchids = 0;
 int CraftView::lilies = 0;
 int CraftView::magnolias = 0;
-int CraftView::totalFlowers = 0;
+unsigned CraftView::totalFlowers = 0;
 std::string CraftView::flower_str;
 sf::Text CraftView::flower_text;
 int CraftView::view_state = 0;
@@ -514,7 +514,6 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 					// draw sprite in box 1
 					box1 = true;
 					box1Sprite = sprites[i];
-					totalFlowers--;
 					// check here for if it's a base flower -- if it's a tier flower, needs to be scaled differently
 					if (std::get<1>(flowerStrList[i]) == "FireFlower" || std::get<1>(flowerStrList[i]) == "WaterFlower" || std::get<1>(flowerStrList[i]) == "AirFlower" \
 							|| std::get<1>(flowerStrList[i]) == "EarthFlower"){
@@ -542,7 +541,6 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 						box2Sprite.setPosition(Configuration::getWindowWidth()/3.2,Configuration::getWindowHeight()/9);
 
 					}
-					totalFlowers--;
 				}
 			}
 		}
@@ -664,7 +662,6 @@ void CraftView::returnFlower(StrongActorPtr flower){
 	else if (flower->isOfType("Magnolia")){
 		magnolias++;
 	}
-	totalFlowers++;
 }
 
 /**
@@ -693,7 +690,6 @@ void CraftView::updateFlowerCount(std::string flower){
 	else if (flower == "Magnolia"){
 		magnolias--;
 	}
-	totalFlowers--;
 }
 
 

@@ -20,7 +20,7 @@ class CraftView  {
 		static int view_state;
     private:	
 	// Flower counts
-        static int totalFlowers;
+        static unsigned totalFlowers;
         static int fireFlowers;
         static int waterFlowers;
         static int earthFlowers;
