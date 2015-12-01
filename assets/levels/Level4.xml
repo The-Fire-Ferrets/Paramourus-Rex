@@ -1,317 +1,326 @@
 <?xml version="1.0"?>
 <Level4 Name = "Skyline Paradise" Background = "Level4.png" MinimapBackground = "minimapbg.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "60000" Damage = "True" Prompt = "Prompt.png">	
 
-	<!-- Top Boundary -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 0 775 0 25 25 775 25">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>	
-	<!-- Left Boundary -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 0 0 25 0 0 600 25 600">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>	
-	<!-- Bottom Boundary -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 575 775 575 25 600 775 600">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>	
+  <!-- Top Boundary -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 0 775 0 25 25 775 25">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>	
+  <!-- Left Boundary -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 0 0 25 0 0 600 25 600">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>	
+  <!-- Bottom Boundary -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 575 775 575 25 600 775 600">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>	
 
-	<!-- Obs1 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 50 75 50 25 150 75 150">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>	
-	<!-- Skyblock2 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 100 25 250 25 100 150 250 150">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>	
-	<!-- Skyblock3 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 250 25 675 25 250 100 675 100">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>	
-	<!-- Wall4 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 675 25 725 25 675 350 725 350">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<!-- Wall5 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 775 25 800 25 775 575 800 575">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<!-- Wall6 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 200 100 200 25 300 100 300">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<!-- Wall7 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 100 200 150 200 100 350 150 350">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<!-- Wall8 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 200 150 250 150 200 550 250 550">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<!-- Wall9 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 325 150 350 150 325 575 350 575">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<!-- Wall10 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 150 600 150 350 200 600 200">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<!-- Wall11 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 200 600 200 350 575 600 575">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<!-- Wall12 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 600 150 625 150 600 575 625 575">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<!-- Wall13 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 350 75 350 25 450 75 450">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<!-- Wall14 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 500 150 500 25 550 150 550">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<!-- Wall15 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 675 400 775 450 675 400 775 450">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
-	<!-- Wall16 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 625 500 725 550 625 500 725 550">		
-		<PhysicsComponent>
-			<Properties Type = "Opaque"/>
-		</PhysicsComponent>
-	</Obstacle>
+  <!-- Obs1 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 50 75 50 25 150 75 150">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>	
+  <!-- Skyblock2 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 100 25 250 25 100 150 250 150">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>	
+  <!-- Skyblock3 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 250 25 675 25 250 100 675 100">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>	
+  <!-- Wall4 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 675 25 725 25 675 350 725 350">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>
+  <!-- Wall5 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 775 25 800 25 775 575 800 575">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>
+  <!-- Wall6 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 200 100 200 25 300 100 300">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>
+  <!-- Wall7 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 100 200 150 200 100 350 150 350">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>
+  <!-- Wall8 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 200 150 250 150 200 550 250 550">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>
+  <!-- Wall9 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 325 150 350 150 325 575 350 575">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>
+  <!-- Wall10 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 150 600 150 350 200 600 200">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>
+  <!-- Wall11 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 200 600 200 350 575 600 575">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>
+  <!-- Wall12 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 600 150 625 150 600 575 625 575">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>
+  <!-- Wall13 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 350 75 350 25 450 75 450">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>
+  <!-- Wall14 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 500 150 500 25 550 150 550">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>
+  <!-- Wall15 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 675 400 775 450 675 400 775 450">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>
+  <!-- Wall16 -->
+  <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 625 500 725 550 625 500 725 550">		
+    <PhysicsComponent>
+      <Properties Type = "Opaque"/>
+    </PhysicsComponent>
+  </Obstacle>
 
-	<!--
-	<Obstacle Generate = "50" Type = "Cactus"  Sprite = "Cactus.png"  Damage = "True">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<PhysicsComponent>
-			<Properties Type = "Opaque" />
-		</PhysicsComponent>
-	</Obstacle>
-	-->
+      <Obstacle Generate = "6" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+        <Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
+        <PhysicsComponent>
+          <Properties Type = "Transparent"/>
+        </PhysicsComponent>
+        <Pathfinder PathType = "-5"/>
+      </Obstacle>
 
-	<NPC Generate = "1">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-3" TargetType = "-2"/>
-		<InputComponent>
-			<Control Speed = "3"/>
-		</InputComponent>
-		<PhysicsComponent>
-			<VisionBoundary Height = "90" Width = "90" X = "-50" Y = "-50"/>
-		</PhysicsComponent>
-	</NPC>
-  <!--
-	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "170" Y = "174" Width = "10" Height = "10"/>		
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-6"/>
-	</Obstacle>
-	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "95" Y = "374" Width = "10" Height = "10"/>		
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-6"/>
-	</Obstacle>
-	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "50" Y = "480" Width = "10" Height = "10"/>		
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-6"/>
-	</Obstacle>
-	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "177" Y = "480" Width = "10" Height = "10"/>		
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-6"/>
-	</Obstacle>
-	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "650" Y = "250" Width = "10" Height = "10"/>		
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-7"/>
-	</Obstacle>
-	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "650" Y = "375" Width = "10" Height = "10"/>		
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-7"/>
-	</Obstacle>
-	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "750" Y = "375" Width = "10" Height = "10"/>		
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-7"/>
-	</Obstacle>
-	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "750" Y = "250" Width = "10" Height = "10"/>		
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-7"/>
-	</Obstacle>
+      <NPC>
+        <Location X = "646" Y = "563" Width = "10" Height = "10"/>
+        <Pathfinder PathType = "-3" TargetType = "-2"/>
+        <InputComponent>
+          <Control Speed = "3.5"/>
+        </InputComponent>
+        <PhysicsComponent>
+          <VisionBoundary Height = "90" Width = "90" X = "-50" Y = "-50"/>
+        </PhysicsComponent>
+      </NPC>
+      <NPC>
+        <Location X = "39" Y = "37" Width = "10" Height = "10"/>
+        <Pathfinder PathType = "-3" TargetType = "-2"/>
+        <InputComponent>
+          <Control Speed = "3.5"/>
+        </InputComponent>
+        <PhysicsComponent>
+          <VisionBoundary Height = "90" Width = "90" X = "-50" Y = "-50"/>
+        </PhysicsComponent>
+      </NPC>
+      <!--
+  <Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+    <Location X = "170" Y = "174" Width = "10" Height = "10"/>		
+    <PhysicsComponent>
+      <Properties Type = "Transparent"/>
+    </PhysicsComponent>
+    <Pathfinder PathType = "-6"/>
+  </Obstacle>
+  <Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+    <Location X = "95" Y = "374" Width = "10" Height = "10"/>		
+    <PhysicsComponent>
+      <Properties Type = "Transparent"/>
+    </PhysicsComponent>
+    <Pathfinder PathType = "-6"/>
+  </Obstacle>
+  <Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+    <Location X = "50" Y = "480" Width = "10" Height = "10"/>		
+    <PhysicsComponent>
+      <Properties Type = "Transparent"/>
+    </PhysicsComponent>
+    <Pathfinder PathType = "-6"/>
+  </Obstacle>
+  <Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+    <Location X = "177" Y = "480" Width = "10" Height = "10"/>		
+    <PhysicsComponent>
+      <Properties Type = "Transparent"/>
+    </PhysicsComponent>
+    <Pathfinder PathType = "-6"/>
+  </Obstacle>
+  <Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+    <Location X = "650" Y = "250" Width = "10" Height = "10"/>		
+    <PhysicsComponent>
+      <Properties Type = "Transparent"/>
+    </PhysicsComponent>
+    <Pathfinder PathType = "-7"/>
+  </Obstacle>
+  <Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+    <Location X = "650" Y = "375" Width = "10" Height = "10"/>		
+    <PhysicsComponent>
+      <Properties Type = "Transparent"/>
+    </PhysicsComponent>
+    <Pathfinder PathType = "-7"/>
+  </Obstacle>
+  <Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+    <Location X = "750" Y = "375" Width = "10" Height = "10"/>		
+    <PhysicsComponent>
+      <Properties Type = "Transparent"/>
+    </PhysicsComponent>
+    <Pathfinder PathType = "-7"/>
+  </Obstacle>
+  <Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+    <Location X = "750" Y = "250" Width = "10" Height = "10"/>		
+    <PhysicsComponent>
+      <Properties Type = "Transparent"/>
+    </PhysicsComponent>
+    <Pathfinder PathType = "-7"/>
+  </Obstacle>
   -->
-	<WaterFlower>
-    	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-2"/>
-	</WaterFlower>
-	<EarthFlower>
-    	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-2"/>
-	</EarthFlower>
-	<FireFlower>
-    	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-2"/>
-	</FireFlower>
-	<AirFlower>
-    	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-2"/>
-	</AirFlower>
+  <WaterFlower>
+    <Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+    <Pathfinder PathType = "-2"/>
+  </WaterFlower>
+  <EarthFlower>
+    <Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+    <Pathfinder PathType = "-2"/>
+  </EarthFlower>
+  <FireFlower>
+    <Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+    <Pathfinder PathType = "-2"/>
+  </FireFlower>
+  <AirFlower>
+    <Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+    <Pathfinder PathType = "-2"/>
+  </AirFlower>
 
   <!-- Commenting to address comments about getting stuck.          
        Not much real estate in terms of space on this level anyway. 
-	<Obstacle Generate = "30" Type = "Rock"  Sprite = "Rock.png"  Damage = "False">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<PhysicsComponent>
-			<Properties Type = "Opaque" />
-		</PhysicsComponent>
-	</Obstacle>
+  <Obstacle Generate = "30" Type = "Rock"  Sprite = "Rock.png"  Damage = "False">
+    <Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+    <PhysicsComponent>
+      <Properties Type = "Opaque" />
+    </PhysicsComponent>
+  </Obstacle>
   -->
 
-	<Player>
-		<Location X = "32" Y = "560" Width = "10" Height = "10"/>
-		<InputComponent>
-			<Control Speed = "4"/> 
-		</InputComponent>
-		<Pathfinder PathType = "-4"/>
-	</Player>
-	<Homer>
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-	</Homer>
-	<Action>
-		<Spawn1>
-			<NPC Generate = "1">
-				<Pathfinder PathType = "-3" TargetType = "-2"/>
-				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-				<InputComponent>
-					<Control Type = "Artificial" Speed = "3.5"/>
-				</InputComponent>
-				<PhysicsComponent>
-					<VisionBoundary Height = "90" Width = "90"/>
-				</PhysicsComponent>
-			</NPC>
-			<Obstacle Generate = "20" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
-				<PhysicsComponent>
-					<Properties Type = "Transparent"/>
-				</PhysicsComponent>
-				<Pathfinder PathType = "-5"/>
-			</Obstacle>
-		</Spawn1>
-	</Action>
+  <Player>
+    <Location X = "32" Y = "560" Width = "10" Height = "10"/>
+    <InputComponent>
+      <Control Speed = "4"/> 
+    </InputComponent>
+    <Pathfinder PathType = "-4"/>
+  </Player>
+  <Homer>
+    <Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+  </Homer>
+  <Action>
+    <Spawn1>
+      <NPC Generate = "1">
+        <Pathfinder PathType = "-3" TargetType = "-2"/>
+        <Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+        <InputComponent>
+          <Control Type = "Artificial" Speed = "3.5"/>
+        </InputComponent>
+        <PhysicsComponent>
+          <VisionBoundary Height = "90" Width = "90"/>
+        </PhysicsComponent>
+      </NPC>
+      <Obstacle Generate = "20" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+        <Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
+        <PhysicsComponent>
+          <Properties Type = "Transparent"/>
+        </PhysicsComponent>
+        <Pathfinder PathType = "-5"/>
+      </Obstacle>
+    </Spawn1>
+  </Action>
 
-	<Commentary>
-		<Commentary1 Display = "Player" Actor = "Player" Contact = "" Action = "0" Occurance = "1">
-			<Dialogue1 Text = "Homer! HELP!" />
-		</Commentary1>
-		<Commentary2  Display = "Player" Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
-			<Dialogue1  Text = "Ouch! That hurt." />
-			<Dialogue2  Text = "I'll try to avoid that next time." />
-			<Dialogue3  Text = "Lost another flower." />
-			<Dialogue4  Text = "That was a mistake." />
-			<Dialogue5  Text = "Prickly, Prickly, Prickly." />
-		</Commentary2>	
-		<Commentary3  Display = "Player" Actor = "NPC" Contact = "Player"  Action = "-2" Occurance = "-1">
-			<Dialogue1  Text = "Thank You!" />
-			<Dialogue2  Text = "Don't mind if I take one of these!" />
-			<Dialogue3  Text = "Diana is going to love this." />
-			<Dialogue4  Text = "You didn't run fast enough" />
-			<Dialogue5  Text = "You can run and you can hide, oh wait..." />
-		</Commentary3>	
-		<Commentary4 Display = "Player" Actor = "Player" Contact = "EarthFlower" Action = "-2" Occurance = "-1">
-			<Dialogue1 Text = "Woohoo!" />
-			<Dialogue2 Text = "Mmm. Earthy!" />
-			<Dialogue3 Text = "Lucky me!" />
-		</Commentary4>
-		<Commentary5 Display = "Player" Actor = "Player" Contact = "FireFlower" Action = "-2" Occurance = "-1">
-			<Dialogue1 Text = "Great!" />
-			<Dialogue2 Text = "Spicy!" />
-			<Dialogue3 Text = "Woop woop." />
-		</Commentary5>
-		<Commentary6 Display = "Player" Actor = "Player" Contact = "WaterFlower" Action = "-2" Occurance = "-1">
-			<Dialogue1 Text = "Cool cool!" />
-			<Dialogue2 Text = "Smooth sailing." />
-		</Commentary6>
-		<Commentary7 Display = "Player" Actor = "Player" Contact = "AirFlower" Action = "-2" Occurance = "-1">
-			<Dialogue1 Text = "Light as a feather!" />
-			<Dialogue2 Text = "Hmm hmm hmm!" />
-		</Commentary7>
-		<Commentary8 Display = "Player" Actor = "Player" Contact = "EarthFlower" Action = "-2" Occurance = "-1">
-			<Dialogue1 Text = "No can do." />
-			<Dialogue2 Text = "No more vases." />
-			<Dialogue3 Text = "Can't carry any more" />
-			<Dialogue4 Text = "All out of space" />
-		</Commentary8>
-		<Commentary9 Display = "Player" Actor = "Player" Contact = "FireFlower" Action = "-2" Occurance = "-1">
-			<Dialogue1 Text = "No can do." />
-			<Dialogue2 Text = "No more vases." />
-			<Dialogue3 Text = "Can't carry any more" />
-			<Dialogue4 Text = "All out of space" />
-		</Commentary9>
-		<Commentary10 Display = "Player" Actor = "Player" Contact = "WaterFlower" Action = "-2" Occurance = "-1">
-			<Dialogue1 Text = "No can do." />
-			<Dialogue2 Text = "No more vases." />
-			<Dialogue3 Text = "Can't carry any more" />
-			<Dialogue4 Text = "All out of space" />
-		</Commentary10>
-		<Commentary11 Display = "Player" Actor = "Player" Contact = "AirFlower" Action = "-2" Occurance = "-1">
-			<Dialogue1 Text = "No can do." />
-			<Dialogue2 Text = "No more vases." />
-			<Dialogue3 Text = "Can't carry any more" />
-			<Dialogue4 Text = "All out of space" />
-		</Commentary11>
-	</Commentary>
+  <Commentary>
+    <Commentary1 Display = "Player" Actor = "Player" Contact = "" Action = "0" Occurance = "1">
+      <Dialogue1 Text = "Homer! HELP!" />
+    </Commentary1>
+    <Commentary2  Display = "Player" Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
+      <Dialogue1  Text = "Ouch! That hurt." />
+      <Dialogue2  Text = "I'll try to avoid that next time." />
+      <Dialogue3  Text = "Lost another flower." />
+      <Dialogue4  Text = "That was a mistake." />
+      <Dialogue5  Text = "Prickly, Prickly, Prickly." />
+    </Commentary2>	
+    <Commentary3  Display = "Player" Actor = "NPC" Contact = "Player"  Action = "-2" Occurance = "-1">
+      <Dialogue1  Text = "Thank You!" />
+      <Dialogue2  Text = "Don't mind if I take one of these!" />
+      <Dialogue3  Text = "Diana is going to love this." />
+      <Dialogue4  Text = "You didn't run fast enough" />
+      <Dialogue5  Text = "You can run and you can hide, oh wait..." />
+    </Commentary3>	
+    <Commentary4 Display = "Player" Actor = "Player" Contact = "EarthFlower" Action = "-2" Occurance = "-1">
+      <Dialogue1 Text = "Woohoo!" />
+      <Dialogue2 Text = "Mmm. Earthy!" />
+      <Dialogue3 Text = "Lucky me!" />
+    </Commentary4>
+    <Commentary5 Display = "Player" Actor = "Player" Contact = "FireFlower" Action = "-2" Occurance = "-1">
+      <Dialogue1 Text = "Great!" />
+      <Dialogue2 Text = "Spicy!" />
+      <Dialogue3 Text = "Woop woop." />
+    </Commentary5>
+    <Commentary6 Display = "Player" Actor = "Player" Contact = "WaterFlower" Action = "-2" Occurance = "-1">
+      <Dialogue1 Text = "Cool cool!" />
+      <Dialogue2 Text = "Smooth sailing." />
+    </Commentary6>
+    <Commentary7 Display = "Player" Actor = "Player" Contact = "AirFlower" Action = "-2" Occurance = "-1">
+      <Dialogue1 Text = "Light as a feather!" />
+      <Dialogue2 Text = "Hmm hmm hmm!" />
+    </Commentary7>
+    <Commentary8 Display = "Player" Actor = "Player" Contact = "EarthFlower" Action = "-2" Occurance = "-1">
+      <Dialogue1 Text = "No can do." />
+      <Dialogue2 Text = "No more vases." />
+      <Dialogue3 Text = "Can't carry any more" />
+      <Dialogue4 Text = "All out of space" />
+    </Commentary8>
+    <Commentary9 Display = "Player" Actor = "Player" Contact = "FireFlower" Action = "-2" Occurance = "-1">
+      <Dialogue1 Text = "No can do." />
+      <Dialogue2 Text = "No more vases." />
+      <Dialogue3 Text = "Can't carry any more" />
+      <Dialogue4 Text = "All out of space" />
+    </Commentary9>
+    <Commentary10 Display = "Player" Actor = "Player" Contact = "WaterFlower" Action = "-2" Occurance = "-1">
+      <Dialogue1 Text = "No can do." />
+      <Dialogue2 Text = "No more vases." />
+      <Dialogue3 Text = "Can't carry any more" />
+      <Dialogue4 Text = "All out of space" />
+    </Commentary10>
+    <Commentary11 Display = "Player" Actor = "Player" Contact = "AirFlower" Action = "-2" Occurance = "-1">
+      <Dialogue1 Text = "No can do." />
+      <Dialogue2 Text = "No more vases." />
+      <Dialogue3 Text = "Can't carry any more" />
+      <Dialogue4 Text = "All out of space" />
+    </Commentary11>
+  </Commentary>
 </Level4>
