@@ -12,8 +12,8 @@
 	<Rose        Type = "Rose"        Sprite = "Rose.png"        Components = "Fire Air"/>
   <!-- Violet = Water + Fire -->
 	<Violet      Type = "Violet"      Sprite = "Violet.png"      Components = "Fire Water"/>
-  <!-- Lily = Water + Sunflower -->
-	<Lily        Type = "Lily"        Sprite = "Lily.png"        Components = "Fire Fire Water"/>
+  <!-- Lily = Earth + Sunflower -->
+	<Lily        Type = "Lily"        Sprite = "Lily.png"        Components = "Fire Fire Earth"/>
   <!-- Orchid = Violet + Earth -->
 	<Orchid      Type = "Orchid"      Sprite = "Orchid.png"      Components = "Fire Water Earth"/>
   <!-- Magnolia = Rose + Air -->

@@ -646,8 +646,8 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 		//Updates target grids for moving targets such as the player in pathfinder
 		//Updates normally for all other objects
 		std::vector<StrongActorPtr>::iterator it;
-		if (testing_view)
-			std::cout << player->getPosition().x << " " << player->getPosition().y << std::endl;
+		//if (testing_view)
+		//	std::cout << player->getPosition().x << " " << player->getPosition().y << std::endl;
 		for (it = actorList.begin(); it != actorList.end(); it++) {
 			if ((*it)->getPathType() == -4) {
 				(*it)->update(time);
