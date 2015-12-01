@@ -545,7 +545,7 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C) && !call_key_pressed && (view_state == 1 || (view_state == 2 && last_action < 0))) {
 		call_key_pressed = true;
 		EventInterfacePtr event;
-		event.reset(new ContactEvent(0.f, player->getInstance(), -1));l;
+		event.reset(new ContactEvent(0.f, player->getInstance(), -1));
 		update(event);
 	}
 	
