@@ -45,7 +45,7 @@
 				<PhysicsComponent>
 					<Properties Type = "Transparent"/>
 				</PhysicsComponent>
-				<Pathfinder PathType = "-5"/>
+				<Pathfinder PathType = "-20"/>
 			</Obstacle>
 
 			<NPC Generate = "5">

@@ -104,23 +104,6 @@
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
-
-	<!--
-	<Obstacle Generate = "50" Type = "Cactus"  Sprite = "Cactus.png"  Damage = "True">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<PhysicsComponent>
-			<Properties Type = "Opaque" />
-		</PhysicsComponent>
-	</Obstacle>
-	-->
-<!-- 	<Obstacle Generate = "175" Type = "Rock"  Sprite = "Rock.png"  Damage = "True">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<PhysicsComponent>
-			<Properties Type = "Opaque" />
-		</PhysicsComponent>
-	</Obstacle>
- -->
-
 	<Obstacle Generate = "45" Type = "Crystal-Green"  Sprite = "Obst-Crystal-Green.png"  Damage = "True">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<PhysicsComponent>
@@ -152,43 +135,6 @@
 	<Homer>
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Homer>
-	<!-- Uncomment to generate NPCs.  Didn't think it made sense to have them 
-		 here, story-wise.  To compensate, I generate a bunch of obstacles
-		 instead, requiring that the player have a little bit of finess in terms
-		 of how they move through the level, which I think rebalances things.
-	<NPC Generate = "4">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<Pathfinder PathType = "-3" TargetType = "-5"/>
-		<InputComponent>
-			<Control Speed = "3.5"/>
-		</InputComponent>
-		<PhysicsComponent>
-			<VisionBoundary Height = "60" Width = "60" X = "-50" Y = "-50"/>
-		</PhysicsComponent>
-	</NPC>
-
-	<Obstacle Generate = "8" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-5"/>
-	</Obstacle>
-	<Obstacle Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-5"/>
-	</Obstacle>
-	<Obstacle Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-5"/>
-	</Obstacle>
-	-->
 	<EarthFlower>
     	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
@@ -223,7 +169,7 @@
 				<PhysicsComponent>
 					<Properties Type = "Transparent"/>
 				</PhysicsComponent>
-				<Pathfinder PathType = "-5"/>
+				<Pathfinder PathType = "-20"/>
 			</Obstacle>
 		</Spawn1>
 	</Action>

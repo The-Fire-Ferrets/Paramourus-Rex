@@ -33,6 +33,7 @@ PhysicsComponent::PhysicsComponent(void) {
 	inVision = false;
 	inVision_flower = std::pair<int, bool>(-1, false);
 	first_run = 0;
+	intangible = false;
 }
 
 /** Destructor
@@ -52,6 +53,12 @@ bool PhysicsComponent::Init(pugi::xml_node* elem) {
         for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute()) {
             if (!strcmp(attr.name(),"Type"))
                 type = attr.value();
+		else if (!strcmp(attr.name(),"intangible")) {
+			if (!strcmp(attr.value(), "True"))
+                		intangible = true;
+			else
+				intangible = false;
+		}
 		else if (!strcmp(tool.name(), "VisionBoundary"), !strcmp(attr.name(),"Width")) {
 			if (!strcmp(attr.value(), ""))
 				vision_boundary_size.x = 0;
@@ -249,6 +256,8 @@ void PhysicsComponent::restart(void) {
  **/
 bool PhysicsComponent::query(sf::FloatRect bound, sf::Vector2f dir) {
 	sf::FloatRect* other_bound;
+	if (intangible)
+		return true;
 	for (auto it = last_boundaries.begin(); it != last_boundaries.end(); it++) {
 		other_bound = it->first;
 		bool val;

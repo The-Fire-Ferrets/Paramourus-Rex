@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <NPC Type = "NPC" SpriteUp = "NPCUp-Animation.png" SpriteRight = "NPCRight-Animation.png" SpriteLeft = "NPCLeft-Animation.png" SpriteDown = "NPCDown-Animation.png"  SpriteMinimap = "" Damage = "True" PathType = "-1" TargetType = "0" FrameCountUp = "5" FrameCountDown = "5" FrameCountLeft = "6" FrameCountRight = "6" FrameDuration = "100" AnimationScaling = "1.5">
 	<PhysicsComponent>
-		<Properties Type = "Transparent" />
+		<Properties Type = "Transparent" Intangibility = "False"/>
 		<VisionBoundary Height = "" Width = ""/>
 	</PhysicsComponent>	
 	<InputComponent>

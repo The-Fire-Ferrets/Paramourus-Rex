@@ -7,7 +7,7 @@
 		<Properties Type = "Air"/>
 	</CraftableComponent>
 	<PhysicsComponent>
-		<Properties Type = "Transparent" />
+		<Properties Type = "Transparent" Intangibility = "False"/>
 		<VisionBoundary Height = "" Width = ""/>
 	</PhysicsComponent>
 </AirFlower>

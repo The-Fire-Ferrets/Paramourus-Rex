@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Player Type = "Player" SpriteUp = "PlayerUp-Animation.png" SpriteDown = "PlayerDown-Animation.png" SpriteRight = "PlayerRight-Animation.png" SpriteLeft = "PlayerLeft-Animation.png"  SpriteMinimap = "PlayerSpot.png" Damage = "False" PathType = "-1" TargetType = "0" FrameCountUp = "8" FrameCountDown = "4" FrameCountLeft = "8" FrameCountRight = "8" FrameDuration = "100">
 	<PhysicsComponent>
-		<Properties Type = "Transparent" />
+		<Properties Type = "Transparent" Intangibility = "False"/>
 		<VisionBoundary Height = "" Width = ""/>
 	</PhysicsComponent>
 	<InputComponent>

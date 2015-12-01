@@ -674,9 +674,6 @@ void LevelView::update(sf::RenderWindow *window, int* state, float time) {
 				reveal_homer = true;
 			}
 		}
-		else if (inVision > 0) {
-			reveal_homer = false;
-		}
 
 		//Set timer to bottom right corner
 		sf::Vector2f gameView_bottom_corner = Configuration::getGameViewCenter();

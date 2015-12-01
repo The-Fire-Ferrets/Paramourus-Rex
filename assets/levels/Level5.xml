@@ -106,7 +106,7 @@
 		<PhysicsComponent>
 			<Properties Type = "Transparent"/>
 		</PhysicsComponent>
-		<Pathfinder PathType = "-5"/>
+		<Pathfinder PathType = "-20"/>
 	</Obstacle>
 
 	<Obstacle Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
@@ -114,7 +114,7 @@
 		<PhysicsComponent>
 			<Properties Type = "Transparent"/>
 		</PhysicsComponent>
-		<Pathfinder PathType = "-5"/>
+		<Pathfinder PathType = "-20"/>
 	</Obstacle>	
 
 	<Player>
@@ -160,7 +160,7 @@
 		<PhysicsComponent>
 			<Properties Type = "Transparent"/>
 		</PhysicsComponent>
-		<Pathfinder PathType = "-5"/>
+		<Pathfinder PathType = "-20"/>
 	</Obstacle>
 	<EarthFlower>
     	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
@@ -196,7 +196,7 @@
 				<PhysicsComponent>
 					<Properties Type = "Transparent"/>
 				</PhysicsComponent>
-				<Pathfinder PathType = "-5"/>
+				<Pathfinder PathType = "-20"/>
 			</Obstacle>
 		</Spawn1>
 	</Action>

@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <EarthFlower Type = "EarthFlower" Sprite = "EarthFlower.png"  SpriteMinimap = "EarthFlowerSpot.png" Damage = "False" PathType = "-1" TargetType = "0">
 	<CollectableComponent>
-		<Category Some_Attribute = "Value" />
+		<Category Some_Attribute = "Value"/>
 	</CollectableComponent>
 	<CraftableComponent>
 		<Properties Type = "Earth"/>
 	</CraftableComponent>
 	<PhysicsComponent>
-		<Properties Type = "Transparent" />
+		<Properties Type = "Transparent" Intangibility = "False"/>
 		<VisionBoundary Height = "" Width = ""/>
 	</PhysicsComponent>
 </EarthFlower>

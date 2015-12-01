@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<MovingObstacle Type = "Cloud" Sprite = "Rock.png" SpriteMinimap = "" Damage = "False" PathType = "-1" TargetType = "0" FrameCountUp = "5" FrameCountDown = "5" FrameCountLeft = "6" FrameCountRight = "6" FrameDuration = "100" AnimationScaling = "1.5">
+	<PhysicsComponent>
+		<Properties Type = "Opaque" Intangibility = "True"/>
+		<VisionBoundary Height = "" Width = ""/>
+	</PhysicsComponent>	
+	<InputComponent>
+		<Control Type = "Artificial" Speed = "1"/>
+	</InputComponent>
+</MovingObstacle>

@@ -499,7 +499,7 @@ void Actor::updateBoundary(void) {
 		}
 	}
 	else {
-		if (isOfType("Obstacle"))
+		if (isOfType("Obstacle") && !isOfType("Cloud"))
 			*boundary.back() = sf::FloatRect(position.x + size.x * minimize, position.y + size.y * minimize, size.x * (1 - minimize), size.y * (1 - minimize));
 		else
 			*boundary.back() = sf::FloatRect(position.x, position.y, size.x, size.y);
@@ -757,7 +757,7 @@ bool Actor::causesDamage(void) {
  **/
 void Actor::setMinimapSpritePosition(sf::Vector2f pos) {
 	sprite_minimap.setPosition(pos);
-	if (this->hasComponent(InputComponent::id) || this->hasComponent(CollectableComponent::id)) {
+	if (isOfType("Homer") || isOfType("Player") || isOfType("FireFlower") || isOfType("EarthFlower") || isOfType("AirFlower") || isOfType("WaterFlower")) {
 		sf::FloatRect bounds = sprite_minimap.getGlobalBounds();
 		float x = bounds.width/2; // sprite_minimap.getScale().x;
 		float y = bounds.height/2; // sprite_minimap.getScale().y;
