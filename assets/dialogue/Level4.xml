@@ -3,14 +3,14 @@
 	<Correct>
 	  <Dialogue Speaker = "Narrator" Text = "The other T-Rex fighting for Diana's heart may have had strength and size on their side, but you figure that your small size and speed came in handy on Optimism Island. That island is hard to navigate, but the flowers you found up there really paid off. You stop by at the local watering hole to get a drink, only to find Diana there too." />
 	  <Dialogue Speaker = "Diana" Text = "Hey Phil! Homer gave me that Tulip and said it was from you again... Thank you so much! It made me feel all bright and cheerful again, like it was sunny outside again. It's too bad there's so much dust around -- normally I'd go find a good sunning rock after getting a drink. I hate all this dust and ash - it was so much nicer when the air was all crisp and clean, huh? I feel like you'd have to be all the way up in the mountains to get a breath of fresh air nowadays. Do you like mountaineering Phil?" />
-	  <Dialogue Speaker = "Phil" Text = "&#10; 1) Of course. I was actually raised by Pterodactyls. 2)&#10;I'm kind of afraid of heights." />
+	  <Dialogue Speaker = "Phil" Text = "&#10; 1) Of course. I was actually raised by Pterodactyls. &#10; 2)I'm kind of afraid of heights." />
 	  <Dialogue Speaker = "Diana" Text= "Uhm... you know I've met your mom and dad before. You don't need to lie." />
 	  <Dialogue Speaker = "Diana" Text = "Haha, I don't blame you. I'm not really built for climbing either." /> 
 	</Correct>
 	<Incorrect>
 	  <Dialogue Speaker = "Narrator" Text = "The other T-Rex fighting for Diana's heart may have had strength and size on their side, but you figure that your small size and speed came in handy on Optimism Island. The island is hard to navigate but the flowers you found up there really paid off. You stop by at the local watering hole to get a drink, only to find Diana there too." />
 	  <Dialogue Speaker = "Diana" Text = "Hey Phil! I was just about to leave... It's too bad there's so much dust around. Normally I'd go find a good sunning rock after getting a drink. I hate all this dust and ash - it was so much nicer when the air was all crisp and clean, huh? I feel like you'd have to be all the way up in the mountains to get a breath of fresh air nowadays. Do you like mountaineering Phil?" />
-	  <Dialogue Speaker = "Phil" Text = "&#10; 1) Of course. I was actually raised by Pterodactyls. 2)&#10; I'm kind of afraid of heights." />
+	  <Dialogue Speaker = "Phil" Text = "&#10; 1) Of course. I was actually raised by Pterodactyls. &#10; t2) I'm kind of afraid of heights." />
 	  <Dialogue Speaker = "Diana" Text= "Uhm... you know I've met your mom and dad before. You don't need to lie." />
 	  <Dialogue Speaker = "Diana" Text = "Haha, I don't blame you. I'm not really built for climbing either." /> 
 	</Incorrect>

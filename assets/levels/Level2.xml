@@ -134,14 +134,14 @@
 
 	<Action>
 		<Spawn1>
-			<NPC Generate = "1">
+			<NPC Generate = "2">
 				<Pathfinder PathType = "-3" TargetType = "-2"/>
 				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 				<InputComponent>
 					<Control Type = "Artificial" Speed = "3.5"/>
 				</InputComponent>
 				<PhysicsComponent>
-					<VisionBoundary Height = "60" Width = "60"/>
+					<VisionBoundary Height = "75" Width = "75"/>
 				</PhysicsComponent>
 			</NPC>
 			<Obstacle Generate = "20" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
@@ -193,26 +193,26 @@
 		<Commentary8 Display = "Player" Actor = "Player" Contact = "EarthFlower" Action = "-2" Occurance = "-1">
 			<Dialogue1 Text = "No can do." />
 			<Dialogue2 Text = "No more vases." />
-			<Dialogue3 Text = "Can't carry any more" />
-			<Dialogue4 Text = "All out of space" />
+			<Dialogue3 Text = "Can't carry any more." />
+			<Dialogue4 Text = "All out of space." />
 		</Commentary8>
 		<Commentary9 Display = "Player" Actor = "Player" Contact = "FireFlower" Action = "-2" Occurance = "-1">
 			<Dialogue1 Text = "No can do." />
 			<Dialogue2 Text = "No more vases." />
-			<Dialogue3 Text = "Can't carry any more" />
-			<Dialogue4 Text = "All out of space" />
+			<Dialogue3 Text = "Can't carry any more." />
+			<Dialogue4 Text = "All out of space." />
 		</Commentary9>
 		<Commentary10 Display = "Player" Actor = "Player" Contact = "WaterFlower" Action = "-2" Occurance = "-1">
 			<Dialogue1 Text = "No can do." />
 			<Dialogue2 Text = "No more vases." />
-			<Dialogue3 Text = "Can't carry any more" />
-			<Dialogue4 Text = "All out of space" />
+			<Dialogue3 Text = "Can't carry any more." />
+			<Dialogue4 Text = "All out of space." />
 		</Commentary10>
 		<Commentary11 Display = "Player" Actor = "Player" Contact = "AirFlower" Action = "-2" Occurance = "-1">
 			<Dialogue1 Text = "No can do." />
 			<Dialogue2 Text = "No more vases." />
-			<Dialogue3 Text = "Can't carry any more" />
-			<Dialogue4 Text = "All out of space" />
+			<Dialogue3 Text = "Can't carry any more." />
+			<Dialogue4 Text = "All out of space." />
 		</Commentary11>
 
 	</Commentary>
