@@ -5,7 +5,7 @@
 	<Level1 X = "325" Y = "400" Height = "125" Width = "125" Sprite = "Level1.png" MinFlowers = "3" MaxFlowers = "6" FireFlower = ".33" EarthFlower = ".33" WaterFlower = ".33" AirFlower = ".0"/>
 	<Level2 X = "250" Y = "75" Height = "125" Width = "125" Sprite = "Level2.png" MinFlowers = "3" MaxFlowers = "7" FireFlower = ".80" EarthFlower = ".175" WaterFlower = ".025" AirFlower = ".0"/>
 	<Level3 X = "625" Y = "275" Height = "125" Width = "125" Sprite = "Level3.png" MinFlowers = "4" MaxFlowers = "8" FireFlower = "0" EarthFlower = ".2" WaterFlower = ".6" AirFlower = ".2"/>
-	<Level4 X = "100" Y = "200" Height = "125" Width = "125" Sprite = "Level4.png" MinFlowers = "4" MaxFlowers = "4" FireFlower = ".33" EarthFlower = "0" WaterFlower = "0" AirFlower = ".67"/>
+	<Level4 X = "100" Y = "200" Height = "125" Width = "125" Sprite = "Level4.png" MinFlowers = "4" MaxFlowers = "4" FireFlower = ".5" EarthFlower = "0" WaterFlower = "0" AirFlower = ".5"/>
 	<Level5 X = "505" Y = "190" Height = "125" Width = "125" Sprite = "Level5.png" MinFlowers = "4" MaxFlowers = "8" FireFlower = ".3" EarthFlower = ".3" WaterFlower = ".3" AirFlower = ".1"/>
 	<Commentary>
 		<Commentary1 Display = "Homer" Actor = "" Contact = "" Action = "" Occurance = "1">

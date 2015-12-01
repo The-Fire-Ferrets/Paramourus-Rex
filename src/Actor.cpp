@@ -1,8 +1,6 @@
 #include "Actor.h"
 #include "Constants.h" // for window_[width|height]
 #include "PhysicsComponent.h"         // for ids
-#include "InputComponent.h"
-#include "CollectableComponent.h"
 //unique instance id among actors
 int Actor::instances = 0;
 
@@ -757,7 +755,7 @@ bool Actor::causesDamage(void) {
  **/
 void Actor::setMinimapSpritePosition(sf::Vector2f pos) {
 	sprite_minimap.setPosition(pos);
-	if (isOfType("Homer") || isOfType("Player") || isOfType("FireFlower") || isOfType("EarthFlower") || isOfType("AirFlower") || isOfType("WaterFlower")) {
+	if (this->isOfType("Player") || this->isOfType("Homer") || this->isOfType("WaterFlower") || this->isOfType("EarthFlower") || this->isOfType("EarthFlower") || this->isOfType("FireFlower")) {
 		sf::FloatRect bounds = sprite_minimap.getGlobalBounds();
 		float x = bounds.width/2; // sprite_minimap.getScale().x;
 		float y = bounds.height/2; // sprite_minimap.getScale().y;
