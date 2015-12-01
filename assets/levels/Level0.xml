@@ -60,15 +60,8 @@
 			</NPC>
 		</Spawn4>
 		<Spawn5>
-			<Obstacle Generate = "6" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
-				<PhysicsComponent>
-					<Properties Type = "Transparent"/>
-				</PhysicsComponent>
-				<Pathfinder PathType = "-5"/>
-			</Obstacle>
 			<NPC Generate = "3">
-				<Pathfinder PathType = "-3" TargetType = "-2"/>
+				<Pathfinder PathType = "-3" TargetType = "-4"/>
 				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 				<InputComponent>
 					<Control Type = "Artificial" Speed = "3.5"/>
@@ -93,7 +86,7 @@
 			<Dialogue1  Text = "What a brave raptor you are. Now see these T-Rex? They want the same flowers you want, because they want to woo Diana too. If they become aware of your presence, they'll start chasing you. If they bump into you, you'll drop a vase. Go get bumped by one, so you learn what that's like, too." />
 		</Commentary4>		
 		<Commentary5   Display = "Homer" Actor = "Player" Contact = "NPC"  Action = "-1" Occurance = "1">
-			<Dialogue1  Text = "You goofball, you did it! If you get out of your pursuers' field of vision, they will quickly forget about you. To leave the level with all your flowers, you'll need me to guide you you. When you're ready, press the C button to call me. Be carefull though: other T-Rexes will hear your call and come to the area." />
+			<Dialogue1  Text = "You goofball, you did it! If you get out of your pursuers' field of vision, they will quickly forget about you. To leave the level with all your flowers, you'll need me to guide you you. When you're ready, press the C button to call me. Be carefull though: other T-Rexes will hear your call and come to the area. And once these ones have your scent, they wont stop chasing you." />
 		</Commentary5>
 		<Commentary6  Display = "Player" Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Ouch! That hurt." />

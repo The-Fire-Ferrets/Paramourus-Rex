@@ -155,7 +155,7 @@
 	<Action>
 		<Spawn1>
 			<NPC Generate = "1">
-				<Pathfinder PathType = "-3" TargetType = "-2"/>
+				<Pathfinder PathType = "-3" TargetType = "-4"/>
 				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 				<InputComponent>
 					<Control Type = "Artificial" Speed = "3.5"/>
@@ -164,13 +164,6 @@
 					<VisionBoundary Height = "60" Width = "60"/>
 				</PhysicsComponent>
 			</NPC>
-			<Obstacle Generate = "20" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
-				<PhysicsComponent>
-					<Properties Type = "Transparent"/>
-				</PhysicsComponent>
-				<Pathfinder PathType = "-20"/>
-			</Obstacle>
 		</Spawn1>
 	</Action>
 

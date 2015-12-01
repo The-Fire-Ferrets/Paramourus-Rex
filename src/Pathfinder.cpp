@@ -513,7 +513,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 					return false;
 				if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 					return false;
-				std::cout << "Branch 0" << std::endl;
+				//std::cout << "Branch 0" << std::endl;
 				inProcessPaths[std::pair<GridLocation*, GridLocation*>(itr->first.first, itr->first.second)] = true;
 				target_taken[itr->first.second] = true;
 				if (paths[start_ptr].first != NULL && itr->first.second != paths[start_ptr].first)
@@ -540,7 +540,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] == target_values[itr->first.second] && !itr->second.empty() && target_values[itr->first.second] == -2 && start_targets[start_ptr] > -100 && !target_taken[itr->first.second]){ 		
 			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 				return false;
-			std::cout << "Branch1 " << target_taken[itr->first.second] << std::endl;
+			//std::cout << "Branch1 " << target_taken[itr->first.second] << std::endl;
 			inProcessPaths[std::pair<GridLocation*, GridLocation*>(itr->first.first, itr->first.second)] = true;
 			target_taken[itr->first.second] = true;
 			if (paths[start_ptr].first != NULL && itr->first.second != paths[start_ptr].first)
@@ -560,7 +560,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && target_values[itr->first.second] <= -20 && ((start_targets[start_ptr] == target_values[itr->first.second] && start_targets[start_ptr] < -20) || (target_values[itr->first.second] == -20 && start_targets[start_ptr] > -20 ))  && *itr->first.second != curr_pair && !target_taken[itr->first.second]) {		
 			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 				return false;
-			std::cout << "Branch2 " << target_taken[itr->first.second] << std::endl;
+			//std::cout << "Branch2 " << target_taken[itr->first.second] << std::endl;
 			inProcessPaths[std::pair<GridLocation*, GridLocation*>(itr->first.first, itr->first.second)] = true;
 			target_taken[itr->first.second] = true;
 			if (paths[start_ptr].first != NULL && itr->first.second != paths[start_ptr].first)
@@ -585,7 +585,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 				return false;
 			inProcessPaths[std::pair<GridLocation*, GridLocation*>(itr->first.first, itr->first.second)] = true;
-			std::cout << "Branch3 " << allPaths.size() << std::endl;
+			//std::cout << "Branch3 " << allPaths.size() << std::endl;
 			*start_ptr = curr_pair;
 			itr->second.clear();
 			itr->second.push_back(sf::Vector2f(curr_pair.second * player_size, curr_pair.first * player_size));

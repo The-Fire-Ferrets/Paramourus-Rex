@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level4 Name = "Skyline Paradise" Background = "Level4.png" MinimapBackground = "minimapbg.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "60000" Damage = "True" Prompt = "Prompt.png">	
+<Level4 Name = "Skyline Paradise" Background = "Level4.png" MinimapBackground = "minimapbg.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "600000000" Damage = "True" Prompt = "Prompt.png">	
 
 	<!-- Top Boundary -->
 	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 0 775 0 25 25 775 25">		
@@ -116,16 +116,6 @@
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
-
-	<!--
-	<Obstacle Generate = "50" Type = "Cactus"  Sprite = "Cactus.png"  Damage = "True">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<PhysicsComponent>
-			<Properties Type = "Opaque" />
-		</PhysicsComponent>
-	</Obstacle>
-	-->
-
 	
 	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
 		<Location X = "216" Y = "530" Width = "10" Height = "10"/>		
@@ -153,7 +143,137 @@
 		</InputComponent>
 	</MovingObstacle>
 
-	<!--<NPC Generate = "1">
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "140" Y = "257" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-101"/>
+	</Obstacle>
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "200" Y = "257" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-101"/>
+	</Obstacle>
+
+	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "HorizontalCloud.png"  SpriteMinimap = "" Damage = "False">
+		<Location X = "130" Y = "257" Width = "20" Height = "10"/>
+		<Pathfinder PathType = "-5" TargetType = "-101"/>
+		<PhysicsComponent>
+			<Properties Type = "Opaque" Intangibility = "True"/>
+		</PhysicsComponent>	
+		<InputComponent>
+			<Control Speed = "2"/>
+		</InputComponent>
+	</MovingObstacle>
+
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "60" Y = "95" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-102"/>
+	</Obstacle>
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "95" Y = "95" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-102"/>
+	</Obstacle>
+
+	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "HorizontalCloud.png"  SpriteMinimap = "" Damage = "False">
+		<Location X = "100" Y = "95" Width = "20" Height = "10"/>
+		<Pathfinder PathType = "-5" TargetType = "-102"/>
+		<PhysicsComponent>
+			<Properties Type = "Opaque" Intangibility = "True"/>
+		</PhysicsComponent>	
+		<InputComponent>
+			<Control Speed = "2"/>
+		</InputComponent>
+	</MovingObstacle>
+
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "230" Y = "180" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-103"/>
+	</Obstacle>
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "320" Y = "180" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-103"/>
+	</Obstacle>
+
+	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "HorizontalCloud.png"  SpriteMinimap = "" Damage = "False">
+		<Location X = "325" Y = "180" Width = "20" Height = "10"/>
+		<Pathfinder PathType = "-5" TargetType = "-103"/>
+		<PhysicsComponent>
+			<Properties Type = "Opaque" Intangibility = "True"/>
+		</PhysicsComponent>	
+		<InputComponent>
+			<Control Speed = "2"/>
+		</InputComponent>
+	</MovingObstacle>
+
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "230" Y = "430" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-104"/>
+	</Obstacle>
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "320" Y = "430" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-104"/>
+	</Obstacle>
+
+	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "HorizontalCloud.png"  SpriteMinimap = "" Damage = "False">
+		<Location X = "325" Y = "430" Width = "20" Height = "10"/>
+		<Pathfinder PathType = "-5" TargetType = "-104"/>
+		<PhysicsComponent>
+			<Properties Type = "Opaque" Intangibility = "True"/>
+		</PhysicsComponent>	
+		<InputComponent>
+			<Control Speed = "2"/>
+		</InputComponent>
+	</MovingObstacle>
+
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "282" Y = "85" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-105"/>
+	</Obstacle>
+	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+		<Location X = "282" Y = "580" Width = "10" Height = "10"/>		
+		<PhysicsComponent>
+			<Properties Type = "Transparent"/>
+		</PhysicsComponent>
+		<Pathfinder PathType = "-105"/>
+	</Obstacle>
+
+	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "HorizontalCloud.png"  SpriteMinimap = "" Damage = "False">
+		<Location X = "282" Y = "590" Width = "20" Height = "10"/>
+		<Pathfinder PathType = "-5" TargetType = "-105"/>
+		<PhysicsComponent>
+			<Properties Type = "Opaque" Intangibility = "True"/>
+		</PhysicsComponent>	
+		<InputComponent>
+			<Control Speed = "2"/>
+		</InputComponent>
+	</MovingObstacle>
+
+	<NPC Generate = "1">
 		<Location X = "1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
 		<InputComponent>
@@ -162,9 +282,9 @@
 		<PhysicsComponent>
 			<VisionBoundary Height = "90" Width = "90" X = "-50" Y = "-50"/>
 		</PhysicsComponent>
-	</NPC>-->
+	</NPC>
 
-  <!--
+
 	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
 		<Location X = "170" Y = "174" Width = "10" Height = "10"/>		
 		<PhysicsComponent>
@@ -179,49 +299,7 @@
 		</PhysicsComponent>
 		<Pathfinder PathType = "-20"/>
 	</Obstacle>
-	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "50" Y = "480" Width = "10" Height = "10"/>		
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-20"/>
-	</Obstacle>
-	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "177" Y = "480" Width = "10" Height = "10"/>		
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-20"/>
-	</Obstacle>
-	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "650" Y = "250" Width = "10" Height = "10"/>		
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-7"/>
-	</Obstacle>
-	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "650" Y = "375" Width = "10" Height = "10"/>		
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-7"/>
-	</Obstacle>
-	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "750" Y = "375" Width = "10" Height = "10"/>		
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-7"/>
-	</Obstacle>
-	<Obstacle Generate = "1" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-		<Location X = "750" Y = "250" Width = "10" Height = "10"/>		
-		<PhysicsComponent>
-			<Properties Type = "Transparent"/>
-		</PhysicsComponent>
-		<Pathfinder PathType = "-7"/>
-	</Obstacle>
-  -->
+	
 	<WaterFlower>
     	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
@@ -239,16 +317,6 @@
 		<Pathfinder PathType = "-2"/>
 	</AirFlower>
 
-  <!-- Commenting to address comments about getting stuck.          
-       Not much real estate in terms of space on this level anyway. 
-	<Obstacle Generate = "30" Type = "Rock"  Sprite = "Rock.png"  Damage = "False">
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<PhysicsComponent>
-			<Properties Type = "Opaque" />
-		</PhysicsComponent>
-	</Obstacle>
-  -->
-
 	<Player>
 		<Location X = "32" Y = "560" Width = "10" Height = "10"/>
 		<InputComponent>
@@ -262,7 +330,7 @@
 	<Action>
 		<Spawn1>
 			<NPC Generate = "1">
-				<Pathfinder PathType = "-3" TargetType = "-2"/>
+				<Pathfinder PathType = "-3" TargetType = "-4"/>
 				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 				<InputComponent>
 					<Control Type = "Artificial" Speed = "3.5"/>
@@ -271,13 +339,6 @@
 					<VisionBoundary Height = "90" Width = "90"/>
 				</PhysicsComponent>
 			</NPC>
-			<Obstacle Generate = "20" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
-				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
-				<PhysicsComponent>
-					<Properties Type = "Transparent"/>
-				</PhysicsComponent>
-				<Pathfinder PathType = "-5"/>
-			</Obstacle>
 		</Spawn1>
 	</Action>
 
