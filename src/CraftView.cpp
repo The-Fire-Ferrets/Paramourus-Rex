@@ -502,7 +502,7 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 					inList = true;
 				}
 				else if (i == 9 && orchids > 0 && (box1 == false || box2 == false)){
-					violets--;
+					orchids--;
 					inList = true;
 				}
 				else if (i == 10 && magnolias > 0 && (box1 == false || box2 == false)){
