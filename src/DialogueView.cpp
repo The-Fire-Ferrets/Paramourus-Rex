@@ -249,7 +249,7 @@ void DialogueView::Create(const char* resource, int* state){
 	sound.play();
 
 	// this is really hacky, but whatever
-	if (fileString != "Level1") { // definitely OUT of tutorial mode
+	if (fileString != "Level1" && fileString != "Level0") { // definitely OUT of tutorial mode
 		view_state = 1;
 	}
 }
