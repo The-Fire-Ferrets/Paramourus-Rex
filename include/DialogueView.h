@@ -55,6 +55,16 @@ class DialogueView {
 		static bool draw_overlay;
 		static int response;
 
+		// commentary display
+		static sf::Texture commentary_prompt_texture;
+		static sf::Sprite  commentary_prompt;
+		static std::string commentary_string_flower;
+		static std::string commentary_string_choices;
+		static sf::Text    commentary_flower;
+		static sf::Text    commentary_choices;
+		static bool        display_commentary_flower;
+		static bool        display_commentary_choices;
+
 	public:
 		static int num_times_impressed;
 		static std::vector<std::pair<std::string, std::string>> boxes;     // what gets displayed on screen

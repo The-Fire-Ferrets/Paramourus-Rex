@@ -7,7 +7,7 @@
 		<Properties Type = "Fire"/>
 	</CraftableComponent>
 	<PhysicsComponent>
-		<Properties Type = "Transparent" />
+		<Properties Type = "Transparent" Intangibility = "False"/>
 		<VisionBoundary Height = "" Width = ""/>
 	</PhysicsComponent>
 </FireFlower>

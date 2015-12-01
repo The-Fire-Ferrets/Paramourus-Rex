@@ -61,6 +61,7 @@ class PhysicsComponent : public ActorComponent {
 		sf::Clock vision_timer;
 		int first_run;
 		sf::Vector2f collisionSide(sf::FloatRect other_bounds);
+		bool intangible;
 };
 
 #endif

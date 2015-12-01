@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level6 Background = "Dialogue5.png" Response="2" Flower = "Orchid" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30" Backlay = "Prompnt.png">
+<Level6 Background = "Dialogue5.png" Response="2" Flower = "Orchid" Diana = "Diana.png" Phil = "Phil.png" DianaPosX = "600" DianaPosY = "650" PhilPosX = "600" PhilPosY = "50" DianaSizeX = "300" DianaSizeY = "400" PhilSizeX = "300" PhilSizeY = "400" Text_X = "20" Text_Y = "400" Font = "arial.ttf" Text_Size = "30" Backlay = "Prompt.png">
 	<Correct>
 	  <Dialogue Speaker = "Narrator" Text = "Later that night, when you're getting ready for bed, you're surprised to find Diana stopping by your nest to visit."/>
 	  <Dialogue Speaker = "Diana" Text = "Hey, Phil. Homer gave me that Orchid you made me, and I just... wanted to say thanks for spending so much time with me lately, and being so nice. I've been thinking a lot about the future, and I had a question. A lot of herds are heading out lately... What are your thoughts about leaving the valley?"/>

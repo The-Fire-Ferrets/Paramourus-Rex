@@ -40,12 +40,12 @@
 			</Obstacle>
 		</Spawn3>
 		<Spawn4>
-			<Obstacle Generate = "20" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
+			<Obstacle Generate = "10" Type = "FakeTarget"  Sprite = ""  SpriteMinimap = "" Damage = "False">
 				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>		
 				<PhysicsComponent>
 					<Properties Type = "Transparent"/>
 				</PhysicsComponent>
-				<Pathfinder PathType = "-5"/>
+				<Pathfinder PathType = "-20"/>
 			</Obstacle>
 
 			<NPC Generate = "5">
@@ -59,6 +59,18 @@
 				</PhysicsComponent>
 			</NPC>
 		</Spawn4>
+		<Spawn5>
+			<NPC Generate = "3">
+				<Pathfinder PathType = "-3" TargetType = "-4"/>
+				<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
+				<InputComponent>
+					<Control Type = "Artificial" Speed = "3.5"/>
+				</InputComponent>
+				<PhysicsComponent>
+					<VisionBoundary Height = "60" Width = "60"/>
+				</PhysicsComponent>
+			</NPC>
+		</Spawn5>
 	</Action>
 	<Commentary>
 		<Commentary1 Display = "Homer" Actor = "Player" Contact = "" Action = "0" Occurance = "1">
@@ -68,13 +80,13 @@
 			<Dialogue1  Text = "Good job! The air out here is pretty foul; you'll pass out if you breathe it in for too long! If the timer in the bottom right hand corner hits zero, you've run out of stamina and will pass out.  If you do faint, I'll come and bail you out, but I'm also going to eat the flowers. Go get the next one, Phil." />
 		</Commentary2>		
 		<Commentary3  Display = "Homer" Actor = "Player" Contact = "FireFlower"  Action = "2" Occurance = "1">
-			<Dialogue1  Text = "In the top-left corner, you'll see that you've collected two FireFlowers. Hold on to them. You'll see many more of these cacti and rocks in the future. You'll drop a vase if you touch a cactus, so try to avoid them! Try touching a cactus, just once, to see what it's like." />
+			<Dialogue1  Text = "In the top-left corner, you'll see that you've collected two FireFlowers. Hold on to them. You'll see many more of these cacti and rocks in the future. You'll drop a vase if you touch a cactus or various other dangerous objects through your journey, so try to avoid them! Try touching a cactus, just once, to see what it's like." />
 		</Commentary3>		
 		<Commentary4   Display = "Homer" Actor = "Player" Contact = "Cactus"  Action = "3" Occurance = "1">
 			<Dialogue1  Text = "What a brave raptor you are. Now see these T-Rex? They want the same flowers you want, because they want to woo Diana too. If they become aware of your presence, they'll start chasing you. If they bump into you, you'll drop a vase. Go get bumped by one, so you learn what that's like, too." />
 		</Commentary4>		
 		<Commentary5   Display = "Homer" Actor = "Player" Contact = "NPC"  Action = "-1" Occurance = "1">
-			<Dialogue1  Text = "You goofball, you did it!  Come find me so we can leave. If you get out of your pursuers' field of vision, they will quickly forget about you. Only when you're out of immediate danger, or you've taken all the flowers you can take, I'll show up. It won't work now since I'm already helping you, but you can press the C button to call me. Be carefull though: other T-Rexes will hear you call and come to the area. If I disappear occasionally, it's probably because you're suddenly in danger again - I don't want to be chased by a dinosaur!" />
+			<Dialogue1  Text = "You goofball, you did it! If you get out of your pursuers' field of vision, they will quickly forget about you. To leave the level with all your flowers, you'll need me to guide you you. When you're ready, press the C button to call me. Be carefull though: other T-Rexes will hear your call and come to the area. And once these ones have your scent, they wont stop chasing you." />
 		</Commentary5>
 		<Commentary6  Display = "Player" Actor = "Player" Contact = "Cactus"  Action = "-2" Occurance = "-1">
 			<Dialogue1  Text = "Ouch! That hurt." />
@@ -133,5 +145,8 @@
 			<Dialogue3 Text = "Can't carry any more" />
 			<Dialogue4 Text = "All out of space" />
 		</Commentary15>
+		<Commentary16 Display = "Player" Actor = "Player" Contact = "" Action = "4" Occurance = "1">
+			<Dialogue1 Text = "Homer! HELP!" />
+		</Commentary16>
 	</Commentary>
 </Level0>

@@ -102,7 +102,7 @@ void Pathfinder::addToGrid(std::vector<sf::FloatRect*> bounds, int path_type, in
 			for (int j = top_left_col; j < bottom_right_col; j++) {
 				GridLocation loc(i, j);
 				paths_mutex.lock();				
-				if (path_type == -2 || path_type == -4 || path_type <= -5) {
+				if (path_type == -2 || path_type == -4 || path_type <= -20 ) {
 					targets[target_num] = std::pair<GridLocation, std::pair<GridLocation, int>>(GridLocation(i,j), std::pair<GridLocation, int>(GridLocation(i,j), path_type));
 					GridLocation target_pair = (targets[target_num].first);
 					GridLocation* target_ptr = &(targets[target_num].first);
@@ -111,9 +111,10 @@ void Pathfinder::addToGrid(std::vector<sf::FloatRect*> bounds, int path_type, in
 					target_taken.insert(std::pair<GridLocation*, int>(target_ptr, false));
 					inProcessTargets.insert(std::pair<GridLocation*, bool>(target_ptr, false));
 					generatePathsToTarget();
-					target_num++;				
+					target_num++;	
+					//std::cout << path_type << std::endl;			
 				}
-				else if (path_type == -3) {
+				else if (path_type == -3 || path_type == -5) {
 					start_positions[start_num] = std::pair<GridLocation, std::pair<GridLocation, int>>(GridLocation(i,j), std::pair<GridLocation, int>(GridLocation(i,j), target_type));
 					start_targets.insert(std::pair<GridLocation*, int>(&(start_positions[start_num].first), start_positions[start_num].second.second));
 					initial_positions.insert(std::pair<GridLocation*, GridLocation>(&(start_positions[start_num].first), start_positions[start_num].second.first));
@@ -141,7 +142,7 @@ void Pathfinder::generatePathsToTarget() {
 		GridLocation pos_pair = start_positions[start_idx].first;
 		GridLocation* pos_ptr = &(start_positions[start_idx].first);
 		
-		if (start_targets[pos_ptr] == target_values[target_ptr] || target_values[target_ptr] == -4 || target_values[target_ptr] == -5) {
+		if (start_targets[pos_ptr] == target_values[target_ptr] || target_values[target_ptr] == -4 || target_values[target_ptr] == -20) {
 			inProcessPaths.insert(std::pair<std::pair<GridLocation*,GridLocation*>, bool>(std::pair<GridLocation*,GridLocation*>(pos_ptr, target_ptr), false));
 			pathUpdates.insert(std::pair<std::pair<GridLocation*, GridLocation*>, bool>(std::pair<GridLocation*, GridLocation*>(pos_ptr, target_ptr), false));
 			PathList temp;
@@ -167,7 +168,7 @@ void Pathfinder::generatePathsFromStart() {
 		GridLocation pos_pair = start_positions[start_num].first;
 		GridLocation* pos_ptr = &(start_positions[start_num].first);
 		
-		if (start_targets[pos_ptr] == target_values[target_ptr] || target_values[target_ptr] == -4 || target_values[target_ptr] == -5) {
+		if (start_targets[pos_ptr] == target_values[target_ptr] || target_values[target_ptr] == -4 || target_values[target_ptr] == -20) {
 			inProcessPaths.insert(std::pair<std::pair<GridLocation*,GridLocation*>, bool>(std::pair<GridLocation*,GridLocation*>(pos_ptr, target_ptr), false));
 			pathUpdates.insert(std::pair<std::pair<GridLocation*, GridLocation*>, bool>(std::pair<GridLocation*, GridLocation*>(pos_ptr, target_ptr), false));
 			PathList temp;
@@ -499,14 +500,14 @@ void Pathfinder::generatePath(GridLocation init, GridLocation start, GridLocatio
 //Selects a new path depending on targets on grid and objects path type and target type
 bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, GridLocation curr_pair) {
 	//If path is already in process, return	
-	///std::cout << "New path 1" << std::endl;	
+	//std::cout << "New path 1" << std::endl;	
 	if (paths[start_ptr].second != NULL && paths[start_ptr].first != NULL) {
 		if (inProcessPaths[std::pair<GridLocation*, GridLocation*>(start_ptr, paths[start_ptr].first)])
 				return false;	
 	}
 
 	for (auto itr = inVision.begin(); itr != inVision.end(); itr++) {
-		if ( itr->second && itr->first.first == start_ptr ) {
+		if ( itr->second && itr->first.first == start_ptr && start_targets[start_ptr] > -100) {
 			if (isValidTarget(itr->first.second)) {
 				if (*(itr->first.second) == curr_pair)
 					return false;
@@ -536,7 +537,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 	//std::cout << "New path 2" << std::endl;	
 	//Select a flower if appropriate
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
-		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] == target_values[itr->first.second] && !itr->second.empty() && target_values[itr->first.second] == -2 && !target_taken[itr->first.second]){ 		
+		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] == target_values[itr->first.second] && !itr->second.empty() && target_values[itr->first.second] == -2 && start_targets[start_ptr] > -100 && !target_taken[itr->first.second]){ 		
 			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 				return false;
 			//std::cout << "Branch1 " << target_taken[itr->first.second] << std::endl;
@@ -556,7 +557,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 	
 	//Select a fake target if appropriate
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
-		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && target_values[itr->first.second] <= -5 && ((start_targets[start_ptr] == target_values[itr->first.second] && start_targets[start_ptr] < -5) || (target_values[itr->first.second] == -5 && start_targets[start_ptr] > -5))  && *itr->first.second != curr_pair && !target_taken[itr->first.second]) {		
+		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && target_values[itr->first.second] <= -20 && ((start_targets[start_ptr] == target_values[itr->first.second] && start_targets[start_ptr] < -20) || (target_values[itr->first.second] == -20 && start_targets[start_ptr] > -20 ))  && *itr->first.second != curr_pair && !target_taken[itr->first.second]) {		
 			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 				return false;
 			//std::cout << "Branch2 " << target_taken[itr->first.second] << std::endl;
@@ -580,7 +581,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 	
 	//Select then player if appropriate
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
-		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && target_values[itr->first.second] == -4 && *itr->first.second != curr_pair) {			
+		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && target_values[itr->first.second] == -4 && start_targets[start_ptr] > -100 && *itr->first.second != curr_pair) {			
 			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 				return false;
 			inProcessPaths[std::pair<GridLocation*, GridLocation*>(itr->first.first, itr->first.second)] = true;
@@ -646,7 +647,7 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 		*direction = dir;
 		return start_changed;
 	}
-
+	//std::cout << "HERE2" << std::endl;
 	GridLocation curr_pair = getPositionMapping(curr_pos);
 	if (paths[start_ptr].second == NULL) {
 		if(!(start_changed = selectNewPath(init_pair, start_ptr, curr_pair))) {
@@ -655,7 +656,7 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 			return start_changed;
 		}
 	}
-
+	//std::cout << "HERE2.1" << std::endl;
 	PathList* path = paths[start_ptr].second;
 
 	if (path == NULL) {
@@ -663,7 +664,7 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 		*direction = dir;
 		return start_changed;
 	}
-
+	//std::cout << "HERE2.2" << std::endl;
 	if (path->empty()) {
 		if(!(start_changed = selectNewPath(init_pair, start_ptr, curr_pair))) {
 			*next_pos = pos_next;
@@ -671,7 +672,7 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 			return start_changed;
 		}
 	}
-
+	//std::cout << "HERE2.3" << std::endl;
 	GridLocation target_pair = *(paths[start_ptr].first);
 	sf::Vector2f target_pos(target_pair.second * player_size, target_pair.first * player_size);
 	if (findTarget(target_pair) == NULL) {
@@ -679,7 +680,7 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 		*direction = dir;
 		return start_changed;
 	}
-
+	//std::cout << "HERE2.4" << std::endl;
 	sf::Vector2f path_pos = path->back();
 	//Gets the next position torwards towards target and accounts for framerate distance
 	float dist_total = getDistance(curr_pos, path_pos);
@@ -705,7 +706,7 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 	//Checks to see if conflict with wall
 	GridLocation pos_check = getPositionMapping(pos_next);
 	int fix = 0;
-	if (grid[pos_check.first][pos_check.second] == -1) {
+	if (grid[pos_check.first][pos_check.second] == -1 && start_targets[start_ptr] > -100) {
 		path->pop_back();
 		*next_pos = curr_pos;
 		*direction = dir;
@@ -716,7 +717,7 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 	if (p > .99)
 		path->pop_back();
 	
-	//std::cout << "HERE2 " << "Position: " << pos_next.x << " " << pos_next.y << " Direction: " << dir.x << " " << dir.y << std::endl;	
+	//std::cout << "HERE4 " << "Position: " << pos_next.x << " " << pos_next.y << " Direction: " << dir.x << " " << dir.y << std::endl;	
 	*next_pos = pos_next;
 	*direction = dir;
 	return start_changed;
@@ -771,7 +772,10 @@ void Pathfinder::generateHCosts(void) {
 		for (int i = 0; i < rows; i++) {
 			temp_grid[i] = new int[cols];
 			for (int j = 0; j < cols; j++)
-				temp_grid[i][j] = grid[i][j];
+				if((targets[targ_idx]).second.second <= -100)
+					temp_grid[i][j] = 0;
+				else
+					temp_grid[i][j] = grid[i][j];
 		}
 	
 		GridLocation* target_ptr = &((targets[targ_idx]).first);
@@ -790,11 +794,6 @@ void Pathfinder::generateHCosts(void) {
 **/
 void Pathfinder::generateHCost(GridLocation* target_ptr, GridLocation curr_pos) {
 	Grid temp_grid  = new int*[rows];
-	for (int i = 0; i < rows; i++) {
-		temp_grid[i] = new int[cols];
-		for (int j = 0; j < cols; j++)
-			temp_grid[i][j] = grid[i][j];
-	}
 
 	int type = -2;
 	for (int targ_idx = 0; targ_idx < target_num; targ_idx++) {	
@@ -802,6 +801,15 @@ void Pathfinder::generateHCost(GridLocation* target_ptr, GridLocation curr_pos) 
 			type = targets[targ_idx].second.second;
 			break;
 		}
+	}
+
+	for (int i = 0; i < rows; i++) {
+		temp_grid[i] = new int[cols];
+		for (int j = 0; j < cols; j++)
+			if(type <= -100)
+				temp_grid[i][j] = 0;
+			else
+				temp_grid[i][j] = grid[i][j];
 	}
 
 	temp_grid[curr_pos.first][curr_pos.second] = type;
@@ -938,7 +946,7 @@ int Pathfinder::getCost(sf::Vector2f pos, sf::Vector2f dir, Grid* target_grid) {
 
 	if (grid_pair.first < rows && grid_pair.second < cols && grid_pair.first >= 0 && grid_pair.second >= 0) {
 		int value =  (*target_grid)[grid_pair.first][grid_pair.second];
-		if (value == -2 || value == -4 || value <= -5)
+		if (value == -2 || value == -4 || value <= -20 )
 			return 0;
 		else if (value >= 0)
 			return	value;
@@ -959,7 +967,7 @@ int Pathfinder::getCost(sf::Vector2f pos, Grid* target_grid) {
 
 	if (grid_pair.first < rows && grid_pair.second < cols && grid_pair.first >= 0 && grid_pair.second >= 0) {
 		int value =  (*target_grid)[grid_pair.first][grid_pair.second];
-		if (value == -2 || value == -4 || value <= -5)
+		if (value == -2 || value == -4 || value <= -20)
 			return 0;
 		else if (value >= 0)
 			return	value;
@@ -979,7 +987,7 @@ int Pathfinder::getCost(GridLocation loc, Grid* target_grid)  {
 
 	if (loc.first < rows && loc.second < cols && loc.first >= 0 && loc.second >= 0) {
 		int value =  (*target_grid)[loc.first][loc.second];
-		if (value == -2 || value == -4 || value <= -5)
+		if (value == -2 || value == -4 || value <= -20 )
 			return 0;
 		else if (value >= 0)
 			return	value;
