@@ -55,7 +55,7 @@
 					<Control Type = "Artificial" Speed = "3.5"/>
 				</InputComponent>
 				<PhysicsComponent>
-					<VisionBoundary Height = "50" Width = "50"/>
+					<VisionBoundary Height = "75" Width = "75"/>
 				</PhysicsComponent>
 			</NPC>
 		</Spawn4>
@@ -67,7 +67,7 @@
 					<Control Type = "Artificial" Speed = "3.5"/>
 				</InputComponent>
 				<PhysicsComponent>
-					<VisionBoundary Height = "60" Width = "60"/>
+					<VisionBoundary Height = "100" Width = "100"/>
 				</PhysicsComponent>
 			</NPC>
 		</Spawn5>

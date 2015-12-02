@@ -143,16 +143,6 @@
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 	</Homer>
 
-	<NPC Generate = "1">
-		<Pathfinder PathType = "-3" TargetType = "-2"/>
-		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
-		<InputComponent>
-			<Control Type = "Artificial" Speed = "3.5"/>
-		</InputComponent>
-		<PhysicsComponent>
-			<VisionBoundary Height = "100" Width = "100"/>
-		</PhysicsComponent>
-	</NPC>
 	<EarthFlower>
     	<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<Pathfinder PathType = "-2"/>
@@ -179,7 +169,7 @@
 					<Control Type = "Artificial" Speed = "3.5"/>
 				</InputComponent>
 				<PhysicsComponent>
-					<VisionBoundary Height = "60" Width = "60"/>
+					<VisionBoundary Height = "100" Width = "100"/>
 				</PhysicsComponent>
 			</NPC>
 		</Spawn1>
