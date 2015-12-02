@@ -174,6 +174,7 @@ void Pathfinder::generatePathsFromStart() {
 			PathList temp;
 			temp.push_back(sf::Vector2f(pos_pair.second * player_size, pos_pair.first * player_size));
 			allPaths.insert(std::pair<std::pair<GridLocation*, GridLocation*>, PathList>(std::pair<GridLocation*, GridLocation*>(pos_ptr, target_ptr), temp));
+			inVision.insert(std::pair<std::pair<GridLocation*, GridLocation*>, bool>(std::pair<GridLocation*, GridLocation*>(pos_ptr, target_ptr), false));
 		}
 	}	
 }
@@ -316,11 +317,11 @@ bool Pathfinder::lineOfSight(pathNode* p_node, pathNode* c_node, Grid* target_gr
 
 //Determined whether the target grid is available to update
 bool Pathfinder::canUpdateTargetGrid(sf::Vector2f start_pos) {
-	GridLocation start_pair = getPositionMapping(start_pos);
-	GridLocation* start_ptr = NULL;
+	GridLocation targ_pair = getPositionMapping(start_pos);
+	GridLocation* targ_ptr = NULL;
 	bool output = false;
-	if ((start_ptr = findTarget(start_pair)) != NULL)
-		output = !inProcessTargets[start_ptr];
+	if ((targ_ptr = findPositionPtr(targ_pair)) != NULL)
+		output = !inProcessTargets[targ_ptr];
 	return output;
 }
 
@@ -333,7 +334,7 @@ bool Pathfinder::positionsEqual(GridLocation* pos1, GridLocation* pos2) {
 bool Pathfinder::canUpdateStartPath(sf::Vector2f init_pos, sf::Vector2f start_pos) {
 	GridLocation init_pair = getPositionMapping(init_pos);	
 	GridLocation start_pair = getPositionMapping(start_pos);
-	GridLocation* start_ptr = findStart(init_pair, start_pair);	
+	GridLocation* start_ptr = findPositionPtr(init_pair);	
 	if (start_ptr == NULL) {
 		return false;
 	}
@@ -349,24 +350,16 @@ bool Pathfinder::canUpdateStartPath(sf::Vector2f init_pos, sf::Vector2f start_po
 }
 
 //Finds the position pointer for the object at the grid location
-GridLocation* Pathfinder::findTarget(GridLocation pos, GridLocation init) {
+GridLocation* Pathfinder::findPositionPtr(GridLocation init) {
 	GridLocation* ptr = NULL;
-	if (init.first != -1) {
-		for ( auto itr = initial_positions.begin(); itr != initial_positions.end(); itr++) {
-			if (init == itr->second) {
-				ptr = itr->first;
-				break;
-			}
+
+	for ( auto itr = initial_positions.begin(); itr != initial_positions.end(); itr++) {
+		if (init == itr->second) {
+			ptr = itr->first;
+			break;
 		}
 	}
-	else {
-		for (int targ_idx = 0; targ_idx < target_num; targ_idx++) {	
-			if ((targets[targ_idx]).first == pos && (targets[targ_idx]).first.first < level_height && (targets[targ_idx]).first.first >= 0 && (targets[targ_idx]).first.second < level_width && (targets[targ_idx]).first.second >= 0) {
-				ptr = &((targets[targ_idx]).first);
-				break;
-			}
-		}
-	}
+
 	return ptr;
 }
 
@@ -377,33 +370,14 @@ bool Pathfinder::isValidTarget(GridLocation* ptr) {
 	return (ptr->first < rows && ptr->first >= 0 && ptr->second < cols && ptr->second >= 0); 
 }
 
-
-//Returns the start position pointer that points to the object at the selected position and start position
-GridLocation* Pathfinder::findStart(GridLocation init, GridLocation pos) {
-	GridLocation* ptr = NULL;
-	for ( auto itr = initial_positions.begin(); itr != initial_positions.end(); itr++) {
-		if (init == itr->second) {
-			ptr = itr->first;
-			break;
-		}
-	}
-	/*for (int start_idx = 0; start_idx < start_num; start_idx++) {
-		if ((start_positions[start_idx]).first == pos && (start_positions[start_idx]).second.first == init) {
-			ptr = &((start_positions[start_idx]).first);
-			break;
-		}
-	}*/
-	return ptr;
-}
-
 //Updates the target search grid
 void Pathfinder::updateTargetGrid(sf::Vector2f start_pos, sf::Vector2f curr_pos) {
-	GridLocation start_pair = getPositionMapping(start_pos);
+	GridLocation targ_pair = getPositionMapping(start_pos);
 	GridLocation curr_pair = getPositionMapping(curr_pos);
-	GridLocation* ptr = findTarget(start_pair);
+	GridLocation* ptr = findPositionPtr(targ_pair);
 	inProcessTargets[ptr] = true;
 	generateHCost(ptr, curr_pair);
-	
+	//std::cout << "Updating target" << std::endl;
 	for (auto itr = pathUpdates.begin(); itr != pathUpdates.end(); itr++) {
 		if ((itr->first).second == ptr) {
 			itr->second = true;
@@ -418,7 +392,7 @@ void Pathfinder::updateTargetGrid(sf::Vector2f start_pos, sf::Vector2f curr_pos)
 void Pathfinder::generatePath2(sf::Vector2f init_pos, sf::Vector2f start_pos, sf::Vector2f curr_pos) {
 	GridLocation init_pair = getPositionMapping(init_pos);
 	GridLocation start_pair = getPositionMapping(start_pos);
-	GridLocation* start_ptr = findStart(init_pair, start_pair);
+	GridLocation* start_ptr = findPositionPtr(init_pair);
 	if (start_ptr == NULL)
 		return;
 	GridLocation curr_pair = getPositionMapping(curr_pos);
@@ -426,7 +400,7 @@ void Pathfinder::generatePath2(sf::Vector2f init_pos, sf::Vector2f start_pos, sf
 		if (positionsEqual(itr->first.first, start_ptr)) {
 			*(itr->first).first = curr_pair;
 			if (itr->second && isValidTarget(itr->first.second) && !inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)]) {
-				generatePath(init_pair, start_pair, *((itr->first).second), curr_pair);
+				generatePath(((itr->first).first), ((itr->first).second), curr_pair);
 			}
 		}
 	}
@@ -435,16 +409,13 @@ void Pathfinder::generatePath2(sf::Vector2f init_pos, sf::Vector2f start_pos, sf
 /** Generates path
  **
 **/
-void Pathfinder::generatePath(GridLocation init, GridLocation start, GridLocation target, GridLocation new_start, bool change_path) {			
+void Pathfinder::generatePath(GridLocation* start_ptr, GridLocation* target_ptr, GridLocation new_start, bool change_path) {			
 	std::vector<Pathfinder::pathNode*> open;
 	std::vector<Pathfinder::pathNode*> closed;
-	GridLocation* start_ptr = findStart(init, start);
 	//std::cout << "Path 1" << std::endl;	
 	if (start_ptr == NULL) {
 		return;
 	}
-
-	GridLocation* target_ptr = findTarget(target);
 	
 	if (target_ptr == NULL) {
 		return;
@@ -509,11 +480,13 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 	for (auto itr = inVision.begin(); itr != inVision.end(); itr++) {
 		if ( itr->second && itr->first.first == start_ptr && start_targets[start_ptr] > -100) {
 			if (isValidTarget(itr->first.second)) {
-				if (*(itr->first.second) == curr_pair)
+				if (*(itr->first.second) == curr_pair) {
+					//std::cout << "HERE" << std::endl;
 					return false;
+				}
 				if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 					return false;
-				//std::cout << "Branch 0" << std::endl;
+				//std::cout << "Branch 0 " << curr_pair.first << " " << curr_pair.second << " " << itr->first.second->first << " " << itr->first.second->second << std::endl;
 				inProcessPaths[std::pair<GridLocation*, GridLocation*>(itr->first.first, itr->first.second)] = true;
 				target_taken[itr->first.second] = true;
 				if (paths[start_ptr].first != NULL && itr->first.second != paths[start_ptr].first)
@@ -523,7 +496,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 				allPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)].push_back(sf::Vector2f(curr_pair.second * player_size, curr_pair.first * player_size));
 				paths[start_ptr].first = itr->first.second;
 				paths[start_ptr].second = &(allPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)]);
-				std::thread(&Pathfinder::generatePath, init_pair, *start_ptr, *(itr->first.second), curr_pair, true).detach();
+				std::thread(&Pathfinder::generatePath, start_ptr, (itr->first.second), curr_pair, true).detach();
 				return true;
 			}
 			else {
@@ -537,7 +510,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 	//std::cout << "New path 2" << std::endl;	
 	//Select a flower if appropriate
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
-		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] == target_values[itr->first.second] && !itr->second.empty() && target_values[itr->first.second] == -2 && start_targets[start_ptr] > -100 && !target_taken[itr->first.second]){ 		
+		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] == target_values[itr->first.second] && target_values[itr->first.second] == -2 && start_targets[start_ptr] > -100 && !target_taken[itr->first.second]){ 		
 			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 				return false;
 			//std::cout << "Branch1 " << target_taken[itr->first.second] << std::endl;
@@ -550,14 +523,14 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 			itr->second.push_back(sf::Vector2f(curr_pair.second * player_size, curr_pair.first * player_size));
 			paths[start_ptr].first = itr->first.second;
 			paths[start_ptr].second = &(itr->second);
-			std::thread(&Pathfinder::generatePath, init_pair, *start_ptr, *(itr->first.second), curr_pair, true).detach();
+			std::thread(&Pathfinder::generatePath, start_ptr, (itr->first.second), curr_pair, true).detach();
 			return true;
 		}
 	}	
 	
 	//Select a fake target if appropriate
 	for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
-		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && target_values[itr->first.second] <= -20 && ((start_targets[start_ptr] == target_values[itr->first.second] && start_targets[start_ptr] < -20) || (target_values[itr->first.second] == -20 && start_targets[start_ptr] > -20 ))  && *itr->first.second != curr_pair && !target_taken[itr->first.second]) {		
+		if (itr->first.first == start_ptr && isValidTarget(itr->first.second) && start_targets[start_ptr] != -4 && target_values[itr->first.second] <= -20 && ((start_targets[start_ptr] == target_values[itr->first.second] && start_targets[start_ptr] < -20) || (target_values[itr->first.second] == -20 && start_targets[start_ptr] > -20 ))  && *itr->first.second != curr_pair && !target_taken[itr->first.second]) {		
 			if (inProcessPaths[std::pair<GridLocation*, GridLocation*>((itr->first).first, itr->first.second)])
 				return false;
 			//std::cout << "Branch2 " << target_taken[itr->first.second] << std::endl;
@@ -573,7 +546,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 			paths[start_ptr].first = itr->first.second;
 			paths[start_ptr].second = &(itr->second);
 			//std::cout << "Branch2 4" << std::endl;
-			std::thread(&Pathfinder::generatePath, init_pair, *start_ptr, *(itr->first.second), curr_pair, true).detach();
+			std::thread(&Pathfinder::generatePath, start_ptr, (itr->first.second), curr_pair, true).detach();
 			//std::cout << "Branch2 5" << std::endl;
 			return true;
 		}
@@ -591,7 +564,7 @@ bool Pathfinder::selectNewPath(GridLocation init_pair, GridLocation* start_ptr, 
 			itr->second.push_back(sf::Vector2f(curr_pair.second * player_size, curr_pair.first * player_size));
 			paths[start_ptr].first = itr->first.second;
 			paths[start_ptr].second = &(itr->second);
-			std::thread(&Pathfinder::generatePath, init_pair, *start_ptr, *(itr->first.second), curr_pair, true).detach();
+			std::thread(&Pathfinder::generatePath, start_ptr, (itr->first.second), curr_pair, true).detach();
 			return true;
 		}
 	}
@@ -614,8 +587,8 @@ void Pathfinder::changeVision(sf::Vector2f start_init_pos, sf::Vector2f targ_ini
 	GridLocation start_init_pair = getPositionMapping(start_init_pos);
 	GridLocation targ_init_pair = getPositionMapping(targ_init_pos);
 
-	GridLocation* start_ptr = findStart(start_init_pair, start_init_pair);
-	GridLocation* targ_ptr = findTarget(targ_init_pair, targ_init_pair);
+	GridLocation* start_ptr = findPositionPtr(start_init_pair);
+	GridLocation* targ_ptr = findPositionPtr(targ_init_pair);
 	
 	if (start_ptr != NULL && targ_ptr != NULL) {
 		if (paths[start_ptr].first != NULL) {
@@ -640,7 +613,7 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 	sf::Vector2f dir(0,0);
 	GridLocation init_pair = getPositionMapping(init_pos);	
 	GridLocation start_pair = getPositionMapping(start_pos);
-	GridLocation* start_ptr = findStart(init_pair, start_pair);
+	GridLocation* start_ptr = findPositionPtr(init_pair);
 
 	if (start_ptr == NULL) {
 		*next_pos = pos_next;
@@ -673,13 +646,13 @@ bool Pathfinder::getNextPosition(float dist,  sf::Vector2f init_pos, sf::Vector2
 		}
 	}
 	//std::cout << "HERE2.3" << std::endl;
-	GridLocation target_pair = *(paths[start_ptr].first);
-	sf::Vector2f target_pos(target_pair.second * player_size, target_pair.first * player_size);
-	if (findTarget(target_pair) == NULL) {
+	if (paths[start_ptr].first == NULL) {
 		*next_pos = pos_next;
 		*direction = dir;
 		return start_changed;
 	}
+	GridLocation target_pair = *(paths[start_ptr].first);
+	sf::Vector2f target_pos(target_pair.second * player_size, target_pair.first * player_size);
 	//std::cout << "HERE2.4" << std::endl;
 	sf::Vector2f path_pos = path->back();
 	//Gets the next position torwards towards target and accounts for framerate distance
@@ -818,53 +791,54 @@ void Pathfinder::generateHCost(GridLocation* target_ptr, GridLocation curr_pos) 
 	std::vector<GridLocation> left;
 	left.push_back(curr_pos);
 	generateHCost_helper(left, &temp_grid);
-	paths_mutex.lock();
+	//paths_mutex.lock();
 	Grid* old_grid = &(target_grids[target_ptr]);
 	*old_grid = temp_grid;	
+	//std::cout << "Generate H Cost " << curr_pos.first << " " << curr_pos.second << std::endl;
 	*target_ptr = curr_pos;
-	paths_mutex.unlock();
+	//paths_mutex.unlock();
 }
 
 /** Remove given pos from paths
  **
 **/
 void Pathfinder::removeFromPaths(sf::Vector2f targ_pos, sf::Vector2f start_pos) {
-	GridLocation pos_pair = getPositionMapping(targ_pos);
-	GridLocation* pos_ptr = findTarget(pos_pair);
+	GridLocation targ_pair = getPositionMapping(targ_pos);
+	GridLocation* targ_ptr = findPositionPtr(targ_pair);
+
+	//std::cout << "Remove from Path2" << std::endl;
+	if (targ_ptr == NULL) {
+		return;	
+	}
 
 	//std::cout << "Remove from Path1" << std::endl;
 	GridLocation start_pair;
 	GridLocation* start_ptr = NULL;
 	if (start_pos.x >= 0 && start_pos.y >= 0) {
 		start_pair = getPositionMapping(start_pos);
-		start_ptr = findStart(start_pair);
-		pos_ptr = findTarget(GridLocation(-1, -1), pos_pair);
+		start_ptr = findPositionPtr(start_pair);
 		if (start_ptr == NULL)
 			return;
 	}
 	
-	//std::cout << "Remove from Path2" << std::endl;
-	if (pos_ptr == NULL) {
-		return;	
-	}
 	//std::cout << "Remove from Path3" << std::endl;
 	if (start_ptr == NULL) {
 		for (int targ_idx = 0; targ_idx < target_num; targ_idx++) {	
 			GridLocation init_pair = (targets[targ_idx]).second.first;
-			if (init_pair == pos_pair) {
+			if (init_pair == targ_pair) {
 				(targets[targ_idx]).first.first = -1000;
 				(targets[targ_idx]).first.second = -1000;
 			}
 		}
 
 		for (auto itr = allPaths.begin(); itr != allPaths.end(); itr++) {
-			if (itr->first.second == pos_ptr) {
+			if (itr->first.second == targ_ptr) {
 				itr->second.clear();
 			}
 		}
 
 		for (auto itr = inVision.begin(); itr != inVision.end(); itr++) {
-			if (itr->first.second == pos_ptr) {
+			if (itr->first.second == targ_ptr) {
 				itr->second = false;
 			}
 		}	
@@ -872,7 +846,7 @@ void Pathfinder::removeFromPaths(sf::Vector2f targ_pos, sf::Vector2f start_pos) 
 	}	
 	else {
 		paths[start_ptr].second->clear();
-		inVision[std::pair<GridLocation*, GridLocation*>(start_ptr, pos_ptr)] = false;
+		inVision[std::pair<GridLocation*, GridLocation*>(start_ptr, targ_ptr)] = false;
 		//std::cout << "Remove from Path5" << std::endl;
 	}
 }

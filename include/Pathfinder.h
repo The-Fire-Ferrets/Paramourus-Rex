@@ -123,8 +123,7 @@ class Pathfinder {
 		static std::vector<EventDelegate> delegateFuncList;
 		static void generateHCost(GridLocation* target_pos, GridLocation curr_pos);
 		static void setVertex(std::vector<pathNode*>* closed, pathNode* p_node, Grid* target_grid);
-		static GridLocation* findTarget(GridLocation pos, GridLocation init = GridLocation(-1, -1));
-		static GridLocation* findStart(GridLocation init, GridLocation pos = GridLocation(-1, -1));
+		static GridLocation* findPositionPtr(GridLocation init);
 		static bool isValidTarget(GridLocation* ptr);
 		static bool selectNewPath(GridLocation init_pair, GridLocation* start_pt, GridLocation curr_pair);
 		static bool positionsEqual(GridLocation* pos1, GridLocation* pos2);
@@ -133,7 +132,7 @@ class Pathfinder {
 	public:
 		static void Create(int lw, int lh, int ps);
 		static void addToGrid(std::vector<sf::FloatRect*> bounds, int path_type, int target_type);
-		static void generatePath(GridLocation init, GridLocation start, GridLocation target, GridLocation new_start, bool change_path = false);
+		static void generatePath(GridLocation* start_ptr, GridLocation* target_ptr, GridLocation new_start, bool change_path = false);
 		static void generateHCosts(void);
 		static void print(void);
 		static void print(Grid* target_grid);
