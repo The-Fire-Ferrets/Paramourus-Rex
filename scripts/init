@@ -1,0 +1,8 @@
+#!/bin/bash
+
+rm -rf SFML
+tar xzvf ./assets/SFML-2.3.1.tgz
+export CMAKE_MODULE_PATH=$(pwd)/SFML/share/SFML/cmake/Modules
+export INCLUDE=$INCLUDE:$(pwd)/SFML/include/
+export LIB=$LIB:$(pwd)/SFML/lib
+cmake . && make

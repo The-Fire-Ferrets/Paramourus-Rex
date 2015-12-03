@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Level4 Name = "Skyline Paradise" Background = "Level4.png" MinimapBackground = "minimapbg.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "600000000" Damage = "True" Prompt = "Prompt.png">	
+<Level4 Name = "Skyline Paradise" Background = "Level4.png" MinimapBackground = "minimapbg.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "60000" Damage = "True" Prompt = "Prompt.png">	
 
   <!-- Top Boundary -->
   <Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 0 775 0 25 25 775 25">		
@@ -274,23 +274,23 @@
 	</MovingObstacle>
 
 	<NPC>
-        <Location X = "646" Y = "563" Width = "10" Height = "10"/>
+        <Location X = "632" Y = "563" Width = "10" Height = "10"/>
         <Pathfinder PathType = "-3" TargetType = "-2"/>
         <InputComponent>
-          <Control Speed = "3.5"/>
+          <Control Speed = "3.3"/>
         </InputComponent>
         <PhysicsComponent>
-          <VisionBoundary Height = "90" Width = "90" X = "-50" Y = "-50"/>
+          <VisionBoundary Height = "90" Width = "90"/>
         </PhysicsComponent>
       </NPC>
       <NPC>
-        <Location X = "39" Y = "37" Width = "10" Height = "10"/>
+        <Location X = "39" Y = "178" Width = "10" Height = "10"/>
         <Pathfinder PathType = "-3" TargetType = "-2"/>
         <InputComponent>
-          <Control Speed = "3.5"/>
+          <Control Speed = "3.3"/>
         </InputComponent>
         <PhysicsComponent>
-          <VisionBoundary Height = "90" Width = "90" X = "-50" Y = "-50"/>
+          <VisionBoundary Height = "90" Width = "90"/>
         </PhysicsComponent>
       </NPC>
 	
@@ -330,7 +330,7 @@
 					<Control Type = "Artificial" Speed = "3.5"/>
 				</InputComponent>
 				<PhysicsComponent>
-					<VisionBoundary Height = "90" Width = "90"/>
+					<VisionBoundary Height = "100" Width = "100"/>
 				</PhysicsComponent>
 			</NPC>
 		</Spawn1>

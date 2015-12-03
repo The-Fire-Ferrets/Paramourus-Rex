@@ -130,10 +130,10 @@
 	<NPC Generate = "2">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<InputComponent>
-			<Control Speed = "3.5"/>
+			<Control Speed = "3.4"/>
 		</InputComponent>
 		<PhysicsComponent>
-			<VisionBoundary Height = "100" Width = "100" X = "-50" Y = "-50"/>
+			<VisionBoundary Height = "95" Width = "95"/>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
 	</NPC>

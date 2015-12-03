@@ -121,10 +121,10 @@
 	<NPC Generate = "1">
 		<Location X = "32" Y = "556" Width = "10" Height = "10"/>
 		<InputComponent>
-			<Control Speed = "3.5"/>
+			<Control Speed = "3.2"/>
 		</InputComponent>
 		<PhysicsComponent>
-			<VisionBoundary Height = "80" Width = "80" X = "-50" Y = "-50"/>
+			<VisionBoundary Height = "85" Width = "85"/>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
 	</NPC>
@@ -132,10 +132,10 @@
 	<NPC Generate = "1">
 		<Location X = "750" Y = "550" Width = "10" Height = "10"/>
 		<InputComponent>
-			<Control Speed = "3.5"/>
+			<Control Speed = "3.2"/>
 		</InputComponent>
 		<PhysicsComponent>
-			<VisionBoundary Height = "80" Width = "80" X = "-50" Y = "-50"/>
+			<VisionBoundary Height = "85" Width = "85"/>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-3" TargetType = "-2"/>
 	</NPC>
@@ -176,10 +176,10 @@
 	<NPC Generate = "1">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<InputComponent>
-			<Control Speed = "3.5"/>
+			<Control Speed = "3.2"/>
 		</InputComponent>
 		<PhysicsComponent>
-			<VisionBoundary Height = "80" Width = "80" X = "-50" Y = "-50"/>
+			<VisionBoundary Height = "85" Width = "85"/>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-3" TargetType = "-21"/>
 	</NPC>
@@ -187,10 +187,10 @@
 	<NPC Generate = "1">
 		<Location X = "-1" Y = "-1" Width = "10" Height = "10"/>
 		<InputComponent>
-			<Control Speed = "3.5"/>
+			<Control Speed = "3.2"/>
 		</InputComponent>
 		<PhysicsComponent>
-			<VisionBoundary Height = "80" Width = "80" X = "-50" Y = "-50"/>
+			<VisionBoundary Height = "85" Width = "85"/>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-3" TargetType = "-22"/>
 	</NPC>
@@ -245,7 +245,7 @@
 					<Control Type = "Artificial" Speed = "3.5"/>
 				</InputComponent>
 				<PhysicsComponent>
-					<VisionBoundary Height = "80" Width = "80"/>
+					<VisionBoundary Height = "100" Width = "100"/>
 				</PhysicsComponent>
 			</NPC>
 		</Spawn1>

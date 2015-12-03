@@ -341,7 +341,7 @@ void CraftView::Create(const char* resource) {
 	unsigned int posX = Configuration::getWindowWidth()/6.6;
 	unsigned int posY = Configuration::getWindowHeight()/1.4;
 
-	character_tex.loadFromFile("./assets/sprites/Homer.png");
+	character_tex.loadFromFile("./assets/sprites/ChefHomer.png");
 	character_sprite = sf::Sprite(character_tex);
 	character_sprite.setPosition(posX+320, posY-character_tex.getSize().y-4);
 
