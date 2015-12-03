@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+n<?xml version="1.0"?>
 <Level4 Name = "Skyline Paradise" Background = "Level4.png" MinimapBackground = "minimapbg.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "60000" Damage = "True" Prompt = "Prompt.png">	
 
   <!-- Top Boundary -->
@@ -68,8 +68,22 @@
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
-	<!-- Wall9 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 325 150 350 150 325 575 350 575">		
+
+	<!-- Walls 9 through 12 readjusted to allow two more passages across the lower middle third of the map. -->
+	<!-- Wall9.1 -->
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 325 150 350 150 325 300 350 300">		
+		<PhysicsComponent>
+			<Properties Type = "Opaque"/>
+		</PhysicsComponent>
+	</Obstacle>
+	<!-- Wall9.2 -->
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 325 350 350 350 325 450 350 450">		
+		<PhysicsComponent>
+			<Properties Type = "Opaque"/>
+		</PhysicsComponent>
+	</Obstacle>
+	<!-- Wall9.3 -->
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 325 525 350 525 325 575 350 575">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
@@ -80,18 +94,43 @@
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
-	<!-- Wall11 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 200 600 200 350 575 600 575">		
+	<!-- Wall11.1 -->
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 200 600 200 350 300 600 300">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
-	<!-- Wall12 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 600 150 625 150 600 575 625 575">		
+	<!-- Wall11.2 -->
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 350 600 350 350 450 600 450">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
 	</Obstacle>
+	<!-- Wall11.3 -->
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 525 600 525 350 575 600 575">		
+		<PhysicsComponent>
+			<Properties Type = "Opaque"/>
+		</PhysicsComponent>
+	</Obstacle>
+	<!-- Wall12.1 -->
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 600 150 625 150 600 300 625 300">		
+		<PhysicsComponent>
+			<Properties Type = "Opaque"/>
+		</PhysicsComponent>
+	</Obstacle>
+	<!-- Wall12.2 -->
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 600 350 625 350 600 450 625 450">		
+		<PhysicsComponent>
+			<Properties Type = "Opaque"/>
+		</PhysicsComponent>
+	</Obstacle>
+	<!-- Wall12.3 -->
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 600 525 625 525 600 575 625 575">		
+		<PhysicsComponent>
+			<Properties Type = "Opaque"/>
+		</PhysicsComponent>
+	</Obstacle>
+
 	<!-- Wall13 -->
 	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 25 350 75 350 25 450 75 450">		
 		<PhysicsComponent>
