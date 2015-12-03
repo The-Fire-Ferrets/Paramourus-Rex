@@ -846,7 +846,9 @@ void Pathfinder::removeFromPaths(sf::Vector2f targ_pos, sf::Vector2f start_pos) 
 	}	
 	else {
 		paths[start_ptr].second->clear();
-		inVision[std::pair<GridLocation*, GridLocation*>(start_ptr, targ_ptr)] = false;
+		for (auto itr2 = inVision.begin(); itr2 != inVision.end(); itr2++)
+			if (itr2->first.second == targ_ptr)
+				itr2->second = false;
 		//std::cout << "Remove from Path5" << std::endl;
 	}
 }
