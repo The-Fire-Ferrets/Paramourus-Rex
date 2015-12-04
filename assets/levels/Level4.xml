@@ -83,7 +83,7 @@ n<?xml version="1.0"?>
 		</PhysicsComponent>
 	</Obstacle>
 	<!-- Wall9.3 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 325 525 350 525 325 575 350 575">		
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 325 500 350 500 325 575 350 575">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
@@ -107,7 +107,7 @@ n<?xml version="1.0"?>
 		</PhysicsComponent>
 	</Obstacle>
 	<!-- Wall11.3 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 525 600 525 350 575 600 575">		
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 350 500 600 500 350 575 600 575">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
@@ -125,7 +125,7 @@ n<?xml version="1.0"?>
 		</PhysicsComponent>
 	</Obstacle>
 	<!-- Wall12.3 -->
-	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 600 525 625 525 600 575 625 575">		
+	<Obstacle Type = "Wall"  Sprite = ""  SpriteMinimap = "" Damage = "False" VertexArray = "4 600 500 625 500 600 575 625 575">		
 		<PhysicsComponent>
 			<Properties Type = "Opaque"/>
 		</PhysicsComponent>
