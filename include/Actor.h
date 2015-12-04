@@ -113,7 +113,7 @@ class Actor {
 		unsigned frame_duration;
 		unsigned frame_no;
 		float animation_scaling;
-
+    bool use_animation;
 		void animate();
 };
 

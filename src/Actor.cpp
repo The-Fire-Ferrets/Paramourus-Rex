@@ -44,6 +44,7 @@ Actor::Actor(void) {
 	renderToGameView = true;
 	direction = sf::Vector2f(0,0);
 	animation_scaling = 1.f;
+  use_animation = false;
 	id.clear();
 }
 
@@ -99,8 +100,9 @@ bool Actor::Init(pugi::xml_node* elem) {
 		else if (!strcmp(attr.name(),"SpriteRight")) {
 			sprite_filename[3] = attr.value();
 		}
-		else if (!strcmp(attr.name(), "FrameCountUp")) {
+		else if (!strcmp(attr.name(), "FrameCountUp") || !strcmp(attr.name(), "FrameCount")) {
 			sprite_frame_count[0] = strtol(attr.value(), &temp, 10);
+      use_animation = true;
 		}
 		else if (!strcmp(attr.name(), "FrameCountDown")) {
 			sprite_frame_count[1] = strtol(attr.value(), &temp, 10);
@@ -116,6 +118,7 @@ bool Actor::Init(pugi::xml_node* elem) {
 		}
 		else if (!strcmp(attr.name(), "AnimationScaling")) {
 			animation_scaling = strtof(attr.value(), &temp);
+      std::cout << elem->name() << " animation scaling " << animation_scaling << std::endl;
 		}
 		else if (!strcmp(attr.name(),"SpriteMinimap")) {
 			if (!strcmp(attr.value(), ""))
@@ -276,13 +279,13 @@ void Actor::PostInit(pugi::xml_node* elem) {
 				else
 					sprite_texture[i].loadFromFile(("./assets/sprites/" + sprite_filename[0]).c_str());
 				sprite[i] = sf::Sprite(sprite_texture[i], sf::IntRect(0, 0, (sprite_texture[i].getSize()).x, (sprite_texture[i].getSize()).y));
-				if (!this->isOfType("Player") && !this->isOfType("NPC")) {
-					sprite[i].setScale(size.x/(sprite_texture[i].getSize()).x, size.y/(sprite_texture[i].getSize()).y);
-				}
-				else {
+				if (this->isOfType("Player") || this->isOfType("NPC") || (use_animation && i == 0)) {
 					float x = size.x / (sprite_texture[i].getSize().x/sprite_frame_count[i]);
 					float y = size.y / sprite_texture[i].getSize().y;
 					sprite[i].setScale(animation_scaling*x, animation_scaling*y);
+				}
+        else {
+					sprite[i].setScale(size.x/(sprite_texture[i].getSize()).x, size.y/(sprite_texture[i].getSize()).y);
 				}
 				sprite[i].setPosition(position);
 			}
@@ -306,7 +309,7 @@ void Actor::PostInit(pugi::xml_node* elem) {
 			}
 	}
 
-	if (this->isOfType("Player") || this->isOfType("NPC")) {
+	if (use_animation) {
 		frame_no = 0;
 		this->animate();
 	}
@@ -322,28 +325,32 @@ void Actor::PostInit(void) {
  ** if the obstacle pointer is set (by a physics component o fthe actor or another actor after contact) it prevents the actors from moving into each other
  **/
 void Actor::move(sf::Vector2f next_pos, sf::Vector2f dir) {
-	if (dir.x < 0)
-		sprite_idx = 2;
-	else if (dir.x > 0)
-		sprite_idx = 3;
-	else if (dir.y < 0)
-		sprite_idx = 0;
-	else if (dir.y > 0)
-		sprite_idx = 1;
+  if (!this->isOfType("MovingObstacle")) {
+    if (dir.x < 0)
+      sprite_idx = 2;
+    else if (dir.x > 0)
+      sprite_idx = 3;
+    else if (dir.y < 0)
+      sprite_idx = 0;
+    else if (dir.y > 0)
+      sprite_idx = 1;
+  }
 
 	// update the frame number and animate
-	if (sprite_clock.getElapsedTime().asMilliseconds() > frame_duration) {
-		frame_no = (frame_no+1) % sprite_frame_count[sprite_idx];
+  if (use_animation) {
+    if (sprite_clock.getElapsedTime().asMilliseconds() > frame_duration) {
+      frame_no = (frame_no+1) % sprite_frame_count[sprite_idx];
 
-		this->animate();
-		sprite_clock.restart();
-	}
-	else if (direction != dir) {
-		frame_no = 0;
+      this->animate();
+      sprite_clock.restart();
+    }
+    else if (direction != dir) {
+      frame_no = 0;
 
-		this->animate();
-		sprite_clock.restart();
-	}
+      this->animate();
+      sprite_clock.restart();
+    }
+  }
 
 	//Move Actor
 	sf::Vector2f p = next_pos;
@@ -372,18 +379,20 @@ void Actor::move(float distance, sf::Vector2f dir) {
 		sprite_idx = 1;
 
 	// update the frame number and animate
-	if (sprite_clock.getElapsedTime().asMilliseconds() > frame_duration) {
-		frame_no = (frame_no+1) % sprite_frame_count[sprite_idx];
+  if (use_animation) {
+    if (sprite_clock.getElapsedTime().asMilliseconds() > frame_duration) {
+      frame_no = (frame_no+1) % sprite_frame_count[sprite_idx];
 
-		this->animate();
-		sprite_clock.restart();
-	}
-	else if (direction != dir) {
-		frame_no = 0;
+      this->animate();
+      sprite_clock.restart();
+    }
+    else if (direction != dir) {
+      frame_no = 0;
 
-		this->animate();
-		sprite_clock.restart();
-	}
+      this->animate();
+      sprite_clock.restart();
+    }
+  }
 
 	//Move Actor
 	sf::Vector2f p = this->getPosition() + dir * distance;
@@ -777,7 +786,7 @@ bool Actor::isOfType(ActorId type) {
  **/
 void Actor::animate() {
 	// sanity check
-	if (!this->isOfType("Player") && !this->isOfType("NPC")) {
+	if (!use_animation) {
 		return;
 	}
 
