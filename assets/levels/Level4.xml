@@ -1,4 +1,4 @@
-n<?xml version="1.0"?>
+<?xml version="1.0"?>
 <Level4 Name = "Skyline Paradise" Background = "Level4.png" MinimapBackground = "minimapbg.png" Edge = "" Text_X = "650" Text_Y = "0" Font = "DIGITALDREAMFAT.ttf" Text_Size = "8" Duration = "60000" Damage = "True" Prompt = "Prompt.png">	
 
   <!-- Top Boundary -->
@@ -171,7 +171,7 @@ n<?xml version="1.0"?>
 		<Pathfinder PathType = "-100"/>
 	</Obstacle>
 
-	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "VerticalCloud.png"  SpriteMinimap = "" Damage = "True">
+	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "ThunderCloud-V.png"  SpriteMinimap = "" Damage = "True">
 		<Location X = "200" Y = "535" Width = "10" Height = "20"/>
 		<Pathfinder PathType = "-5" TargetType = "-100"/>
 		<PhysicsComponent>
@@ -223,7 +223,7 @@ n<?xml version="1.0"?>
 		<Pathfinder PathType = "-102"/>
 	</Obstacle>
 
-	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "HorizontalCloud.png"  SpriteMinimap = "" Damage = "True">
+	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "ThunderCloud-H.png"  SpriteMinimap = "" Damage = "True">
 		<Location X = "100" Y = "95" Width = "20" Height = "10"/>
 		<Pathfinder PathType = "-5" TargetType = "-102"/>
 		<PhysicsComponent>
@@ -275,7 +275,7 @@ n<?xml version="1.0"?>
 		<Pathfinder PathType = "-104"/>
 	</Obstacle>
 
-	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "HorizontalCloud.png"  SpriteMinimap = "" Damage = "True">
+	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "ThunderCloud-H.png"  SpriteMinimap = "" Damage = "True">
 		<Location X = "325" Y = "430" Width = "20" Height = "10"/>
 		<Pathfinder PathType = "-5" TargetType = "-104"/>
 		<PhysicsComponent>
@@ -327,7 +327,7 @@ n<?xml version="1.0"?>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-106"/>
 	</Obstacle>
-	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "VerticalCloud.png"  SpriteMinimap = "" Damage = "True">
+	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "ThunderCloud-V.png"  SpriteMinimap = "" Damage = "True">
 		<Location X = "317" Y = "326" Width = "10" Height = "20"/>
 		<Pathfinder PathType = "-5" TargetType = "-106"/>
 		<PhysicsComponent>
@@ -379,7 +379,7 @@ n<?xml version="1.0"?>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-108"/>
 	</Obstacle>
-	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "VerticalCloud.png"  SpriteMinimap = "" Damage = "True">
+	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "ThunderCloud-V.png"  SpriteMinimap = "" Damage = "True">
 		<Location X = "317" Y = "475" Width = "10" Height = "20"/>
 		<Pathfinder PathType = "-5" TargetType = "-108"/>
 		<PhysicsComponent>
@@ -405,7 +405,7 @@ n<?xml version="1.0"?>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-109"/>
 	</Obstacle>
-	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "VerticalCloud.png"  SpriteMinimap = "" Damage = "True">
+	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "ThunderCloud-V.png"  SpriteMinimap = "" Damage = "True">
 		<Location X = "87" Y = "405" Width = "10" Height = "20"/>
 		<Pathfinder PathType = "-5" TargetType = "-109"/>
 		<PhysicsComponent>
@@ -457,7 +457,7 @@ n<?xml version="1.0"?>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-111"/>
 	</Obstacle>
-	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "HorizontalCloud.png"  SpriteMinimap = "" Damage = "True">
+	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "ThunderCloud-H.png"  SpriteMinimap = "" Damage = "True">
 		<Location X = "560" Y = "130" Width = "20" Height = "10"/>
 		<Pathfinder PathType = "-5" TargetType = "-111"/>
 		<PhysicsComponent>
@@ -483,7 +483,7 @@ n<?xml version="1.0"?>
 		</PhysicsComponent>
 		<Pathfinder PathType = "-112"/>
 	</Obstacle>
-	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "VerticalCloud.png"  SpriteMinimap = "" Damage = "True">
+	<MovingObstacle Generate = "1" Type = "Cloud"  Sprite = "ThunderCloud-V.png"  SpriteMinimap = "" Damage = "True">
 		<Location X = "745" Y = "170" Width = "10" Height = "20"/>
 		<Pathfinder PathType = "-5" TargetType = "-112"/>
 		<PhysicsComponent>
