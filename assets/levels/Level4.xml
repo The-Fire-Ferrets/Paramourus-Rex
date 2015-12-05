@@ -604,5 +604,11 @@
       <Dialogue3 Text = "Can't carry any more" />
       <Dialogue4 Text = "All out of space" />
     </Commentary11>
+    <Commentary12 Display = "Player" Actor = "Player" Contact = "Cloud" Action = "-2" Occurance = "-1">
+      <Dialogue1 Text = "Oh gosh." />
+      <Dialogue2 Text = "I guess that could've been worse." />
+      <Dialogue3 Text = "That was... a surprise." />
+    </Commentary12>
+
   </Commentary>
 </Level4>
