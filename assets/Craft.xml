@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Craft Background = "HomersCave.png" Map = "Map.png" Diana_Icon = "DianaIcon.png" Hints_Icon = "Question_Mark.png" Recipes_Icon = "Recipes.png" Recipe_Scroll = "RecipeScroll.png" Font = "arial.ttf" Text_Size = "30" Text_X="150" Text_Y = "430" Hints_PosX = "150" Hints_PosY = "150" Prompt = "Prompt.png" Backlay = "Prompt.png">
+<Craft Background = "HomersCave.png" Map = "Map.png" Diana_Icon = "DianaIcon.png" Hints_Icon = "Question_Mark.png" Recipes_Icon = "Recipes.png" Recipe_Scroll = "RecipeScroll.png" Font = "arial.ttf" Text_Size = "30" Text_X="150" Text_Y = "430" Hints_PosX = "150" Hints_PosY = "150" Prompt = "Prompt.png" Backlay = "Prompt.png" FrameCount = "7" FrameDuration = "100">
   <FireFlower Sprite = "FireFlower" Height = "30" Width = "30" X = "10" Y = "10"/>
   <WaterFlower Sprite = "WaterFlower" Height = "30" Width = "30" X = "10" Y = "50" />
   <EarthFlower Sprite = "EarthFlower" Height = "30" Width = "30" X = "10" Y = "90" />

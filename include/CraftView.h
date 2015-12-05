@@ -113,6 +113,15 @@ class CraftView  {
 
 	static std::string fitStringToBox(std::string str, int character_size = 0, sf::Vector2f box_size = sf::Vector2f(0,0), bool center = true);
 
+		// members related to spritesheets and animation
+		static unsigned sprite_frame_count;
+		static sf::Clock sprite_clock;
+		static unsigned frame_duration;
+		static unsigned frame_no;
+    static bool use_animation;
+
+		static void animate();
+
 	public:
         static int total_craft_visits;
 		static int getNumFlowers(void);

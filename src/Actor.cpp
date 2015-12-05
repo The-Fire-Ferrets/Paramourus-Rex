@@ -118,7 +118,6 @@ bool Actor::Init(pugi::xml_node* elem) {
 		}
 		else if (!strcmp(attr.name(), "AnimationScaling")) {
 			animation_scaling = strtof(attr.value(), &temp);
-      std::cout << elem->name() << " animation scaling " << animation_scaling << std::endl;
 		}
 		else if (!strcmp(attr.name(),"SpriteMinimap")) {
 			if (!strcmp(attr.value(), ""))

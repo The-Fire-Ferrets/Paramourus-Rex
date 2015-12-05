@@ -106,6 +106,13 @@ sf::Sound CraftView::sound;
 sf::Texture CraftView::character_tex;
 sf::Sprite  CraftView::character_sprite;
 
+unsigned CraftView::sprite_frame_count;
+sf::Clock CraftView::sprite_clock;
+unsigned CraftView::frame_duration;
+unsigned CraftView::frame_no;
+bool CraftView::use_animation = false;
+
+// backlay
 sf::Texture CraftView::backlay_texture;
 sf::Vector2f CraftView::backlay_size;
 sf::Sprite CraftView::backlay;
@@ -241,6 +248,13 @@ void CraftView::Create(const char* resource) {
 
 			//recipe_scroll_sprite.setPosition(Configuration::getWindowWidth()/7,Configuration::getWindowHeight()/15);
 		}
+    else if (!strcmp(attr.name(), "FrameCount")) {
+      sprite_frame_count = strtol(attr.value(), &temp, 10);
+      use_animation = true;
+    }
+    else if (!strcmp(attr.name(), "FrameDuration")) {
+      frame_duration = strtol(attr.value(), &temp, 10);
+    }
 	}
 
 	sf::Vector2u prompt_size = hints_prompt_texture.getSize();
@@ -341,9 +355,11 @@ void CraftView::Create(const char* resource) {
 	unsigned int posX = Configuration::getWindowWidth()/6.6;
 	unsigned int posY = Configuration::getWindowHeight()/1.4;
 
-	character_tex.loadFromFile("./assets/sprites/ChefHomer.png");
+	character_tex.loadFromFile("./assets/sprites/ChefHomer_StirPot.png");
 	character_sprite = sf::Sprite(character_tex);
-	character_sprite.setPosition(posX+320, posY-character_tex.getSize().y-4);
+  float size_x = (use_animation) ? (character_tex.getSize().x / sprite_frame_count) : (character_tex.getSize().x);
+	character_sprite.setPosition(float(posX+width)*1.5f, posY-character_tex.getSize().y);
+
 
 
 	// set text to initial greeting from Homer
@@ -370,6 +386,11 @@ void CraftView::Create(const char* resource) {
 	sound.setBuffer(buffer);
 	sound.setLoop(true);
 	sound.play();
+
+  if (use_animation) {
+    frame_no = 0;
+    CraftView::animate();
+  }
 
 	// // If this is tutorial mode, the hints should get drawn right away.
 	// if (view_state == 2)
@@ -622,6 +643,14 @@ void CraftView::update(sf::RenderWindow *window, int* state) {
 		pressed = false;
 		first_click = true;
 	}
+
+
+  if (use_animation && sprite_clock.getElapsedTime().asMilliseconds() > frame_duration) {
+    frame_no = (frame_no+1) % sprite_frame_count;
+    
+    CraftView::animate();
+    sprite_clock.restart();
+  }
 }
 
 /**
@@ -1060,4 +1089,23 @@ void CraftView::clearInventory(void) {
 	magnolias = 0;
 
 	actorList.clear();
+}
+
+/** Update the animation frame.
+ **
+ **/
+void CraftView::animate() {
+	// sanity check
+	if (!use_animation) {
+		return;
+	}
+
+	// determine the bounds of the frame
+	int top  = 0;
+	int width = character_tex.getSize().x / sprite_frame_count;
+	int left = frame_no * width;
+	int height = character_tex.getSize().y;
+
+	// set the frame
+	character_sprite.setTextureRect(sf::IntRect(left, top, width, height));
 }
